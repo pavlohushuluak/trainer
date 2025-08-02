@@ -36,7 +36,7 @@ export const GuestCheckout = ({ onClose }: GuestCheckoutProps) => {
       const tempPassword = Math.random().toString(36).slice(-8);
       
       // Use unified language detection
-      const detectedLanguage = detectBrowserLanguage();
+      const detectedLanguage = detectBrowserLanguage() || 'de';
       console.log('🔐 GuestCheckout - detected language:', detectedLanguage);
       
       const { data: authData, error: signUpError } = await supabase.auth.signUp({

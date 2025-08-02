@@ -34,7 +34,7 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
       
 
       // Use unified language detection
-      const detectedLanguage = detectBrowserLanguage();
+      const detectedLanguage = detectBrowserLanguage() || 'de';
       console.log('🔐 EmailSignUpTab - detected language:', detectedLanguage);
       
       const { data, error } = await signUp(email, password, firstName, lastName, detectedLanguage);

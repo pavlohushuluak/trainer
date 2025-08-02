@@ -65,7 +65,7 @@ export const detectBrowserLanguage = (): string => {
     }
   }
 
-  // Default to German
+  // Default to German - always return 'de' as fallback
   return 'de';
 };
 

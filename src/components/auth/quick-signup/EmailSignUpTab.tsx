@@ -58,7 +58,7 @@ export const EmailSignUpTab = ({ onClose }: EmailSignUpTabProps) => {
       } else {
         // Sign up - warten auf Session
         // Use unified language detection
-        const detectedLanguage = detectBrowserLanguage();
+        const detectedLanguage = detectBrowserLanguage() || 'de';
         console.log('🔐 QuickSignUp EmailSignUpTab - detected language:', detectedLanguage);
         
         const { data, error } = await supabase.auth.signUp({

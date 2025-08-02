@@ -37,7 +37,7 @@ export const EmailAuthForm = ({ onSuccess, onPasswordResetClick }: EmailAuthForm
     try {
       if (isSignUp) {
         // Use unified language detection
-        const detectedLanguage = detectBrowserLanguage();
+        const detectedLanguage = detectBrowserLanguage() || 'de';
         console.log('🔐 EmailAuthForm - detected language:', detectedLanguage);
         
         const { data, error } = await supabase.auth.signUp({

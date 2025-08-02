@@ -77,7 +77,8 @@ export const useAuthOperations = () => {
     const redirectUrl = `${window.location.origin}/auth/callback`;
     
     // Detect preferred language using the unified detection function
-    const detectedLanguage = language || detectBrowserLanguage();
+    // Always default to German ('de') if no language is provided
+    const detectedLanguage = language || detectBrowserLanguage() || 'de';
     console.log('🔐 Signup - detected language:', detectedLanguage);
     
     // Always provide metadata, even if empty - this prevents "undefined values" error

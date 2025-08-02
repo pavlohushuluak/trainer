@@ -29,7 +29,7 @@ export default function TestEmailAuth() {
     try {
       
       // Use unified language detection
-      const detectedLanguage = detectBrowserLanguage();
+      const detectedLanguage = detectBrowserLanguage() || 'de';
       console.log('🔐 TestEmailAuth - detected language:', detectedLanguage);
       
       // Always provide metadata to prevent "undefined values" error
