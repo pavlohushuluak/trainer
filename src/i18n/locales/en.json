@@ -1,0 +1,3811 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "retry": "Retry",
+    "reload": "Reload",
+    "years": "years",
+    "old": "old",
+    "born": "born",
+    "created": "Created",
+    "of": "of"
+  },
+  "support": {
+    "title": "Help & Support 🐾",
+    "subtitle": "We are here to help you and your pet – with heart and mind.",
+    "chatSupport": {
+      "title": "Start Chat Support",
+      "description": "Ask your question directly to our AI assistant or support team. We respond quickly and empathetically.",
+      "button": "Open Chat"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "description": "You'll find many answers in our frequently asked questions. All topics around pet training.",
+      "button": "Browse FAQ"
+    },
+    "motivation": {
+      "title": "Your Pet is Close to Our Hearts ❤️",
+      "description": "Every question is important. Whether technical problem or training tip – we'll find the best solution together for you and your pet."
+    },
+    "ticketHistory": {
+      "title": "Your Support Requests"
+    },
+    "emptyState": {
+      "title": "You haven't submitted any support requests yet.",
+      "subtitle": "Use the support chat when you need help! 🐾"
+    },
+    "ticketCreated": {
+      "title": "Ticket created",
+      "description": "Your support ticket has been created successfully."
+    },
+    "ticketError": {
+      "title": "Error",
+      "description": "Ticket could not be created"
+    },
+    "messageSent": {
+      "title": "Message sent",
+      "description": "Your message has been sent to support."
+    },
+    "messageError": {
+      "title": "Error",
+      "description": "Message could not be sent"
+    },
+    "loadingError": {
+      "title": "Loading Error",
+      "description": "Support tickets could not be loaded."
+    },
+    "feedbackSubmitted": {
+      "title": "Feedback submitted",
+      "description": "Thank you for your feedback! 🐾"
+    },
+    "feedbackError": {
+      "title": "Error",
+      "description": "Feedback could not be submitted."
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "training": "Pet Training",
+    "pricing": "Pricing",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "help": "Help & Support",
+    "imageAnalysis": "Image Analysis",
+    "trainerChat": "Trainer Chat",
+    "settings": "Settings",
+    "loggingOut": "Logging out..."
+  },
+  "hero": {
+    "title": "Professional Pet Training with AI",
+    "startTraining": "To Image Analysis",
+    "startChat": "Chat with Trainer",
+    "viewPricing": "View Prices & Packages",
+    "developmentBadge": "Development",
+    "testAccess": "Test Access Active",
+    "riskFreeTrial": "14 Days Risk-Free Trial",
+    "mainTitle": "The <span class=\"text-brand-gradient font-extrabold drop-shadow-beautiful text-beautiful-shadow\">smart pet training</span><br /><span class=\"text-foreground/85 font-bold tracking-wide\">for happy (house) pets</span>",
+    "subtitle": "Individual training based on the latest methods – <span class=\"text-primary font-semibold\">proven in practice</span>, <span class=\"text-primary font-semibold\">available anytime</span>.",
+    "features": {
+      "trainerAvailable": "🕒 24/7 Trainer Available",
+      "customized": "🐾 Customized for Your Pet",
+      "imageAnalysis": "🖼️ Image Upload & Behavior Analysis"
+    },
+    "socialProof": {
+      "rating": "4.9/5",
+      "description": "Over 2,847+ satisfied pet owners already trust our smart training"
+    },
+    "carousel": {
+      "trainingSuccess": "Pet Training Success",
+      "happyDogs": "Happy Dogs",
+      "parkTraining": "Training in the Park",
+      "professionalTraining": "Professional Training",
+      "humanAnimalBond": "Human-Animal Bond",
+      "trainingSuccesses": "Training Successes",
+      "description": "Professional pet training for happy and well-behaved pets",
+      "swipeHint": "← Swipe to navigate →"
+    },
+    "developmentMode": "🧪 Test Mode: Full Access",
+    "smartLogin": {
+      "testAccessTitle": "Start Test Access",
+      "testAccessDescription": "Sign in to get full access to the test system.",
+      "trainingTitle": "Sign in for Pet Training",
+      "trainingDescription": "Sign in to access pet training and start training.",
+      "defaultTitle": "🐾 Start Free Training – Quick Sign Up",
+      "defaultDescription": "Sign up to start your free 7-day training. Your pet will thank you! 💛"
+    }
+  },
+  "pets": {
+    "title": "My Pets",
+    "addPet": "Add Pet",
+    "editPet": "Edit Pet",
+    "deletePet": "Delete Pet",
+    "petName": "Pet Name",
+    "species": "Species",
+    "breed": "Breed",
+    "age": "Age",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "weight": "Weight",
+    "description": "Description",
+    "petAdded": "Pet added",
+    "petUpdated": "Pet updated",
+    "petDeleted": "Pet deleted",
+    "noPets": "You haven't created any pet profiles yet",
+    "addFirstPet": "Create your first pet profile to start personalized training",
+    "behaviorFocus": "Behavior Focus",
+    "notes": "Notes",
+    "pets": "pets"
+  },
+  "subscription": {
+    "title": "Subscription",
+    "active": "Active",
+    "inactive": "Inactive",
+    "cancelled": "Cancelled",
+    "expired": "Expired",
+    "trial": "Trial",
+    "manage": "Manage",
+    "cancel": "Cancel",
+    "reactivate": "Reactivate",
+    "upgrade": "Upgrade",
+    "downgrade": "Downgrade",
+    "billing": "Billing",
+    "invoices": "Invoices",
+    "paymentMethod": "Payment Method",
+    "nextBilling": "Next Billing",
+    "subscriptionCancelled": "Subscription cancelled",
+    "subscriptionReactivated": "Subscription reactivated",
+    "modeDisplay": {
+      "loading": "Loading...",
+      "freeMode": "Free Mode",
+      "sevenDayTrial": "7-Day Trial (ends {{endDate}})",
+      "trialExpired": "Trial Expired",
+      "premium": "Premium",
+      "onePet": "1 Pet Plan",
+      "twoPets": "2 Pets Plan",
+      "threeFourPets": "3-4 Pets Plan",
+      "fiveEightPets": "5-8 Pets Plan",
+      "unlimited": "Unlimited Pets",
+      "unknown": "Unknown"
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions about TierTrainer24",
+    "subtitle": "Everything about our intelligent pet training for dogs, cats, horses, small animals & birds with 14-day money-back guarantee",
+    "questions": {
+      "guarantee": {
+        "question": "How does the 14-day money-back guarantee work at TierTrainer24?",
+        "answer": "Our 14-day money-back guarantee is completely risk-free. Test all premium features: unlimited consultation chats via text, voice and images, individual training plans, behavior analysis and community access. Not satisfied? Within 14 days of purchase, you automatically get your money back – no questions asked."
+      },
+      "animals": {
+        "question": "For which animals does TierTrainer24 offer professional training?",
+        "answer": "TierTrainer24 is your expert for dogs, cats, horses, small animals (rabbits, guinea pigs, hamsters) and birds. Each training is individually adapted to your pet, its breed, age and specific needs – from puppies from 8 weeks to adult animals."
+      },
+      "analysis": {
+        "question": "How does the intelligent behavior analysis work?",
+        "answer": "Our advanced behavior analysis works via text, voice or photo upload. Describe your pet's behavior or upload a photo – our system immediately creates a professional analysis with individual training recommendations. Available 24/7 for all animal species."
+      },
+      "success": {
+        "question": "What makes TierTrainer24 so successful?",
+        "answer": "We have analyzed the most proven techniques from leading pet experts for each animal species and developed the best from them – without expensive collaborations with individual experts. The result: Highly effective, scientifically based training methods for all animal species at a fraction of the cost."
+      },
+      "community": {
+        "question": "How can I exchange ideas with other pet owners?",
+        "answer": "In our community you can exchange ideas with other pet owners, share experiences and ask questions. You can also share videos and photos of your training and receive feedback from the community."
+      },
+      "pricing": {
+        "question": "What does TierTrainer24 cost compared to local pet trainers?",
+        "answer": "TierTrainer24 is significantly cheaper than local pet trainers. While a local trainer costs €50-100 per hour, TierTrainer24 offers unlimited consultation starting at €9.90/month. You not only save money, but also get 24/7 availability, personalized training plans and scientifically proven methods."
+      },
+      "features": {
+        "question": "What premium features are included in the subscription?",
+        "answer": "Your premium subscription includes: Unlimited consultation chats via text, voice and images, individual training plans, intelligent behavior analysis, community access, video upload for detailed analyses, priority support and regular progress reports. Everything in one package for maximum success."
+      },
+      "devices": {
+        "question": "Can I use TierTrainer24 on all devices?",
+        "answer": "Yes! TierTrainer24 works on all devices: smartphone, tablet, laptop and desktop. Our web app is optimized for all screen sizes and works in any modern browser. You can seamlessly switch between devices and have access to your training plans and chat everywhere."
+      },
+      "emergency": {
+        "question": "What about emergencies or medical problems?",
+        "answer": "For medical emergencies or health problems, we always recommend an immediate visit to the veterinarian. TierTrainer24 is designed for behavior training and consultation, not for medical diagnoses. For behavioral changes that could indicate pain, please see a veterinarian."
+      }
+    }
+  },
+  "errors": {
+    "general": "An error occurred",
+    "network": "Network error",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Access denied",
+    "notFound": "Not found",
+    "serverError": "Server error",
+    "validation": "Validation error",
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "passwordTooShort": "Password is too short",
+    "passwordsDoNotMatch": "Passwords do not match"
+  },
+  "success": {
+    "saved": "Successfully saved",
+    "deleted": "Successfully deleted",
+    "created": "Successfully created",
+    "updated": "Successfully updated",
+    "sent": "Successfully sent",
+    "uploaded": "Successfully uploaded"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "minLength": "At least {{min}} characters required",
+    "maxLength": "Maximum {{max}} characters allowed",
+    "passwordMatch": "Passwords must match",
+    "fileSize": "File is too large",
+    "fileType": "Invalid file type",
+    "validEmail": "Valid email address",
+    "invalidEmail": "Please enter a valid email address",
+    "passwordStrength": "Password strength:",
+    "veryWeak": "Very weak",
+    "weak": "Weak",
+    "medium": "Medium",
+    "strong": "Strong",
+    "veryStrong": "Very strong",
+    "requirements": "Requirements:",
+    "minCharacters": "At least {{min}} characters",
+    "uppercaseRequired": "At least one uppercase letter (A-Z)",
+    "lowercaseRequired": "At least one lowercase letter (a-z)",
+    "numberRequired": "At least one number (0-9)",
+    "specialRequired": "At least one special character (!@#$%^&*)",
+    "passwordPlaceholder": "Enter password",
+    "emailPlaceholder": "your@email.com"
+  },
+  "dashboard": {
+    "notAuthenticated": "Not authenticated",
+    "loginRequired": "Please log in to access the dashboard.",
+    "paymentSuccess": "Payment successful!",
+    "subscriptionActivated": "Your subscription has been successfully activated.",
+    "paymentCanceled": "Payment canceled",
+    "checkoutCanceled": "The checkout process was canceled."
+  },
+  "footer": {
+    "tagline": "Your digital behavior coach for pets. Available 24/7.",
+    "legal": "Legal",
+    "imprint": "Imprint",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "cookieSettings": "Change Cookie Settings",
+    "contact": "Contact",
+    "email": "Email: support@tiertrainer24.com",
+    "website": "Web: www.tiertrainer24.com",
+    "copyright": "© 2024 Shopping-Guru GmbH. All rights reserved."
+  },
+  "cookies": {
+    "title": "🍪 Cookie Settings",
+    "description": "We use cookies to operate our website optimally. You can decide for yourself whether you want to allow statistics and marketing cookies. For more information, see our Privacy Policy.",
+    "acceptAll": "Accept All",
+    "acceptNecessary": "Necessary Cookies Only",
+    "manageSettings": "Manage Settings",
+    "settingsTitle": "Cookie Settings",
+    "necessaryTitle": "Necessary Cookies",
+    "necessaryDescription": "These cookies are required for the website to function and cannot be disabled. They are usually only set in response to actions you take.",
+    "alwaysActive": "Always active",
+    "analyticsTitle": "Analytics Cookies",
+    "analyticsDescription": "These cookies help us understand how you interact with our website by collecting and reporting information anonymously.",
+    "marketingTitle": "Marketing Cookies",
+    "marketingDescription": "These cookies are used to show you relevant advertisements. They can also be used to limit the number of ad impressions.",
+    "saveSettings": "Save Settings",
+    "cancel": "Cancel"
+  },
+  "benefits": {
+    "title": "Why TierTrainer?",
+    "subtitle": "Six decisive advantages that set us apart from conventional pet trainers",
+    "benefit1": {
+      "title": "💬 1. Because you don't have to wait for the next appointment.",
+      "description1": "With us, you get an assessment immediately.",
+      "description2": "No \"We might have something available next Thursday at 2:00 PM\".",
+      "description3": "Your pet needs help when the behavior happens – not two weeks later."
+    },
+    "benefit2": {
+      "title": "🏠 2. Because your pet learns best in its familiar environment.",
+      "description1": "Many pets behave completely differently with trainers – quiet, intimidated, distracted.",
+      "description2": "We analyze behavior where it really happens: at home, in everyday life, in your real life."
+    },
+    "benefit3": {
+      "title": "💸 3. Because the subscription costs less than a single training session.",
+      "subscriptionPrice": "TierTrainer subscription: from €9.90/month",
+      "trainerPrice": "On-site pet trainer: €60–150/hour",
+      "description1": "And that every time you need help?",
+      "description2": "With us: Ask unlimited questions – one price."
+    },
+    "benefit4": {
+      "title": "⏱️ 4. Because you're continuously supported in the subscription – not just occasionally.",
+      "description1": "Many trainers give you homework and then disappear.",
+      "description2": "We stay by your side – with progress journal, updates, reminders, and real feedback over weeks."
+    },
+    "benefit5": {
+      "title": "🧠 5. Because you learn more than just \"sit\".",
+      "description1": "We help you understand your pet – their motives, their fears, their body language.",
+      "description2": "Changing behavior starts with empathy – not with drill."
+    },
+    "benefit6": {
+      "title": "🔒 6. Because you're supported safely, ad-free & stress-free.",
+      "point1": "No sales tactics.",
+      "point2": "No pressure to book additional sessions.",
+      "point3": "No hidden upsells like with many pet trainers or online courses"
+    },
+    "cta": {
+      "title": "👉 Start for free. Test for up to 14 days."
+    }
+  },
+  "pricing": {
+    "title": "Do something good for your pet – start now with 14-day money-back guarantee",
+    "subtitle": "Your pet deserves the best. Test TierTrainer24 14 days completely risk-free – not satisfied? Money back. Automatically. For you. For your pet. For a better togetherness.",
+    "guarantee": "✅ Immediate refund • ✅ No fine print • ✅ 100% trust guarantee",
+    "monthly": "Monthly",
+    "yearly": "6 Months (cheaper)",
+    "startPremium": "Start Premium Now",
+    "free": "Free",
+    "perMonth": "per month",
+    "perYear": "per year",
+    "features": {
+      "unlimitedChat": "Unlimited consultation chats",
+      "trainingPlans": "Individual training plans",
+      "behaviorAnalysis": "Behavior analysis",
+      "communityAccess": "Community access",
+      "imageAnalysis": "Image analysis",
+      "voiceChat": "Voice chat",
+      "prioritySupport": "Priority support"
+    },
+    "header": {
+      "title": "TierTrainer Premium – For Your Pet(s)",
+      "subtitle": "Everything you need for successful pet care"
+    },
+    "packageContent": {
+      "title": "🎯 What you get with TierTrainer24",
+      "features": {
+        "allInclusive": "🎯 All features included • 🔄 Cancel anytime • 💰 14-day money-back guarantee"
+      },
+      "cards": {
+        "tierTrainer": {
+          "title": "🤖 TierTrainer",
+          "feature1": "Personal trainer for your pet",
+          "feature2": "For all pet types (dog, cat, bird, etc.)",
+          "feature3": "Based on latest technology"
+        },
+        "multimodal": {
+          "title": "💬 Multimodal Consultation",
+          "feature1": "Text chat for quick questions",
+          "feature2": "Voice input for natural conversations",
+          "feature3": "Image analysis for behavior & health"
+        },
+        "imageAnalysis": {
+          "title": "🖼️ Image Upload & Behavior Analysis",
+          "question": "What is your pet trying to tell you?",
+          "description": "Simply upload a photo of your pet – our technology analyzes gaze, posture, and facial expressions. You'll know in seconds what your pet is feeling or needs right now.",
+          "feature1": "Image-based behavior analysis",
+          "feature2": "Detection of stress, joy & curiosity",
+          "feature3": "Evaluate body language & emotions"
+        },
+        "customized": {
+          "title": "🐾 Customized for Your Pet",
+          "feature1": "Personalized training plans",
+          "feature2": "Step-by-step instructions",
+          "feature3": "Adapted to your pet & your goals"
+        }
+      }
+    },
+    "moneyBackGuarantee": {
+      "title": "💰 14-Day Money-Back Guarantee",
+      "description": "Start today. Test for 14 days. Not satisfied? Money back. Automatically.",
+      "features": {
+        "refund": "Immediate refund",
+        "noFinePrint": "No fine print",
+        "riskFree": "100% risk-free"
+      },
+      "howItWorks": {
+        "title": "How it works:",
+        "description": "Cancel within 14 days of purchase – and you'll get your money back automatically. No questions asked, no hassle."
+      }
+    },
+    "paymentMethods": {
+      "title": "Secure Payment Methods",
+      "methods": {
+        "creditCards": "Credit Cards",
+        "paypal": "PayPal",
+        "mobilePay": "Apple Pay / Google Pay",
+        "sslEncrypted": "SSL Encrypted"
+      },
+      "description": "All payments are processed securely through Stripe. PayPal is available in supported regions."
+    },
+    "footer": {
+      "features": "✅ 14-day money-back guarantee • ✅ Automatic refund • ✅ Cancel anytime • ✅ No minimum term",
+      "refundInfo": "💰 Cancel in the first 14 days = money back. No ifs or buts."
+    },
+    "planCard": {
+      "popular": "Popular",
+      "unlimited": "Unlimited",
+      "upTo": "Up to",
+      "pets": "pets",
+      "save": "Save",
+      "startNow": "Start now",
+      "guarantee": "14-day money-back guarantee"
+    },
+    "plans": {
+      "names": {
+        "onePet": "1 Pet",
+        "twoPets": "2 Pets",
+        "threeFourPets": "3-4 Pets",
+        "fiveEightPets": "5-8 Pets",
+        "unlimited": "Unlimited"
+      },
+      "periods": {
+        "month": "/month",
+        "sixMonths": "/6 months"
+      },
+      "features": {
+        "unlimitedConsultation": "Unlimited consultation with your pet trainer",
+        "unlimitedImageAnalysis": "Unlimited image analysis",
+        "onePetProfile": "1 pet profile",
+        "twoPetProfiles": "2 pet profiles",
+        "upToFourPetProfiles": "Up to 4 pet profiles",
+        "upToEightPetProfiles": "Up to 8 pet profiles",
+        "unlimitedPetProfiles": "Unlimited pet profiles",
+        "prioritySupport": "Priority Support"
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Real Success Stories",
+    "subtitle": "Thousands of pet owners have already solved their problems with TierTrainer. Here are some of their stories.",
+    "rating": "4.9/5 Stars",
+    "reviews": "Over 2,500 Reviews",
+    "withOwner": "with",
+    "stories": [
+      {
+        "animal": "🐕",
+        "name": "Bella (Golden Retriever)",
+        "owner": "Maria S.",
+        "story": "Bella constantly had separation anxiety and destroyed the apartment. TierTrainer gave me concrete steps and after 2 weeks she was much more relaxed. Incredible!",
+        "rating": 5
+      },
+      {
+        "animal": "🐱",
+        "name": "Whiskers (House Cat)",
+        "owner": "Thomas K.",
+        "story": "My cat suddenly stopped using the litter box. The 24/7 availability was perfect - at 11 PM I got immediate help and the problem was solved.",
+        "rating": 5
+      },
+      {
+        "animal": "🐎",
+        "name": "Thunder (Warmblood)",
+        "owner": "Lisa M.",
+        "story": "Thunder was very skittish while riding. The personalized exercises helped both of us build trust. Now we're a well-coordinated team!",
+        "rating": 5
+      },
+      {
+        "animal": "🐦",
+        "name": "Charlie (Budgerigar)",
+        "owner": "Stefan R.",
+        "story": "Charlie was plucking his feathers and was very restless. TierTrainer quickly recognized stress signals and helped me improve his environment. He's much calmer now.",
+        "rating": 5
+      },
+      {
+        "animal": "🐰",
+        "name": "Hoppel (Dwarf Rabbit)",
+        "owner": "Anna T.",
+        "story": "Hoppel was very aggressive towards my second rabbit. The step-by-step guide for bonding was perfect - now they even cuddle!",
+        "rating": 5
+      }
+    ]
+  },
+  "imageAnalysis": {
+    "page": {
+      "title": "AI Image Analysis",
+      "subtitle": "Upload images of your pet and receive AI-powered behavior analysis for dogs, cats, horses, small animals and birds.",
+      "loginRequired": {
+        "title": "Login Required",
+        "description": "You must be logged in to use image analysis."
+      }
+    },
+    "usage": {
+      "title": "Usage Data",
+      "description": "Your current analysis quotas",
+      "loading": "Loading usage data...",
+      "error": {
+        "title": "Error loading usage data",
+        "description": "An unexpected error occurred."
+      }
+    },
+    "upload": {
+      "title": "Upload & Analyze Image",
+      "description": "Upload a photo of your pet for AI-powered behavior analysis"
+    },
+    "results": {
+      "title": "Analysis Results",
+      "description": "AI-powered behavior analysis of your pet"
+    },
+    "features": {
+      "title": "Analysis Features",
+      "description": "What our AI image analysis can detect",
+      "bodyLanguage": {
+        "title": "Body Language",
+        "description": "Detection of stress, relaxation, attention and other body signals"
+      },
+      "behavior": {
+        "title": "Behavior",
+        "description": "Identification of behavior patterns and potential problems"
+      },
+      "environment": {
+        "title": "Environment",
+        "description": "Analysis of environmental factors that could influence behavior"
+      },
+      "recommendations": {
+        "title": "Recommendations",
+        "description": "Personalized training recommendations based on analysis"
+      }
+    },
+    "tips": {
+      "title": "Tips for Best Results",
+      "description": "How to get the best analysis results",
+      "photoQuality": {
+        "title": "📸 Photo Quality",
+        "description": "Use good lighting and ensure your pet is clearly visible"
+      },
+      "focus": {
+        "title": "🎯 Focus",
+        "description": "The photo should show the whole pet or at least face and body"
+      },
+      "recency": {
+        "title": "⏰ Recency",
+        "description": "Use current photos (not older than 1 week) for best results"
+      },
+      "fileSize": {
+        "title": "📱 File Size",
+        "description": "Maximum file size: 10MB. Supported formats: JPG, PNG, WEBP"
+      }
+    },
+    "limitDisplay": {
+      "premium": {
+        "title": "🎁 Premium Image Analysis",
+        "description": "Unlimited analyses available",
+        "badge": "Premium"
+      },
+      "limitReached": {
+        "title": "🎯 Free image analyses used up",
+        "description": "You have used all free image analyses. Upgrade now for unlimited analyses!",
+        "button": "Become Premium Now"
+      },
+      "free": {
+        "title": "📸 Free Image Analysis",
+        "description": "analyses remaining",
+        "badge": "Free"
+      }
+    },
+    "uploadComponent": {
+      "disabled": {
+        "title": "🎯 Step 2: Upload photo & get analysis",
+        "description": "⚠️ First create a pet profile above to unlock image analysis."
+      },
+      "unavailable": {
+        "description": "Image analysis temporarily unavailable. Please try again later."
+      },
+      "uploadTitle": "📸 Step 2: Upload pet photo",
+      "tips": {
+        "title": "💡 Tips for best results:",
+        "lighting": "• Use good lighting",
+        "visibility": "• Your pet should be clearly visible",
+        "recency": "• Current photo (not older than 1 week)",
+        "focus": "• Photo shows the whole pet or face/body"
+      }
+    },
+    "limitReachedState": {
+      "title": "Limit reached",
+      "description": "You have used all free image analyses.",
+      "button": "Become Premium for unlimited analyses"
+    },
+    "uploadArea": {
+      "dragDrop": "Click here or drag a photo here",
+      "fileTypes": "JPG, PNG or WEBP • Max. 10MB",
+      "selectButton": "Select photo"
+    },
+    "errorDisplay": {
+      "error": "Error:",
+      "retryButton": "Try again"
+    },
+    "imagePreview": {
+      "alt": "Preview",
+      "analyzing": "Analyzing image...",
+      "selectOther": "Select other photo",
+      "retryAnalysis": "Retry analysis"
+    },
+    "imageAnalysis": {
+      "uploadSuccess": {
+        "title": "Image uploaded",
+        "description": "Your image has been uploaded successfully."
+      },
+      "uploadError": {
+        "title": "Upload failed",
+        "description": "Image could not be uploaded. Please try again."
+      },
+      "analysisStarted": {
+        "title": "Analysis started",
+        "description": "Your image is being analyzed..."
+      },
+      "analysisSuccess": {
+        "title": "Analysis complete",
+        "description": "Your pet's behavior has been analyzed successfully."
+      },
+      "analysisError": {
+        "title": "Analysis failed",
+        "description": "Image analysis could not be completed."
+      },
+      "fileTooLarge": {
+        "title": "File too large",
+        "description": "Please select an image smaller than 10MB."
+      },
+      "invalidFormat": {
+        "title": "Invalid format",
+        "description": "Please select a valid image file (JPG, PNG, WebP)."
+      },
+      "limitReached": {
+        "title": "Limit reached",
+        "description": "You have used all free image analyses. Upgrade to Premium for unlimited analyses."
+      },
+      "fileReadError": "Error reading file",
+      "noDataError": "No analysis data received"
+    }
+  },
+  "chat": {
+    "title": "Chat with Trainer",
+    "sendMessage": "Send Message",
+    "typeMessage": "Type message...",
+    "startChat": "Start Chat",
+    "endChat": "End Chat",
+    "chatStarted": "Chat started",
+    "chatEnded": "Chat ended",
+    "messageSent": "Message sent",
+    "messageError": "Error sending message",
+    "freeLimitReached": "Free limit reached",
+    "upgradeToPremium": "Upgrade to Premium",
+    "page": {
+      "title": "Trainer Chat",
+      "subtitle": "Chat with our AI dog trainer and receive personalized training recommendations.",
+      "loginRequired": {
+        "title": "Login Required",
+        "description": "You must be logged in to use the trainer chat."
+      },
+      "startChat": {
+        "title": "Start Chat",
+        "button": "Open Chat",
+        "description": "Our AI trainer is available to:",
+        "features": [
+          "Create individual training plans",
+          "Analyze behavior problems",
+          "Provide training tips",
+          "Answer dog training questions"
+        ]
+      }
+    },
+    "modal": {
+      "placeholders": {
+        "noPets": "Create a pet profile first...",
+        "limitReached": "🔒 Free limit reached - Premium for unlimited chats",
+        "sending": "💭 Sending message...",
+        "default": "💬 Your question to the pet trainer..."
+      }
+    },
+    "header": {
+      "trainingWith": "Training with",
+      "generalAdvice": "🌟 General Pet Advice",
+      "trainer": "👨‍⚕️ Your Trainer:",
+      "specializedAdvice": "🎯 Specialized advice for",
+      "selectPetAdvice": "💡 Select a pet above for personalized advice"
+    },
+    "petProfileRequired": {
+      "title": "🐾 Pet Profile Required",
+      "description": "To use the chat, please create a pet profile first. This helps our trainers give you better advice.",
+      "button": "Create Pet Profile Now"
+    },
+    "freeChatLimit": {
+      "limitReached": {
+        "title": "Free chat ended! 🎯",
+        "description": "You have used all free questions. Your chat history remains saved.",
+        "historyNote": "You can still view your previous conversations",
+        "button": "Become Premium now for unlimited chats"
+      },
+      "active": {
+        "title": "Free chat: questions used",
+        "remaining": "free questions remaining",
+        "button": "Become Premium"
+      }
+    },
+    "messages": {
+      "emptyState": {
+        "greeting": "👋 Hello! I am",
+        "trainer": "🎯 Your personal pet trainer",
+        "trainingWith": "🐾 Ready for training with",
+        "generalAdvice": "💡 Ask me questions about pet behavior and training!"
+      },
+      "loading": {
+        "typing": "is typing..."
+      },
+      "message": {
+        "planCreated": "✅ Training plan successfully created!",
+        "defaultTrainerName": "Pet Trainer",
+        "defaultUserName": "You"
+      }
+    },
+    "petSelector": {
+      "singlePet": {
+        "trainingWith": "Training with",
+        "adviceNote": "💡 All advice specifically adapted for"
+      },
+      "multiplePets": {
+        "title": "🎯 Training for which pet?",
+        "available": "available",
+        "pet": "pet",
+        "pets": "pets",
+        "placeholder": "🐾 Select pet for personalized training",
+        "generalAdvice": "🌟 General pet advice (no specific pet)",
+        "trainingFor": "Training for"
+      }
+    }
+  },
+  "settings": {
+    "page": {
+      "title": "Settings",
+      "subtitle": "Manage your account settings and preferences.",
+      "loginRequired": {
+        "title": "Login Required",
+        "description": "You must be logged in to manage settings."
+      }
+    },
+    "profile": {
+      "title": "Profile Settings",
+      "description": "Manage your personal information",
+      "email": "Email",
+      "editProfile": "Edit Profile"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Manage your notification preferences",
+      "comingSoon": "Notification settings will be available in a future version.",
+      "manageNotifications": "Manage Notifications"
+    },
+    "security": {
+      "title": "Security",
+      "description": "Manage your security settings",
+      "comingSoon": "Password management and additional security options will be available in a future version.",
+      "changePassword": "Change Password"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize the appearance of the application",
+      "currentTheme": "Current Theme",
+      "darkTheme": "Dark Theme",
+      "lightTheme": "Light Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "switchToLight": "Switch to light mode",
+      "switchToDark": "Switch to dark mode"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Choose your preferred language for the application",
+      "currentLanguage": "Current Language",
+      "selectLanguage": "Select language",
+      "note": "Language selection is applied immediately and saved for future visits."
+    }
+  },
+  "myPetTraining": {
+    "page": {
+      "title": "My Pet Training",
+      "loading": {
+        "authentication": "Checking authentication...",
+        "petProfiles": "Loading your pet profiles..."
+      },
+      "error": {
+        "title": "Loading Error",
+        "description": "Your pet profiles could not be loaded. Please try again.",
+        "retry": "Try Again",
+        "petProfiles": "Error loading pet profiles. Please refresh the page."
+      }
+    },
+    "pets": {
+      "unnamedPet": "Unnamed Pet",
+      "defaultSpecies": "Pet"
+    }
+  },
+  "adminAnalytics": {
+    "title": "Analytics Dashboard",
+    "description": "Comprehensive insights into usage, conversion and customer satisfaction",
+    "loading": "Loading analytics data...",
+    "timeRange": {
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "last3Months": "Last 3 months",
+      "lastYear": "Last year"
+    },
+    "comparison": {
+      "previousPeriod": "Previous period",
+      "previousYear": "Previous year",
+      "noComparison": "No comparison"
+    },
+    "metrics": {
+      "totalUsers": "Total Users",
+      "activeSubscriptions": "Active Subscriptions",
+      "trialUsers": "Trial Users",
+      "newSignups": "New Signups",
+      "conversionRate": "Conversion Rate",
+      "registeredProfiles": "Registered Profiles",
+      "payingCustomers": "Paying Customers",
+      "inTrial": "In Trial",
+      "lastDays": "Last {days} days",
+      "trialToPaying": "Trial → Paying",
+      "vsPreviousPeriod": "vs. Previous Period"
+    },
+    "tabs": {
+      "traffic": "Traffic & Engagement",
+      "conversion": "Trial & Conversion",
+      "subscribers": "Subscribers",
+      "support": "Customer Support"
+    },
+    "traffic": {
+      "pageViews": "Page Views",
+      "uniqueUsers": "Unique Users",
+      "trialStarted": "Trial Started",
+      "totalViews": "Total Views",
+      "differentVisitors": "Different Visitors",
+      "newTrialUsers": "New Trial Users",
+      "trafficTrend": "Traffic Trend",
+      "trafficDescription": "Page views and unique users over time"
+    },
+    "subscribers": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "activeSubscribers": "Active Subscribers",
+      "monthlySubscribers": "Monthly Subscribers",
+      "yearlySubscribers": "Yearly Subscribers",
+      "churnRate": "Churn Rate",
+      "growth": "Growth",
+      "churn": "Churn"
+    },
+    "support": {
+      "technicalIssues": "Technical Issues",
+      "billingIssues": "Billing Issues",
+      "contentQuestions": "Content Questions",
+      "cancellations": "Cancellations",
+      "totalTickets": "Total Tickets",
+      "resolvedTickets": "Resolved Tickets",
+      "pendingTickets": "Pending Tickets",
+      "resolutionRate": "Resolution Rate",
+      "totalNotes": "Total Notes",
+      "completedCases": "Completed Cases",
+      "openTickets": "Open Tickets",
+      "successRate": "Success Rate",
+      "weeklySupportTrend": "Weekly Support Trend",
+      "ticketVolumeAndResolution": "Ticket Volume and Resolution Rate",
+      "supportCategories": "Support Categories",
+      "requestTypeDistribution": "Request Type Distribution"
+    },
+    "trialConversion": {
+      "newTrialUsers": "New Trial Users",
+      "conversions": "Conversions",
+      "conversionRate": "Conversion Rate",
+      "expiredTrials": "Expired Trials",
+      "inTrial": "In Trial",
+      "trialToPaying": "Trial → Paying",
+      "successRate": "Success Rate",
+      "notConverted": "Not Converted",
+      "weeklyConversion": "Weekly Conversion",
+      "newTrialsAndConversions": "New trial users and conversions",
+      "conversionFunnel": "Conversion Funnel",
+      "userStatusDistribution": "User status distribution",
+      "activeTrialUsers": "Active Trial Users",
+      "converted": "Converted",
+      "trialExpired": "Trial Expired",
+      "newTrials": "New Trials"
+    },
+    "cacheStatus": {
+      "title": "Cache Performance",
+      "description": "Memory cache for optimized performance",
+      "cacheEntries": "Cache Entries",
+      "lastUpdate": "Last Update",
+      "unknown": "Unknown",
+      "clearCache": "Clear Cache",
+      "loading": "Loading cache information..."
+    }
+  },
+  "adminUsers": {
+    "title": "User Management",
+    "description": "Manage all registered users and their subscriptions",
+    "loading": "Loading users...",
+    "error": {
+      "title": "Error Loading",
+      "message": "Users could not be loaded.",
+      "retry": "Try Again",
+      "syncStripe": "Sync Stripe"
+    },
+    "search": {
+      "title": "Search Users",
+      "placeholder": "Search by email address...",
+      "filter": "Filter"
+    },
+    "userList": {
+      "title": "Users",
+      "noUsersFound": "No users found"
+    },
+    "userCard": {
+      "status": "Status",
+      "plan": "Plan",
+      "country": "Country",
+      "lastActivity": "Last Activity",
+      "trialEnds": "Trial ends",
+      "subscriptionEnds": "Subscription ends",
+      "manuallyActivated": "Manually activated",
+      "adminNotes": "Admin Notes",
+      "noSubscriptionData": "No subscription data available",
+      "active": "Active",
+      "inactive": "Inactive",
+      "yes": "Yes"
+    },
+    "userActions": {
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "trialPeriod": "Trial Period",
+      "setTrialPeriod": "Set Trial Period",
+      "setTrialFor": "Set a trial period for",
+      "days": "Days",
+      "selectDays": "Select days",
+      "save": "Save",
+      "removeTestUser": "Remove Test User",
+      "markAsTestUser": "Mark as Test User",
+      "details": "Details",
+      "delete": "Delete",
+      "trialDays": {
+        "7": "7 Days",
+        "14": "14 Days",
+        "30": "30 Days",
+        "60": "60 Days",
+        "90": "90 Days"
+      }
+    },
+    "testUserManager": {
+      "title": "Test User Manager",
+      "description": "Create a test access for development and testing"
+    },
+    "header": {
+      "refresh": "Refresh",
+      "stripeSync": "Stripe Sync"
+    },
+    "userDetails": {
+      "title": "User Details",
+      "overview": "Overview",
+      "chats": "Chats",
+      "support": "Support",
+      "notes": "Notes",
+      "subscriptionInfo": "Subscription Information",
+      "status": "Status",
+      "package": "Package",
+      "subscriptionEnds": "Subscription ends",
+      "trialEnds": "Trial ends",
+      "testUser": "🧪 Test User",
+      "accountDetails": "Account Details",
+      "registered": "Registered",
+      "country": "Country",
+      "lastActivity": "Last Activity",
+      "adminNotes": "Admin Notes",
+      "addNewNote": "Add New Note",
+      "notePlaceholder": "Enter note...",
+      "addNote": "Add Note",
+      "notesHistory": "Notes History",
+      "noSubscription": "No Subscription",
+      "active": "Active",
+      "trial": "Trial",
+      "inactive": "Inactive",
+      "noteAdded": "Note Added",
+      "noteAddedDescription": "The note was successfully saved."
+    }
+  },
+  "adminChats": {
+    "title": "Chat Management",
+    "loading": "Loading chat sessions...",
+    "error": {
+      "title": "Error Loading",
+      "message": "Chat sessions could not be loaded.",
+      "unknownError": "Unknown error",
+      "retry": "Try Again"
+    },
+    "search": {
+      "placeholder": "Search by email, chat title or pet name..."
+    },
+    "stats": {
+      "totalChats": "Total Chats",
+      "activeUsers": "Active Users",
+      "premiumUsers": "Premium Users"
+    },
+    "chatList": {
+      "unnamedChat": "Unnamed Chat",
+      "unknown": "Unknown",
+      "messages": "Messages",
+      "showDetails": "Show Details",
+      "loadMore": "Load More",
+      "loading": "Loading...",
+      "noChatsFound": "No chats found",
+      "noChatsMatching": "No chats match the search criteria.",
+      "noChatsYet": "No chat sessions available yet."
+    },
+    "subscriptionBadges": {
+      "free": "Free",
+      "premium": "Premium",
+      "trial": "Trial",
+      "canceled": "Canceled",
+      "unknown": "Unknown",
+      "inactive": "Inactive"
+    },
+    "chatDetail": {
+      "title": "Chat Details",
+      "unnamedSession": "Unnamed Session",
+      "userInfo": "User Information",
+      "email": "Email",
+      "subscriptionStatus": "Subscription Status",
+      "pet": "Pet",
+      "sessionDetails": "Session Details",
+      "created": "Created",
+      "lastActive": "Last Active",
+      "sessionId": "Session ID",
+      "chatHistory": "Chat History",
+      "noMessages": "No messages found in this session",
+      "user": "User",
+      "ai": "AI",
+      "tokens": "Tokens"
+    }
+  },
+  "adminPayments": {
+    "title": "Payments & Invoices",
+    "description": "Overview of all transactions and invoices",
+    "loading": "Loading payment data...",
+    "error": {
+      "title": "Error Loading",
+      "message": "Payment data could not be loaded.",
+      "unknownError": "Unknown error",
+      "retry": "Try Again",
+      "statsError": "Statistics could not be loaded"
+    },
+    "header": {
+      "refresh": "Refresh",
+      "csvExport": "CSV Export"
+    },
+    "stats": {
+      "totalRevenue": "Total Revenue",
+      "paidInvoices": "paid invoices",
+      "thisMonth": "This Month",
+      "vsLastMonth": "vs. {amount} last month",
+      "pending": "Pending",
+      "totalInvoices": "Total Invoices"
+    },
+    "filters": {
+      "title": "Filter & Search",
+      "searchPlaceholder": "Email or invoice number...",
+      "status": "Status",
+      "allStatuses": "All Statuses",
+      "paid": "Paid",
+      "open": "Open",
+      "pending": "Pending",
+      "draft": "Draft",
+      "timeframe": "Timeframe",
+      "last7Days": "Last 7 Days",
+      "last30Days": "Last 30 Days",
+      "last90Days": "Last 90 Days",
+      "lastYear": "Last Year",
+      "all": "All",
+      "advancedFilters": "Advanced Filters"
+    },
+    "invoiceList": {
+      "title": "Invoices",
+      "noInvoices": "No invoices found",
+      "noEmail": "No Email",
+      "paid": "Paid",
+      "due": "Due",
+      "view": "View",
+      "page": "Page {current} of {total}",
+      "showing": "Showing {start} to {end} of {total} entries",
+      "back": "Back",
+      "next": "Next"
+    }
+  },
+  "adminSupport": {
+    "title": "Support Management",
+    "description": "Management of notifications and support requests",
+    "notifications": {
+      "createNew": "New Notification",
+      "createTitle": "Create New Notification",
+      "createDescription": "Create a new system notification for users.",
+      "type": "Type",
+      "title": "Title",
+      "message": "Message",
+      "userId": "User ID (optional)",
+      "titlePlaceholder": "Notification title",
+      "messagePlaceholder": "Detailed message (optional)",
+      "userIdPlaceholder": "Specific user ID or empty for all",
+      "cancel": "Cancel",
+      "create": "Create",
+      "created": "Notification created",
+      "createdDescription": "The notification was successfully created.",
+      "error": "Error",
+      "errorDescription": "Notification could not be created.",
+      "types": {
+        "info": "Info",
+        "warning": "Warning",
+        "error": "Error",
+        "success": "Success"
+      }
+    },
+    "stats": {
+      "unreadNotifications": "Unread Notifications",
+      "resolvedTickets": "Resolved Tickets",
+      "userNotes": "User Notes",
+      "openTickets": "Open Tickets"
+    },
+    "filters": {
+      "title": "Filter & Search",
+      "searchPlaceholder": "Search by title or message...",
+      "status": "Status",
+      "allStatuses": "All Statuses",
+      "unread": "Unread",
+      "read": "Read",
+      "resolved": "Resolved"
+    },
+    "notificationsList": {
+      "title": "System Notifications",
+      "noNotifications": "No notifications found",
+      "markAsRead": "Mark as Read",
+      "resolve": "Resolve"
+    },
+    "statusBadges": {
+      "unread": "Unread",
+      "read": "Read",
+      "resolved": "Resolved"
+    },
+    "tickets": {
+      "loading": "Loading tickets...",
+      "noTickets": "No tickets found.",
+      "aiResolved": "AI",
+      "status": {
+        "open": "Open",
+        "inProgress": "In Progress",
+        "waitingUser": "Waiting for User",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      }
+    },
+    "ticketDetail": {
+      "chatHistory": "Chat History",
+      "sendReply": "Send Reply",
+      "replyPlaceholder": "Write an empathetic response in TierTrainer style...",
+      "sendMessage": "Send Message",
+      "ticketDetails": "Ticket Details",
+      "user": "User",
+      "category": "Category",
+      "priority": "Priority",
+      "created": "Created",
+      "resolved": "Resolved",
+      "rating": "Rating",
+      "aiResolved": "Resolved by AI 🤖",
+      "messageSenders": {
+        "ai": "🤖 AI",
+        "admin": "👨‍💻 Support",
+        "user": "👤 User"
+      }
+    }
+  },
+  "adminEmail": {
+    "title": "Email Management",
+    "description": "Configuration and monitoring of the email system",
+    "configuration": {
+      "title": "Email Configuration",
+      "productionChecklist": "⚠️ Production Checklist",
+      "implementedEmails": "✅ Implemented Emails:",
+      "pendingEmails": "⏳ Still to implement:",
+      "checklistItems": {
+        "domainVerified": "• Domain tiertrainer24.com verified in Resend",
+        "spfDkimConfigured": "• SPF/DKIM Records configured",
+        "templatesTested": "• Email templates tested",
+        "bounceHandling": "• Bounce handling set up"
+      },
+      "emailTypes": {
+        "welcomeRegistration": "• Welcome & Registration",
+        "checkoutConfirmation": "• Subscription Confirmation (Checkout)",
+        "cancellationConfirmation": "• Cancellation Confirmation",
+        "supportNotifications": "• Support Notifications",
+        "paymentIssues": "• Payment Issues"
+      },
+      "pendingTypes": {
+        "loginSecurityAlerts": "• Login Security Alerts",
+        "doubleOptIn": "• Double-Opt-In System",
+        "newsletterSystem": "• Newsletter System",
+        "inactivityReminders": "• Inactivity Reminders"
+      }
+    },
+    "statistics": {
+      "title": "Email Statistics",
+      "sent": "Sent",
+      "failed": "Failed",
+      "lastEmail": "Last Email",
+      "none": "None",
+      "loading": "Loading email statistics..."
+    },
+    "modeToggle": {
+      "testMode": "🧪 Test Mode Active",
+      "liveMode": "🚀 Live Mode",
+      "testDescription": "All emails are forwarded to owydwaldt12@gmail.com",
+      "liveDescription": "Emails are sent to real user addresses",
+      "syncConfiguration": "Sync Configuration",
+      "reload": "🔄 Reload",
+      "autoSyncInfo": "💡 Automatic Synchronization: These settings are automatically synchronized with Edge Function configurations. Click \"Sync\" to load the latest configuration from Edge Functions.",
+      "toasts": {
+        "syncSuccess": "✅ Configuration synchronized",
+        "syncError": "❌ Synchronization failed",
+        "testModeActivated": "🧪 Test mode activated",
+        "liveModeActivated": "🚀 Live mode activated",
+        "toggleError": "Error",
+        "toggleErrorDescription": "Setting could not be changed."
+      }
+    },
+    "testButtons": {
+      "title": "🧪 Email Tests",
+      "info": "💡 All other test emails are forwarded to <strong>owydwaldt12@gmail.com</strong>",
+      "connectionTest": {
+        "title": "🔗 Test Connection",
+        "description": "First test the connection to Edge Functions",
+        "success": "✅ Connection OK",
+        "successDescription": "Supabase Edge Functions are reachable and functional.",
+        "error": "❌ Connection Error",
+        "edgeFunctionsUnreachable": "❌ Edge Functions not reachable",
+        "edgeFunctionsUnreachableDescription": "Supabase Edge Functions are not available. Check the deployment configuration.",
+        "errorDescriptions": {
+          "failedToFetch": "Edge Functions are not deployed or not reachable. Check the Supabase project configuration.",
+          "cors": "CORS configuration error in Edge Functions.",
+          "jwt": "Authentication error. Check the API keys.",
+          "unknown": "Unknown error"
+        }
+      },
+      "emailValidation": {
+        "title": "Test Email Validation",
+        "description": "Test email validation and template rendering",
+        "success": "✅ Validation successful",
+        "error": "❌ Validation error"
+      },
+      "comprehensiveTest": {
+        "title": "Comprehensive Email Test",
+        "description": "Test all email functions and templates",
+        "success": "✅ All tests successful",
+        "error": "❌ Test failed"
+      },
+      "liveTest": {
+        "title": "Send Live Email",
+        "description": "Send a test email to the configured address",
+        "success": "✅ Test email sent",
+        "error": "❌ Email could not be sent"
+      },
+      "specificTests": {
+        "title": "Specific Email Tests",
+        "authEmails": "🔐 Auth Emails",
+        "testUserEmails": "🧪 Test User Emails",
+        "buttons": {
+          "welcome": "📧 Test Welcome",
+          "checkout": "🎉 Test Checkout",
+          "magicLink": "🔗 Magic Link",
+          "confirmSignup": "✅ Confirm Signup",
+          "inviteUser": "🎁 Invite User",
+          "testUserWelcome": "🧪 Test User Welcome",
+          "testUserActivation": "🔓 Test User Activation",
+          "support": "🎫 Test Support",
+          "cancellation": "📅 Test Cancellation"
+        },
+        "success": "✅ Test email sent",
+        "error": "❌ Test failed"
+      }
+    }
+  },
+  "adminHooks": {
+    "adminUsers": {
+      "errors": {
+        "invalidEmail": "Invalid email format",
+        "notAuthenticated": "Not authenticated",
+        "noPermission": "No permission to create administrators",
+        "userSearchError": "Error searching for user",
+        "userNotFound": "User with this email address not found",
+        "alreadyAdmin": "User is already an admin"
+      },
+      "toasts": {
+        "adminAdded": "Admin added",
+        "adminAddedDescription": "The new admin was successfully added.",
+        "statusUpdated": "Status updated",
+        "statusUpdatedDescription": "The admin status was successfully changed.",
+        "adminRemoved": "Admin removed",
+        "adminRemovedDescription": "The admin was successfully removed.",
+        "error": "Error"
+      }
+    },
+    "userQuery": {
+      "errors": {
+        "fetchSubscribersError": "Error loading subscribers"
+      }
+    },
+    "userActivation": {
+      "toasts": {
+        "userActivated": "User activated",
+        "userActivatedDescription": "The user was successfully activated.",
+        "userDeactivated": "User deactivated",
+        "userDeactivatedDescription": "The user was successfully deactivated."
+      }
+    },
+    "userDeletion": {
+      "errors": {
+        "noSession": "No authentication session found",
+        "deleteFailed": "Failed to delete user"
+      },
+      "toasts": {
+        "userDeletedWithRefund": "User deleted with refund",
+        "userDeleted": "User deleted",
+        "userDeletedDescription": "The user was completely deleted from the system.",
+        "deleteError": "Error deleting",
+        "deleteErrorDescription": "The user could not be deleted."
+      }
+    },
+    "trialManagement": {
+      "toasts": {
+        "trialSet": "Trial period set",
+        "trialSetDescription": "Trial period activated for {days} days."
+      }
+    },
+    "subscriptionCancellation": {
+      "toasts": {
+        "cancelledWithRefund": "Cancellation with refund successful",
+        "cancelledImmediate": "Cancellation successful",
+        "cancelledImmediateDescription": "Subscription was terminated immediately.",
+        "cancelledPeriodEnd": "Cancellation successful",
+        "cancelledPeriodEndDescription": "Subscription runs until the end of the period.",
+        "cancellationError": "Error during cancellation",
+        "cancellationErrorDescription": "Cancellation could not be processed."
+      }
+    },
+    "testUserManagement": {
+      "toasts": {
+        "markedAsTest": "Marked as test user",
+        "markedAsTestDescription": "The user was marked as a test user.",
+        "unmarkedAsTest": "Test user status removed",
+        "unmarkedAsTestDescription": "The test user status was removed."
+      }
+    },
+    "userSync": {
+      "toasts": {
+        "syncSuccess": "Synchronization successful",
+        "syncSuccessDescription": "{count} users were synchronized.",
+        "syncError": "Synchronization failed"
+      }
+    }
+  },
+  "adminPayment": {
+    "invoiceList": {
+      "title": "Invoices",
+      "noInvoices": "No invoices found",
+      "noEmail": "No Email",
+      "paid": "Paid",
+      "open": "Open",
+      "pending": "Pending",
+      "draft": "Draft",
+      "paidAt": "Paid",
+      "dueDate": "Due",
+      "view": "View",
+      "page": "Page {current} of {total}",
+      "showing": "Showing {start} to {end} of {total} entries",
+      "back": "Back",
+      "next": "Next"
+    },
+    "paymentFilters": {
+      "title": "Filter & Search",
+      "searchPlaceholder": "Email or invoice number...",
+      "statusPlaceholder": "Status",
+      "datePlaceholder": "Time Period",
+      "allStatuses": "All Statuses",
+      "allDates": "All",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "last90Days": "Last 90 days",
+      "lastYear": "Last year",
+      "advancedFilters": "Advanced Filters"
+    },
+    "paymentStats": {
+      "totalRevenue": "Total Revenue",
+      "thisMonth": "This Month",
+      "pending": "Pending",
+      "totalInvoices": "Total Invoices",
+      "paidInvoices": "paid invoices",
+      "vsLastMonth": "vs. {amount} last month"
+    },
+    "utils": {
+      "csvHeaders": {
+        "invoiceNumber": "Invoice Number",
+        "email": "Email",
+        "amount": "Amount",
+        "status": "Status",
+        "created": "Created",
+        "paid": "Paid",
+        "paymentMethod": "Payment Method"
+      },
+      "csvFilename": "invoices_{date}.csv"
+    }
+  },
+  "adminSystem": {
+    "comprehensiveMonitor": {
+      "title": "Comprehensive System Monitor",
+      "runAllTests": "Run All Tests ({count})",
+      "runCriticalTests": "Run Critical Tests ({count})",
+      "reset": "Reset",
+      "testProgress": "Test Progress",
+      "testsRunning": "{count} test{plural} currently running...",
+      "summary": {
+        "total": "Total",
+        "passed": "Passed",
+        "failed": "Failed",
+        "warnings": "Warnings",
+        "running": "Running",
+        "critical": "Critical",
+        "status": "Status"
+      },
+      "categories": {
+        "all": "All",
+        "connectivity": "Network",
+        "database": "Database",
+        "auth": "Auth",
+        "email": "Email",
+        "functions": "Functions",
+        "performance": "Performance",
+        "critical": "Critical"
+      },
+      "tableHeaders": {
+        "status": "Status",
+        "test": "Test",
+        "category": "Category",
+        "result": "Result",
+        "duration": "Duration",
+        "critical": "Critical",
+        "action": "Action"
+      },
+      "statusLabels": {
+        "critical": "Critical",
+        "normal": "Normal",
+        "runCategory": "Run Category",
+        "run": "Run",
+        "details": "Details"
+      },
+      "emptyState": "No tests found for this category."
+    },
+    "comprehensiveTest": {
+      "title": "Comprehensive System Test",
+      "lastRun": "Last run: {date}",
+      "runFullTest": "Run Full System Test",
+      "runningTest": "Running Comprehensive Test...",
+      "testProgress": "Test Progress",
+      "testSchedule": "Test Schedule & Progress",
+      "tableHeaders": {
+        "number": "#",
+        "status": "Status",
+        "component": "Test Component",
+        "description": "Description",
+        "result": "Result",
+        "actions": "Actions"
+      },
+      "actions": {
+        "run": "Run",
+        "fix": "Fix",
+        "debug": "Debug"
+      },
+      "alert": {
+        "title": "System Test Information",
+        "description": "This comprehensive test runs through all critical system components in sequence. You can also run individual tests using the \"Run\" button for each component. Failed components will show Fix and Debug buttons for targeted troubleshooting."
+      },
+      "testComponents": {
+        "databaseConnection": "Database Connection",
+        "authSystem": "Auth System",
+        "edgeFunctions": "Edge Functions",
+        "cacheStatus": "Cache Status",
+        "emailValidation": "Email Validation",
+        "emailSending": "Email Sending"
+      },
+      "testDescriptions": {
+        "databaseConnection": "Test basic database connectivity and response time",
+        "authSystem": "Verify authentication system functionality",
+        "edgeFunctions": "Check edge functions availability and response",
+        "cacheStatus": "Detect potential cache issues and response times",
+        "emailValidation": "Validate email configuration and API keys",
+        "emailSending": "Test actual email sending capability"
+      },
+      "messages": {
+        "waitingToStart": "Waiting to start...",
+        "testingDatabase": "Testing database connectivity...",
+        "testingAuth": "Testing authentication system...",
+        "testingEdgeFunctions": "Testing edge functions...",
+        "testingCache": "Testing cache status...",
+        "testingEmailValidation": "Testing email validation...",
+        "testingEmailSending": "Testing email sending..."
+      }
+    },
+    "simpleMonitor": {
+      "title": "System Health Monitor",
+      "runAllTests": "Run All Tests",
+      "runningTests": "Running Tests...",
+      "sendReport": "Send Report",
+      "summary": {
+        "passed": "Passed",
+        "warnings": "Warnings",
+        "failed": "Failed",
+        "total": "Total"
+      },
+      "tableHeaders": {
+        "status": "Status",
+        "test": "Test",
+        "description": "Description",
+        "result": "Result",
+        "duration": "Duration",
+        "lastRun": "Last Run",
+        "action": "Action"
+      },
+      "actions": {
+        "run": "Run"
+      },
+      "tests": {
+        "database": {
+          "name": "Database Connection",
+          "description": "Basic database connectivity",
+          "message": "Not tested yet",
+          "testing": "Testing connection...",
+          "success": "Connected successfully ({duration}ms)",
+          "failure": "Connection failed: {error}",
+          "networkError": "Network error: {error}"
+        },
+        "auth": {
+          "name": "Authentication",
+          "description": "User authentication system",
+          "message": "Not tested yet",
+          "testing": "Testing authentication...",
+          "success": "Authentication working ({duration}ms)",
+          "failure": "Authentication failed: {error}",
+          "networkError": "Network error: {error}"
+        },
+        "emailConfig": {
+          "name": "Email Configuration",
+          "description": "Email system setup validation",
+          "message": "Not tested yet",
+          "testing": "Testing email configuration...",
+          "success": "Email configuration valid ({duration}ms)",
+          "failure": "Email configuration failed: {error}",
+          "networkError": "Network error: {error}"
+        },
+        "emailSend": {
+          "name": "Email Sending",
+          "description": "Actual email delivery test",
+          "message": "Not tested yet",
+          "testing": "Testing email sending...",
+          "success": "Email sent successfully ({duration}ms)",
+          "failure": "Email sending failed: {error}",
+          "networkError": "Network error: {error}"
+        }
+      },
+      "timeLabels": {
+        "never": "Never"
+      }
+    }
+  },
+  "adminLayout": {
+    "analytics": "Analytics",
+    "users": "Users",
+    "chats": "Chats",
+    "payments": "Payments",
+    "support": "Support",
+    "system": "System",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "adminDetails": {
+    "title": "User Details: {email}",
+    "tabs": {
+      "overview": "Overview",
+      "chats": "Chats",
+      "support": "Support",
+      "notes": "Notes"
+    },
+    "subscriptionInfo": {
+      "title": "Subscription Information",
+      "status": "Status",
+      "plan": "Plan",
+      "subscriptionEnds": "Subscription ends",
+      "trialEnds": "Trial ends",
+      "testUser": "🧪 Test User"
+    },
+    "accountDetails": {
+      "title": "Account Details",
+      "registered": "Registered",
+      "country": "Country",
+      "lastActivity": "Last Activity"
+    },
+    "adminNotes": {
+      "title": "Admin Notes"
+    },
+    "addNote": {
+      "title": "Add New Note",
+      "placeholder": "Enter note...",
+      "button": "Add Note"
+    },
+    "noteHistory": {
+      "title": "Note History",
+      "by": "by"
+    },
+    "statusBadges": {
+      "noSubscription": "No Subscription",
+      "active": "Active",
+      "trial": "Trial",
+      "inactive": "Inactive"
+    },
+    "toasts": {
+      "noteAdded": "Note added",
+      "noteSaved": "The note was successfully saved."
+    }
+  },
+  "adminCancelSubscription": {
+    "cancelButton": "Cancel",
+    "title": "Cancel Subscription",
+    "description": "Do you want to cancel the subscription for {email}?",
+    "moneyBackGuarantee": {
+      "title": "Money-back guarantee available",
+      "description": "The user is within the 14-day period and has an eligible plan (\"1 Tier\"). An automatic refund is possible."
+    },
+    "noGuarantee": {
+      "note": "Note:",
+      "description": "This plan (\"{plan}\") does not have a 14-day money-back guarantee. Only the \"1 Tier\" plan is eligible."
+    },
+    "actions": {
+      "cancelWithRefund": "Cancel with refund",
+      "cancelWithoutRefund": "Cancel without refund",
+      "cancel": "Cancel",
+      "cancelDialog": "Cancel"
+    }
+  },
+  "adminAddAdmin": {
+    "title": "Add New Admin",
+    "description": "Add a new admin user",
+    "emailPlaceholder": "User's email address",
+    "roles": {
+      "support": "Support",
+      "admin": "Admin"
+    },
+    "addButton": "Add"
+  },
+  "adminAuth": {
+    "title": "Admin Area",
+    "subtitle": "Login for staff and administrators",
+    "email": "Email",
+    "emailPlaceholder": "admin@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "loginButton": "Admin Login",
+    "footer": {
+      "authorized": "For authorized staff only.",
+      "contactAdmin": "Contact the administrator if you have problems."
+    },
+    "toasts": {
+      "loginSuccess": "Admin login successful",
+      "welcomeMessage": "Welcome to the admin area ({role})",
+      "loginFailed": "Admin login failed",
+      "unknownError": "Unknown error",
+      "noPermission": "No admin permission for this account"
+    }
+  },
+  "adminSettings": {
+    "title": "⚙️ Settings",
+    "description": "Manage admin users, email configuration and system settings",
+    "tabs": {
+      "email": "📧 Email Management",
+      "admins": "👥 Admin Management"
+    },
+    "loading": "Loading admin data...",
+    "error": {
+      "title": "Error loading admin data",
+      "message": "Error loading admin data"
+    }
+  },
+  "adminUsersList": {
+    "title": "Admin Users ({count})",
+    "noAdmins": "No admin users yet"
+  },
+  "adminUserCard": {
+    "added": "Added: {date}",
+    "addedBy": "by {email}",
+    "lastLogin": "Last login: {date}",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "roles": {
+      "admin": "Admin",
+      "support": "Support"
+    },
+    "removeDialog": {
+      "title": "Remove Admin",
+      "description": "Are you sure you want to remove {email} as admin? This action cannot be undone.",
+      "cancel": "Cancel",
+      "remove": "Remove"
+    }
+  },
+  "adminDebug": {
+    "debugInfo": "Debug: {count} admin users found"
+  },
+  "adminEmailManagement": {
+    "title": "📧 Email Management",
+    "description": "Manage email settings, test functions and monitor all email activities",
+    "tabs": {
+      "configuration": "⚙️ Configuration & Tests",
+      "logs": "📊 Logs & History"
+    }
+  },
+  "adminSystemMonitoring": {
+    "authenticationRequired": "Authentication required. Please log in to access the system monitoring dashboard.",
+    "checkingPermissions": "Checking permissions...",
+    "permissionError": "Error checking permissions: {{message}}. This might be a database connectivity issue.",
+    "accessDenied": "Access denied. You need admin privileges to access this page. Current user: {{email}}",
+    "title": "System Monitoring",
+    "description": "Comprehensive system health monitoring, performance testing, and diagnostics.",
+    "tabs": {
+      "comprehensive": "Comprehensive Monitor",
+      "network": "Network Diagnostics"
+    },
+    "advancedNetworkDiagnostics": "Advanced Network Diagnostics"
+  },
+  "training": {
+    "title": "Training",
+    "createPlan": "Create Plan",
+    "editPlan": "Edit Plan",
+    "deletePlan": "Delete Plan",
+    "planName": "Plan Name",
+    "planDescription": "Plan Description",
+    "steps": "Steps",
+    "addStep": "Add Step",
+    "editStep": "Edit Step",
+    "deleteStep": "Delete Step",
+    "stepName": "Step Name",
+    "stepDescription": "Step Description",
+    "stepOrder": "Step Order",
+    "planCreated": "Plan created",
+    "planUpdated": "Plan updated",
+    "planDeleted": "Plan deleted",
+    "stepAdded": "Step added",
+    "stepUpdated": "Step updated",
+    "stepDeleted": "Step deleted",
+    "subscriptionManagement": {
+      "title": "Subscription Management",
+      "description": "Manage your subscription and access premium features",
+      "currentPlan": "Current Plan",
+      "active": "Active",
+      "expired": "Expired",
+      "animals": "animals"
+    },
+    "rewards": {
+      "loadingError": "Error loading rewards",
+      "loadingMessage": "Loading achievements...",
+      "awards": "Awards",
+      "points": "Points",
+      "achievements": "Achievements",
+      "nextBadgeTooltip": "{{steps}} more steps until \"{{name}}\"",
+      "noAwardsYet": "No awards yet",
+      "lastActivity": "Last activity"
+    },
+    "plans": {
+      "loadingMessage": "Loading training plans...",
+      "loadingError": "Error loading training plans"
+    },
+    "petProfilesSection": {
+      "title": "Pet Profiles",
+      "description": "Manage your pet profiles and their training data"
+    },
+    "firstStepsGuide": {
+      "title": "Welcome to TierTrainer! 🎯",
+      "subtitle": "Follow these steps to start training",
+      "afterStep": "After step",
+      "locked": "Locked",
+      "steps": {
+        "step1": {
+          "title": "Create pet profile",
+          "description": "Create a profile for your pet to receive personalized training plans",
+          "action": "Add pet"
+        },
+        "step2": {
+          "title": "Upload photo",
+          "description": "Upload a photo of your pet for AI-powered behavior analysis",
+          "action": "Upload photo"
+        },
+        "step3": {
+          "title": "Create training plan",
+          "description": "Create an individual training plan based on your goals",
+          "action": "Create plan"
+        }
+      },
+      "tip": {
+        "title": "Pro tip",
+        "description": "Use the chat with our AI trainer for instant help and personalized advice!"
+      }
+    },
+    "trainingPlans": {
+      "title": "Training Plans",
+      "description": "Create and manage individual training plans for your pets"
+    },
+    "imageAnalysis": {
+      "title": "AI Image Analysis",
+      "description": "Upload a photo of your pet and receive detailed behavior analysis with training recommendations",
+      "freeForAll": "Free for everyone!",
+      "freeDescription": "This feature is available for all users."
+    },
+    "heroStory": {
+      "title": "Welcome to TierTrainer! 🐾",
+      "description": {
+        "withPet": "Ready for training with",
+        "withoutPet": "Ready for professional pet training? Create a pet profile and start your journey!"
+      },
+      "features": {
+        "instantAnswers": "⚡ Instant answers",
+        "individualTraining": "🎯 Individual training",
+        "behaviorAnalysis": "🔍 Behavior analysis",
+        "detailedPlans": "📋 Detailed plans"
+      },
+      "buttons": {
+        "chatWithTrainer": "Chat with trainer",
+        "freeQuestions": "5 questions free",
+        "managePetProfile": "Manage pet profile"
+      },
+      "premium": {
+        "title": "Upgrade to Premium",
+        "description": "Get unlimited chat questions and advanced training plans",
+        "button": "View packages"
+      }
+    },
+    "createPlanModal": {
+      "title": "🎯 Create new training plan",
+      "planName": "Plan name",
+      "planNamePlaceholder": "e.g. Basic obedience, leash training...",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe your training goals...",
+      "selectPet": "Select pet",
+      "generalPlan": "🌟 General plan (without specific pet)",
+      "status": {
+        "label": "Status",
+        "planned": "📋 Planned",
+        "inProgress": "🏃 In progress",
+        "completed": "✅ Completed"
+      },
+      "cancel": "Cancel",
+      "creating": "Creating...",
+      "createPlan": "Create plan",
+      "toast": {
+        "success": {
+          "title": "🎯 Plan created!",
+          "description": "Your new training plan has been successfully created."
+        },
+        "error": {
+          "title": "❌ Error",
+          "description": "Plan could not be created"
+        }
+      }
+    },
+    "emptyPlansState": {
+      "title": "No training plans yet",
+      "subtitle": "Create your first training plan to get started"
+    },
+    "emptyTemplateStates": {
+      "noPets": "Please create a pet profile first to see suitable training plan templates.",
+      "noTemplates": "No templates available yet for your pet types ({species}).",
+      "canCreateIndividual": "You can still create an individual plan.",
+      "understood": "Understood"
+    },
+    "deletePlanDialog": {
+      "title": "Delete plan?",
+      "description": "Are you sure you want to delete this training plan? This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "emptyStepsState": {
+      "title": "No training steps available yet.",
+      "subtitle": "Create a plan via chat!"
+    },
+    "completedPlanBanner": {
+      "title": "Plan completed!",
+      "celebrateAgain": "Celebrate again!",
+      "congratulations": "Congratulations! You have successfully completed all steps."
+    },
+    "motivationalQuotes": {
+      "newQuote": "Load new quote",
+      "quotes": {
+        "quote1": {
+          "text": "Every step brings you and your pet closer together! 🐕",
+          "author": "TierTrainer Team"
+        },
+        "quote2": {
+          "text": "Patience and consistency are the keys to training success.",
+          "author": "Pet Psychology"
+        },
+        "quote3": {
+          "text": "Your pet trusts you - show them the way! 🎯",
+          "author": "TierTrainer Community"
+        },
+        "quote4": {
+          "text": "Small progress every day leads to big changes.",
+          "author": "Success Principle"
+        },
+        "quote5": {
+          "text": "Training is teamwork - you're an amazing team! ⭐",
+          "author": "TierTrainer Motto"
+        },
+        "quote6": {
+          "text": "Every minute of training is an investment in your shared future.",
+          "author": "Bonding Expert"
+        },
+        "quote7": {
+          "text": "Your persistence will pay off - keep going! 💪",
+          "author": "Motivation Coach"
+        },
+        "quote8": {
+          "text": "Positive reinforcement works wonders - for you and your pet!",
+          "author": "Learning Theory"
+        }
+      }
+    },
+    "introductionCard": {
+      "title": "🔮 Image Analysis - Understand Your Pet Better",
+      "whatToDo": {
+        "title": "What you need to do:",
+        "step1": "Create a pet profile (if not already available)",
+        "step2": "Upload a current photo of your pet",
+        "step3": "Wait 10-15 seconds for the analysis"
+      },
+      "whatYouGet": {
+        "title": "What you get:",
+        "moodAnalysis": "Mood analysis: Is your pet relaxed, stressed, or playful?",
+        "bodyLanguage": "Body language interpretation: What does the posture say about needs?",
+        "recommendations": "Personal recommendations: Concrete tips for better training",
+        "trainingPlan": "Training plan suggestion: Tailored exercises (optional)"
+      },
+      "freeForAll": "Free for all users! Everyone can try image analysis once for free."
+    },
+    "upgradeCard": {
+      "title": "Upgrade to Premium",
+      "description": "Unlock all features and start professional pet training today",
+      "premiumFeatures": "Premium Features",
+      "features": {
+        "unlimitedProfiles": "Unlimited pet profiles",
+        "imageAnalysis": "AI-powered image analysis",
+        "trainingPlans": "Personal training plans",
+        "premiumSupport": "Premium support"
+      },
+      "immediatelyAvailable": "Immediately available",
+      "immediatelyDescription": "After upgrading, you can immediately use all premium features and optimize your pet training.",
+      "monthlyPlan": "Premium Monthly Plan",
+      "sixMonthPlan": "6-Month Package",
+      "discount": "-20%",
+      "trialInfo": "7 days free trial • Cancel anytime"
+    },
+    "subscriptionTabs": {
+      "overview": "Overview",
+      "plans": "Plans",
+      "invoices": "Invoices"
+    },
+    "planCard": {
+      "popular": "Popular",
+      "currentPlan": "Your Current Plan",
+      "upgrade": "Upgrade",
+      "select": "Select",
+      "upTo": "Up to",
+      "unlimited": "unlimited",
+      "animals": "animals",
+      "insteadOf": "Instead of",
+      "save": "save"
+    },
+    "petProfileWarning": {
+      "title": "🐾 Step 1: Create Pet Profile",
+      "description": "To use image analysis, please first create a pet profile. This helps us provide better and more suitable recommendations.",
+      "button": "Create Pet Profile Now"
+    },
+    "dailyGoal": {
+      "title": "Daily Goal",
+      "startFirstTraining": "Start your first training",
+      "adjustTitle": "Adjust Daily Goals",
+      "sessionsPerDay": "Training Sessions per Day",
+      "recommended": "Recommended: 2-5 sessions per day",
+      "saving": "Saving...",
+      "sessions": "Sessions"
+    },
+    "subscriptionGuard": {
+      "premiumFeatures": "Premium features are only available for subscribers.",
+      "savedPlans": "Your saved training plans are only available with Premium."
+    },
+    "supportButton": {
+      "title": "Help & Support"
+    },
+    "petFilter": {
+      "title": "🎯 Pet Filter:",
+      "allPets": "🌟 All Pets",
+      "generalPlans": "📋 General Plans",
+      "unassigned": "❓ Unassigned",
+      "selectPet": "Select Pet",
+      "showAllPets": "Show All Pets",
+      "unassignedPlans": "Unassigned Plans",
+      "plan": "Plan",
+      "plans": "Plans",
+      "selectedPet": "selected pet",
+      "description": {
+        "allPets": "Show all training plans for all pets",
+        "generalPlans": "Show general plans without specific pet",
+        "unassignedPlans": "Show only unassigned training plans",
+        "specificPet": "Show plans for {{petName}} + unassigned plans"
+      }
+    },
+    "plansHeader": {
+      "title": "🎯 My Training Plans",
+      "fromTemplate": "From Template",
+      "newPlan": "New Plan"
+    },
+    "toasts": {
+      "planActions": {
+        "templateCreated": {
+          "title": "🎯 Plan created from template!",
+          "description": "\"{{title}}\" was successfully created with {{steps}} steps."
+        },
+        "templateError": {
+          "title": "❌ Error",
+          "description": "Plan could not be created. Please try again."
+        },
+        "planDeleted": {
+          "title": "🗑️ Plan deleted",
+          "description": "The training plan was successfully deleted."
+        },
+        "deleteError": {
+          "title": "❌ Error",
+          "description": "Plan could not be deleted"
+        }
+      },
+      "subscription": {
+        "statusUpdated": {
+          "title": "Status updated",
+          "description": "Premium status: {{tier}}"
+        },
+        "freeMode": {
+          "title": "Status updated",
+          "description": "Free mode detected"
+        },
+        "error": {
+          "title": "Error",
+          "description": "Database error: {{message}}"
+        },
+        "checkoutRedirect": {
+          "title": "Redirecting to Stripe",
+          "description": "Checkout with 7-day trial will be opened"
+        },
+        "checkoutOpened": {
+          "title": "Redirecting to Stripe",
+          "description": "Checkout will be opened in new tab"
+        },
+        "checkoutError": {
+          "title": "Error",
+          "description": "Checkout could not be created"
+        },
+        "cancellationStarted": {
+          "title": "Cancellation started",
+          "description": "Your subscription will be cancelled at the end of the billing period."
+        },
+        "cancellationError": {
+          "title": "Error",
+          "description": "Cancellation could not be processed"
+        },
+        "reactivationSuccess": {
+          "title": "Subscription reactivated",
+          "description": "Your subscription has been reactivated successfully."
+        },
+        "reactivationError": {
+          "title": "Error",
+          "description": "Subscription could not be reactivated"
+        }
+      },
+      "imageAnalysis": {
+        "uploadSuccess": {
+          "title": "Image uploaded",
+          "description": "Your image has been uploaded successfully."
+        },
+        "uploadError": {
+          "title": "Upload failed",
+          "description": "Image could not be uploaded. Please try again."
+        },
+        "analysisStarted": {
+          "title": "Analysis started",
+          "description": "Your image is being analyzed..."
+        },
+        "analysisSuccess": {
+          "title": "Analysis complete",
+          "description": "Your pet's behavior has been analyzed successfully."
+        },
+        "analysisError": {
+          "title": "Analysis failed",
+          "description": "Image analysis could not be completed."
+        },
+        "fileTooLarge": {
+          "title": "File too large",
+          "description": "Please select an image smaller than 10MB."
+        },
+        "invalidFormat": {
+          "title": "Invalid format",
+          "description": "Please select a valid image file (JPG, PNG, WebP)."
+        },
+        "limitReached": {
+          "title": "Limit reached",
+          "description": "You have used all free image analyses. Upgrade to Premium for unlimited analyses."
+        },
+        "fileReadError": "Error reading file",
+        "noDataError": "No analysis data received"
+      },
+      "trainingSessions": {
+        "sessionCompleted": {
+          "title": "Session completed",
+          "description": "Great job! Your training session has been recorded."
+        },
+        "sessionError": {
+          "title": "Error",
+          "description": "Session could not be recorded"
+        },
+        "sessionDeleted": {
+          "title": "Session removed",
+          "description": "The training session has been deleted."
+        },
+        "deleteError": {
+          "title": "Error",
+          "description": "Session could not be deleted"
+        },
+        "targetUpdated": {
+          "title": "Target updated",
+          "description": "Your daily training target has been updated."
+        },
+        "targetError": {
+          "title": "Error",
+          "description": "Target could not be updated"
+        }
+      },
+      "pricing": {
+        "redirectingToStripe": {
+          "title": "Redirecting to Stripe",
+          "description": "You will be redirected to Stripe Checkout..."
+        },
+        "checkoutError": {
+          "title": "Checkout Error",
+          "description": "An unexpected error occurred"
+        },
+        "loginRequired": {
+          "title": "Login required",
+          "description": "Please log in to access premium features"
+        }
+      },
+      "support": {
+        "ticketCreated": {
+          "title": "Ticket created",
+          "description": "Your support ticket has been created successfully."
+        },
+        "ticketError": {
+          "title": "Error",
+          "description": "Ticket could not be created"
+        },
+        "messageSent": {
+          "title": "Message sent",
+          "description": "Your message has been sent to support."
+        },
+        "messageError": {
+          "title": "Error",
+          "description": "Message could not be sent"
+        }
+      }
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "loginWithGoogle": "Login with Google",
+    "loginWithEmail": "Login with Email",
+    "registerWithGoogle": "Register with Google",
+    "registerWithEmail": "Register with Email",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "loginSuccess": "Login successful",
+    "registerSuccess": "Registration successful",
+    "loginError": "Login failed",
+    "registerError": "Registration failed",
+    "welcome": "Welcome to TierTrainer24",
+    "secureLogin": "Secure login for your pet training",
+    "fastestLogin": "Fastest login",
+    "oneClickStart": "One click - start immediately!",
+    "secureGoogle": "🔒 Secure via Google • No separate passwords",
+    "or": "or",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "firstNamePlaceholder": "Max",
+    "lastNamePlaceholder": "Mustermann",
+    "loggingIn": "Logging in...",
+    "creatingAccount": "Creating account...",
+    "createAccount": "Create Account",
+    "invalidCredentials": "Invalid login credentials. Please check your email and password.",
+    "generalError": "An error occurred. Please try again.",
+    "emailAlreadyRegistered": "This email address is already registered. Please log in.",
+    "registrationSuccess": "Registration successful! Please check your email for confirmation.",
+    "termsAgreement": "By logging in, you agree to our Terms and Privacy Policy.",
+    "alreadyHaveAccountText": "Already have an account?",
+    "loginNow": "Login now",
+    "oauth": {
+      "preparing": "Preparing login",
+      "redirecting": "You will be redirected to Google...",
+      "failed": "Login failed",
+      "error": "An error occurred",
+      "loading": "Loading...",
+      "providers": {
+        "google": "Sign in with Google",
+        "github": "Sign in with GitHub",
+        "default": "Sign in"
+      }
+    },
+    "confirmPassword": {
+      "label": "Confirm password",
+      "placeholder": "Confirm password",
+      "passwordsMatch": "Passwords match",
+      "passwordsDontMatch": "Passwords do not match"
+    },
+    "errorDisplay": {
+      "closeError": "Close error"
+    },
+    "quickSignup": {
+      "header": {
+        "title": "Quick Sign Up",
+        "subtitle": "Create your account in a few steps"
+      },
+      "tabs": {
+        "google": "Google (Recommended)",
+        "email": "Email"
+      },
+      "toasts": {
+        "googleSuccess": {
+          "title": "Google sign-in successful!",
+          "description": "You will be redirected to the pet area..."
+        }
+      },
+      "footer": {
+        "freeTrial": "Free trial",
+        "price": "$9.99/month",
+        "features": "All features included"
+      }
+    },
+    "subscriptionGuard": {
+      "defaultMessage": "This feature is only available for premium members.",
+      "loginRequired": "Please log in to access this feature.",
+      "trialExpired": "Trial expired",
+      "premiumFeature": "Premium feature",
+      "upgradeNow": "Upgrade now"
+    },
+    "protectedRoute": {
+      "checkingAuth": "Checking authentication..."
+    },
+    "loadingScreen": {
+      "defaultMessage": "Email is being confirmed...",
+      "pleaseWait": "Please wait a moment."
+    },
+    "emailSignUpTab": {
+      "title": {
+        "login": "Sign in with Email",
+        "signup": "Sign up for free"
+      },
+      "description": {
+        "login": "Already have an account? Sign in here",
+        "signup": "Create a free account with email"
+      },
+      "placeholders": {
+        "name": "Your name",
+        "email": "Email",
+        "password": "Password",
+        "passwordSignup": "Password (min. 6 characters)"
+      },
+      "buttons": {
+        "processing": "Processing...",
+        "login": "Sign in",
+        "signup": "Sign up for free",
+        "switchToSignup": "No account yet? Sign up for free",
+        "switchToLogin": "Already have an account? Sign in"
+      },
+      "toasts": {
+        "missingFields": {
+          "title": "Missing information",
+          "loginDescription": "Please enter email and password",
+          "signupDescription": "Please fill in all fields"
+        },
+        "loginSuccess": {
+          "title": "Sign-in successful!",
+          "description": "You will be redirected to the pet area..."
+        },
+        "signupSuccess": {
+          "title": "Registration successful!",
+          "description": "You will be redirected to the pet area...",
+          "emailConfirmation": "Please confirm your email address"
+        },
+        "loginFailed": "Sign-in failed",
+        "signupFailed": "Registration failed"
+      }
+    },
+    "googleSignUpTab": {
+      "title": "Sign in with Google",
+      "description": "🚀 Fastest option - just one click!",
+      "availableAfterSignin": "Available immediately after sign-in",
+      "securityInfo": "Secure via Google • No separate passwords"
+    },
+    "form": {
+      "recommended": "🚀 Recommended",
+      "orWithEmail": "Or with Email",
+      "tabs": {
+        "login": "Login",
+        "signup": "Sign Up"
+      },
+      "login": {
+        "title": "Login",
+        "description": "Sign in to your account",
+        "email": "Email",
+        "password": "Password",
+        "loginButton": "Login"
+      },
+      "signup": {
+        "title": "Sign Up",
+        "description": "Create your new account",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "password": "Password",
+        "signupButton": "Sign Up"
+      },
+      "toasts": {
+        "loginSuccess": "Login successful",
+        "welcomeBack": "Welcome back!",
+        "acceptTerms": "Accept Terms",
+        "acceptTermsDescription": "Please accept the terms and conditions and privacy policy",
+        "signupSuccess": "Registration successful!",
+        "signupSuccessDescription": "Please check your email inbox and confirm your email address. The confirmation link is valid for 1 hour.",
+        "signupSuccessConfirmed": "Registration successful",
+        "signupSuccessConfirmedDescription": "Welcome! Your account has been created.",
+        "unknownError": "An unknown error occurred",
+        "invalidCredentials": "Invalid login credentials. Please check your email and password.",
+        "userAlreadyExists": "An account with this email address already exists.",
+        "passwordTooShort": "The password must be at least 6 characters long.",
+        "emailNotConfirmed": "Please confirm your email address first. Check your inbox (including spam folder) and click the confirmation link.",
+        "emailLinkExpired": "The email confirmation link is invalid or expired. Please try registering again.",
+        "loginFailed": "Login failed",
+        "signupFailed": "Registration failed"
+      }
+    },
+    "checkout": {
+      "guest": {
+        "title": "Quick Buy - No Registration Required",
+        "description": "Enter your details and buy directly. After payment, you'll automatically receive an account.",
+        "moneyBackGuarantee": {
+          "title": "14-Day Money-Back Guarantee",
+          "description": "Not satisfied? Cancel within the first 14 days and get your money back automatically."
+        },
+        "placeholders": {
+          "name": "Your Name",
+          "email": "Your Email"
+        },
+        "buttons": {
+          "monthly": "Buy Monthly for €9.99",
+          "yearly": "Buy Yearly for €89 (Save 25%)"
+        },
+        "features": {
+          "moneyBack": "✅ 14-Day Money-Back Guarantee",
+          "emailAccess": "📧 Access credentials via email after payment",
+          "cancelAnytime": "🔒 Cancel anytime",
+          "refundInfo": "💰 Cancel within 14 days: Money back"
+        },
+        "toasts": {
+          "missingFields": "Missing Information",
+          "missingFieldsDescription": "Please enter email and name",
+          "redirectingToStripe": "Redirecting to Stripe",
+          "redirectingDescription": "🎉 You're being redirected to Stripe Checkout...",
+          "checkoutError": "Checkout Error",
+          "checkoutErrorDescription": "An unexpected error occurred"
+        }
+      }
+    },
+    "communityPage": {
+      "title": "TierTrainer Community",
+      "description": "Exchange ideas with other pet owners, share successes and get tips!",
+      "newPost": "New Post",
+      "stats": {
+        "members": "Members",
+        "posts": "Posts",
+        "likes": "Likes"
+      }
+    },
+    "community": {
+      "feed": {
+        "loadingError": {
+          "title": "Error Loading Posts",
+          "description": "An unknown error occurred",
+          "retryButton": "Try Again",
+          "reloadButton": "Reload Page"
+        },
+        "emptyState": {
+          "title": "No Posts Yet",
+          "description": "Be the first to share your experiences!",
+          "filteredDescription": "No posts found for the selected filters.",
+          "showAllButton": "Show All Posts"
+        }
+      },
+      "dashboard": {
+        "welcome": {
+          "title": "Welcome back! 🐾",
+          "withPet": "Ready for the next training session with {petName}?",
+          "noPet": "Create your first pet profile and start training!",
+          "buttons": {
+            "chatWithTrainer": "Chat with trainer",
+            "managePetProfile": "Manage pet profile"
+          }
+        },
+        "upgrade": {
+          "title": "Premium features available! ✨",
+          "description": "Expand your training with a premium package.",
+          "button": "Discover Premium"
+        },
+        "quickStats": {
+          "today": "🎯 Today",
+          "trainingTime": "Training time",
+          "pointsCollected": "Points collected",
+          "exercises": "Exercises",
+          "subscription": {
+            "title": "Your Package",
+            "premium": "Premium",
+            "free": "Free",
+            "activeUntil": "Active until {date}",
+            "noActiveSubscription": "No active subscription",
+            "unknown": "Unknown",
+            "manage": "Manage"
+          }
+        }
+      },
+      "debug": {
+        "imageAnalysis": {
+          "title": "🔍 Image Analysis Debug",
+          "fields": {
+            "userId": "User ID",
+            "subscription": "Subscription",
+            "analysesUsed": "Analyses Used",
+            "maxAnalyses": "Max Analyses",
+            "remaining": "Remaining",
+            "hasReachedLimit": "Has Reached Limit",
+            "canAnalyze": "Can Analyze",
+            "loading": "Loading",
+            "error": "Error"
+          },
+          "values": {
+            "noUser": "No user",
+            "active": "Active",
+            "inactive": "Inactive",
+            "yes": "Yes",
+            "no": "No"
+          },
+          "buttons": {
+            "testIncrement": "Test Increment",
+            "resetUsage": "Reset Usage"
+          },
+          "note": "Check browser console for detailed logs"
+        }
+      },
+      "hero": {
+        "testAccess": "🚀 Test Access",
+        "riskFreeTrial": "🚀 Risk-Free Trial",
+        "mainTitle": "AI-Powered<br/><span class=\"text-primary\">Pet Training</span><br/>at Home",
+        "subtitle": "Professional training plans, personalized exercises, and 24/7 AI support for happy, well-behaved pets.",
+        "startTraining": "Start Training",
+        "startChat": "Start Chat",
+        "features": {
+          "trainerAvailable": "24/7 Trainer Available",
+          "customized": "Personalized",
+          "imageAnalysis": "AI Image Analysis"
+        },
+        "viewPricing": "View Pricing",
+        "socialProof": {
+          "rating": "4.9/5",
+          "description": "Over 1,000+ satisfied pet owners"
+        },
+        "developmentMode": "Development Mode",
+        "carousel": {
+          "trainingSuccess": "Training Success",
+          "happyDogs": "Happy Dogs",
+          "parkTraining": "Park Training",
+          "professionalTraining": "Professional Training",
+          "humanAnimalBond": "Human-Animal Bond",
+          "trainingSuccesses": "Training Successes",
+          "description": "Experience the power of AI-powered pet training",
+          "swipeHint": "Swipe to navigate"
+        }
+      },
+      "legal": {
+        "close": "Close",
+        "privacy": {
+          "title": "Privacy Policy",
+          "subtitle": "Tiertrainer24 – A product of Shopping-Guru GmbH"
+        },
+        "agb": {
+          "company": {
+            "name": "Shopping-Guru GmbH",
+            "address": "Krähenhoop 4, D-38448 Wolfsburg",
+            "ceo": "CEO: Shawn Asaro",
+            "email": "Email: support@tiertrainer24.com",
+            "website": "Web: www.tiertrainer24.com, www.tiertrainer1.com"
+          },
+          "lastUpdated": "Last updated: June 2025",
+          "title": "General Terms and Conditions (GTC)",
+          "subtitle": "Tiertrainer24 – A product of Shopping-Guru GmbH",
+          "sections": {
+            "scope": {
+              "title": "1. Scope of Application",
+              "content": "These General Terms and Conditions apply to all contracts between Shopping-Guru GmbH (hereinafter \"we\" or \"Tiertrainer24\") and users of our online platform tiertrainer24.com or tiertrainer1.com."
+            },
+            "registration": {
+              "title": "3. Registration & User Account",
+              "content": "Usage requires registration. After account creation, pet profiles can be managed and subscriptions can be concluded."
+            },
+            "company": {
+              "name": "Shopping-Guru GmbH",
+              "street": "Krähenhoop 4",
+              "city": "D-38448 Wolfsburg",
+              "ceo": "CEO: Shawn Asaro",
+              "email": "Email",
+              "web": "Web",
+              "vat": "VAT identification number according to § 27a UStG: DE305366892"
+            },
+            "services": {
+              "title": "2. Service Description",
+              "description": "Tiertrainer24 provides digital online pet training with:",
+              "features": {
+                "ai": "AI-powered behavior analysis & recommendations",
+                "communication": "Interactive communication via text, voice, and image",
+                "plans": "Individual training plans & progress tracking"
+              },
+              "intro": "Tiertrainer24 provides pet owners with digital online pet training. Included are:",
+              "aiAnalysis": "AI-supported behavior analysis & recommendations",
+              "communication": "Interactive communication via text, voice and image",
+              "trainingPlans": "Individual, customizable training plans",
+              "progressControl": "Progress control with reminder functions",
+              "petProfiles": "Management of multiple pet profiles",
+              "availability": "Our services are available 24/7 online, are ad-free and contain no product placements."
+            },
+            "contract": {
+              "title": "4. Contract Conclusion & Subscription",
+              "intro": "A binding contract is concluded as soon as a paid subscription is selected and the payment process is completed.",
+              "trial": {
+                "title": "Trial period:",
+                "period": "7-day free trial period without automatic debiting",
+                "cancellation": "Cancellation possible at any time in the user account",
+                "autoRenewal": "If no cancellation occurs during the trial period, the subscription is automatically activated for a fee"
+              },
+              "models": {
+                "title": "Subscription models:",
+                "monthly": "Cancellable monthly",
+                "semiAnnual": "Cancellable semi-annually"
+              },
+              "binding": "Binding contract when concluding a paid subscription.",
+              "autoRenewal": "Without cancellation, the subscription automatically becomes paid."
+            },
+            "pricing": {
+              "title": "5. Prices & Payment",
+              "intro": "The prices displayed on www.tiertrainer24.com at the time of contract conclusion apply. Price changes remain reserved. All prices are inclusive of statutory VAT.",
+              "paymentMethods": "The following payment methods are accepted:",
+              "creditCard": "Credit card",
+              "paypal": "PayPal",
+              "klarna": "Klarna",
+              "applePay": "Apple Pay",
+              "googlePay": "Google Pay",
+              "amazonPay": "Amazon Pay",
+              "autoDebit": "Debiting takes place automatically according to the chosen subscription model.",
+              "content": "All prices incl. VAT. Payment by credit card, PayPal, Klarna, Apple Pay, Google Pay, Amazon Pay."
+            },
+            "delivery": {
+              "title": "6. Service Delivery",
+              "content": "Access to online pet training takes place directly after registration or after the trial period expires. Services are provided exclusively digitally."
+            },
+            "disclaimer": {
+              "title": "7. Disclaimer & Medical Notice",
+              "intro": "Tiertrainer24 does not provide medical, veterinary or therapeutic advice. Our content is based on AI-supported analyses and findings from animal behavior psychology, but does not replace a visit to a veterinarian.",
+              "liability": "In case of health abnormalities in your pet, a veterinary practice must be consulted immediately. We assume no liability for damages resulting from incorrect self-treatment, omitted veterinary measures or misinterpretation of our content.",
+              "important": "Important:",
+              "content": "Tiertrainer24 does not replace veterinary consultation. For health problems, please contact a veterinary practice."
+            },
+            "license": {
+              "title": "8. Usage License",
+              "content": "Upon contract conclusion, users receive a simple, non-transferable usage right for personal use of the content. Sharing, commercial use or publication is prohibited."
+            },
+            "availability": {
+              "title": "9. Availability",
+              "content": "We strive for stable availability of our platform. However, short-term maintenance work and technical failures cannot be ruled out."
+            },
+            "cancellation": {
+              "email": "Cancellation by email: support@tiertrainer24.com",
+              "expiry": "Right of cancellation expires with consent to immediate service commencement.",
+              "title": "10. Right of Cancellation",
+              "instruction": "Cancellation Instructions",
+              "right": "Consumers have a 14-day right of cancellation.",
+              "period": {
+                "title": "Period start:",
+                "content": "The period begins with the conclusion of the contract."
+              },
+              "exercise": {
+                "title": "Exercise of cancellation:",
+                "content": "Simply by email to support@tiertrainer24.com or by post:"
+              },
+              "form": {
+                "title": "📄 Sample cancellation form:",
+                "subtitle": "(Please fill out and send in case of cancellation)",
+                "company": {
+                  "name": "Shopping-Guru GmbH",
+                  "street": "Krähenhoop 4",
+                  "city": "38448 Wolfsburg",
+                  "email": "Email: support@tiertrainer24.com"
+                },
+                "declaration": "Hereby I cancel the contract for the use of the following service:",
+                "orderedOn": "Ordered on: ___________",
+                "name": "Name: __________________________",
+                "address": "Address: _______________________",
+                "dateSignature": "Date / Signature: ___________"
+              },
+              "note": {
+                "title": "Note:",
+                "content": "The right of cancellation expires prematurely if you expressly agree to digital content that the service provision begins before the cancellation period expires."
+              }
+            },
+            "privacy": {
+              "title": "11. Privacy",
+              "content": "Personal data is processed exclusively for contract fulfillment in accordance with GDPR and BDSG. Details can be found in our privacy policy."
+            },
+            "jurisdiction": {
+              "title": "12. Jurisdiction & Final Provisions",
+              "law": "German law applies.",
+              "court": "Jurisdiction, insofar as legally permissible, is Berlin.",
+              "validity": "Should individual clauses be invalid, the validity of the remaining ones remains unaffected.",
+              "content": "German law. Jurisdiction: Wolfsburg."
+            }
+          }
+        },
+        "impressum": {
+          "title": "Legal Notice",
+          "subtitle": "Tiertrainer24 – A product of Shopping-Guru GmbH",
+          "sections": {
+            "responsible": {
+              "title": "1. Data Controller",
+              "company": "Shopping-Guru GmbH",
+              "street": "Krähenhoop 4",
+              "city": "38448 Wolfsburg",
+              "country": "Germany",
+              "ceo": "CEO: Shawn Asaro",
+              "email": "Email",
+              "web": "Web",
+              "name": "Shawn Asaro"
+            },
+            "general": {
+              "title": "2. General Data Processing",
+              "content": "The protection of your personal data is our highest priority. We process your data exclusively within the framework of legal data protection regulations, in particular the GDPR and the BDSG."
+            },
+            "dataTypes": {
+              "title": "3. What Data We Process",
+              "registration": {
+                "title": "a) During registration and use:",
+                "firstName": "First name, last name (optional)",
+                "email": "Email address",
+                "petProfiles": "Pet profiles (name, species, behavior topic)",
+                "password": "Password (encrypted)",
+                "chatHistory": "Chat history including text, image and voice messages",
+                "trainingDocs": "Individual training documentation"
+              },
+              "automatic": {
+                "title": "b) Automatically when visiting the website:",
+                "ipAddress": "IP address",
+                "dateTime": "Date and time of access",
+                "browser": "Browser type and version",
+                "os": "Operating system",
+                "referrer": "Referrer URL",
+                "device": "Device"
+              }
+            },
+            "purposes": {
+              "title": "4. Purposes of Data Processing",
+              "intro": "We process your data for the following purposes:",
+              "services": "Provision of our digital services (24/7 pet behavior consultation)",
+              "analysis": "Analysis of animal behavior based on your inputs",
+              "trainingPlans": "Creation of individual training plans",
+              "platform": "Operation, maintenance and improvement of the platform",
+              "payment": "Payment processing",
+              "legal": "Fulfillment of legal obligations"
+            },
+            "legalBasis": {
+              "title": "5. Legal Basis",
+              "intro": "The processing of your data is carried out in accordance with:",
+              "contract": "Art. 6 para. 1 lit. b GDPR (contract fulfillment)",
+              "consent": "Art. 6 para. 1 lit. a GDPR (consent, e.g. for image or audio analysis)",
+              "legitimateInterest": "Art. 6 para. 1 lit. f GDPR (legitimate interest: operation, security, functionality)",
+              "legalObligation": "Art. 6 para. 1 lit. c GDPR (legal obligations)"
+            },
+            "paymentProviders": {
+              "title": "6. Payment Service Providers",
+              "intro": "For payment processing, we use external providers. Payment data is transmitted directly to the following independently responsible services:",
+              "paypal": "PayPal (Europe) S.à r.l.",
+              "stripe": "Stripe Payments Europe Ltd.",
+              "klarna": "Klarna Bank AB",
+              "applePay": "Apple Pay",
+              "googlePay": "Google Pay",
+              "amazonPay": "Amazon Pay",
+              "note": "These providers process data independently according to their respective privacy policies."
+            },
+            "cookies": {
+              "title": "7. Cookies & Tracking",
+              "necessary": "We use technically necessary cookies to ensure the functionality of our website.",
+              "optional": "Optional tracking tools (e.g. Google Analytics, Matomo) are only used after active consent via cookie banner.",
+              "withdrawal": "You can revoke or change your consent at any time."
+            },
+            "dataProcessing": {
+              "title": "8. Data Processing & Data Transfer",
+              "services": "To provide our services, we use external service providers (e.g. for hosting, maintenance, support) who are obliged to confidentiality according to Art. 28 GDPR.",
+              "noAdvertising": "Data is never passed on to third parties for advertising purposes."
+            },
+            "storage": {
+              "title": "9. Storage Period",
+              "duration": "We only store personal data for as long as it is necessary for the respective purpose.",
+              "deletion": "After cancellation or prolonged inactivity, we delete your user account within 30 days, unless legal retention obligations prevent this."
+            },
+            "rights": {
+              "title": "10. Your Rights",
+              "intro": "You have the right at any time to:",
+              "information": "Information (Art. 15 GDPR)",
+              "correction": "Correction (Art. 16 GDPR)",
+              "deletion": "Deletion (Art. 17 GDPR)",
+              "restriction": "Restriction of processing (Art. 18 GDPR)",
+              "portability": "Data portability (Art. 20 GDPR)",
+              "objection": "Objection to processing (Art. 21 GDPR)",
+              "contact": "To exercise your rights, please write to"
+            },
+            "security": {
+              "title": "11. Security",
+              "content": "Our platform uses modern security standards (e.g. SSL encryption) to protect your data from unauthorized access."
+            },
+            "ai": {
+              "title": "12. Note on AI-supported Functions",
+              "content": "Tiertrainer24 uses AI-supported systems for animal behavior analysis. Your texts, images and voice recordings are not used for the further development or training of AI, but exclusively for situational individual case processing."
+            },
+            "changes": {
+              "title": "13. Changes to this Statement",
+              "intro": "We reserve the right to adapt this privacy policy if necessary. You can find the current version at any time at:"
+            },
+            "legalInfo": {
+              "title": "Information according to § 5 TMG",
+              "company": "Shopping-Guru GmbH",
+              "street": "Krähenhoop 4",
+              "city": "D-38448 Wolfsburg",
+              "country": "Germany"
+            },
+            "representation": {
+              "title": "Represented by:",
+              "ceo": "CEO: Shawn Asaro"
+            },
+            "vat": {
+              "title": "VAT Identification Number",
+              "number": "VAT identification number according to § 27a UStG: DE305366892"
+            },
+            "contact": {
+              "title": "Contact",
+              "email": "Email",
+              "website1": "Website",
+              "website2": "Website"
+            },
+            "registry": {
+              "title": "Commercial Register",
+              "registered": "Registered in the commercial register.",
+              "court": "Register court: Amtsgericht Braunschweig",
+              "number": "Commercial register number: HRB 211913"
+            },
+            "dispute": {
+              "title": "Note on online dispute resolution according to Art. 14 Abs. 1 ODR-VO",
+              "description": "The European Commission provides a platform for online dispute resolution (OS):",
+              "emailInfo": "You can find our email address above in the legal notice."
+            }
+          },
+          "lastUpdated": "Last updated: June 2025"
+        },
+        "cancellation": {
+          "title": "Cancellation Policy",
+          "sections": {
+            "right": {
+              "title": "Right of Cancellation",
+              "content": "You have the right to cancel this contract within fourteen days without giving any reason."
+            },
+            "period": {
+              "title": "Cancellation Period",
+              "content": "The cancellation period is fourteen days from the day of contract conclusion."
+            },
+            "exercise": {
+              "title": "Exercise of the Right of Cancellation",
+              "description": "To exercise your right of cancellation, you must inform us of your decision by means of a clear declaration:",
+              "company": {
+                "name": "Shopping-Guru GmbH",
+                "street": "Krähenhoop 4",
+                "city": "38448 Wolfsburg",
+                "email": "Email: support@tiertrainer24.com"
+              }
+            },
+            "form": {
+              "title": "Model Cancellation Form",
+              "description": "If you want to cancel the contract, please fill out this form and send it back:",
+              "to": "To: Shopping-Guru GmbH, Krähenhoop 4, 38448 Wolfsburg",
+              "email": "Email: support@tiertrainer24.com",
+              "declaration": "I/we hereby cancel the contract concluded by me/us for the provision of the following service:",
+              "orderedOn": "Ordered on",
+              "consumerName": "Name of consumer(s)",
+              "consumerAddress": "Address of consumer(s)",
+              "consumerSignature": "Signature of consumer(s)",
+              "date": "Date"
+            },
+            "consequences": {
+              "title": "Consequences of Cancellation",
+              "content": "If you cancel this contract, we will refund all payments we have received from you immediately and no later than fourteen days from the day on which we received notification of your cancellation of this contract."
+            },
+            "expiry": {
+              "title": "Premature Expiry of the Right of Cancellation",
+              "important": "Important Notice:",
+              "content": "Your right of cancellation expires prematurely if we have begun to execute the service after you have given your express consent and at the same time confirmed that you lose your right of cancellation as soon as we have completely begun to execute the service."
+            }
+          }
+        }
+      },
+      "performance": {
+        "title": "Performance",
+        "loading": "Loading...",
+        "status": {
+          "slow": "🐌 SLOW",
+          "medium": "⚠️ MEDIUM",
+          "fast": "✅ FAST"
+        },
+        "petSection": {
+          "title": "Pet Section Performance"
+        },
+        "actions": {
+          "clear": "Clear"
+        },
+        "summary": {
+          "average": "Average",
+          "slow": "Slow"
+        },
+        "noMetrics": {
+          "description": "No metrics available.",
+          "action": "Perform actions in the pet section."
+        },
+        "improvements": {
+          "title": "Improvement Suggestions",
+          "tooSlow": "too slow"
+        }
+      },
+      "pets": {
+        "noPets": "No pet profiles yet",
+        "addFirstPet": "Create your first pet profile for personalized training recommendations",
+        "addPet": "Add Pet",
+        "pets": "pets",
+        "behaviorFocus": "Behavior Focus",
+        "notes": "Notes",
+        "birthday": "🎂 Born",
+        "focus": "🎯 Focus",
+        "welcome": {
+          "title": "Welcome to TierTrainer24!",
+          "description": "Create your first pet profile and start with professional training. Our AI trainer helps you understand and improve your pet's behavior."
+        },
+        "empty": {
+          "title": "🐾 No pet profiles yet",
+          "description": "Create your first pet profile for personalized training recommendations from our AI trainer team.",
+          "createFirst": "Create first pet profile"
+        },
+        "limit": {
+          "reached": "You have reached the maximum number of pets ({max}) for your current plan.",
+          "near": "You have {current} of {max} pets created.",
+          "upgrade": "Upgrade Plan"
+        },
+        "table": {
+          "name": "Name",
+          "species": "Species",
+          "breed": "Breed",
+          "age": "Age",
+          "birthDate": "Birth Date",
+          "focus": "Focus",
+          "actions": "Actions"
+        },
+        "delete": {
+          "title": "🗑️ Delete Pet Profile",
+          "confirmation": "Are you sure you want to delete the pet profile of {name}?",
+          "confirmationStrong": "Are you <strong>absolutely sure</strong> that you want to delete the pet profile of <strong>{name}</strong>?",
+          "warning": "This action cannot be undone.",
+          "irreversible": "⚠️ This action CANNOT be undone!",
+          "dataLoss": "All data, chat histories, and training plans for this pet will be permanently lost.",
+          "confirmName": "Type the name \"<strong>{name}</strong>\" to confirm and proceed.",
+          "confirm": "Delete",
+          "permanently": "Delete Permanently"
+        },
+        "carousel": {
+          "swipeHint": "Swipe left/right for more pet profiles"
+        },
+        "form": {
+          "editTitle": "✏️ Edit Pet Profile",
+          "createTitle": "🐾 New Pet Profile",
+          "name": "Name",
+          "namePlaceholder": "e.g. Bella",
+          "species": "Species",
+          "speciesPlaceholder": "e.g. Dog, Cat, Horse",
+          "breed": "Breed",
+          "breedPlaceholder": "e.g. Golden Retriever",
+          "birthDate": "Birth Date",
+          "selectDate": "Select date",
+          "age": "Age",
+          "agePlaceholder": "Will be calculated automatically",
+          "ageCalculated": "Age will be calculated automatically from birth date",
+          "behaviorFocus": "Behavior Focus",
+          "behaviorFocusPlaceholder": "e.g. Leash training, Separation anxiety",
+          "notes": "Notes",
+          "notesPlaceholder": "Additional information about your pet...",
+          "saving": "💾 Saving...",
+          "update": "💾 Update",
+          "create": "🚀 Create Now",
+          "errors": {
+            "nameRequired": "Name is a required field",
+            "speciesRequired": "Species is a required field",
+            "mustBeLoggedIn": "You must be logged in to save a pet profile.",
+            "unexpected": "An unexpected error occurred"
+          }
+        },
+        "toast": {
+          "created": {
+            "title": "✅ Pet Profile Created!",
+            "description": "{name} has been successfully added to your pets"
+          },
+          "updated": {
+            "title": "✅ Pet Profile Updated!",
+            "description": "{name} has been successfully updated"
+          },
+          "saved": {
+            "title": "💾 Saved",
+            "description": "{name} has been successfully saved to the database"
+          },
+          "deleted": {
+            "title": "🗑️ Pet Profile Deleted",
+            "description": "{name} has been removed from your pets"
+          },
+          "deletedConfirmed": {
+            "title": "✅ Deletion Confirmed",
+            "description": "Pet profile of {name} has been permanently deleted"
+          },
+          "error": {
+            "title": "❌ Error",
+            "description": "An error occurred. Please try again."
+          }
+        }
+      },
+      "pricing": {
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "perMonth": "/month",
+        "perYear": "/year",
+        "guarantee": "💰 14-Day Money-Back Guarantee",
+        "recommended": "RECOMMENDED - SAVE 25%",
+        "equivalentTo": "equivalent to",
+        "insteadOf": "instead of",
+        "saveYearly": "Save €29.80 yearly",
+        "loading": "Loading...",
+        "startNow": "Start Now",
+        "saveNow": "Save Now",
+        "signUpAndBuy": "Sign Up & Buy Now",
+        "signUpAndSave": "Sign Up & Save Now",
+        "quickSignUp": "🚀 Quick signup with Google or Email",
+        "price": "Price",
+        "selectPlan": "Select Plan",
+        "features": {
+          "guarantee": "💰 14 days money-back guarantee",
+          "allPremium": "All premium features with your pet trainer (Text & Voice & Images)",
+          "cancelAnytime": "Cancel anytime"
+        },
+        "checkout": {
+          "loginRequired": "Login Required",
+          "loginDescription": "Please sign in to purchase the premium subscription",
+          "redirectingToStripe": "Redirecting to Stripe",
+          "guaranteeIncluded": "💰 14-day money-back guarantee included – Checkout will open in new tab",
+          "error": "Error",
+          "couldNotCreate": "Checkout could not be created"
+        },
+        "amazonPay": {
+          "configError": "Amazon Pay configuration not received",
+          "error": "Amazon Pay Error",
+          "unknownError": "An unknown error occurred",
+          "title": "Amazon Pay",
+          "integrationPlaceholder": "Amazon Pay integration would be initialized here",
+          "loading": "Loading Amazon Pay...",
+          "payWith": "Pay with Amazon Pay",
+          "loginForPayment": "Login for Amazon Pay",
+          "loginDescription": "Please sign in to pay with Amazon Pay."
+        },
+        "confirmation": {
+          "title": "🐾 Your free training starts now!",
+          "sixMonths": "6 months",
+          "month": "month",
+          "todayFree": "Today: €0.00 - Completely free",
+          "sevenDaysFree": "7 days free training for your pet 🐾",
+          "youStart": "You start:",
+          "trainingFor": "Training for",
+          "textVoiceImages": "Text, Voice & Images",
+          "individualPlans": "Individual training plans",
+          "subscriptionStarts": "Subscription starts on",
+          "thenPrice": "Then",
+          "cancelBefore": "Cancel before = completely free",
+          "cancellationInfo": "✅ Cancel anytime with 1 click<br/>💝 Cancel before {date} = €0 cost<br/>🔒 Secure processing via Stripe",
+          "preparing": "Preparing...",
+          "startFreeNow": "Start Free Now"
+        },
+        "trialDetails": {
+          "yourSelection": "Your Selection",
+          "perSixMonths": "/6 months",
+          "equivalentTo": "equivalent to",
+          "notSatisfied": "Not satisfied? Money back. Automatically. 🐾",
+          "startFreeNow": "Start Free Now",
+          "guaranteeIncluded": "💰 14 days money-back guarantee included",
+          "cancelFirst14Days": "🛡️ Cancel within first 14 days = money back",
+          "noQuestions": "No questions asked. Automatically."
+        },
+        "freeTrial": {
+          "guarantee": "💰 14 Days Money-Back Guarantee",
+          "startToday": "Start today. Not satisfied? Money back. Automatically.",
+          "description": "Cancel within 14 days of purchase and receive the full amount back – no questions, no hassle. Your trust is important to us."
+        }
+      },
+      "subscription": {
+        "overview": {
+          "currentStatus": "Current Status",
+          "currentStatusDescription": "Your current subscription status",
+          "status": "Status",
+          "sevenDayTrial": "7-Day Trial",
+          "active": "Active",
+          "inactive": "Inactive",
+          "plan": "Plan",
+          "billing": "Billing",
+          "yearly": "Yearly",
+          "monthly": "Monthly",
+          "trialEnds": "Trial ends",
+          "expires": "Expires",
+          "renews": "Renews",
+          "cancellationWarning": "Your subscription will be cancelled at the end of the current period",
+          "manageSubscription": "Manage Subscription",
+          "cancelSubscription": "Cancel Subscription"
+        },
+        "requiredWarning": {
+          "title": "Premium Feature Required",
+          "description": "To create and manage pet profiles, you need a premium subscription",
+          "currentStatus": "Current Status",
+          "freeAccount": "Free Account",
+          "startToday": "Start professional pet training today",
+          "upgradeNow": "Upgrade Now",
+          "trialInfo": "7 days free trial • Cancel anytime",
+          "supportInfo": "Have questions? Contact our support for personal consultation."
+        },
+        "upgradeModal": {
+          "title": "🐾 Expand Your Pet Package!",
+          "description": "You have already created {current} of {max} pets. Upgrade to a larger package to add more pets!",
+          "currentPlan": "Your Current Plan",
+          "upTo": "Up to",
+          "unlimited": "unlimited",
+          "pets": "pets",
+          "active": "Active",
+          "instantUpgrade": "⚡ Instant Upgrade",
+          "instantActivation": "Upgrade is activated immediately after payment",
+          "allFeaturesAvailable": "All new features are directly available",
+          "securePayment": "Secure payment via Stripe",
+          "cancelAnytime": "Cancel anytime",
+          "popular": "Popular",
+          "upgrade": "Upgrade",
+          "perMonth": "/month",
+          "morePets": "more pets",
+          "processing": "Processing...",
+          "upgradeNow": "Upgrade Now",
+          "maxPlanReached": "You already have the largest package!",
+          "maxPlanDescription": "With {max} pet slots, you have reached the maximum package.",
+          "securityInfo": "🔒 Secure & GDPR compliant • Cancel anytime • Immediate activation after payment"
+        },
+        "trialStatus": {
+          "error": "Error",
+          "couldNotLoad": "Trial status could not be loaded",
+          "myTrialStatus": "My Trial Status",
+          "trialEligibility": "Trial Eligibility",
+          "eligible": "Eligible",
+          "notEligible": "Not Eligible",
+          "trialUsed": "Trial Used",
+          "alreadyUsed": "Already Used",
+          "stillAvailable": "Still Available",
+          "activeTrial": "Active Trial",
+          "daysRemaining": "You still have <strong>{days} days</strong> of free access!",
+          "trialEnd": "Trial End",
+          "trialAvailable": "Trial Available!",
+          "canStartTrial": "You can start a 7-day free trial period.",
+          "trialAlreadyUsed": "You have already used a trial period. For additional trial periods, please contact our support.",
+          "loading": "Trial status is loading...",
+          "refreshStatus": "Refresh Status"
+        },
+        "cancellation": {
+          "moneyBackGuarantee": "💰 Money-Back Guarantee",
+          "cancelSubscription": "Cancel Subscription",
+          "errors": {
+            "expiredPeriod": {
+              "title": "14-Day Money-Back Guarantee Expired",
+              "description": "Your subscription was started {days} days ago. The money-back guarantee is only valid in the first 14 days after signing up. You can still cancel your subscription - it will run until {endDate}.",
+              "endDate": "expiration date"
+            },
+            "alreadyCancelled": {
+              "title": "Subscription Already Cancelled",
+              "description": "Your subscription has already been cancelled and will run until the end of the period."
+            },
+            "noSubscription": {
+              "title": "No Active Subscription Found",
+              "description": "No active subscription could be found for your account."
+            },
+            "noGuarantee": {
+              "title": "Cancellation Notice",
+              "description": "Your subscription package does not include a 14-day money-back guarantee. The money-back guarantee is only available with the \"1 Pet\" package. You can still cancel your subscription - it will run until {endDate}.",
+              "endDate": "expiration date"
+            },
+            "general": {
+              "title": "Cancellation Error",
+              "description": "An unexpected error occurred. Please contact support."
+            }
+          }
+        },
+        "breadcrumb": {
+          "home": "Home",
+          "backToPricing": "Back to Pricing",
+          "myPetTraining": "My Pet Training"
+        },
+        "modeDisplay": {
+          "loading": "Loading...",
+          "freeMode": "Free Mode",
+          "sevenDayTrial": "7-Day Trial (ends {{endDate}})",
+          "trialExpired": "Trial Expired",
+          "premium": "Premium",
+          "onePet": "1 Pet Plan",
+          "twoPets": "2 Pets Plan",
+          "threeFourPets": "3-4 Pets Plan",
+          "fiveEightPets": "5-8 Pets Plan",
+          "unlimited": "Unlimited Pets",
+          "unknown": "Unknown"
+        },
+        "refreshButton": {
+          "updated": "✅ Updated",
+          "successfullyUpdated": "Your subscription data has been successfully updated.",
+          "error": "❌ Error",
+          "couldNotUpdate": "Subscription could not be updated. Please try again.",
+          "updating": "Updating...",
+          "updateSubscription": "Update Subscription"
+        },
+        "errorState": {
+          "loadingError": "Loading Error",
+          "tryAgain": "Try Again"
+        },
+        "loadingState": {
+          "loadingData": "Loading data..."
+        }
+      },
+      "support": {
+        "emptyState": {
+          "title": "No support tickets yet",
+          "subtitle": "You haven't created any support requests yet."
+        },
+        "ticketHistory": {
+          "title": "Support Ticket History",
+          "status": {
+            "open": "Open",
+            "inProgress": "In Progress",
+            "waitingUser": "Waiting for Response",
+            "resolved": "Resolved",
+            "closed": "Closed"
+          },
+          "rating": "Rating",
+          "resolvedByAI": "Resolved by AI"
+        },
+        "chat": {
+          "title": "TierTrainer Support 🐾",
+          "ticketNumber": "Ticket #{id}",
+          "thinking": "I'm thinking..."
+        },
+        "ticketDetail": {
+          "ticketId": "Ticket ID",
+          "created": "Created",
+          "category": "Category",
+          "priority": "Priority",
+          "chatHistory": "Chat History",
+          "giveFeedback": "Give Feedback",
+          "status": {
+            "open": "Open",
+            "inProgress": "In Progress",
+            "waitingUser": "Waiting for Response",
+            "resolved": "Resolved",
+            "closed": "Closed"
+          }
+        },
+        "feedback": {
+          "title": "How satisfied were you with our support?",
+          "description": "Your feedback helps us be even better for you and your pet.",
+          "selectRating": "Select a rating",
+          "veryUnsatisfied": "Very unsatisfied 😞",
+          "unsatisfied": "Unsatisfied 😐",
+          "ok": "OK 🙂",
+          "satisfied": "Satisfied 😊",
+          "verySatisfied": "Very satisfied! 🎉",
+          "additionalComments": "Would you like to tell us anything else? (optional)",
+          "placeholder": "Share your thoughts with us...",
+          "cancel": "Cancel",
+          "sendFeedback": "Send Feedback"
+        },
+        "chatInput": {
+          "placeholder": "Write us your question... 🐾",
+          "helpMessage": "We're here to help you and your pet"
+        },
+        "satisfactionRequest": {
+          "question": "Did this answer help you?",
+          "yes": "Yes, thanks!",
+          "no": "Need more help"
+        }
+      },
+      "subscriptionManager": {
+        "premiumActive": "✅ Premium subscription active",
+        "until": "until",
+        "loadingDetails": "🔄 Loading current subscription details..."
+      },
+      "networkDiagnostic": {
+        "title": "Network Diagnostics",
+        "runDiagnostic": "Run Full Diagnostic",
+        "running": "Running Diagnostics...",
+        "ok": "OK",
+        "failed": "FAILED",
+        "networkInformation": "Network Information",
+        "onlineStatus": "Online Status",
+        "online": "Online",
+        "offline": "Offline",
+        "connectionType": "Connection Type",
+        "downlink": "Downlink",
+        "rtt": "RTT",
+        "supabaseConnectivity": "Supabase Connectivity",
+        "basicConnection": "Basic Connection",
+        "authentication": "Authentication",
+        "databaseRead": "Database Read",
+        "databaseWrite": "Database Write",
+        "edgeFunctions": "Edge Functions",
+        "recommendations": "Recommendations"
+      },
+      "tableOfContents": {
+        "navigation": "Navigation",
+        "start": "Start",
+        "whyTierTrainer": "Why TierTrainer?",
+        "pricing": "Pricing & Packages",
+        "successStories": "Success Stories",
+        "faq": "FAQ"
+      },
+      "dataRefreshButton": {
+        "refreshing": "Refreshing...",
+        "refreshData": "Refresh Data",
+        "toast": {
+          "success": {
+            "title": "Data updated",
+            "description": "All data has been successfully refreshed"
+          },
+          "error": {
+            "title": "Refresh failed",
+            "description": "Error refreshing data. Please try again."
+          }
+        }
+      },
+      "notFound": {
+        "title": "Oops! Page not found",
+        "returnHome": "Return to Home"
+      },
+      "subscriptionPage": {
+        "loginRequired": {
+          "title": "Login Required",
+          "description": "You must be logged in to manage your subscription."
+        },
+        "title": "Manage Subscription",
+        "subtitle": "Manage your TierTrainer24 subscription and payment details.",
+        "currentSubscription": {
+          "title": "Current Subscription",
+          "description": "Your current plan and status",
+          "planName": "Premium Plan",
+          "planDescription": "Full access to all features",
+          "active": "Active",
+          "nextPayment": "Next Payment",
+          "amount": "Amount"
+        },
+        "includedFeatures": {
+          "title": "Included Features",
+          "description": "What's included in your current plan",
+          "unlimitedChat": "Unlimited AI Chat Conversations",
+          "personalizedPlans": "Personalized Training Plans",
+          "imageAnalysis": "Image Analysis Feature",
+          "communityAccess": "Community Access",
+          "mobileApp": "Mobile App Access",
+          "prioritySupport": "Priority Support"
+        },
+        "paymentDetails": {
+          "title": "Payment Details",
+          "description": "Your payment method and invoices",
+          "paymentMethod": "Payment Method",
+          "changePaymentMethod": "Change Payment Method",
+          "viewInvoices": "View Invoices"
+        },
+        "manageSubscription": {
+          "title": "Manage Subscription",
+          "description": "Options for your subscription",
+          "info": "You can cancel your subscription or change your plan at any time.",
+          "changePlan": "Change Plan",
+          "pauseSubscription": "Pause Subscription",
+          "cancel": "Cancel"
+        }
+      },
+      "adminEmailTestToggle": {
+        "title": "📧 Email Configuration & Tests",
+        "description": "Manage email delivery and test all email functions"
+      },
+      "filters": {
+        "categories": {
+          "title": "Categories",
+          "all": "All Categories",
+          "dog": "Dogs",
+          "cat": "Cats",
+          "horse": "Horses",
+          "smallAnimals": "Small Animals",
+          "birds": "Birds",
+          "other": "Other"
+        },
+        "postTypes": {
+          "title": "Post Types",
+          "all": "All Types",
+          "question": "Questions",
+          "tip": "Tips",
+          "success": "Success Stories",
+          "discussion": "Discussions"
+        },
+        "activeFilters": {
+          "label": "Active Filters:",
+          "clearAll": "Clear All Filters"
+        }
+      },
+      "createPost": {
+        "postType": {
+          "label": "Post Type",
+          "question": "❓ Question",
+          "tip": "💡 Tip",
+          "success": "🎉 Success",
+          "discussion": "💬 Discussion"
+        },
+        "category": {
+          "label": "Animal Type",
+          "dog": "Dog",
+          "cat": "Cat",
+          "horse": "Horse",
+          "smallAnimals": "Small Animals",
+          "birds": "Birds",
+          "other": "Other"
+        },
+        "pet": {
+          "label": "Pet (optional)",
+          "placeholder": "No pet selected",
+          "noPet": "No pet",
+          "loading": "Loading pets..."
+        },
+        "title": {
+          "label": "Create New Post",
+          "placeholder": "Give your post a meaningful title..."
+        },
+        "content": {
+          "label": "Content *",
+          "placeholder": "Describe your concern, share your experiences, or ask your question...",
+          "charCount": "{count}/2000 characters"
+        },
+        "buttons": {
+          "cancel": "Cancel",
+          "publish": "Publish Post",
+          "uploadingVideo": "Uploading video...",
+          "creating": "Creating..."
+        },
+        "toasts": {
+          "missingFields": "Missing Information",
+          "missingFieldsDescription": "Title and content are required.",
+          "success": "Post created!",
+          "successWithVideo": "Your post with video was successfully shared in the community.",
+          "successWithoutVideo": "Your post was successfully shared in the community.",
+          "error": "Error",
+          "errorDescription": "Post could not be created."
+        }
+      },
+      "postCard": {
+        "withPet": "with {name} ({species})",
+        "solved": "Solved",
+        "deletePost": "Delete Post",
+        "deleteDialog": {
+          "title": "Delete Post",
+          "description": "Are you sure you want to delete this post? This action cannot be undone.",
+          "videoWarning": "The associated video and all comments will also be deleted.",
+          "cancel": "Cancel",
+          "delete": "Delete",
+          "deleting": "Deleting..."
+        },
+        "video": {
+          "preview": "Preview",
+          "fileSize": "File size: {size} MB",
+          "withThumbnail": "• With thumbnail"
+        },
+        "toasts": {
+          "actionError": "Error",
+          "actionErrorDescription": "Action could not be performed",
+          "deleteSuccess": "Post deleted",
+          "deleteSuccessDescription": "Your post was successfully deleted.",
+          "deleteError": "Error deleting",
+          "deleteErrorDescription": "The post could not be deleted."
+        }
+      },
+      "comments": {
+        "title": "Comments ({count})",
+        "loading": "Loading comments...",
+        "unknownUser": "Unknown User",
+        "solution": "Solution",
+        "placeholder": "Write a comment...",
+        "posting": "Posting...",
+        "comment": "Comment",
+        "toasts": {
+          "success": "Comment added",
+          "successDescription": "Your comment was successfully posted.",
+          "error": "Error",
+          "errorDescription": "Comment could not be posted."
+        }
+      },
+      "shareSuccess": {
+        "rewards": {
+          "points": "Points",
+          "streak": "Day Streak",
+          "badges": "Badges"
+        },
+        "pet": {
+          "label": "Pet",
+          "noPet": "No pet selected"
+        },
+        "title": {
+          "label": "Share your success with the community!",
+          "placeholder": "What have you achieved?",
+          "generateButton": "💡 Generate title suggestion"
+        },
+        "content": {
+          "label": "Tell us about your success *",
+          "placeholder": "Describe what you achieved, how you did it, and what might help others...",
+          "charCount": "{count}/2000 characters"
+        },
+        "buttons": {
+          "shareLater": "Share later",
+          "shareSuccess": "🎉 Share success",
+          "sharing": "Sharing..."
+        },
+        "toasts": {
+          "missingFields": "Missing Information",
+          "missingFieldsDescription": "Title and description are required.",
+          "success": "Success shared! 🎉",
+          "successDescription": "Your success story was shared in the community.",
+          "error": "Error",
+          "errorDescription": "Success could not be shared."
+        }
+      },
+      "videoUpload": {
+        "label": "Upload video (optional)",
+        "compressing": "Video is being compressed",
+        "uploadArea": {
+          "title": "Click here to upload a video",
+          "compression": "Automatic compression for faster uploads",
+          "formats": "MP4, MOV, AVI or WebM • Max. 50MB",
+          "selectButton": "Select video"
+        },
+        "compressionProgress": {
+          "title": "Video Compression",
+          "stages": {
+            "loading": "Loading video...",
+            "compressing": "Compressing video...",
+            "finalizing": "Finalizing compression...",
+            "processing": "Processing..."
+          },
+          "timeNote": "This may take several minutes depending on video size"
+        },
+        "preview": {
+          "compressed": "{percent}% smaller"
+        }
+      }
+    },
+    "emailAuth": {
+      "title": {
+        "signup": "Create Account",
+        "login": "Login"
+      },
+      "description": {
+        "signup": "After registration, checkout will open automatically",
+        "login": "After login, checkout will open automatically"
+      },
+      "placeholders": {
+        "name": "Your Name",
+        "email": "Email",
+        "password": "Password (min. 6 characters)",
+        "passwordLogin": "Password"
+      },
+      "buttons": {
+        "forgotPassword": "Forgot password?",
+        "createAccount": "Create Account",
+        "login": "Login",
+        "processing": "Processing...",
+        "switchToLogin": "Already have an account? Login here",
+        "switchToSignup": "No account yet? Register for free now"
+      },
+      "toasts": {
+        "missingFields": "Missing information",
+        "missingFieldsSignup": "Please fill in all fields",
+        "missingFieldsLogin": "Please enter email and password",
+        "accountCreated": "🎉 Account successfully created!",
+        "checkoutOpening": "Checkout will open automatically...",
+        "signupSuccess": "Registration successful!",
+        "signupSuccessDescription": "Please confirm your email address. Then you can log in.",
+        "welcomeBack": "🐾 Welcome back!",
+        "signupFailed": "Registration failed",
+        "loginFailed": "Login failed"
+      }
+    },
+    "passwordRecovery": {
+      "title": "Set New Password",
+      "labels": {
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password"
+      },
+      "placeholders": {
+        "newPassword": "Enter new password",
+        "confirmPassword": "Confirm password"
+      },
+      "buttons": {
+        "updatePassword": "Update Password",
+        "updating": "Updating..."
+      },
+      "toasts": {
+        "passwordRequired": "Password required",
+        "passwordRequiredDescription": "Please enter a new password and confirm it.",
+        "passwordsMismatch": "Passwords do not match",
+        "passwordsMismatchDescription": "Please make sure both passwords are identical.",
+        "passwordTooShort": "Password too short",
+        "passwordTooShortDescription": "The password must be at least 6 characters long.",
+        "passwordUpdated": "Password updated!",
+        "passwordUpdatedDescription": "Your password has been successfully changed.",
+        "updateError": "Error updating password",
+        "updateErrorDescription": "An error occurred."
+      }
+    },
+    "passwordReset": {
+      "title": "Reset Password",
+      "description": "Enter your email address and we'll send you a link to reset your password.",
+      "placeholder": "Your email address",
+      "buttons": {
+        "sendResetLink": "Send Password Reset Link",
+        "sending": "Sending..."
+      },
+      "toasts": {
+        "emailRequired": "Email required",
+        "emailRequiredDescription": "Please enter your email address",
+        "emailSent": "Email sent!",
+        "emailSentDescription": "Check your email inbox for the password reset link. The link is valid for 1 hour.",
+        "resetError": "Error resetting password",
+        "rateLimit": "Too many requests. Please wait a moment.",
+        "userNotFound": "No account found with this email address.",
+        "emailNotConfirmed": "Please confirm your email address first."
+      }
+    },
+    "legal": {
+      "acceptTerms": "I accept the",
+      "terms": "Terms",
+      "and": "and",
+      "privacy": "Privacy Policy"
+    }
+  },
+  "adminTestUser": {
+    "form": {
+      "emailLabel": "Test Email Address",
+      "emailPlaceholder": "test@tiertrainer.de",
+      "activateButton": "Activate Test Access",
+      "creatingButton": "Creating...",
+      "magicLinkButton": "Send New Magic Link",
+      "sendingButton": "Sending..."
+    },
+    "instructions": {
+      "usageTitle": "How to use test access:",
+      "usageSteps": {
+        "step1": "1. Click \"Activate Test Access\" to activate the subscription",
+        "step2": "2. Click \"Send New Magic Link\" to get a fresh login link",
+        "step3": "3. Check your email inbox for the login link (also check spam folder!)",
+        "step4": "4. Click the link within 60 minutes to log in"
+      },
+      "emailSetupTitle": "Email setup corrected:",
+      "emailSetupItems": {
+        "domain": "• <strong>Domain corrected:</strong> All emails now use tiertrainer24.com",
+        "magicLinks": "• <strong>Magic Links:</strong> Correctly redirect to tiertrainer24.com/dashboard",
+        "sender": "• <strong>Email sender:</strong> TierTrainer &lt;noreply@tiertrainer24.com&gt;",
+        "resend": "• <strong>Resend setup:</strong> Make sure tiertrainer24.com is verified in Resend"
+      },
+      "nextStepsTitle": "Next steps for Resend:",
+      "nextStepsItems": {
+        "verifyDomain": "• <strong>Verify domain:</strong> Go to resend.com/domains and add tiertrainer24.com",
+        "dnsRecords": "• <strong>DNS records:</strong> Add the DNS records provided by Resend",
+        "alternative": "• <strong>Alternative:</strong> Use 'onboarding@resend.dev' as sender for now"
+      },
+      "supabaseTitle": "Check Supabase settings:",
+      "supabaseItems": {
+        "siteUrl": "• <strong>Site URL:</strong> https://tiertrainer24.com in Supabase → Authentication → Settings",
+        "redirectUrls": "• <strong>Redirect URLs:</strong> Add https://tiertrainer24.com/dashboard",
+        "emailTemplates": "• <strong>Email templates:</strong> Check all templates for correct domain"
+      }
+    },
+    "actions": {
+      "errors": {
+        "checkExistingUser": "Error checking existing user: {error}",
+        "updateError": "Error updating: {error}",
+        "createError": "Error creating: {error}",
+        "invalidEmailFormat": "Invalid email format",
+        "emailRateLimit": "Email rate limit reached. Please wait 60 seconds before trying again.",
+        "signupDisabled": "Registration is disabled in Supabase. Enable \"Enable email confirmations\" in Auth settings.",
+        "emailAddressInvalid": "The email address is invalid.",
+        "checkEmailAddress": "Please check the email address.",
+        "waitAndRetry": "Wait 60 seconds and try again.",
+        "enableSignup": "Enable \"Enable email confirmations\" in Supabase settings.",
+        "enterValidEmail": "Please enter a valid email address.",
+        "checkSupabaseConfig": "Check the Supabase Auth configuration."
+      },
+      "toasts": {
+        "testAccessSuccess": "✅ Test access successful",
+        "testAccessCreated": "Test access for {email} was created. Welcome email was sent! 📧",
+        "testAccessUpdated": "Test access for {email} was activated. Welcome email was sent! 📧",
+        "testAccessError": "❌ Test access error",
+        "testAccessErrorDescription": "Test access could not be created. Please try again.",
+        "magicLinkSent": "✉️ Magic Link sent",
+        "magicLinkDescription": "A login link was sent to {email}!\n\n⏰ The link is valid for 60 minutes\n📧 Also check the spam folder  \n🔗 An additional email with instructions was sent",
+        "magicLinkError": "❌ Magic Link error",
+        "magicLinkGenericError": "Magic Link could not be sent."
+      },
+      "adminNotes": {
+        "testAccessActivated": "Test access activated on {date}",
+        "testAccessCreated": "Test access created on {date}"
+      }
+    }
+  },
+  "testEmailAuth": {
+    "title": "📧 Email System Test",
+    "description": "Test the Supabase email configuration for registration and password reset",
+    "emailLabel": "Test Email Address",
+    "emailPlaceholder": "your.email@example.com",
+    "testRegistrationEmail": "Test Registration Email",
+    "testPasswordResetEmail": "Test Password Reset Email",
+    "sendingConfirmationEmail": "Sending confirmation email...",
+    "sendingResetEmail": "Sending reset email...",
+    "success": {
+      "confirmationEmailSent": "✅ Confirmation email sent!",
+      "confirmationEmailDescription": "A confirmation email was sent to {{email}}. Please check your inbox.",
+      "passwordResetEmailSent": "✅ Password reset email sent!",
+      "passwordResetEmailDescription": "A password reset email was sent to {{email}}."
+    },
+    "warnings": {
+      "userAlreadyRegistered": "⚠️ User already registered",
+      "userAlreadyConfirmed": "This user is already registered and confirmed."
+    },
+    "errors": {
+      "emailRequired": "Email required",
+      "validEmailRequired": "Please enter a valid email address",
+      "unknownError": "An unknown error occurred",
+      "userAlreadyExists": "An account with this email address already exists.",
+      "invalidEmail": "Invalid email address.",
+      "smtpConfigurationError": "Email configuration error. Check the SMTP settings.",
+      "templateConfigurationError": "Email template configuration error. Check the Supabase email settings.",
+      "emailTestFailed": "❌ Email test failed",
+      "passwordResetFailed": "❌ Password reset failed"
+    },
+    "testNotes": {
+      "title": "💡 Test Notes:",
+      "useRealEmail": "Use a real email address that you control",
+      "checkSpam": "Also check your spam folder",
+      "emailsFromTierTrainer": "Emails should come from TierTrainer24",
+      "checkSmtpConfig": "For errors, check the SMTP configuration in Supabase"
+    },
+    "undefinedValuesFix": {
+      "title": "🔧 Fix \"Undefined values\" error:",
+      "goToSupabase": "Go to Supabase Dashboard → Authentication → Email Templates",
+      "checkTemplateVariables": "Check that all template variables are correctly defined",
+      "ensureSiteUrl": "Make sure {{ .SiteURL }} and other variables are set",
+      "checkAuthConfig": "Check the Auth configuration under Settings → Auth"
+    },
+    "furtherTroubleshooting": {
+      "title": "🔧 Further troubleshooting:",
+      "description": "If emails still don't arrive:",
+      "smtpSettings": "SMTP settings in Supabase Auth configuration",
+      "resendDomainVerification": "Resend domain verification",
+      "apiKeyPermissions": "API key permissions",
+      "emailTemplatesConfigured": "Email templates in Supabase fully configured"
+    }
+  },
+  "testEmail": {
+    "title": "📧 Email Test",
+    "description": "Send a test email to verify the email system",
+    "sending": "Sending test email...",
+    "sendTo": "Test email to {{email}}",
+    "success": {
+      "title": "✅ Test email sent",
+      "description": "Email was successfully sent to {{email}}."
+    },
+    "errors": {
+      "title": "❌ Test failed",
+      "description": "Error: {{error}}",
+      "unknownError": "Unknown error"
+    }
+  },
+  "chatDiagnostics": {
+    "title": "🔧 Chat System Diagnostics",
+    "description": "This diagnostics helps identify and fix problems with the chat system."
+  },
+  "languagePreference": {
+    "title": "🌐 Language Settings",
+    "description": "Choose your preferred language for emails and user interface.",
+    "selectLanguage": "Select Language",
+    "selectPlaceholder": "Choose language...",
+    "updating": "Updating language...",
+    "updated": "Language Updated",
+    "updatedDescription": "Your language preference has been successfully saved.",
+    "error": "Update Error",
+    "errorDescription": "The language preference could not be updated.",
+    "note": "Notes:",
+    "noteEmails": "Emails will be sent in your chosen language",
+    "noteInterface": "The user interface will be displayed in your chosen language",
+    "noteSupport": "Support will be provided in your chosen language",
+    "refreshPage": "Refresh Page"
+  }
+}

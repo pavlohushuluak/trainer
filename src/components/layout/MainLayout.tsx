@@ -1,0 +1,179 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { TopNavigationBar } from './TopNavigationBar';
+import { Footer } from '../Footer';
+import { SupportButton } from '../support/SupportButton';
+import { useAuth } from '@/hooks/useAuth';
+import { useStickyHeader } from '@/hooks/useStickyHeader';
+import { AuthErrorDisplay } from '../auth/AuthErrorDisplay';
+import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import type { Tables } from '@/integrations/supabase/types';
+import { requestCache } from '@/utils/requestCache';
+
+interface MainLayoutProps {
+  showFooter?: boolean;
+  showSupportButton?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export const MainLayout: React.FC<MainLayoutProps> = ({
+  showFooter = true,
+  showSupportButton = true,
+  className,
+  children
+}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user, loading, signOut } = useAuth();
+  const { isScrolled } = useStickyHeader();
+  const [pets, setPets] = useState<Tables<'pet_profiles'>[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false);
+
+  // Check if we're on the Index page (root path)
+  const isIndexPage = location.pathname === '/';
+
+  // Check if user is admin
+  const checkAdminStatus = useCallback(async () => {
+    if (!user || isLoadingData) return;
+    
+    try {
+      setIsLoadingData(true);
+      const result = await requestCache.get(
+        `admin_status_${user.id}`,
+        async () => {
+          // Use the database function instead of direct table query
+          const { data, error } = await supabase
+            .rpc('is_admin', { _user_id: user.id });
+          
+          if (error) {
+            console.warn('Error checking admin status:', error);
+            return false;
+          }
+          
+          return !!data;
+        },
+        60000 // Cache for 1 minute
+      );
+      
+      setIsAdmin(result);
+    } catch (error) {
+      console.warn('Error checking admin status:', error);
+      setIsAdmin(false);
+    } finally {
+      setIsLoadingData(false);
+    }
+  }, [user, isLoadingData]);
+
+  // Fetch user's pets
+  const fetchPets = useCallback(async () => {
+    if (!user || isLoadingData) return;
+    
+    try {
+      setIsLoadingData(true);
+      const result = await requestCache.get(
+        `pets_${user.id}`,
+        async () => {
+          const { data: userPets, error } = await supabase
+            .from('pet_profiles')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false });
+          
+          if (error) {
+            console.warn('Error fetching pets:', error);
+            return [];
+          }
+          
+          return userPets || [];
+        },
+        30000 // Cache for 30 seconds
+      );
+      
+      setPets(result);
+    } catch (error) {
+      console.warn('Error fetching pets:', error);
+      setPets([]);
+    } finally {
+      setIsLoadingData(false);
+    }
+  }, [user, isLoadingData]);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return; // Prevent multiple logout calls
+    
+    console.log('🔓 MainLayout: Starting logout...');
+    setIsLoggingOut(true);
+    
+    try {
+      // Clear cache for this user immediately
+      if (user) {
+        requestCache.clear(`admin_status_${user.id}`);
+        requestCache.clear(`pets_${user.id}`);
+      }
+      
+      // Clear local state immediately
+      setPets([]);
+      setIsAdmin(false);
+      
+      // Call signOut - it will handle the redirect
+      await signOut();
+      
+    } catch (error) {
+      console.error('🔓 MainLayout logout error:', error);
+      // On any error, force redirect
+      window.location.replace('/');
+    } finally {
+      // Reset logging out state if we're still here
+      setTimeout(() => setIsLoggingOut(false), 1000);
+    }
+  };
+
+  // Load data when user changes
+  useEffect(() => {
+    if (user) {
+      // Add a small delay to prevent too many concurrent requests
+      const timer = setTimeout(() => {
+        checkAdminStatus();
+        fetchPets();
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    } else {
+      // Clear data when user logs out
+      setPets([]);
+      setIsAdmin(false);
+    }
+  }, [user, checkAdminStatus, fetchPets]);
+
+  return (
+    <div className={cn("min-h-screen bg-background flex flex-col", className)}>
+      {/* Sticky Navigation Header */}
+      <TopNavigationBar 
+        primaryPet={pets[0]}
+        isAdmin={isAdmin}
+        onLogout={handleLogout}
+        showAdminAccess={isAdmin}
+        showSettings={!!user}
+        isAuthenticated={!!user}
+      />
+      
+      {/* Auth Error Display */}
+      <AuthErrorDisplay />
+      
+      {/* Main Content */}
+      <div className="flex-1 mt-16">
+        {children || <Outlet />}
+      </div>
+      
+      {/* Footer */}
+      {showFooter && <Footer />}
+      
+      {/* Support Button - Hide on Index page */}
+      {showSupportButton && !isIndexPage && <SupportButton />}
+    </div>
+  );
+}; 

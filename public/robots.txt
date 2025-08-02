@@ -1,0 +1,32 @@
+
+User-agent: *
+Allow: /
+
+# Preferred domain signal
+Host: https://www.tiertrainer24.com
+
+# Sitemap location
+Sitemap: https://www.tiertrainer24.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Disallow admin and sensitive areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /checkout/
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
