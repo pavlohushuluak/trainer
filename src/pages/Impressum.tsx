@@ -59,16 +59,6 @@ const Impressum = () => {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold mb-3">{t('legal.impressum.sections.responsible.title')}</h2>
-          <div className="space-y-1">
-            <p>{t('legal.impressum.sections.responsible.name')}</p>
-            <p>{t('legal.impressum.sections.responsible.street')}</p>
-            <p>{t('legal.impressum.sections.responsible.city')}</p>
-            <p>{t('legal.impressum.sections.responsible.country')}</p>
-          </div>
-        </section>
-
-        <section>
           <h2 className="text-xl font-semibold mb-3">{t('legal.impressum.sections.dispute.title')}</h2>
           <div className="space-y-2">
             <p>{t('legal.impressum.sections.dispute.description')}</p>

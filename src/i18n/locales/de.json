@@ -2561,341 +2561,6 @@
           "swipeHint": "Wischen zum Navigieren"
         }
       },
-      "legal": {
-        "close": "Schließen",
-        "privacy": {
-          "title": "Datenschutzerklärung",
-          "subtitle": "Tiertrainer24 – Ein Produkt der Shopping-Guru GmbH"
-        },
-        "agb": {
-          "company": {
-            "name": "Shopping-Guru GmbH",
-            "address": "Krähenhoop 4, D-38448 Wolfsburg",
-            "ceo": "CEO: Shawn Asaro",
-            "email": "E-Mail: support@tiertrainer24.com",
-            "website": "Web: www.tiertrainer24.com, www.tiertrainer1.com"
-          },
-          "lastUpdated": "Zuletzt aktualisiert: Juni 2025",
-          "title": "Allgemeine Geschäftsbedingungen (AGB)",
-          "subtitle": "Tiertrainer24 – Ein Produkt der Shopping-Guru GmbH",
-          "sections": {
-            "scope": {
-              "title": "1. Anwendungsbereich",
-              "content": "Diese Allgemeinen Geschäftsbedingungen gelten für alle Verträge zwischen der Shopping-Guru GmbH (im Folgenden \"wir\" oder \"Tiertrainer24\") und Nutzern unserer Online-Plattform tiertrainer24.com oder tiertrainer1.com."
-            },
-            "registration": {
-              "title": "3. Registrierung & Benutzerkonto",
-              "content": "Die Nutzung erfordert eine Registrierung. Nach der Kontoerstellung können Haustierprofile verwaltet und Abonnements abgeschlossen werden."
-            },
-            "company": {
-              "name": "Shopping-Guru GmbH",
-              "street": "Krähenhoop 4",
-              "city": "D-38448 Wolfsburg",
-              "ceo": "CEO: Shawn Asaro",
-              "email": "E-Mail",
-              "web": "Web",
-              "vat": "Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: DE305366892"
-            },
-            "services": {
-              "title": "2. Leistungsbeschreibung",
-              "description": "Tiertrainer24 bietet digitale Online-Haustiererziehung mit:",
-              "features": {
-                "ai": "KI-gestützte Verhaltensanalyse & Empfehlungen",
-                "communication": "Interaktive Kommunikation über Text, Sprache und Bild",
-                "plans": "Individuelle Trainingspläne & Fortschrittsverfolgung"
-              },
-              "intro": "Tiertrainer24 bietet Haustierbesitzern digitale Online-Haustiererziehung. Inbegriffen sind:",
-              "aiAnalysis": "KI-gestützte Verhaltensanalyse & Empfehlungen",
-              "communication": "Interaktive Kommunikation über Text, Sprache und Bild",
-              "trainingPlans": "Individuelle, anpassbare Trainingspläne",
-              "progressControl": "Fortschrittskontrolle mit Erinnerungsfunktionen",
-              "petProfiles": "Verwaltung mehrerer Haustierprofile",
-              "availability": "Unsere Dienste sind 24/7 online verfügbar, werbefrei und enthalten keine Produktplatzierungen."
-            },
-            "contract": {
-              "title": "4. Vertragsabschluss & Abonnement",
-              "intro": "Ein verbindlicher Vertrag kommt zustande, sobald ein kostenpflichtiges Abonnement ausgewählt und der Zahlungsvorgang abgeschlossen ist.",
-              "trial": {
-                "title": "Testphase:",
-                "period": "7-tägige kostenlose Testphase ohne automatische Belastung",
-                "cancellation": "Kündigung jederzeit im Benutzerkonto möglich",
-                "autoRenewal": "Falls während der Testphase keine Kündigung erfolgt, wird das Abonnement automatisch kostenpflichtig aktiviert"
-              },
-              "models": {
-                "title": "Abonnement-Modelle:",
-                "monthly": "Monatlich kündbar",
-                "semiAnnual": "Halbjährlich kündbar"
-              },
-              "binding": "Verbindlicher Vertrag beim Abschluss eines kostenpflichtigen Abonnements.",
-              "autoRenewal": "Ohne Kündigung wird das Abonnement automatisch kostenpflichtig."
-            },
-            "pricing": {
-              "title": "5. Preise & Zahlung",
-              "intro": "Es gelten die zum Zeitpunkt des Vertragsabschlusses auf www.tiertrainer24.com angezeigten Preise. Preisänderungen bleiben vorbehalten. Alle Preise verstehen sich inklusive gesetzlicher Mehrwertsteuer.",
-              "paymentMethods": "Folgende Zahlungsmethoden werden akzeptiert:",
-              "creditCard": "Kreditkarte",
-              "paypal": "PayPal",
-              "klarna": "Klarna",
-              "applePay": "Apple Pay",
-              "googlePay": "Google Pay",
-              "amazonPay": "Amazon Pay",
-              "autoDebit": "Die Belastung erfolgt automatisch entsprechend dem gewählten Abonnement-Modell.",
-              "content": "Alle Preise inkl. MwSt. Zahlung per Kreditkarte, PayPal, Klarna, Apple Pay, Google Pay, Amazon Pay."
-            },
-            "delivery": {
-              "title": "6. Leistungserbringung",
-              "content": "Der Zugang zur Online-Haustiererziehung erfolgt direkt nach der Registrierung oder nach Ablauf der Testphase. Die Leistungen werden ausschließlich digital erbracht."
-            },
-            "disclaimer": {
-              "title": "7. Haftungsausschluss & Medizinischer Hinweis",
-              "intro": "Tiertrainer24 erteilt keine medizinischen, tierärztlichen oder therapeutischen Ratschläge. Unsere Inhalte basieren auf KI-gestützten Analysen und Erkenntnissen aus der Tierverhaltenspsychologie, ersetzen jedoch keinen Besuch beim Tierarzt.",
-              "liability": "Bei gesundheitlichen Auffälligkeiten Ihres Haustiers muss umgehend eine tierärztliche Praxis konsultiert werden. Wir übernehmen keine Haftung für Schäden, die aus falscher Selbstbehandlung, unterlassenen tierärztlichen Maßnahmen oder Fehlinterpretation unserer Inhalte resultieren.",
-              "important": "Wichtig:",
-              "content": "Tiertrainer24 ersetzt keine tierärztliche Beratung. Bei Gesundheitsproblemen wenden Sie sich bitte an eine tierärztliche Praxis."
-            },
-            "license": {
-              "title": "8. Nutzungslizenz",
-              "content": "Mit Vertragsabschluss erhalten Nutzer ein einfaches, nicht übertragbares Nutzungsrecht für die persönliche Nutzung der Inhalte. Weitergabe, gewerbliche Nutzung oder Veröffentlichung ist untersagt."
-            },
-            "availability": {
-              "title": "9. Verfügbarkeit",
-              "content": "Wir streben eine stabile Verfügbarkeit unserer Plattform an. Kurzfristige Wartungsarbeiten und technische Ausfälle können jedoch nicht ausgeschlossen werden."
-            },
-            "cancellation": {
-              "email": "Kündigung per E-Mail: support@tiertrainer24.com",
-              "expiry": "Widerrufsrecht erlischt bei Zustimmung zum sofortigen Leistungsbeginn.",
-              "title": "10. Widerrufsrecht",
-              "instruction": "Widerrufsanweisungen",
-              "right": "Verbraucher haben ein 14-tägiges Widerrufsrecht.",
-              "period": {
-                "title": "Fristbeginn:",
-                "content": "Die Frist beginnt mit dem Abschluss des Vertrags."
-              },
-              "exercise": {
-                "title": "Ausübung des Widerrufs:",
-                "content": "Einfach per E-Mail an support@tiertrainer24.com oder per Post:"
-              },
-              "form": {
-                "title": "📄 Muster-Widerrufsformular:",
-                "subtitle": "(Bitte ausfüllen und senden bei Widerruf)",
-                "company": {
-                  "name": "Shopping-Guru GmbH",
-                  "street": "Krähenhoop 4",
-                  "city": "38448 Wolfsburg",
-                  "email": "E-Mail: support@tiertrainer24.com"
-                },
-                "declaration": "Hiermit widerrufe ich den Vertrag für die Nutzung der folgenden Dienstleistung:",
-                "orderedOn": "Bestellt am: ___________",
-                "name": "Name: __________________________",
-                "address": "Adresse: _______________________",
-                "dateSignature": "Datum / Unterschrift: ___________"
-              },
-              "note": {
-                "title": "Hinweis:",
-                "content": "Das Widerrufsrecht erlischt vorzeitig, wenn Sie ausdrücklich zustimmen, dass bei digitalen Inhalten die Leistungserbringung vor Ablauf der Widerrufsfrist beginnt."
-              }
-            },
-            "privacy": {
-              "title": "11. Datenschutz",
-              "content": "Personenbezogene Daten werden ausschließlich zur Vertragserfüllung gemäß DSGVO und BDSG verarbeitet. Details finden Sie in unserer Datenschutzerklärung."
-            },
-            "jurisdiction": {
-              "title": "12. Gerichtsstand & Schlussbestimmungen",
-              "law": "Deutsches Recht gilt.",
-              "court": "Gerichtsstand ist, soweit rechtlich zulässig, Berlin.",
-              "validity": "Sollten einzelne Klauseln unwirksam sein, bleibt die Wirksamkeit der übrigen unberührt.",
-              "content": "Deutsches Recht. Gerichtsstand: Wolfsburg."
-            }
-          }
-        },
-        "impressum": {
-          "title": "Impressum",
-          "subtitle": "Tiertrainer24 – Ein Produkt der Shopping-Guru GmbH",
-          "sections": {
-            "responsible": {
-              "title": "1. Verantwortlicher",
-              "company": "Shopping-Guru GmbH",
-              "street": "Krähenhoop 4",
-              "city": "38448 Wolfsburg",
-              "country": "Deutschland",
-              "ceo": "CEO: Shawn Asaro",
-              "email": "E-Mail",
-              "web": "Web",
-              "name": "Shawn Asaro"
-            },
-            "general": {
-              "title": "2. Allgemeine Datenverarbeitung",
-              "content": "Der Schutz Ihrer personenbezogenen Daten hat für uns höchste Priorität. Wir verarbeiten Ihre Daten ausschließlich im Rahmen der gesetzlichen Datenschutzbestimmungen, insbesondere der DSGVO und des BDSG."
-            },
-            "dataTypes": {
-              "title": "3. Welche Daten wir verarbeiten",
-              "registration": {
-                "title": "a) Bei Registrierung und Nutzung:",
-                "firstName": "Vorname, Nachname (optional)",
-                "email": "E-Mail-Adresse",
-                "petProfiles": "Haustierprofile (Name, Art, Verhaltensthema)",
-                "password": "Passwort (verschlüsselt)",
-                "chatHistory": "Chat-Verlauf einschließlich Text-, Bild- und Sprachnachrichten",
-                "trainingDocs": "Individuelle Trainingsdokumentation"
-              },
-              "automatic": {
-                "title": "b) Automatisch beim Besuch der Website:",
-                "ipAddress": "IP-Adresse",
-                "dateTime": "Datum und Uhrzeit des Zugriffs",
-                "browser": "Browser-Typ und -Version",
-                "os": "Betriebssystem",
-                "referrer": "Referrer-URL",
-                "device": "Gerät"
-              }
-            },
-            "purposes": {
-              "title": "4. Zwecke der Datenverarbeitung",
-              "intro": "Wir verarbeiten Ihre Daten für folgende Zwecke:",
-              "services": "Bereitstellung unserer digitalen Dienste (24/7 Haustierverhaltensberatung)",
-              "analysis": "Analyse des Tierverhaltens basierend auf Ihren Eingaben",
-              "trainingPlans": "Erstellung individueller Trainingspläne",
-              "platform": "Betrieb, Wartung und Verbesserung der Plattform",
-              "payment": "Zahlungsabwicklung",
-              "legal": "Erfüllung gesetzlicher Verpflichtungen"
-            },
-            "legalBasis": {
-              "title": "5. Rechtsgrundlage",
-              "intro": "Die Verarbeitung Ihrer Daten erfolgt gemäß:",
-              "contract": "Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung)",
-              "consent": "Art. 6 Abs. 1 lit. a DSGVO (Einwilligung, z.B. für Bild- oder Audioanalyse)",
-              "legitimateInterest": "Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse: Betrieb, Sicherheit, Funktionalität)",
-              "legalObligation": "Art. 6 Abs. 1 lit. c DSGVO (gesetzliche Verpflichtungen)"
-            },
-            "paymentProviders": {
-              "title": "6. Zahlungsdienstleister",
-              "intro": "Für die Zahlungsabwicklung nutzen wir externe Anbieter. Zahlungsdaten werden direkt an folgende eigenverantwortliche Dienste übermittelt:",
-              "paypal": "PayPal (Europe) S.à r.l.",
-              "stripe": "Stripe Payments Europe Ltd.",
-              "klarna": "Klarna Bank AB",
-              "applePay": "Apple Pay",
-              "googlePay": "Google Pay",
-              "amazonPay": "Amazon Pay",
-              "note": "Diese Anbieter verarbeiten Daten eigenverantwortlich gemäß ihren jeweiligen Datenschutzrichtlinien."
-            },
-            "cookies": {
-              "title": "7. Cookies & Tracking",
-              "necessary": "Wir verwenden technisch notwendige Cookies, um die Funktionalität unserer Website sicherzustellen.",
-              "optional": "Optionale Tracking-Tools (z.B. Google Analytics, Matomo) werden nur nach aktiver Einwilligung über Cookie-Banner verwendet.",
-              "withdrawal": "Sie können Ihre Einwilligung jederzeit widerrufen oder ändern."
-            },
-            "dataProcessing": {
-              "title": "8. Datenverarbeitung & Datenübertragung",
-              "services": "Zur Bereitstellung unserer Dienste nutzen wir externe Dienstleister (z.B. für Hosting, Wartung, Support), die gemäß Art. 28 DSGVO zur Verschwiegenheit verpflichtet sind.",
-              "noAdvertising": "Daten werden niemals zu Werbezwecken an Dritte weitergegeben."
-            },
-            "storage": {
-              "title": "9. Speicherdauer",
-              "duration": "Wir speichern personenbezogene Daten nur so lange, wie es für den jeweiligen Zweck erforderlich ist.",
-              "deletion": "Nach Kündigung oder längerer Inaktivität löschen wir Ihr Benutzerkonto innerhalb von 30 Tagen, es sei denn, gesetzliche Aufbewahrungspflichten verhindern dies."
-            },
-            "rights": {
-              "title": "10. Ihre Rechte",
-              "intro": "Sie haben jederzeit das Recht auf:",
-              "information": "Auskunft (Art. 15 DSGVO)",
-              "correction": "Berichtigung (Art. 16 DSGVO)",
-              "deletion": "Löschung (Art. 17 DSGVO)",
-              "restriction": "Einschränkung der Verarbeitung (Art. 18 DSGVO)",
-              "portability": "Datenübertragbarkeit (Art. 20 DSGVO)",
-              "objection": "Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)",
-              "contact": "Zur Ausübung Ihrer Rechte schreiben Sie bitte an"
-            },
-            "security": {
-              "title": "11. Sicherheit",
-              "content": "Unsere Plattform verwendet moderne Sicherheitsstandards (z.B. SSL-Verschlüsselung), um Ihre Daten vor unbefugtem Zugriff zu schützen."
-            },
-            "ai": {
-              "title": "12. Hinweis zu KI-gestützten Funktionen",
-              "content": "Tiertrainer24 verwendet KI-gestützte Systeme zur Tierverhaltensanalyse. Ihre Texte, Bilder und Sprachaufnahmen werden nicht für die Weiterentwicklung oder das Training von KI verwendet, sondern ausschließlich für die situative Einzelfallbearbeitung."
-            },
-            "changes": {
-              "title": "13. Änderungen dieser Erklärung",
-              "intro": "Wir behalten uns das Recht vor, diese Datenschutzerklärung bei Bedarf anzupassen. Die aktuelle Version finden Sie jederzeit unter:"
-            },
-            "legalInfo": {
-              "title": "Angaben gemäß § 5 TMG",
-              "company": "Shopping-Guru GmbH",
-              "street": "Krähenhoop 4",
-              "city": "D-38448 Wolfsburg",
-              "country": "Deutschland"
-            },
-            "representation": {
-              "title": "Vertreten durch:",
-              "ceo": "CEO: Shawn Asaro"
-            },
-            "vat": {
-              "title": "Umsatzsteuer-Identifikationsnummer",
-              "number": "Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: DE305366892"
-            },
-            "contact": {
-              "title": "Kontakt",
-              "email": "E-Mail",
-              "website1": "Website",
-              "website2": "Website"
-            },
-            "registry": {
-              "title": "Handelsregister",
-              "registered": "Eingetragen im Handelsregister.",
-              "court": "Registergericht: Amtsgericht Braunschweig",
-              "number": "Handelsregisternummer: HRB 211913"
-            },
-            "dispute": {
-              "title": "Hinweis zur Online-Streitbeilegung gemäß Art. 14 Abs. 1 ODR-VO",
-              "description": "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:",
-              "emailInfo": "Unsere E-Mail-Adresse finden Sie oben im Impressum."
-            }
-          },
-          "lastUpdated": "Zuletzt aktualisiert: Juni 2025"
-        },
-        "cancellation": {
-          "title": "Widerrufsbelehrung",
-          "sections": {
-            "right": {
-              "title": "Widerrufsrecht",
-              "content": "Sie haben das Recht, diesen Vertrag innerhalb von vierzehn Tagen ohne Angabe von Gründen zu widerrufen."
-            },
-            "period": {
-              "title": "Widerrufsfrist",
-              "content": "Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsabschlusses."
-            },
-            "exercise": {
-              "title": "Exercise of the Right of Cancellation",
-              "description": "To exercise your right of cancellation, you must inform us of your decision by means of a clear declaration:",
-              "company": {
-                "name": "Shopping-Guru GmbH",
-                "street": "Krähenhoop 4",
-                "city": "38448 Wolfsburg",
-                "email": "Email: support@tiertrainer24.com"
-              }
-            },
-            "form": {
-              "title": "Model Cancellation Form",
-              "description": "If you want to cancel the contract, please fill out this form and send it back:",
-              "to": "To: Shopping-Guru GmbH, Krähenhoop 4, 38448 Wolfsburg",
-              "email": "Email: support@tiertrainer24.com",
-              "declaration": "I/we hereby cancel the contract concluded by me/us for the provision of the following service:",
-              "orderedOn": "Ordered on",
-              "consumerName": "Name of consumer(s)",
-              "consumerAddress": "Address of consumer(s)",
-              "consumerSignature": "Signature of consumer(s)",
-              "date": "Date"
-            },
-            "consequences": {
-              "title": "Consequences of Cancellation",
-              "content": "If you cancel this contract, we will refund all payments we have received from you immediately and no later than fourteen days from the day on which we received notification of your cancellation of this contract."
-            },
-            "expiry": {
-              "title": "Premature Expiry of the Right of Cancellation",
-              "important": "Important Notice:",
-              "content": "Your right of cancellation expires prematurely if we have begun to execute the service after you have given your express consent and at the same time confirmed that you lose your right of cancellation as soon as we have completely begun to execute the service."
-            }
-          }
-        }
-      },
       "performance": {
         "title": "Leistung",
         "loading": "Laden...",
@@ -2921,107 +2586,6 @@
         "improvements": {
           "title": "Verbesserungsvorschläge",
           "tooSlow": "zu langsam"
-        }
-      },
-      "pets": {
-        "noPets": "Noch keine Haustierprofile",
-        "addFirstPet": "Erstellen Sie Ihr erstes Haustierprofil für personalisierte Trainingsempfehlungen",
-        "addPet": "Haustier hinzufügen",
-        "pets": "Haustiere",
-        "behaviorFocus": "Verhaltensfokus",
-        "notes": "Notizen",
-        "birthday": "🎂 Geboren",
-        "focus": "🎯 Fokus",
-        "welcome": {
-          "title": "Willkommen bei TierTrainer24!",
-          "description": "Erstellen Sie Ihr erstes Haustierprofil und starten Sie mit professionellem Training. Unser KI-Trainer hilft Ihnen, das Verhalten Ihres Haustiers zu verstehen und zu verbessern."
-        },
-        "empty": {
-          "title": "🐾 Noch keine Haustierprofile",
-          "description": "Erstellen Sie Ihr erstes Haustierprofil für personalisierte Trainingsempfehlungen von unserem KI-Trainer-Team.",
-          "createFirst": "Erstes Haustierprofil erstellen"
-        },
-        "limit": {
-          "reached": "Sie haben die maximale Anzahl von Haustieren ({max}) für Ihren aktuellen Plan erreicht.",
-          "near": "Sie haben {current} von {max} Haustieren erstellt.",
-          "upgrade": "Plan upgraden"
-        },
-        "table": {
-          "name": "Name",
-          "species": "Art",
-          "breed": "Rasse",
-          "age": "Alter",
-          "birthDate": "Geburtsdatum",
-          "focus": "Fokus",
-          "actions": "Aktionen"
-        },
-        "delete": {
-          "title": "🗑️ Haustierprofil löschen",
-          "confirmation": "Sind Sie sicher, dass Sie das Haustierprofil von {name} löschen möchten?",
-          "confirmationStrong": "Sind Sie <strong>absolut sicher</strong>, dass Sie das Haustierprofil von <strong>{name}</strong> löschen möchten?",
-          "warning": "Diese Aktion kann nicht rückgängig gemacht werden.",
-          "irreversible": "⚠️ Diese Aktion kann NICHT rückgängig gemacht werden!",
-          "dataLoss": "Alle Daten, Chat-Verläufe und Trainingspläne für dieses Haustier gehen dauerhaft verloren.",
-          "confirmName": "Geben Sie den Namen \"<strong>{name}</strong>\" ein, um zu bestätigen und fortzufahren.",
-          "confirm": "Löschen",
-          "permanently": "Endgültig löschen"
-        },
-        "carousel": {
-          "swipeHint": "Wischen Sie links/rechts für weitere Haustierprofile"
-        },
-        "form": {
-          "editTitle": "✏️ Haustierprofil bearbeiten",
-          "createTitle": "🐾 Neues Haustierprofil",
-          "name": "Name",
-          "namePlaceholder": "z.B. Bella",
-          "species": "Art",
-          "speciesPlaceholder": "z.B. Hund, Katze, Pferd",
-          "breed": "Rasse",
-          "breedPlaceholder": "z.B. Golden Retriever",
-          "birthDate": "Geburtsdatum",
-          "selectDate": "Datum auswählen",
-          "age": "Alter",
-          "agePlaceholder": "Wird automatisch berechnet",
-          "ageCalculated": "Alter wird automatisch aus dem Geburtsdatum berechnet",
-          "behaviorFocus": "Verhaltensfokus",
-          "behaviorFocusPlaceholder": "z.B. Leinentraining, Trennungsangst",
-          "notes": "Notizen",
-          "notesPlaceholder": "Zusätzliche Informationen über Ihr Haustier...",
-          "saving": "💾 Speichern...",
-          "update": "💾 Aktualisieren",
-          "create": "🚀 Jetzt erstellen",
-          "errors": {
-            "nameRequired": "Name ist ein Pflichtfeld",
-            "speciesRequired": "Art ist ein Pflichtfeld",
-            "mustBeLoggedIn": "Sie müssen angemeldet sein, um ein Haustierprofil zu speichern.",
-            "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
-          }
-        },
-        "toast": {
-          "created": {
-            "title": "✅ Haustierprofil erstellt!",
-            "description": "{name} wurde erfolgreich zu Ihren Haustieren hinzugefügt"
-          },
-          "updated": {
-            "title": "✅ Haustierprofil aktualisiert!",
-            "description": "{name} wurde erfolgreich aktualisiert"
-          },
-          "saved": {
-            "title": "💾 Gespeichert",
-            "description": "{name} wurde erfolgreich in der Datenbank gespeichert"
-          },
-          "deleted": {
-            "title": "🗑️ Haustierprofil gelöscht",
-            "description": "{name} wurde aus Ihren Haustieren entfernt"
-          },
-          "deletedConfirmed": {
-            "title": "✅ Löschung bestätigt",
-            "description": "Haustierprofil von {name} wurde endgültig gelöscht"
-          },
-          "error": {
-            "title": "❌ Fehler",
-            "description": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
-          }
         }
       },
       "pricing": {
@@ -3097,139 +2661,6 @@
           "guarantee": "💰 14 Tage Geld-zurück-Garantie",
           "startToday": "Starten Sie heute. Nicht zufrieden? Geld zurück. Automatisch.",
           "description": "Kündigen Sie innerhalb von 14 Tagen nach dem Kauf und erhalten Sie den vollen Betrag zurück – keine Fragen, kein Ärger. Ihr Vertrauen ist uns wichtig."
-        }
-      },
-      "subscription": {
-        "overview": {
-          "currentStatus": "Aktueller Status",
-          "currentStatusDescription": "Ihr aktueller Abonnement-Status",
-          "status": "Status",
-          "sevenDayTrial": "7-Tage Testphase",
-          "active": "Aktiv",
-          "inactive": "Inaktiv",
-          "plan": "Plan",
-          "billing": "Abrechnung",
-          "yearly": "Jährlich",
-          "monthly": "Monatlich",
-          "trialEnds": "Testphase endet",
-          "expires": "Läuft ab",
-          "renews": "Erneuert sich",
-          "cancellationWarning": "Ihr Abonnement wird am Ende der aktuellen Periode gekündigt",
-          "manageSubscription": "Abonnement verwalten",
-          "cancelSubscription": "Abonnement kündigen"
-        },
-        "requiredWarning": {
-          "title": "Premium-Feature erforderlich",
-          "description": "Um Haustierprofile zu erstellen und zu verwalten, benötigen Sie ein Premium-Abonnement",
-          "currentStatus": "Aktueller Status",
-          "freeAccount": "Kostenloses Konto",
-          "startToday": "Starten Sie heute mit professioneller Haustiererziehung",
-          "upgradeNow": "Jetzt upgraden",
-          "trialInfo": "7 Tage kostenlose Testphase • Jederzeit kündbar",
-          "supportInfo": "Haben Sie Fragen? Kontaktieren Sie unseren Support für persönliche Beratung."
-        },
-        "upgradeModal": {
-          "title": "🐾 Erweitern Sie Ihr Haustier-Paket!",
-          "description": "Sie haben bereits {current} von {max} Haustieren erstellt. Upgraden Sie zu einem größeren Paket, um weitere Haustiere hinzuzufügen!",
-          "currentPlan": "Ihr aktueller Plan",
-          "upTo": "Bis zu",
-          "unlimited": "unbegrenzt",
-          "pets": "Haustiere",
-          "active": "Aktiv",
-          "instantUpgrade": "⚡ Sofortiges Upgrade",
-          "instantActivation": "Upgrade wird sofort nach der Zahlung aktiviert",
-          "allFeaturesAvailable": "Alle neuen Features sind direkt verfügbar",
-          "securePayment": "Sichere Zahlung über Stripe",
-          "cancelAnytime": "Jederzeit kündbar",
-          "popular": "Beliebt",
-          "upgrade": "Upgrade",
-          "perMonth": "/Monat",
-          "morePets": "weitere Haustiere",
-          "processing": "Verarbeitung...",
-          "upgradeNow": "Jetzt upgraden",
-          "maxPlanReached": "Sie haben bereits das größte Paket!",
-          "maxPlanDescription": "Mit {max} Haustier-Slots haben Sie das maximale Paket erreicht.",
-          "securityInfo": "🔒 Sicher & DSGVO-konform • Jederzeit kündbar • Sofortige Aktivierung nach Zahlung"
-        },
-        "trialStatus": {
-          "error": "Fehler",
-          "couldNotLoad": "Teststatus konnte nicht geladen werden",
-          "myTrialStatus": "Mein Teststatus",
-          "trialEligibility": "Testberechtigung",
-          "eligible": "Berechtigt",
-          "notEligible": "Nicht berechtigt",
-          "trialUsed": "Test verwendet",
-          "alreadyUsed": "Bereits verwendet",
-          "stillAvailable": "Noch verfügbar",
-          "activeTrial": "Aktiver Test",
-          "daysRemaining": "Sie haben noch <strong>{days} Tage</strong> kostenlosen Zugang!",
-          "trialEnd": "Testende",
-          "trialAvailable": "Test verfügbar!",
-          "canStartTrial": "Sie können eine 7-tägige kostenlose Testphase starten.",
-          "trialAlreadyUsed": "Sie haben bereits eine Testphase verwendet. Für zusätzliche Testphasen kontaktieren Sie bitte unseren Support.",
-          "loading": "Teststatus wird geladen...",
-          "refreshStatus": "Status aktualisieren"
-        },
-        "cancellation": {
-          "moneyBackGuarantee": "💰 Geld-zurück-Garantie",
-          "cancelSubscription": "Abonnement kündigen",
-          "errors": {
-            "expiredPeriod": {
-              "title": "14-Tage Geld-zurück-Garantie abgelaufen",
-              "description": "Ihr Abonnement wurde vor {days} Tagen gestartet. Die Geld-zurück-Garantie ist nur in den ersten 14 Tagen nach der Anmeldung gültig. Sie können Ihr Abonnement trotzdem kündigen - es läuft bis {endDate}.",
-              "endDate": "Ablaufdatum"
-            },
-            "alreadyCancelled": {
-              "title": "Abonnement bereits gekündigt",
-              "description": "Ihr Abonnement wurde bereits gekündigt und läuft bis zum Ende der Periode."
-            },
-            "noSubscription": {
-              "title": "Kein aktives Abonnement gefunden",
-              "description": "Für Ihr Konto konnte kein aktives Abonnement gefunden werden."
-            },
-            "noGuarantee": {
-              "title": "Kündigungshinweis",
-              "description": "Ihr Abonnement-Paket enthält keine 14-tägige Geld-zurück-Garantie. Die Geld-zurück-Garantie ist nur mit dem \"1 Haustier\"-Paket verfügbar. Sie können Ihr Abonnement trotzdem kündigen - es läuft bis {endDate}.",
-              "endDate": "Ablaufdatum"
-            },
-            "general": {
-              "title": "Kündigungsfehler",
-              "description": "Ein unerwarteter Fehler ist aufgetreten. Bitte kontaktieren Sie den Support."
-            }
-          }
-        },
-        "breadcrumb": {
-          "home": "Startseite",
-          "backToPricing": "Zurück zu den Preisen",
-          "myPetTraining": "Meine Haustiererziehung"
-        },
-        "modeDisplay": {
-          "loading": "Laden...",
-          "freeMode": "Kostenloser Modus",
-          "sevenDayTrial": "7-Tage Testphase (endet {{endDate}})",
-          "trialExpired": "Testphase abgelaufen",
-          "premium": "Premium",
-          "onePet": "1 Haustier Plan",
-          "twoPets": "2 Haustiere Plan",
-          "threeFourPets": "3-4 Haustiere Plan",
-          "fiveEightPets": "5-8 Haustiere Plan",
-          "unlimited": "Unbegrenzte Haustiere",
-          "unknown": "Unbekannt"
-        },
-        "refreshButton": {
-          "updated": "✅ Aktualisiert",
-          "successfullyUpdated": "Ihre Abonnement-Daten wurden erfolgreich aktualisiert.",
-          "error": "❌ Fehler",
-          "couldNotUpdate": "Abonnement konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
-          "updating": "Aktualisierung...",
-          "updateSubscription": "Abonnement aktualisieren"
-        },
-        "errorState": {
-          "loadingError": "Ladefehler",
-          "tryAgain": "Erneut versuchen"
-        },
-        "loadingState": {
-          "loadingData": "Daten werden geladen..."
         }
       },
       "support": {
@@ -3649,6 +3080,603 @@
       "terms": "AGB",
       "and": "und",
       "privacy": "Datenschutzerklärung"
+    }
+  },
+  "pets": {
+    "noPets": "Noch keine Haustierprofile",
+    "addFirstPet": "Erstellen Sie Ihr erstes Haustierprofil für personalisierte Trainingsempfehlungen",
+    "addPet": "Haustier hinzufügen",
+    "pets": "Haustiere",
+    "behaviorFocus": "Verhaltensfokus",
+    "notes": "Notizen",
+    "birthday": "🎂 Geboren",
+    "focus": "🎯 Fokus",
+    "welcome": {
+      "title": "Willkommen bei TierTrainer24!",
+      "description": "Erstellen Sie Ihr erstes Haustierprofil und starten Sie mit professionellem Training. Unser KI-Trainer hilft Ihnen, das Verhalten Ihres Haustiers zu verstehen und zu verbessern."
+    },
+    "empty": {
+      "title": "🐾 Noch keine Haustierprofile",
+      "description": "Erstellen Sie Ihr erstes Haustierprofil für personalisierte Trainingsempfehlungen von unserem KI-Trainer-Team.",
+      "createFirst": "Erstes Haustierprofil erstellen"
+    },
+    "limit": {
+      "reached": "Sie haben die maximale Anzahl von Haustieren ({max}) für Ihren aktuellen Plan erreicht.",
+      "near": "Sie haben {current} von {max} Haustieren erstellt.",
+      "upgrade": "Plan upgraden"
+    },
+    "table": {
+      "name": "Name",
+      "species": "Art",
+      "breed": "Rasse",
+      "age": "Alter",
+      "birthDate": "Geburtsdatum",
+      "focus": "Fokus",
+      "actions": "Aktionen"
+    },
+    "delete": {
+      "title": "🗑️ Haustierprofil löschen",
+      "confirmation": "Sind Sie sicher, dass Sie das Haustierprofil von {name} löschen möchten?",
+      "confirmationStrong": "Sind Sie <strong>absolut sicher</strong>, dass Sie das Haustierprofil von <strong>{name}</strong> löschen möchten?",
+      "warning": "Diese Aktion kann nicht rückgängig gemacht werden.",
+      "irreversible": "⚠️ Diese Aktion kann NICHT rückgängig gemacht werden!",
+      "dataLoss": "Alle Daten, Chat-Verläufe und Trainingspläne für dieses Haustier gehen dauerhaft verloren.",
+      "confirmName": "Geben Sie den Namen \"<strong>{name}</strong>\" ein, um zu bestätigen und fortzufahren.",
+      "confirm": "Löschen",
+      "permanently": "Endgültig löschen"
+    },
+    "carousel": {
+      "swipeHint": "Wischen Sie links/rechts für weitere Haustierprofile"
+    },
+    "form": {
+      "editTitle": "✏️ Haustierprofil bearbeiten",
+      "createTitle": "🐾 Neues Haustierprofil",
+      "name": "Name",
+      "namePlaceholder": "z.B. Bella",
+      "species": "Art",
+      "speciesPlaceholder": "z.B. Hund, Katze, Pferd",
+      "breed": "Rasse",
+      "breedPlaceholder": "z.B. Golden Retriever",
+      "birthDate": "Geburtsdatum",
+      "selectDate": "Datum auswählen",
+      "age": "Alter",
+      "agePlaceholder": "Wird automatisch berechnet",
+      "ageCalculated": "Alter wird automatisch aus dem Geburtsdatum berechnet",
+      "behaviorFocus": "Verhaltensfokus",
+      "behaviorFocusPlaceholder": "z.B. Leinentraining, Trennungsangst",
+      "notes": "Notizen",
+      "notesPlaceholder": "Zusätzliche Informationen über Ihr Haustier...",
+      "saving": "💾 Speichern...",
+      "update": "💾 Aktualisieren",
+      "create": "🚀 Jetzt erstellen",
+      "errors": {
+        "nameRequired": "Name ist ein Pflichtfeld",
+        "speciesRequired": "Art ist ein Pflichtfeld",
+        "mustBeLoggedIn": "Sie müssen angemeldet sein, um ein Haustierprofil zu speichern.",
+        "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
+      }
+    },
+    "toast": {
+      "created": {
+        "title": "✅ Haustierprofil erstellt!",
+        "description": "{name} wurde erfolgreich zu Ihren Haustieren hinzugefügt"
+      },
+      "updated": {
+        "title": "✅ Haustierprofil aktualisiert!",
+        "description": "{name} wurde erfolgreich aktualisiert"
+      },
+      "saved": {
+        "title": "💾 Gespeichert",
+        "description": "{name} wurde erfolgreich in der Datenbank gespeichert"
+      },
+      "deleted": {
+        "title": "🗑️ Haustierprofil gelöscht",
+        "description": "{name} wurde aus Ihren Haustieren entfernt"
+      },
+      "deletedConfirmed": {
+        "title": "✅ Löschung bestätigt",
+        "description": "Haustierprofil von {name} wurde endgültig gelöscht"
+      },
+      "error": {
+        "title": "❌ Fehler",
+        "description": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+      }
+    }
+  },
+  "subscription": {
+    "overview": {
+      "currentStatus": "Aktueller Status",
+      "currentStatusDescription": "Ihr aktueller Abonnement-Status",
+      "status": "Status",
+      "sevenDayTrial": "7-Tage Testphase",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "plan": "Plan",
+      "billing": "Abrechnung",
+      "yearly": "Jährlich",
+      "monthly": "Monatlich",
+      "trialEnds": "Testphase endet",
+      "expires": "Läuft ab",
+      "renews": "Erneuert sich",
+      "cancellationWarning": "Ihr Abonnement wird am Ende der aktuellen Periode gekündigt",
+      "manageSubscription": "Abonnement verwalten",
+      "cancelSubscription": "Abonnement kündigen"
+    },
+    "requiredWarning": {
+      "title": "Premium-Feature erforderlich",
+      "description": "Um Haustierprofile zu erstellen und zu verwalten, benötigen Sie ein Premium-Abonnement",
+      "currentStatus": "Aktueller Status",
+      "freeAccount": "Kostenloses Konto",
+      "startToday": "Starten Sie heute mit professioneller Haustiererziehung",
+      "upgradeNow": "Jetzt upgraden",
+      "trialInfo": "7 Tage kostenlose Testphase • Jederzeit kündbar",
+      "supportInfo": "Haben Sie Fragen? Kontaktieren Sie unseren Support für persönliche Beratung."
+    },
+    "upgradeModal": {
+      "title": "🐾 Erweitern Sie Ihr Haustier-Paket!",
+      "description": "Sie haben bereits {current} von {max} Haustieren erstellt. Upgraden Sie zu einem größeren Paket, um weitere Haustiere hinzuzufügen!",
+      "currentPlan": "Ihr aktueller Plan",
+      "upTo": "Bis zu",
+      "unlimited": "unbegrenzt",
+      "pets": "Haustiere",
+      "active": "Aktiv",
+      "instantUpgrade": "⚡ Sofortiges Upgrade",
+      "instantActivation": "Upgrade wird sofort nach der Zahlung aktiviert",
+      "allFeaturesAvailable": "Alle neuen Features sind direkt verfügbar",
+      "securePayment": "Sichere Zahlung über Stripe",
+      "cancelAnytime": "Jederzeit kündbar",
+      "popular": "Beliebt",
+      "upgrade": "Upgrade",
+      "perMonth": "/Monat",
+      "morePets": "weitere Haustiere",
+      "processing": "Verarbeitung...",
+      "upgradeNow": "Jetzt upgraden",
+      "maxPlanReached": "Sie haben bereits das größte Paket!",
+      "maxPlanDescription": "Mit {max} Haustier-Slots haben Sie das maximale Paket erreicht.",
+      "securityInfo": "🔒 Sicher & DSGVO-konform • Jederzeit kündbar • Sofortige Aktivierung nach Zahlung"
+    },
+    "trialStatus": {
+      "error": "Fehler",
+      "couldNotLoad": "Teststatus konnte nicht geladen werden",
+      "myTrialStatus": "Mein Teststatus",
+      "trialEligibility": "Testberechtigung",
+      "eligible": "Berechtigt",
+      "notEligible": "Nicht berechtigt",
+      "trialUsed": "Test verwendet",
+      "alreadyUsed": "Bereits verwendet",
+      "stillAvailable": "Noch verfügbar",
+      "activeTrial": "Aktiver Test",
+      "daysRemaining": "Sie haben noch <strong>{days} Tage</strong> kostenlosen Zugang!",
+      "trialEnd": "Testende",
+      "trialAvailable": "Test verfügbar!",
+      "canStartTrial": "Sie können eine 7-tägige kostenlose Testphase starten.",
+      "trialAlreadyUsed": "Sie haben bereits eine Testphase verwendet. Für zusätzliche Testphasen kontaktieren Sie bitte unseren Support.",
+      "loading": "Teststatus wird geladen...",
+      "refreshStatus": "Status aktualisieren"
+    },
+    "cancellation": {
+      "moneyBackGuarantee": "💰 Geld-zurück-Garantie",
+      "cancelSubscription": "Abonnement kündigen",
+      "errors": {
+        "expiredPeriod": {
+          "title": "14-Tage Geld-zurück-Garantie abgelaufen",
+          "description": "Ihr Abonnement wurde vor {days} Tagen gestartet. Die Geld-zurück-Garantie ist nur in den ersten 14 Tagen nach der Anmeldung gültig. Sie können Ihr Abonnement trotzdem kündigen - es läuft bis {endDate}.",
+          "endDate": "Ablaufdatum"
+        },
+        "alreadyCancelled": {
+          "title": "Abonnement bereits gekündigt",
+          "description": "Ihr Abonnement wurde bereits gekündigt und läuft bis zum Ende der Periode."
+        },
+        "noSubscription": {
+          "title": "Kein aktives Abonnement gefunden",
+          "description": "Für Ihr Konto konnte kein aktives Abonnement gefunden werden."
+        },
+        "noGuarantee": {
+          "title": "Kündigungshinweis",
+          "description": "Ihr Abonnement-Paket enthält keine 14-tägige Geld-zurück-Garantie. Die Geld-zurück-Garantie ist nur mit dem \"1 Haustier\"-Paket verfügbar. Sie können Ihr Abonnement trotzdem kündigen - es läuft bis {endDate}.",
+          "endDate": "Ablaufdatum"
+        },
+        "general": {
+          "title": "Kündigungsfehler",
+          "description": "Ein unerwarteter Fehler ist aufgetreten. Bitte kontaktieren Sie den Support."
+        }
+      }
+    },
+    "breadcrumb": {
+      "home": "Startseite",
+      "backToPricing": "Zurück zu den Preisen",
+      "myPetTraining": "Meine Haustiererziehung"
+    },
+    "modeDisplay": {
+      "loading": "Laden...",
+      "freeMode": "Kostenloser Modus",
+      "sevenDayTrial": "7-Tage Testphase (endet {{endDate}})",
+      "trialExpired": "Testphase abgelaufen",
+      "premium": "Premium",
+      "onePet": "1 Haustier Plan",
+      "twoPets": "2 Haustiere Plan",
+      "threeFourPets": "3-4 Haustiere Plan",
+      "fiveEightPets": "5-8 Haustiere Plan",
+      "unlimited": "Unbegrenzte Haustiere",
+      "unknown": "Unbekannt"
+    },
+    "refreshButton": {
+      "updated": "✅ Aktualisiert",
+      "successfullyUpdated": "Ihre Abonnement-Daten wurden erfolgreich aktualisiert.",
+      "error": "❌ Fehler",
+      "couldNotUpdate": "Abonnement konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+      "updating": "Aktualisierung...",
+      "updateSubscription": "Abonnement aktualisieren"
+    },
+    "errorState": {
+      "loadingError": "Ladefehler",
+      "tryAgain": "Erneut versuchen"
+    },
+    "loadingState": {
+      "loadingData": "Abonnement-Daten werden geladen...",
+      "takingLonger": "Dauert länger als erwartet?",
+      "retry": "Wiederholen",
+      "retryLoading": "Abonnement-Daten erneut laden",
+      "pleaseWait": "Bitte warten Sie, während wir Ihre Abonnement-Informationen laden. Dies kann einen Moment dauern."
+    },
+    "petSelection": {
+      "title": "Tier-Auswahl erforderlich",
+      "description": "Dein aktuelles Paket erlaubt nur {maxAllowed, plural, one {1 aktives Tier} other {# aktive Tiere}}. Bitte wähle aus, {maxAllowed, plural, one {welches Tier} other {welche Tiere}} aktiv bleiben soll{maxAllowed, plural, one {} other {en}}.",
+      "noWorries": "Keine Sorge!",
+      "assurances": {
+        "profilesSaved": "• Alle Tierprofile bleiben gespeichert",
+        "archivedOnly": "• Nicht aktive Tiere werden nur archiviert",
+        "reactivateUpgrade": "• Du kannst sie jederzeit durch ein Upgrade reaktivieren",
+        "trainingDataPreserved": "• Alle Trainingsdaten bleiben erhalten"
+      },
+      "selectActive": "Wähle {maxAllowed, plural, one {dein aktives Tier} other {deine # aktiven Tiere}} aus:",
+      "selectedCount": "{selected} von {maxAllowed} {maxAllowed, plural, one {Tier} other {Tieren}} ausgewählt",
+      "cancel": "Abbrechen",
+      "confirmSelection": "Auswahl bestätigen",
+      "saving": "Speichere...",
+      "error": {
+        "title": "❌ Fehler",
+        "description": "Die Auswahl konnte nicht gespeichert werden."
+      },
+      "selectionRequired": {
+        "title": "Auswahl erforderlich",
+        "description": "Bitte wähle mindestens {maxAllowed, plural, one {ein Tier} other {# Tiere}} aus."
+      }
+    }
+  },
+  "legal": {
+    "close": "Schließen",
+    "privacy": {
+      "title": "Datenschutzerklärung",
+      "subtitle": "Tiertrainer24 – Ein Produkt der Shopping-Guru GmbH"
+    },
+    "agb": {
+      "company": {
+        "name": "Shopping-Guru GmbH",
+        "address": "Krähenhoop 4, D-38448 Wolfsburg",
+        "ceo": "CEO: Shawn Asaro",
+        "email": "E-Mail: support@tiertrainer24.com",
+        "website": "Web: www.tiertrainer24.com, www.tiertrainer1.com"
+      },
+      "lastUpdated": "Zuletzt aktualisiert: Juni 2025",
+      "title": "Allgemeine Geschäftsbedingungen (AGB)",
+      "subtitle": "Tiertrainer24 – Ein Produkt der Shopping-Guru GmbH",
+      "sections": {
+        "scope": {
+          "title": "1. Anwendungsbereich",
+          "content": "Diese Allgemeinen Geschäftsbedingungen gelten für alle Verträge zwischen der Shopping-Guru GmbH (im Folgenden \"wir\" oder \"Tiertrainer24\") und Nutzern unserer Online-Plattform tiertrainer24.com oder tiertrainer1.com."
+        },
+        "registration": {
+          "title": "3. Registrierung & Benutzerkonto",
+          "content": "Die Nutzung erfordert eine Registrierung. Nach der Kontoerstellung können Haustierprofile verwaltet und Abonnements abgeschlossen werden."
+        },
+        "company": {
+          "name": "Shopping-Guru GmbH",
+          "street": "Krähenhoop 4",
+          "city": "D-38448 Wolfsburg",
+          "ceo": "CEO: Shawn Asaro",
+          "email": "E-Mail",
+          "web": "Web",
+          "vat": "Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: DE305366892"
+        },
+        "services": {
+          "title": "2. Leistungsbeschreibung",
+          "description": "Tiertrainer24 bietet digitale Online-Haustiererziehung mit:",
+          "features": {
+            "ai": "KI-gestützte Verhaltensanalyse & Empfehlungen",
+            "communication": "Interaktive Kommunikation über Text, Sprache und Bild",
+            "plans": "Individuelle Trainingspläne & Fortschrittsverfolgung"
+          },
+          "intro": "Tiertrainer24 bietet Haustierbesitzern digitale Online-Haustiererziehung. Inbegriffen sind:",
+          "aiAnalysis": "KI-gestützte Verhaltensanalyse & Empfehlungen",
+          "communication": "Interaktive Kommunikation über Text, Sprache und Bild",
+          "trainingPlans": "Individuelle, anpassbare Trainingspläne",
+          "progressControl": "Fortschrittskontrolle mit Erinnerungsfunktionen",
+          "petProfiles": "Verwaltung mehrerer Haustierprofile",
+          "availability": "Unsere Dienste sind 24/7 online verfügbar, werbefrei und enthalten keine Produktplatzierungen."
+        },
+        "contract": {
+          "title": "4. Vertragsabschluss & Abonnement",
+          "intro": "Ein verbindlicher Vertrag kommt zustande, sobald ein kostenpflichtiges Abonnement ausgewählt und der Zahlungsvorgang abgeschlossen ist.",
+          "trial": {
+            "title": "Testphase:",
+            "period": "7-tägige kostenlose Testphase ohne automatische Belastung",
+            "cancellation": "Kündigung jederzeit im Benutzerkonto möglich",
+            "autoRenewal": "Falls während der Testphase keine Kündigung erfolgt, wird das Abonnement automatisch kostenpflichtig aktiviert"
+          },
+          "models": {
+            "title": "Abonnement-Modelle:",
+            "monthly": "Monatlich kündbar",
+            "semiAnnual": "Halbjährlich kündbar"
+          },
+          "binding": "Verbindlicher Vertrag beim Abschluss eines kostenpflichtigen Abonnements.",
+          "autoRenewal": "Ohne Kündigung wird das Abonnement automatisch kostenpflichtig."
+        },
+        "pricing": {
+          "title": "5. Preise & Zahlung",
+          "intro": "Es gelten die zum Zeitpunkt des Vertragsabschlusses auf www.tiertrainer24.com angezeigten Preise. Preisänderungen bleiben vorbehalten. Alle Preise verstehen sich inklusive gesetzlicher Mehrwertsteuer.",
+          "paymentMethods": "Folgende Zahlungsmethoden werden akzeptiert:",
+          "creditCard": "Kreditkarte",
+          "paypal": "PayPal",
+          "klarna": "Klarna",
+          "applePay": "Apple Pay",
+          "googlePay": "Google Pay",
+          "amazonPay": "Amazon Pay",
+          "autoDebit": "Die Belastung erfolgt automatisch entsprechend dem gewählten Abonnement-Modell.",
+          "content": "Alle Preise inkl. MwSt. Zahlung per Kreditkarte, PayPal, Klarna, Apple Pay, Google Pay, Amazon Pay."
+        },
+        "delivery": {
+          "title": "6. Leistungserbringung",
+          "content": "Der Zugang zur Online-Haustiererziehung erfolgt direkt nach der Registrierung oder nach Ablauf der Testphase. Die Leistungen werden ausschließlich digital erbracht."
+        },
+        "disclaimer": {
+          "title": "7. Haftungsausschluss & Medizinischer Hinweis",
+          "intro": "Tiertrainer24 erteilt keine medizinischen, tierärztlichen oder therapeutischen Ratschläge. Unsere Inhalte basieren auf KI-gestützten Analysen und Erkenntnissen aus der Tierverhaltenspsychologie, ersetzen jedoch keinen Besuch beim Tierarzt.",
+          "liability": "Bei gesundheitlichen Auffälligkeiten Ihres Haustiers muss umgehend eine tierärztliche Praxis konsultiert werden. Wir übernehmen keine Haftung für Schäden, die aus falscher Selbstbehandlung, unterlassenen tierärztlichen Maßnahmen oder Fehlinterpretation unserer Inhalte resultieren.",
+          "important": "Wichtig:",
+          "content": "Tiertrainer24 ersetzt keine tierärztliche Beratung. Bei Gesundheitsproblemen wenden Sie sich bitte an eine tierärztliche Praxis."
+        },
+        "license": {
+          "title": "8. Nutzungslizenz",
+          "content": "Mit Vertragsabschluss erhalten Nutzer ein einfaches, nicht übertragbares Nutzungsrecht für die persönliche Nutzung der Inhalte. Weitergabe, gewerbliche Nutzung oder Veröffentlichung ist untersagt."
+        },
+        "availability": {
+          "title": "9. Verfügbarkeit",
+          "content": "Wir streben eine stabile Verfügbarkeit unserer Plattform an. Kurzfristige Wartungsarbeiten und technische Ausfälle können jedoch nicht ausgeschlossen werden."
+        },
+        "cancellation": {
+          "email": "Kündigung per E-Mail: support@tiertrainer24.com",
+          "expiry": "Widerrufsrecht erlischt bei Zustimmung zum sofortigen Leistungsbeginn.",
+          "title": "10. Widerrufsrecht",
+          "instruction": "Widerrufsanweisungen",
+          "right": "Verbraucher haben ein 14-tägiges Widerrufsrecht.",
+          "period": {
+            "title": "Fristbeginn:",
+            "content": "Die Frist beginnt mit dem Abschluss des Vertrags."
+          },
+          "exercise": {
+            "title": "Ausübung des Widerrufs:",
+            "content": "Einfach per E-Mail an support@tiertrainer24.com oder per Post:"
+          },
+          "form": {
+            "title": "📄 Muster-Widerrufsformular:",
+            "subtitle": "(Bitte ausfüllen und senden bei Widerruf)",
+            "company": {
+              "name": "Shopping-Guru GmbH",
+              "street": "Krähenhoop 4",
+              "city": "38448 Wolfsburg",
+              "email": "E-Mail: support@tiertrainer24.com"
+            },
+            "declaration": "Hiermit widerrufe ich den Vertrag für die Nutzung der folgenden Dienstleistung:",
+            "orderedOn": "Bestellt am: ___________",
+            "name": "Name: __________________________",
+            "address": "Adresse: _______________________",
+            "dateSignature": "Datum / Unterschrift: ___________"
+          },
+          "note": {
+            "title": "Hinweis:",
+            "content": "Das Widerrufsrecht erlischt vorzeitig, wenn Sie ausdrücklich zustimmen, dass bei digitalen Inhalten die Leistungserbringung vor Ablauf der Widerrufsfrist beginnt."
+          }
+        },
+        "privacy": {
+          "title": "11. Datenschutz",
+          "content": "Personenbezogene Daten werden ausschließlich zur Vertragserfüllung gemäß DSGVO und BDSG verarbeitet. Details finden Sie in unserer Datenschutzerklärung."
+        },
+        "jurisdiction": {
+          "title": "12. Gerichtsstand & Schlussbestimmungen",
+          "law": "Deutsches Recht gilt.",
+          "court": "Gerichtsstand ist, soweit rechtlich zulässig, Berlin.",
+          "validity": "Sollten einzelne Klauseln unwirksam sein, bleibt die Wirksamkeit der übrigen unberührt.",
+          "content": "Deutsches Recht. Gerichtsstand: Wolfsburg."
+        }
+      }
+    },
+    "impressum": {
+      "title": "Impressum",
+      "subtitle": "Tiertrainer24 – Ein Produkt der Shopping-Guru GmbH",
+      "sections": {
+        "responsible": {
+          "title": "1. Verantwortlicher",
+          "company": "Shopping-Guru GmbH",
+          "street": "Krähenhoop 4",
+          "city": "38448 Wolfsburg",
+          "country": "Deutschland",
+          "ceo": "CEO: Shawn Asaro",
+          "email": "E-Mail",
+          "web": "Web",
+          "name": "Shawn Asaro"
+        },
+        "general": {
+          "title": "2. Allgemeine Datenverarbeitung",
+          "content": "Der Schutz Ihrer personenbezogenen Daten hat für uns höchste Priorität. Wir verarbeiten Ihre Daten ausschließlich im Rahmen der gesetzlichen Datenschutzbestimmungen, insbesondere der DSGVO und des BDSG."
+        },
+        "dataTypes": {
+          "title": "3. Welche Daten wir verarbeiten",
+          "registration": {
+            "title": "a) Bei Registrierung und Nutzung:",
+            "firstName": "Vorname, Nachname (optional)",
+            "email": "E-Mail-Adresse",
+            "petProfiles": "Haustierprofile (Name, Art, Verhaltensthema)",
+            "password": "Passwort (verschlüsselt)",
+            "chatHistory": "Chat-Verlauf einschließlich Text-, Bild- und Sprachnachrichten",
+            "trainingDocs": "Individuelle Trainingsdokumentation"
+          },
+          "automatic": {
+            "title": "b) Automatisch beim Besuch der Website:",
+            "ipAddress": "IP-Adresse",
+            "dateTime": "Datum und Uhrzeit des Zugriffs",
+            "browser": "Browser-Typ und -Version",
+            "os": "Betriebssystem",
+            "referrer": "Referrer-URL",
+            "device": "Gerät"
+          }
+        },
+        "purposes": {
+          "title": "4. Zwecke der Datenverarbeitung",
+          "intro": "Wir verarbeiten Ihre Daten für folgende Zwecke:",
+          "services": "Bereitstellung unserer digitalen Dienste (24/7 Haustierverhaltensberatung)",
+          "analysis": "Analyse des Tierverhaltens basierend auf Ihren Eingaben",
+          "trainingPlans": "Erstellung individueller Trainingspläne",
+          "platform": "Betrieb, Wartung und Verbesserung der Plattform",
+          "payment": "Zahlungsabwicklung",
+          "legal": "Erfüllung gesetzlicher Verpflichtungen"
+        },
+        "legalBasis": {
+          "title": "5. Rechtsgrundlage",
+          "intro": "Die Verarbeitung Ihrer Daten erfolgt gemäß:",
+          "contract": "Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung)",
+          "consent": "Art. 6 Abs. 1 lit. a DSGVO (Einwilligung, z.B. für Bild- oder Audioanalyse)",
+          "legitimateInterest": "Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse: Betrieb, Sicherheit, Funktionalität)",
+          "legalObligation": "Art. 6 Abs. 1 lit. c DSGVO (gesetzliche Verpflichtungen)"
+        },
+        "paymentProviders": {
+          "title": "6. Zahlungsdienstleister",
+          "intro": "Für die Zahlungsabwicklung nutzen wir externe Anbieter. Zahlungsdaten werden direkt an folgende eigenverantwortliche Dienste übermittelt:",
+          "paypal": "PayPal (Europe) S.à r.l.",
+          "stripe": "Stripe Payments Europe Ltd.",
+          "klarna": "Klarna Bank AB",
+          "applePay": "Apple Pay",
+          "googlePay": "Google Pay",
+          "amazonPay": "Amazon Pay",
+          "note": "Diese Anbieter verarbeiten Daten eigenverantwortlich gemäß ihren jeweiligen Datenschutzrichtlinien."
+        },
+        "cookies": {
+          "title": "7. Cookies & Tracking",
+          "necessary": "Wir verwenden technisch notwendige Cookies, um die Funktionalität unserer Website sicherzustellen.",
+          "optional": "Optionale Tracking-Tools (z.B. Google Analytics, Matomo) werden nur nach aktiver Einwilligung über Cookie-Banner verwendet.",
+          "withdrawal": "Sie können Ihre Einwilligung jederzeit widerrufen oder ändern."
+        },
+        "dataProcessing": {
+          "title": "8. Datenverarbeitung & Datenübertragung",
+          "services": "Zur Bereitstellung unserer Dienste nutzen wir externe Dienstleister (z.B. für Hosting, Wartung, Support), die gemäß Art. 28 DSGVO zur Verschwiegenheit verpflichtet sind.",
+          "noAdvertising": "Daten werden niemals zu Werbezwecken an Dritte weitergegeben."
+        },
+        "storage": {
+          "title": "9. Speicherdauer",
+          "duration": "Wir speichern personenbezogene Daten nur so lange, wie es für den jeweiligen Zweck erforderlich ist.",
+          "deletion": "Nach Kündigung oder längerer Inaktivität löschen wir Ihr Benutzerkonto innerhalb von 30 Tagen, es sei denn, gesetzliche Aufbewahrungspflichten verhindern dies."
+        },
+        "rights": {
+          "title": "10. Ihre Rechte",
+          "intro": "Sie haben jederzeit das Recht auf:",
+          "information": "Auskunft (Art. 15 DSGVO)",
+          "correction": "Berichtigung (Art. 16 DSGVO)",
+          "deletion": "Löschung (Art. 17 DSGVO)",
+          "restriction": "Einschränkung der Verarbeitung (Art. 18 DSGVO)",
+          "portability": "Datenübertragbarkeit (Art. 20 DSGVO)",
+          "objection": "Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)",
+          "contact": "Zur Ausübung Ihrer Rechte schreiben Sie bitte an"
+        },
+        "security": {
+          "title": "11. Sicherheit",
+          "content": "Unsere Plattform verwendet moderne Sicherheitsstandards (z.B. SSL-Verschlüsselung), um Ihre Daten vor unbefugtem Zugriff zu schützen."
+        },
+        "ai": {
+          "title": "12. Hinweis zu KI-gestützten Funktionen",
+          "content": "Tiertrainer24 verwendet KI-gestützte Systeme zur Tierverhaltensanalyse. Ihre Texte, Bilder und Sprachaufnahmen werden nicht für die Weiterentwicklung oder das Training von KI verwendet, sondern ausschließlich für die situative Einzelfallbearbeitung."
+        },
+        "changes": {
+          "title": "13. Änderungen dieser Erklärung",
+          "intro": "Wir behalten uns das Recht vor, diese Datenschutzerklärung bei Bedarf anzupassen. Die aktuelle Version finden Sie jederzeit unter:"
+        },
+        "legalInfo": {
+          "title": "Angaben gemäß § 5 TMG",
+          "company": "Shopping-Guru GmbH",
+          "street": "Krähenhoop 4",
+          "city": "D-38448 Wolfsburg",
+          "country": "Deutschland"
+        },
+        "representation": {
+          "title": "Vertreten durch:",
+          "ceo": "CEO: Shawn Asaro"
+        },
+        "vat": {
+          "title": "Umsatzsteuer-Identifikationsnummer",
+          "number": "Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: DE305366892"
+        },
+        "contact": {
+          "title": "Kontakt",
+          "email": "E-Mail",
+          "website1": "Website",
+          "website2": "Website"
+        },
+        "registry": {
+          "title": "Handelsregister",
+          "registered": "Eingetragen im Handelsregister.",
+          "court": "Registergericht: Amtsgericht Braunschweig",
+          "number": "Handelsregisternummer: HRB 211913"
+        },
+        "dispute": {
+          "title": "Hinweis zur Online-Streitbeilegung gemäß Art. 14 Abs. 1 ODR-VO",
+          "description": "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:",
+          "emailInfo": "Unsere E-Mail-Adresse finden Sie oben im Impressum."
+        }
+      },
+      "lastUpdated": "Zuletzt aktualisiert: Juni 2025"
+    },
+    "cancellation": {
+      "title": "Widerrufsbelehrung",
+      "sections": {
+        "right": {
+          "title": "Widerrufsrecht",
+          "content": "Sie haben das Recht, diesen Vertrag innerhalb von vierzehn Tagen ohne Angabe von Gründen zu widerrufen."
+        },
+        "period": {
+          "title": "Widerrufsfrist",
+          "content": "Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsabschlusses."
+        },
+        "exercise": {
+          "title": "Ausübung des Widerrufsrechts",
+          "description": "Um Ihr Widerrufsrecht auszuüben, müssen Sie uns Ihre Entscheidung durch eine eindeutige Erklärung mitteilen:",
+          "company": {
+            "name": "Shopping-Guru GmbH",
+            "street": "Krähenhoop 4",
+            "city": "38448 Wolfsburg",
+            "email": "E-Mail: support@tiertrainer24.com"
+          }
+        },
+        "form": {
+          "title": "Muster-Widerrufsformular",
+          "description": "Wenn Sie den Vertrag widerrufen möchten, füllen Sie bitte dieses Formular aus und senden Sie es zurück:",
+          "to": "An: Shopping-Guru GmbH, Krähenhoop 4, 38448 Wolfsburg",
+          "email": "E-Mail: support@tiertrainer24.com",
+          "declaration": "Hiermit widerrufe(n) ich/wir den von mir/uns abgeschlossenen Vertrag über die Erbringung der folgenden Dienstleistung:",
+          "orderedOn": "Bestellt am",
+          "consumerName": "Name des/der Verbraucher(s)",
+          "consumerAddress": "Anschrift des/der Verbraucher(s)",
+          "consumerSignature": "Unterschrift des/der Verbraucher(s)",
+          "date": "Datum"
+        },
+        "consequences": {
+          "title": "Folgen des Widerrufs",
+          "content": "Wenn Sie diesen Vertrag widerrufen, erstatten wir alle Zahlungen, die wir von Ihnen erhalten haben, unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurück, an dem die Mitteilung über Ihren Widerruf dieses Vertrags bei uns eingegangen ist."
+        },
+        "expiry": {
+          "title": "Vorzeitiger Ablauf des Widerrufsrechts",
+          "important": "Wichtiger Hinweis:",
+          "content": "Ihr Widerrufsrecht erlischt vorzeitig, wenn wir mit der Ausführung der Dienstleistung begonnen haben, nachdem Sie Ihre ausdrückliche Zustimmung gegeben und gleichzeitig bestätigt haben, dass Sie Ihr Widerrufsrecht verlieren, sobald wir mit der vollständigen Ausführung der Dienstleistung begonnen haben."
+        }
+      }
     }
   },
   "adminTestUser": {

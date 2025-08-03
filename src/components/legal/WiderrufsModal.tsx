@@ -1,6 +1,8 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
+import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface WiderrufsModalProps {
@@ -13,13 +15,44 @@ export const WiderrufsModal = ({ isOpen, onClose }: WiderrufsModalProps) => {
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh]">
-        <DialogHeader>
-          <DialogTitle className="text-xl">{t('legal.cancellation.title')}</DialogTitle>
+      <DialogContent 
+        className="max-w-2xl max-h-[90vh] p-0 gap-0 overflow-hidden"
+        aria-labelledby="widerrufs-modal-title"
+        aria-describedby="widerrufs-modal-subtitle"
+      >
+        {/* Fixed Header */}
+        <DialogHeader className="px-6 py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <DialogTitle 
+                id="widerrufs-modal-title"
+                className="text-xl font-bold text-left"
+              >
+                {t('legal.cancellation.title')}
+              </DialogTitle>
+              <p 
+                id="widerrufs-modal-subtitle"
+                className="text-muted-foreground mt-1 text-sm"
+              >
+                {t('legal.cancellation.sections.right.content')}
+              </p>
+            </div>
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full"
+              aria-label={t('legal.close')}
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">{t('legal.close')}</span>
+            </Button>
+          </div>
         </DialogHeader>
         
-        <ScrollArea className="h-[70vh] pr-4">
-          <div className="space-y-4 text-sm">
+        {/* Scrollable Content */}
+        <ScrollArea className="flex-1 max-h-[calc(90vh-120px)]">
+          <div className="px-6 py-6 space-y-4 text-sm">
             <section>
               <h3 className="font-semibold mb-2">{t('legal.cancellation.sections.right.title')}</h3>
               <p>{t('legal.cancellation.sections.right.content')}</p>
@@ -73,6 +106,19 @@ export const WiderrufsModal = ({ isOpen, onClose }: WiderrufsModalProps) => {
             </section>
           </div>
         </ScrollArea>
+        
+        {/* Fixed Footer with Close Button */}
+        <div className="px-6 py-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex justify-end">
+            <Button 
+              onClick={onClose} 
+              variant="outline"
+              aria-label={t('legal.close')}
+            >
+              {t('legal.close')}
+            </Button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

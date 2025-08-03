@@ -110,7 +110,7 @@
     "developmentBadge": "Development",
     "testAccess": "Test Access Active",
     "riskFreeTrial": "14 Days Risk-Free Trial",
-    "mainTitle": "The <span class=\"text-brand-gradient font-extrabold drop-shadow-beautiful text-beautiful-shadow\">smart pet training</span><br /><span class=\"text-foreground/85 font-bold tracking-wide\">for happy (house) pets</span>",
+    "mainTitle": "The <span class=\"text-brand-gradient font-extrabold drop-shadow-beautiful text-beautiful-shadow\">smart training</span><br /><span class=\"text-foreground/85 font-bold tracking-wide\">for happy pets</span> – at home and beyond",
     "subtitle": "Individual training based on the latest methods – <span class=\"text-primary font-semibold\">proven in practice</span>, <span class=\"text-primary font-semibold\">available anytime</span>.",
     "features": {
       "trainerAvailable": "🕒 24/7 Trainer Available",
@@ -2561,341 +2561,6 @@
           "swipeHint": "Swipe to navigate"
         }
       },
-      "legal": {
-        "close": "Close",
-        "privacy": {
-          "title": "Privacy Policy",
-          "subtitle": "Tiertrainer24 – A product of Shopping-Guru GmbH"
-        },
-        "agb": {
-          "company": {
-            "name": "Shopping-Guru GmbH",
-            "address": "Krähenhoop 4, D-38448 Wolfsburg",
-            "ceo": "CEO: Shawn Asaro",
-            "email": "Email: support@tiertrainer24.com",
-            "website": "Web: www.tiertrainer24.com, www.tiertrainer1.com"
-          },
-          "lastUpdated": "Last updated: June 2025",
-          "title": "General Terms and Conditions (GTC)",
-          "subtitle": "Tiertrainer24 – A product of Shopping-Guru GmbH",
-          "sections": {
-            "scope": {
-              "title": "1. Scope of Application",
-              "content": "These General Terms and Conditions apply to all contracts between Shopping-Guru GmbH (hereinafter \"we\" or \"Tiertrainer24\") and users of our online platform tiertrainer24.com or tiertrainer1.com."
-            },
-            "registration": {
-              "title": "3. Registration & User Account",
-              "content": "Usage requires registration. After account creation, pet profiles can be managed and subscriptions can be concluded."
-            },
-            "company": {
-              "name": "Shopping-Guru GmbH",
-              "street": "Krähenhoop 4",
-              "city": "D-38448 Wolfsburg",
-              "ceo": "CEO: Shawn Asaro",
-              "email": "Email",
-              "web": "Web",
-              "vat": "VAT identification number according to § 27a UStG: DE305366892"
-            },
-            "services": {
-              "title": "2. Service Description",
-              "description": "Tiertrainer24 provides digital online pet training with:",
-              "features": {
-                "ai": "AI-powered behavior analysis & recommendations",
-                "communication": "Interactive communication via text, voice, and image",
-                "plans": "Individual training plans & progress tracking"
-              },
-              "intro": "Tiertrainer24 provides pet owners with digital online pet training. Included are:",
-              "aiAnalysis": "AI-supported behavior analysis & recommendations",
-              "communication": "Interactive communication via text, voice and image",
-              "trainingPlans": "Individual, customizable training plans",
-              "progressControl": "Progress control with reminder functions",
-              "petProfiles": "Management of multiple pet profiles",
-              "availability": "Our services are available 24/7 online, are ad-free and contain no product placements."
-            },
-            "contract": {
-              "title": "4. Contract Conclusion & Subscription",
-              "intro": "A binding contract is concluded as soon as a paid subscription is selected and the payment process is completed.",
-              "trial": {
-                "title": "Trial period:",
-                "period": "7-day free trial period without automatic debiting",
-                "cancellation": "Cancellation possible at any time in the user account",
-                "autoRenewal": "If no cancellation occurs during the trial period, the subscription is automatically activated for a fee"
-              },
-              "models": {
-                "title": "Subscription models:",
-                "monthly": "Cancellable monthly",
-                "semiAnnual": "Cancellable semi-annually"
-              },
-              "binding": "Binding contract when concluding a paid subscription.",
-              "autoRenewal": "Without cancellation, the subscription automatically becomes paid."
-            },
-            "pricing": {
-              "title": "5. Prices & Payment",
-              "intro": "The prices displayed on www.tiertrainer24.com at the time of contract conclusion apply. Price changes remain reserved. All prices are inclusive of statutory VAT.",
-              "paymentMethods": "The following payment methods are accepted:",
-              "creditCard": "Credit card",
-              "paypal": "PayPal",
-              "klarna": "Klarna",
-              "applePay": "Apple Pay",
-              "googlePay": "Google Pay",
-              "amazonPay": "Amazon Pay",
-              "autoDebit": "Debiting takes place automatically according to the chosen subscription model.",
-              "content": "All prices incl. VAT. Payment by credit card, PayPal, Klarna, Apple Pay, Google Pay, Amazon Pay."
-            },
-            "delivery": {
-              "title": "6. Service Delivery",
-              "content": "Access to online pet training takes place directly after registration or after the trial period expires. Services are provided exclusively digitally."
-            },
-            "disclaimer": {
-              "title": "7. Disclaimer & Medical Notice",
-              "intro": "Tiertrainer24 does not provide medical, veterinary or therapeutic advice. Our content is based on AI-supported analyses and findings from animal behavior psychology, but does not replace a visit to a veterinarian.",
-              "liability": "In case of health abnormalities in your pet, a veterinary practice must be consulted immediately. We assume no liability for damages resulting from incorrect self-treatment, omitted veterinary measures or misinterpretation of our content.",
-              "important": "Important:",
-              "content": "Tiertrainer24 does not replace veterinary consultation. For health problems, please contact a veterinary practice."
-            },
-            "license": {
-              "title": "8. Usage License",
-              "content": "Upon contract conclusion, users receive a simple, non-transferable usage right for personal use of the content. Sharing, commercial use or publication is prohibited."
-            },
-            "availability": {
-              "title": "9. Availability",
-              "content": "We strive for stable availability of our platform. However, short-term maintenance work and technical failures cannot be ruled out."
-            },
-            "cancellation": {
-              "email": "Cancellation by email: support@tiertrainer24.com",
-              "expiry": "Right of cancellation expires with consent to immediate service commencement.",
-              "title": "10. Right of Cancellation",
-              "instruction": "Cancellation Instructions",
-              "right": "Consumers have a 14-day right of cancellation.",
-              "period": {
-                "title": "Period start:",
-                "content": "The period begins with the conclusion of the contract."
-              },
-              "exercise": {
-                "title": "Exercise of cancellation:",
-                "content": "Simply by email to support@tiertrainer24.com or by post:"
-              },
-              "form": {
-                "title": "📄 Sample cancellation form:",
-                "subtitle": "(Please fill out and send in case of cancellation)",
-                "company": {
-                  "name": "Shopping-Guru GmbH",
-                  "street": "Krähenhoop 4",
-                  "city": "38448 Wolfsburg",
-                  "email": "Email: support@tiertrainer24.com"
-                },
-                "declaration": "Hereby I cancel the contract for the use of the following service:",
-                "orderedOn": "Ordered on: ___________",
-                "name": "Name: __________________________",
-                "address": "Address: _______________________",
-                "dateSignature": "Date / Signature: ___________"
-              },
-              "note": {
-                "title": "Note:",
-                "content": "The right of cancellation expires prematurely if you expressly agree to digital content that the service provision begins before the cancellation period expires."
-              }
-            },
-            "privacy": {
-              "title": "11. Privacy",
-              "content": "Personal data is processed exclusively for contract fulfillment in accordance with GDPR and BDSG. Details can be found in our privacy policy."
-            },
-            "jurisdiction": {
-              "title": "12. Jurisdiction & Final Provisions",
-              "law": "German law applies.",
-              "court": "Jurisdiction, insofar as legally permissible, is Berlin.",
-              "validity": "Should individual clauses be invalid, the validity of the remaining ones remains unaffected.",
-              "content": "German law. Jurisdiction: Wolfsburg."
-            }
-          }
-        },
-        "impressum": {
-          "title": "Legal Notice",
-          "subtitle": "Tiertrainer24 – A product of Shopping-Guru GmbH",
-          "sections": {
-            "responsible": {
-              "title": "1. Data Controller",
-              "company": "Shopping-Guru GmbH",
-              "street": "Krähenhoop 4",
-              "city": "38448 Wolfsburg",
-              "country": "Germany",
-              "ceo": "CEO: Shawn Asaro",
-              "email": "Email",
-              "web": "Web",
-              "name": "Shawn Asaro"
-            },
-            "general": {
-              "title": "2. General Data Processing",
-              "content": "The protection of your personal data is our highest priority. We process your data exclusively within the framework of legal data protection regulations, in particular the GDPR and the BDSG."
-            },
-            "dataTypes": {
-              "title": "3. What Data We Process",
-              "registration": {
-                "title": "a) During registration and use:",
-                "firstName": "First name, last name (optional)",
-                "email": "Email address",
-                "petProfiles": "Pet profiles (name, species, behavior topic)",
-                "password": "Password (encrypted)",
-                "chatHistory": "Chat history including text, image and voice messages",
-                "trainingDocs": "Individual training documentation"
-              },
-              "automatic": {
-                "title": "b) Automatically when visiting the website:",
-                "ipAddress": "IP address",
-                "dateTime": "Date and time of access",
-                "browser": "Browser type and version",
-                "os": "Operating system",
-                "referrer": "Referrer URL",
-                "device": "Device"
-              }
-            },
-            "purposes": {
-              "title": "4. Purposes of Data Processing",
-              "intro": "We process your data for the following purposes:",
-              "services": "Provision of our digital services (24/7 pet behavior consultation)",
-              "analysis": "Analysis of animal behavior based on your inputs",
-              "trainingPlans": "Creation of individual training plans",
-              "platform": "Operation, maintenance and improvement of the platform",
-              "payment": "Payment processing",
-              "legal": "Fulfillment of legal obligations"
-            },
-            "legalBasis": {
-              "title": "5. Legal Basis",
-              "intro": "The processing of your data is carried out in accordance with:",
-              "contract": "Art. 6 para. 1 lit. b GDPR (contract fulfillment)",
-              "consent": "Art. 6 para. 1 lit. a GDPR (consent, e.g. for image or audio analysis)",
-              "legitimateInterest": "Art. 6 para. 1 lit. f GDPR (legitimate interest: operation, security, functionality)",
-              "legalObligation": "Art. 6 para. 1 lit. c GDPR (legal obligations)"
-            },
-            "paymentProviders": {
-              "title": "6. Payment Service Providers",
-              "intro": "For payment processing, we use external providers. Payment data is transmitted directly to the following independently responsible services:",
-              "paypal": "PayPal (Europe) S.à r.l.",
-              "stripe": "Stripe Payments Europe Ltd.",
-              "klarna": "Klarna Bank AB",
-              "applePay": "Apple Pay",
-              "googlePay": "Google Pay",
-              "amazonPay": "Amazon Pay",
-              "note": "These providers process data independently according to their respective privacy policies."
-            },
-            "cookies": {
-              "title": "7. Cookies & Tracking",
-              "necessary": "We use technically necessary cookies to ensure the functionality of our website.",
-              "optional": "Optional tracking tools (e.g. Google Analytics, Matomo) are only used after active consent via cookie banner.",
-              "withdrawal": "You can revoke or change your consent at any time."
-            },
-            "dataProcessing": {
-              "title": "8. Data Processing & Data Transfer",
-              "services": "To provide our services, we use external service providers (e.g. for hosting, maintenance, support) who are obliged to confidentiality according to Art. 28 GDPR.",
-              "noAdvertising": "Data is never passed on to third parties for advertising purposes."
-            },
-            "storage": {
-              "title": "9. Storage Period",
-              "duration": "We only store personal data for as long as it is necessary for the respective purpose.",
-              "deletion": "After cancellation or prolonged inactivity, we delete your user account within 30 days, unless legal retention obligations prevent this."
-            },
-            "rights": {
-              "title": "10. Your Rights",
-              "intro": "You have the right at any time to:",
-              "information": "Information (Art. 15 GDPR)",
-              "correction": "Correction (Art. 16 GDPR)",
-              "deletion": "Deletion (Art. 17 GDPR)",
-              "restriction": "Restriction of processing (Art. 18 GDPR)",
-              "portability": "Data portability (Art. 20 GDPR)",
-              "objection": "Objection to processing (Art. 21 GDPR)",
-              "contact": "To exercise your rights, please write to"
-            },
-            "security": {
-              "title": "11. Security",
-              "content": "Our platform uses modern security standards (e.g. SSL encryption) to protect your data from unauthorized access."
-            },
-            "ai": {
-              "title": "12. Note on AI-supported Functions",
-              "content": "Tiertrainer24 uses AI-supported systems for animal behavior analysis. Your texts, images and voice recordings are not used for the further development or training of AI, but exclusively for situational individual case processing."
-            },
-            "changes": {
-              "title": "13. Changes to this Statement",
-              "intro": "We reserve the right to adapt this privacy policy if necessary. You can find the current version at any time at:"
-            },
-            "legalInfo": {
-              "title": "Information according to § 5 TMG",
-              "company": "Shopping-Guru GmbH",
-              "street": "Krähenhoop 4",
-              "city": "D-38448 Wolfsburg",
-              "country": "Germany"
-            },
-            "representation": {
-              "title": "Represented by:",
-              "ceo": "CEO: Shawn Asaro"
-            },
-            "vat": {
-              "title": "VAT Identification Number",
-              "number": "VAT identification number according to § 27a UStG: DE305366892"
-            },
-            "contact": {
-              "title": "Contact",
-              "email": "Email",
-              "website1": "Website",
-              "website2": "Website"
-            },
-            "registry": {
-              "title": "Commercial Register",
-              "registered": "Registered in the commercial register.",
-              "court": "Register court: Amtsgericht Braunschweig",
-              "number": "Commercial register number: HRB 211913"
-            },
-            "dispute": {
-              "title": "Note on online dispute resolution according to Art. 14 Abs. 1 ODR-VO",
-              "description": "The European Commission provides a platform for online dispute resolution (OS):",
-              "emailInfo": "You can find our email address above in the legal notice."
-            }
-          },
-          "lastUpdated": "Last updated: June 2025"
-        },
-        "cancellation": {
-          "title": "Cancellation Policy",
-          "sections": {
-            "right": {
-              "title": "Right of Cancellation",
-              "content": "You have the right to cancel this contract within fourteen days without giving any reason."
-            },
-            "period": {
-              "title": "Cancellation Period",
-              "content": "The cancellation period is fourteen days from the day of contract conclusion."
-            },
-            "exercise": {
-              "title": "Exercise of the Right of Cancellation",
-              "description": "To exercise your right of cancellation, you must inform us of your decision by means of a clear declaration:",
-              "company": {
-                "name": "Shopping-Guru GmbH",
-                "street": "Krähenhoop 4",
-                "city": "38448 Wolfsburg",
-                "email": "Email: support@tiertrainer24.com"
-              }
-            },
-            "form": {
-              "title": "Model Cancellation Form",
-              "description": "If you want to cancel the contract, please fill out this form and send it back:",
-              "to": "To: Shopping-Guru GmbH, Krähenhoop 4, 38448 Wolfsburg",
-              "email": "Email: support@tiertrainer24.com",
-              "declaration": "I/we hereby cancel the contract concluded by me/us for the provision of the following service:",
-              "orderedOn": "Ordered on",
-              "consumerName": "Name of consumer(s)",
-              "consumerAddress": "Address of consumer(s)",
-              "consumerSignature": "Signature of consumer(s)",
-              "date": "Date"
-            },
-            "consequences": {
-              "title": "Consequences of Cancellation",
-              "content": "If you cancel this contract, we will refund all payments we have received from you immediately and no later than fourteen days from the day on which we received notification of your cancellation of this contract."
-            },
-            "expiry": {
-              "title": "Premature Expiry of the Right of Cancellation",
-              "important": "Important Notice:",
-              "content": "Your right of cancellation expires prematurely if we have begun to execute the service after you have given your express consent and at the same time confirmed that you lose your right of cancellation as soon as we have completely begun to execute the service."
-            }
-          }
-        }
-      },
       "performance": {
         "title": "Performance",
         "loading": "Loading...",
@@ -2921,107 +2586,6 @@
         "improvements": {
           "title": "Improvement Suggestions",
           "tooSlow": "too slow"
-        }
-      },
-      "pets": {
-        "noPets": "No pet profiles yet",
-        "addFirstPet": "Create your first pet profile for personalized training recommendations",
-        "addPet": "Add Pet",
-        "pets": "pets",
-        "behaviorFocus": "Behavior Focus",
-        "notes": "Notes",
-        "birthday": "🎂 Born",
-        "focus": "🎯 Focus",
-        "welcome": {
-          "title": "Welcome to TierTrainer24!",
-          "description": "Create your first pet profile and start with professional training. Our AI trainer helps you understand and improve your pet's behavior."
-        },
-        "empty": {
-          "title": "🐾 No pet profiles yet",
-          "description": "Create your first pet profile for personalized training recommendations from our AI trainer team.",
-          "createFirst": "Create first pet profile"
-        },
-        "limit": {
-          "reached": "You have reached the maximum number of pets ({max}) for your current plan.",
-          "near": "You have {current} of {max} pets created.",
-          "upgrade": "Upgrade Plan"
-        },
-        "table": {
-          "name": "Name",
-          "species": "Species",
-          "breed": "Breed",
-          "age": "Age",
-          "birthDate": "Birth Date",
-          "focus": "Focus",
-          "actions": "Actions"
-        },
-        "delete": {
-          "title": "🗑️ Delete Pet Profile",
-          "confirmation": "Are you sure you want to delete the pet profile of {name}?",
-          "confirmationStrong": "Are you <strong>absolutely sure</strong> that you want to delete the pet profile of <strong>{name}</strong>?",
-          "warning": "This action cannot be undone.",
-          "irreversible": "⚠️ This action CANNOT be undone!",
-          "dataLoss": "All data, chat histories, and training plans for this pet will be permanently lost.",
-          "confirmName": "Type the name \"<strong>{name}</strong>\" to confirm and proceed.",
-          "confirm": "Delete",
-          "permanently": "Delete Permanently"
-        },
-        "carousel": {
-          "swipeHint": "Swipe left/right for more pet profiles"
-        },
-        "form": {
-          "editTitle": "✏️ Edit Pet Profile",
-          "createTitle": "🐾 New Pet Profile",
-          "name": "Name",
-          "namePlaceholder": "e.g. Bella",
-          "species": "Species",
-          "speciesPlaceholder": "e.g. Dog, Cat, Horse",
-          "breed": "Breed",
-          "breedPlaceholder": "e.g. Golden Retriever",
-          "birthDate": "Birth Date",
-          "selectDate": "Select date",
-          "age": "Age",
-          "agePlaceholder": "Will be calculated automatically",
-          "ageCalculated": "Age will be calculated automatically from birth date",
-          "behaviorFocus": "Behavior Focus",
-          "behaviorFocusPlaceholder": "e.g. Leash training, Separation anxiety",
-          "notes": "Notes",
-          "notesPlaceholder": "Additional information about your pet...",
-          "saving": "💾 Saving...",
-          "update": "💾 Update",
-          "create": "🚀 Create Now",
-          "errors": {
-            "nameRequired": "Name is a required field",
-            "speciesRequired": "Species is a required field",
-            "mustBeLoggedIn": "You must be logged in to save a pet profile.",
-            "unexpected": "An unexpected error occurred"
-          }
-        },
-        "toast": {
-          "created": {
-            "title": "✅ Pet Profile Created!",
-            "description": "{name} has been successfully added to your pets"
-          },
-          "updated": {
-            "title": "✅ Pet Profile Updated!",
-            "description": "{name} has been successfully updated"
-          },
-          "saved": {
-            "title": "💾 Saved",
-            "description": "{name} has been successfully saved to the database"
-          },
-          "deleted": {
-            "title": "🗑️ Pet Profile Deleted",
-            "description": "{name} has been removed from your pets"
-          },
-          "deletedConfirmed": {
-            "title": "✅ Deletion Confirmed",
-            "description": "Pet profile of {name} has been permanently deleted"
-          },
-          "error": {
-            "title": "❌ Error",
-            "description": "An error occurred. Please try again."
-          }
         }
       },
       "pricing": {
@@ -3097,139 +2661,6 @@
           "guarantee": "💰 14 Days Money-Back Guarantee",
           "startToday": "Start today. Not satisfied? Money back. Automatically.",
           "description": "Cancel within 14 days of purchase and receive the full amount back – no questions, no hassle. Your trust is important to us."
-        }
-      },
-      "subscription": {
-        "overview": {
-          "currentStatus": "Current Status",
-          "currentStatusDescription": "Your current subscription status",
-          "status": "Status",
-          "sevenDayTrial": "7-Day Trial",
-          "active": "Active",
-          "inactive": "Inactive",
-          "plan": "Plan",
-          "billing": "Billing",
-          "yearly": "Yearly",
-          "monthly": "Monthly",
-          "trialEnds": "Trial ends",
-          "expires": "Expires",
-          "renews": "Renews",
-          "cancellationWarning": "Your subscription will be cancelled at the end of the current period",
-          "manageSubscription": "Manage Subscription",
-          "cancelSubscription": "Cancel Subscription"
-        },
-        "requiredWarning": {
-          "title": "Premium Feature Required",
-          "description": "To create and manage pet profiles, you need a premium subscription",
-          "currentStatus": "Current Status",
-          "freeAccount": "Free Account",
-          "startToday": "Start professional pet training today",
-          "upgradeNow": "Upgrade Now",
-          "trialInfo": "7 days free trial • Cancel anytime",
-          "supportInfo": "Have questions? Contact our support for personal consultation."
-        },
-        "upgradeModal": {
-          "title": "🐾 Expand Your Pet Package!",
-          "description": "You have already created {current} of {max} pets. Upgrade to a larger package to add more pets!",
-          "currentPlan": "Your Current Plan",
-          "upTo": "Up to",
-          "unlimited": "unlimited",
-          "pets": "pets",
-          "active": "Active",
-          "instantUpgrade": "⚡ Instant Upgrade",
-          "instantActivation": "Upgrade is activated immediately after payment",
-          "allFeaturesAvailable": "All new features are directly available",
-          "securePayment": "Secure payment via Stripe",
-          "cancelAnytime": "Cancel anytime",
-          "popular": "Popular",
-          "upgrade": "Upgrade",
-          "perMonth": "/month",
-          "morePets": "more pets",
-          "processing": "Processing...",
-          "upgradeNow": "Upgrade Now",
-          "maxPlanReached": "You already have the largest package!",
-          "maxPlanDescription": "With {max} pet slots, you have reached the maximum package.",
-          "securityInfo": "🔒 Secure & GDPR compliant • Cancel anytime • Immediate activation after payment"
-        },
-        "trialStatus": {
-          "error": "Error",
-          "couldNotLoad": "Trial status could not be loaded",
-          "myTrialStatus": "My Trial Status",
-          "trialEligibility": "Trial Eligibility",
-          "eligible": "Eligible",
-          "notEligible": "Not Eligible",
-          "trialUsed": "Trial Used",
-          "alreadyUsed": "Already Used",
-          "stillAvailable": "Still Available",
-          "activeTrial": "Active Trial",
-          "daysRemaining": "You still have <strong>{days} days</strong> of free access!",
-          "trialEnd": "Trial End",
-          "trialAvailable": "Trial Available!",
-          "canStartTrial": "You can start a 7-day free trial period.",
-          "trialAlreadyUsed": "You have already used a trial period. For additional trial periods, please contact our support.",
-          "loading": "Trial status is loading...",
-          "refreshStatus": "Refresh Status"
-        },
-        "cancellation": {
-          "moneyBackGuarantee": "💰 Money-Back Guarantee",
-          "cancelSubscription": "Cancel Subscription",
-          "errors": {
-            "expiredPeriod": {
-              "title": "14-Day Money-Back Guarantee Expired",
-              "description": "Your subscription was started {days} days ago. The money-back guarantee is only valid in the first 14 days after signing up. You can still cancel your subscription - it will run until {endDate}.",
-              "endDate": "expiration date"
-            },
-            "alreadyCancelled": {
-              "title": "Subscription Already Cancelled",
-              "description": "Your subscription has already been cancelled and will run until the end of the period."
-            },
-            "noSubscription": {
-              "title": "No Active Subscription Found",
-              "description": "No active subscription could be found for your account."
-            },
-            "noGuarantee": {
-              "title": "Cancellation Notice",
-              "description": "Your subscription package does not include a 14-day money-back guarantee. The money-back guarantee is only available with the \"1 Pet\" package. You can still cancel your subscription - it will run until {endDate}.",
-              "endDate": "expiration date"
-            },
-            "general": {
-              "title": "Cancellation Error",
-              "description": "An unexpected error occurred. Please contact support."
-            }
-          }
-        },
-        "breadcrumb": {
-          "home": "Home",
-          "backToPricing": "Back to Pricing",
-          "myPetTraining": "My Pet Training"
-        },
-        "modeDisplay": {
-          "loading": "Loading...",
-          "freeMode": "Free Mode",
-          "sevenDayTrial": "7-Day Trial (ends {{endDate}})",
-          "trialExpired": "Trial Expired",
-          "premium": "Premium",
-          "onePet": "1 Pet Plan",
-          "twoPets": "2 Pets Plan",
-          "threeFourPets": "3-4 Pets Plan",
-          "fiveEightPets": "5-8 Pets Plan",
-          "unlimited": "Unlimited Pets",
-          "unknown": "Unknown"
-        },
-        "refreshButton": {
-          "updated": "✅ Updated",
-          "successfullyUpdated": "Your subscription data has been successfully updated.",
-          "error": "❌ Error",
-          "couldNotUpdate": "Subscription could not be updated. Please try again.",
-          "updating": "Updating...",
-          "updateSubscription": "Update Subscription"
-        },
-        "errorState": {
-          "loadingError": "Loading Error",
-          "tryAgain": "Try Again"
-        },
-        "loadingState": {
-          "loadingData": "Loading data..."
         }
       },
       "support": {
@@ -3649,6 +3080,603 @@
       "terms": "Terms",
       "and": "and",
       "privacy": "Privacy Policy"
+    }
+  },
+  "pets": {
+    "noPets": "No pet profiles yet",
+    "addFirstPet": "Create your first pet profile for personalized training recommendations",
+    "addPet": "Add Pet",
+    "pets": "pets",
+    "behaviorFocus": "Behavior Focus",
+    "notes": "Notes",
+    "birthday": "🎂 Born",
+    "focus": "🎯 Focus",
+    "welcome": {
+      "title": "Welcome to TierTrainer24!",
+      "description": "Create your first pet profile and start with professional training. Our AI trainer helps you understand and improve your pet's behavior."
+    },
+    "empty": {
+      "title": "🐾 No pet profiles yet",
+      "description": "Create your first pet profile for personalized training recommendations from our AI trainer team.",
+      "createFirst": "Create first pet profile"
+    },
+    "limit": {
+      "reached": "You have reached the maximum number of pets ({max}) for your current plan.",
+      "near": "You have {current} of {max} pets created.",
+      "upgrade": "Upgrade Plan"
+    },
+    "table": {
+      "name": "Name",
+      "species": "Species",
+      "breed": "Breed",
+      "age": "Age",
+      "birthDate": "Birth Date",
+      "focus": "Focus",
+      "actions": "Actions"
+    },
+    "delete": {
+      "title": "🗑️ Delete Pet Profile",
+      "confirmation": "Are you sure you want to delete the pet profile of {name}?",
+      "confirmationStrong": "Are you <strong>absolutely sure</strong> that you want to delete the pet profile of <strong>{name}</strong>?",
+      "warning": "This action cannot be undone.",
+      "irreversible": "⚠️ This action CANNOT be undone!",
+      "dataLoss": "All data, chat histories, and training plans for this pet will be permanently lost.",
+      "confirmName": "Type the name \"<strong>{name}</strong>\" to confirm and proceed.",
+      "confirm": "Delete",
+      "permanently": "Delete Permanently"
+    },
+    "carousel": {
+      "swipeHint": "Swipe left/right for more pet profiles"
+    },
+    "form": {
+      "editTitle": "✏️ Edit Pet Profile",
+      "createTitle": "🐾 New Pet Profile",
+      "name": "Name",
+      "namePlaceholder": "e.g. Bella",
+      "species": "Species",
+      "speciesPlaceholder": "e.g. Dog, Cat, Horse",
+      "breed": "Breed",
+      "breedPlaceholder": "e.g. Golden Retriever",
+      "birthDate": "Birth Date",
+      "selectDate": "Select date",
+      "age": "Age",
+      "agePlaceholder": "Will be calculated automatically",
+      "ageCalculated": "Age will be calculated automatically from birth date",
+      "behaviorFocus": "Behavior Focus",
+      "behaviorFocusPlaceholder": "e.g. Leash training, Separation anxiety",
+      "notes": "Notes",
+      "notesPlaceholder": "Additional information about your pet...",
+      "saving": "💾 Saving...",
+      "update": "💾 Update",
+      "create": "🚀 Create Now",
+      "errors": {
+        "nameRequired": "Name is a required field",
+        "speciesRequired": "Species is a required field",
+        "mustBeLoggedIn": "You must be logged in to save a pet profile.",
+        "unexpected": "An unexpected error occurred"
+      }
+    },
+    "toast": {
+      "created": {
+        "title": "✅ Pet Profile Created!",
+        "description": "{name} has been successfully added to your pets"
+      },
+      "updated": {
+        "title": "✅ Pet Profile Updated!",
+        "description": "{name} has been successfully updated"
+      },
+      "saved": {
+        "title": "💾 Saved",
+        "description": "{name} has been successfully saved to the database"
+      },
+      "deleted": {
+        "title": "🗑️ Pet Profile Deleted",
+        "description": "{name} has been removed from your pets"
+      },
+      "deletedConfirmed": {
+        "title": "✅ Deletion Confirmed",
+        "description": "Pet profile of {name} has been permanently deleted"
+      },
+      "error": {
+        "title": "❌ Error",
+        "description": "An error occurred. Please try again."
+      }
+    }
+  },
+  "subscription": {
+    "overview": {
+      "currentStatus": "Current Status",
+      "currentStatusDescription": "Your current subscription status",
+      "status": "Status",
+      "sevenDayTrial": "7-Day Trial",
+      "active": "Active",
+      "inactive": "Inactive",
+      "plan": "Plan",
+      "billing": "Billing",
+      "yearly": "Yearly",
+      "monthly": "Monthly",
+      "trialEnds": "Trial ends",
+      "expires": "Expires",
+      "renews": "Renews",
+      "cancellationWarning": "Your subscription will be cancelled at the end of the current period",
+      "manageSubscription": "Manage Subscription",
+      "cancelSubscription": "Cancel Subscription"
+    },
+    "requiredWarning": {
+      "title": "Premium Feature Required",
+      "description": "To create and manage pet profiles, you need a premium subscription",
+      "currentStatus": "Current Status",
+      "freeAccount": "Free Account",
+      "startToday": "Start professional pet training today",
+      "upgradeNow": "Upgrade Now",
+      "trialInfo": "7 days free trial • Cancel anytime",
+      "supportInfo": "Have questions? Contact our support for personal consultation."
+    },
+    "upgradeModal": {
+      "title": "🐾 Expand Your Pet Package!",
+      "description": "You have already created {current} of {max} pets. Upgrade to a larger package to add more pets!",
+      "currentPlan": "Your Current Plan",
+      "upTo": "Up to",
+      "unlimited": "unlimited",
+      "pets": "pets",
+      "active": "Active",
+      "instantUpgrade": "⚡ Instant Upgrade",
+      "instantActivation": "Upgrade is activated immediately after payment",
+      "allFeaturesAvailable": "All new features are directly available",
+      "securePayment": "Secure payment via Stripe",
+      "cancelAnytime": "Cancel anytime",
+      "popular": "Popular",
+      "upgrade": "Upgrade",
+      "perMonth": "/month",
+      "morePets": "more pets",
+      "processing": "Processing...",
+      "upgradeNow": "Upgrade Now",
+      "maxPlanReached": "You already have the largest package!",
+      "maxPlanDescription": "With {max} pet slots, you have reached the maximum package.",
+      "securityInfo": "🔒 Secure & GDPR compliant • Cancel anytime • Immediate activation after payment"
+    },
+    "trialStatus": {
+      "error": "Error",
+      "couldNotLoad": "Trial status could not be loaded",
+      "myTrialStatus": "My Trial Status",
+      "trialEligibility": "Trial Eligibility",
+      "eligible": "Eligible",
+      "notEligible": "Not Eligible",
+      "trialUsed": "Trial Used",
+      "alreadyUsed": "Already Used",
+      "stillAvailable": "Still Available",
+      "activeTrial": "Active Trial",
+      "daysRemaining": "You still have <strong>{days} days</strong> of free access!",
+      "trialEnd": "Trial End",
+      "trialAvailable": "Trial Available!",
+      "canStartTrial": "You can start a 7-day free trial period.",
+      "trialAlreadyUsed": "You have already used a trial period. For additional trial periods, please contact our support.",
+      "loading": "Trial status is loading...",
+      "refreshStatus": "Refresh Status"
+    },
+    "cancellation": {
+      "moneyBackGuarantee": "💰 Money-Back Guarantee",
+      "cancelSubscription": "Cancel Subscription",
+      "errors": {
+        "expiredPeriod": {
+          "title": "14-Day Money-Back Guarantee Expired",
+          "description": "Your subscription was started {days} days ago. The money-back guarantee is only valid in the first 14 days after signing up. You can still cancel your subscription - it will run until {endDate}.",
+          "endDate": "expiration date"
+        },
+        "alreadyCancelled": {
+          "title": "Subscription Already Cancelled",
+          "description": "Your subscription has already been cancelled and will run until the end of the period."
+        },
+        "noSubscription": {
+          "title": "No Active Subscription Found",
+          "description": "No active subscription could be found for your account."
+        },
+        "noGuarantee": {
+          "title": "Cancellation Notice",
+          "description": "Your subscription package does not include a 14-day money-back guarantee. The money-back guarantee is only available with the \"1 Pet\" package. You can still cancel your subscription - it will run until {endDate}.",
+          "endDate": "expiration date"
+        },
+        "general": {
+          "title": "Cancellation Error",
+          "description": "An unexpected error occurred. Please contact support."
+        }
+      }
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "backToPricing": "Back to Pricing",
+      "myPetTraining": "My Pet Training"
+    },
+    "modeDisplay": {
+      "loading": "Loading...",
+      "freeMode": "Free Mode",
+      "sevenDayTrial": "7-Day Trial (ends {{endDate}})",
+      "trialExpired": "Trial Expired",
+      "premium": "Premium",
+      "onePet": "1 Pet Plan",
+      "twoPets": "2 Pets Plan",
+      "threeFourPets": "3-4 Pets Plan",
+      "fiveEightPets": "5-8 Pets Plan",
+      "unlimited": "Unlimited Pets",
+      "unknown": "Unknown"
+    },
+    "refreshButton": {
+      "updated": "✅ Updated",
+      "successfullyUpdated": "Your subscription data has been successfully updated.",
+      "error": "❌ Error",
+      "couldNotUpdate": "Subscription could not be updated. Please try again.",
+      "updating": "Updating...",
+      "updateSubscription": "Update Subscription"
+    },
+    "errorState": {
+      "loadingError": "Loading Error",
+      "tryAgain": "Try Again"
+    },
+    "loadingState": {
+      "loadingData": "Loading subscription data...",
+      "takingLonger": "Taking longer than expected?",
+      "retry": "Retry",
+      "retryLoading": "Retry loading subscription data",
+      "pleaseWait": "Please wait while we load your subscription information. This may take a few moments."
+    },
+    "petSelection": {
+      "title": "Pet Selection Required",
+      "description": "Your current package only allows {maxAllowed, plural, one {1 active pet} other {# active pets}}. Please select {maxAllowed, plural, one {which pet} other {which pets}} should remain active.",
+      "noWorries": "Don't worry!",
+      "assurances": {
+        "profilesSaved": "• All pet profiles remain saved",
+        "archivedOnly": "• Non-active pets are only archived",
+        "reactivateUpgrade": "• You can reactivate them anytime with an upgrade",
+        "trainingDataPreserved": "• All training data is preserved"
+      },
+      "selectActive": "Select your {maxAllowed, plural, one {active pet} other {# active pets}}:",
+      "selectedCount": "{selected} of {maxAllowed} {maxAllowed, plural, one {pet} other {pets}} selected",
+      "cancel": "Cancel",
+      "confirmSelection": "Confirm Selection",
+      "saving": "Saving...",
+      "error": {
+        "title": "❌ Error",
+        "description": "The selection could not be saved."
+      },
+      "selectionRequired": {
+        "title": "Selection Required",
+        "description": "Please select at least {maxAllowed, plural, one {one pet} other {# pets}}."
+      }
+    }
+  },
+  "legal": {
+    "close": "Close",
+    "privacy": {
+      "title": "Privacy Policy",
+      "subtitle": "Tiertrainer24 – A product of Shopping-Guru GmbH"
+    },
+    "agb": {
+      "company": {
+        "name": "Shopping-Guru GmbH",
+        "address": "Krähenhoop 4, D-38448 Wolfsburg",
+        "ceo": "CEO: Shawn Asaro",
+        "email": "Email: support@tiertrainer24.com",
+        "website": "Web: www.tiertrainer24.com, www.tiertrainer1.com"
+      },
+      "lastUpdated": "Last updated: June 2025",
+      "title": "General Terms and Conditions (GTC)",
+      "subtitle": "Tiertrainer24 – A product of Shopping-Guru GmbH",
+      "sections": {
+        "scope": {
+          "title": "1. Scope of Application",
+          "content": "These General Terms and Conditions apply to all contracts between Shopping-Guru GmbH (hereinafter \"we\" or \"Tiertrainer24\") and users of our online platform tiertrainer24.com or tiertrainer1.com."
+        },
+        "registration": {
+          "title": "3. Registration & User Account",
+          "content": "Usage requires registration. After account creation, pet profiles can be managed and subscriptions can be concluded."
+        },
+        "company": {
+          "name": "Shopping-Guru GmbH",
+          "street": "Krähenhoop 4",
+          "city": "D-38448 Wolfsburg",
+          "ceo": "CEO: Shawn Asaro",
+          "email": "Email",
+          "web": "Web",
+          "vat": "VAT identification number according to § 27a UStG: DE305366892"
+        },
+        "services": {
+          "title": "2. Service Description",
+          "description": "Tiertrainer24 provides digital online pet training with:",
+          "features": {
+            "ai": "AI-powered behavior analysis & recommendations",
+            "communication": "Interactive communication via text, voice, and image",
+            "plans": "Individual training plans & progress tracking"
+          },
+          "intro": "Tiertrainer24 provides pet owners with digital online pet training. Included are:",
+          "aiAnalysis": "AI-supported behavior analysis & recommendations",
+          "communication": "Interactive communication via text, voice and image",
+          "trainingPlans": "Individual, customizable training plans",
+          "progressControl": "Progress control with reminder functions",
+          "petProfiles": "Management of multiple pet profiles",
+          "availability": "Our services are available 24/7 online, are ad-free and contain no product placements."
+        },
+        "contract": {
+          "title": "4. Contract Conclusion & Subscription",
+          "intro": "A binding contract is concluded as soon as a paid subscription is selected and the payment process is completed.",
+          "trial": {
+            "title": "Trial period:",
+            "period": "7-day free trial period without automatic debiting",
+            "cancellation": "Cancellation possible at any time in the user account",
+            "autoRenewal": "If no cancellation occurs during the trial period, the subscription is automatically activated for a fee"
+          },
+          "models": {
+            "title": "Subscription models:",
+            "monthly": "Cancellable monthly",
+            "semiAnnual": "Cancellable semi-annually"
+          },
+          "binding": "Binding contract when concluding a paid subscription.",
+          "autoRenewal": "Without cancellation, the subscription automatically becomes paid."
+        },
+        "pricing": {
+          "title": "5. Prices & Payment",
+          "intro": "The prices displayed on www.tiertrainer24.com at the time of contract conclusion apply. Price changes remain reserved. All prices are inclusive of statutory VAT.",
+          "paymentMethods": "The following payment methods are accepted:",
+          "creditCard": "Credit card",
+          "paypal": "PayPal",
+          "klarna": "Klarna",
+          "applePay": "Apple Pay",
+          "googlePay": "Google Pay",
+          "amazonPay": "Amazon Pay",
+          "autoDebit": "Debiting takes place automatically according to the chosen subscription model.",
+          "content": "All prices incl. VAT. Payment by credit card, PayPal, Klarna, Apple Pay, Google Pay, Amazon Pay."
+        },
+        "delivery": {
+          "title": "6. Service Delivery",
+          "content": "Access to online pet training takes place directly after registration or after the trial period expires. Services are provided exclusively digitally."
+        },
+        "disclaimer": {
+          "title": "7. Disclaimer & Medical Notice",
+          "intro": "Tiertrainer24 does not provide medical, veterinary or therapeutic advice. Our content is based on AI-supported analyses and findings from animal behavior psychology, but does not replace a visit to a veterinarian.",
+          "liability": "In case of health abnormalities in your pet, a veterinary practice must be consulted immediately. We assume no liability for damages resulting from incorrect self-treatment, omitted veterinary measures or misinterpretation of our content.",
+          "important": "Important:",
+          "content": "Tiertrainer24 does not replace veterinary consultation. For health problems, please contact a veterinary practice."
+        },
+        "license": {
+          "title": "8. Usage License",
+          "content": "Upon contract conclusion, users receive a simple, non-transferable usage right for personal use of the content. Sharing, commercial use or publication is prohibited."
+        },
+        "availability": {
+          "title": "9. Availability",
+          "content": "We strive for stable availability of our platform. However, short-term maintenance work and technical failures cannot be ruled out."
+        },
+        "cancellation": {
+          "email": "Cancellation by email: support@tiertrainer24.com",
+          "expiry": "Right of cancellation expires with consent to immediate service commencement.",
+          "title": "10. Right of Cancellation",
+          "instruction": "Cancellation Instructions",
+          "right": "Consumers have a 14-day right of cancellation.",
+          "period": {
+            "title": "Period start:",
+            "content": "The period begins with the conclusion of the contract."
+          },
+          "exercise": {
+            "title": "Exercise of cancellation:",
+            "content": "Simply by email to support@tiertrainer24.com or by post:"
+          },
+          "form": {
+            "title": "📄 Sample cancellation form:",
+            "subtitle": "(Please fill out and send in case of cancellation)",
+            "company": {
+              "name": "Shopping-Guru GmbH",
+              "street": "Krähenhoop 4",
+              "city": "38448 Wolfsburg",
+              "email": "Email: support@tiertrainer24.com"
+            },
+            "declaration": "Hereby I cancel the contract for the use of the following service:",
+            "orderedOn": "Ordered on: ___________",
+            "name": "Name: __________________________",
+            "address": "Address: _______________________",
+            "dateSignature": "Date / Signature: ___________"
+          },
+          "note": {
+            "title": "Note:",
+            "content": "The right of cancellation expires prematurely if you expressly agree to digital content that the service provision begins before the cancellation period expires."
+          }
+        },
+        "privacy": {
+          "title": "11. Privacy",
+          "content": "Personal data is processed exclusively for contract fulfillment in accordance with GDPR and BDSG. Details can be found in our privacy policy."
+        },
+        "jurisdiction": {
+          "title": "12. Jurisdiction & Final Provisions",
+          "law": "German law applies.",
+          "court": "Jurisdiction, insofar as legally permissible, is Berlin.",
+          "validity": "Should individual clauses be invalid, the validity of the remaining ones remains unaffected.",
+          "content": "German law. Jurisdiction: Wolfsburg."
+        }
+      }
+    },
+    "impressum": {
+      "title": "Legal Notice",
+      "subtitle": "Tiertrainer24 – A product of Shopping-Guru GmbH",
+      "sections": {
+        "responsible": {
+          "title": "1. Data Controller",
+          "company": "Shopping-Guru GmbH",
+          "street": "Krähenhoop 4",
+          "city": "38448 Wolfsburg",
+          "country": "Germany",
+          "ceo": "CEO: Shawn Asaro",
+          "email": "Email",
+          "web": "Web",
+          "name": "Shawn Asaro"
+        },
+        "general": {
+          "title": "2. General Data Processing",
+          "content": "The protection of your personal data is our highest priority. We process your data exclusively within the framework of legal data protection regulations, in particular the GDPR and the BDSG."
+        },
+        "dataTypes": {
+          "title": "3. What Data We Process",
+          "registration": {
+            "title": "a) During registration and use:",
+            "firstName": "First name, last name (optional)",
+            "email": "Email address",
+            "petProfiles": "Pet profiles (name, species, behavior topic)",
+            "password": "Password (encrypted)",
+            "chatHistory": "Chat history including text, image and voice messages",
+            "trainingDocs": "Individual training documentation"
+          },
+          "automatic": {
+            "title": "b) Automatically when visiting the website:",
+            "ipAddress": "IP address",
+            "dateTime": "Date and time of access",
+            "browser": "Browser type and version",
+            "os": "Operating system",
+            "referrer": "Referrer URL",
+            "device": "Device"
+          }
+        },
+        "purposes": {
+          "title": "4. Purposes of Data Processing",
+          "intro": "We process your data for the following purposes:",
+          "services": "Provision of our digital services (24/7 pet behavior consultation)",
+          "analysis": "Analysis of animal behavior based on your inputs",
+          "trainingPlans": "Creation of individual training plans",
+          "platform": "Operation, maintenance and improvement of the platform",
+          "payment": "Payment processing",
+          "legal": "Fulfillment of legal obligations"
+        },
+        "legalBasis": {
+          "title": "5. Legal Basis",
+          "intro": "The processing of your data is carried out in accordance with:",
+          "contract": "Art. 6 para. 1 lit. b GDPR (contract fulfillment)",
+          "consent": "Art. 6 para. 1 lit. a GDPR (consent, e.g. for image or audio analysis)",
+          "legitimateInterest": "Art. 6 para. 1 lit. f GDPR (legitimate interest: operation, security, functionality)",
+          "legalObligation": "Art. 6 para. 1 lit. c GDPR (legal obligations)"
+        },
+        "paymentProviders": {
+          "title": "6. Payment Service Providers",
+          "intro": "For payment processing, we use external providers. Payment data is transmitted directly to the following independently responsible services:",
+          "paypal": "PayPal (Europe) S.à r.l.",
+          "stripe": "Stripe Payments Europe Ltd.",
+          "klarna": "Klarna Bank AB",
+          "applePay": "Apple Pay",
+          "googlePay": "Google Pay",
+          "amazonPay": "Amazon Pay",
+          "note": "These providers process data independently according to their respective privacy policies."
+        },
+        "cookies": {
+          "title": "7. Cookies & Tracking",
+          "necessary": "We use technically necessary cookies to ensure the functionality of our website.",
+          "optional": "Optional tracking tools (e.g. Google Analytics, Matomo) are only used after active consent via cookie banner.",
+          "withdrawal": "You can revoke or change your consent at any time."
+        },
+        "dataProcessing": {
+          "title": "8. Data Processing & Data Transfer",
+          "services": "To provide our services, we use external service providers (e.g. for hosting, maintenance, support) who are obliged to confidentiality according to Art. 28 GDPR.",
+          "noAdvertising": "Data is never passed on to third parties for advertising purposes."
+        },
+        "storage": {
+          "title": "9. Storage Period",
+          "duration": "We only store personal data for as long as it is necessary for the respective purpose.",
+          "deletion": "After cancellation or prolonged inactivity, we delete your user account within 30 days, unless legal retention obligations prevent this."
+        },
+        "rights": {
+          "title": "10. Your Rights",
+          "intro": "You have the right at any time to:",
+          "information": "Information (Art. 15 GDPR)",
+          "correction": "Correction (Art. 16 GDPR)",
+          "deletion": "Deletion (Art. 17 GDPR)",
+          "restriction": "Restriction of processing (Art. 18 GDPR)",
+          "portability": "Data portability (Art. 20 GDPR)",
+          "objection": "Objection to processing (Art. 21 GDPR)",
+          "contact": "To exercise your rights, please write to"
+        },
+        "security": {
+          "title": "11. Security",
+          "content": "Our platform uses modern security standards (e.g. SSL encryption) to protect your data from unauthorized access."
+        },
+        "ai": {
+          "title": "12. Note on AI-supported Functions",
+          "content": "Tiertrainer24 uses AI-supported systems for animal behavior analysis. Your texts, images and voice recordings are not used for the further development or training of AI, but exclusively for situational individual case processing."
+        },
+        "changes": {
+          "title": "13. Changes to this Statement",
+          "intro": "We reserve the right to adapt this privacy policy if necessary. You can find the current version at any time at:"
+        },
+        "legalInfo": {
+          "title": "Information according to § 5 TMG",
+          "company": "Shopping-Guru GmbH",
+          "street": "Krähenhoop 4",
+          "city": "D-38448 Wolfsburg",
+          "country": "Germany"
+        },
+        "representation": {
+          "title": "Represented by:",
+          "ceo": "CEO: Shawn Asaro"
+        },
+        "vat": {
+          "title": "VAT Identification Number",
+          "number": "VAT identification number according to § 27a UStG: DE305366892"
+        },
+        "contact": {
+          "title": "Contact",
+          "email": "Email",
+          "website1": "Website",
+          "website2": "Website"
+        },
+        "registry": {
+          "title": "Commercial Register",
+          "registered": "Registered in the commercial register.",
+          "court": "Register court: Amtsgericht Braunschweig",
+          "number": "Commercial register number: HRB 211913"
+        },
+        "dispute": {
+          "title": "Note on online dispute resolution according to Art. 14 Abs. 1 ODR-VO",
+          "description": "The European Commission provides a platform for online dispute resolution (OS):",
+          "emailInfo": "You can find our email address above in the legal notice."
+        }
+      },
+      "lastUpdated": "Last updated: June 2025"
+    },
+    "cancellation": {
+      "title": "Cancellation Policy",
+      "sections": {
+        "right": {
+          "title": "Right of Cancellation",
+          "content": "You have the right to cancel this contract within fourteen days without giving any reason."
+        },
+        "period": {
+          "title": "Cancellation Period",
+          "content": "The cancellation period is fourteen days from the day of contract conclusion."
+        },
+        "exercise": {
+          "title": "Exercise of the Right of Cancellation",
+          "description": "To exercise your right of cancellation, you must inform us of your decision by means of a clear declaration:",
+          "company": {
+            "name": "Shopping-Guru GmbH",
+            "street": "Krähenhoop 4",
+            "city": "38448 Wolfsburg",
+            "email": "Email: support@tiertrainer24.com"
+          }
+        },
+        "form": {
+          "title": "Model Cancellation Form",
+          "description": "If you want to cancel the contract, please fill out this form and send it back:",
+          "to": "To: Shopping-Guru GmbH, Krähenhoop 4, 38448 Wolfsburg",
+          "email": "Email: support@tiertrainer24.com",
+          "declaration": "I/we hereby cancel the contract concluded by me/us for the provision of the following service:",
+          "orderedOn": "Ordered on",
+          "consumerName": "Name of consumer(s)",
+          "consumerAddress": "Address of consumer(s)",
+          "consumerSignature": "Signature of consumer(s)",
+          "date": "Date"
+        },
+        "consequences": {
+          "title": "Consequences of Cancellation",
+          "content": "If you cancel this contract, we will refund all payments we have received from you immediately and no later than fourteen days from the day on which we received notification of your cancellation of this contract."
+        },
+        "expiry": {
+          "title": "Premature Expiry of the Right of Cancellation",
+          "important": "Important Notice:",
+          "content": "Your right of cancellation expires prematurely if we have begun to execute the service after you have given your express consent and at the same time confirmed that you lose your right of cancellation as soon as we have completely begun to execute the service."
+        }
+      }
     }
   },
   "adminTestUser": {

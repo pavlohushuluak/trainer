@@ -24,7 +24,13 @@ const SubscriptionManager = () => {
 
   // Only show loading if we have no subscription data at all
   if (loading && !subscription) {
-    return <SubscriptionLoadingState />;
+    return (
+      <SubscriptionLoadingState 
+        onRetry={checkSubscription}
+        showRetry={true}
+        loadingMessage={t('subscription.loadingState.loadingData')}
+      />
+    );
   }
 
   if (error) {
