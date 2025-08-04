@@ -12,19 +12,21 @@ import { AnalyticsDashboard } from '@/components/admin/AnalyticsDashboard';
 import { NetworkDiagnostics } from '@/components/admin/NetworkDiagnostics';
 
 const AdminDashboard = () => {
+  console.log('AdminDashboard: Rendering dashboard');
+  
   return (
     <AdminProtectedRoute>
       <AdminLayout>
         <Routes>
-          <Route path="/" element={<Navigate to="/admin/analytics" replace />} />
-          <Route path="/analytics" element={<AnalyticsDashboard />} />
-          <Route path="/users" element={<UserManagement />} />
-          <Route path="/chats" element={<ChatManagement />} />
-          <Route path="/payments" element={<PaymentManagement />} />
-          <Route path="/support" element={<SupportManagement />} />
-          <Route path="/system" element={<SystemMonitoring />} />
-          <Route path="/network" element={<NetworkDiagnostics />} />
-          <Route path="/settings" element={<AdminSettings />} />
+          <Route path="/" element={<Navigate to="analytics" replace />} />
+          <Route path="analytics" element={<AnalyticsDashboard />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="chats" element={<ChatManagement />} />
+          <Route path="payments" element={<PaymentManagement />} />
+          <Route path="support" element={<SupportManagement />} />
+          <Route path="system" element={<SystemMonitoring />} />
+          <Route path="network" element={<NetworkDiagnostics />} />
+          <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </AdminLayout>
     </AdminProtectedRoute>

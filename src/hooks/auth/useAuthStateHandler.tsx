@@ -107,6 +107,12 @@ export const useAuthStateHandler = () => {
         return;
       }
       
+      // If user is already on an admin page, skip admin check to avoid duplicate queries
+      if (currentPath.startsWith('/admin')) {
+        console.log('🔐 User already on admin page, skipping admin check and redirect logic');
+        return;
+      }
+      
       // PRIORITY 1: Pending checkout - IMMEDIATE execution, BLOCK all other redirects
       if (hasPendingCheckout && checkoutData) {
         
@@ -147,9 +153,14 @@ export const useAuthStateHandler = () => {
       if (isAdmin && !currentPath.startsWith('/admin')) {
         console.log('🔐 Redirecting admin to /admin/users');
         window.location.href = '/admin/users';
+      } else if (!isAdmin && currentPath.startsWith('/admin')) {
+        console.log('🔐 Redirecting non-admin away from admin area to /mein-tiertraining');
+        window.location.href = '/mein-tiertraining';
       } else if (!isAdmin && currentPath !== '/mein-tiertraining') {
         console.log('🔐 Redirecting user to /mein-tiertraining');
         window.location.href = '/mein-tiertraining';
+      } else {
+        console.log('🔐 No redirect needed - user is in correct location');
       }
       
     } catch (error) {
@@ -169,8 +180,6 @@ export const useAuthStateHandler = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return;
-        
-        console.log('Auth state change:', event, session?.user?.email);
         
         setSession(session);
         setUser(session?.user ?? null);

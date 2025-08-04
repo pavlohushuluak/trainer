@@ -1733,6 +1733,19 @@
     },
     "advancedNetworkDiagnostics": "Erweiterte Netzwerk-Diagnostik"
   },
+  "admin": {
+    "loading": {
+      "checkingPermissions": "Admin-Berechtigungen werden überprüft...",
+      "authenticating": "Benutzer wird authentifiziert..."
+    },
+    "access": {
+      "denied": {
+        "title": "Zugriff verweigert",
+        "description": "Sie haben keine Berechtigung, auf diesen Bereich zuzugreifen.",
+        "loginButton": "Zur Admin-Anmeldung"
+      }
+    }
+  },
   "training": {
     "title": "Training",
     "createPlan": "Plan erstellen",

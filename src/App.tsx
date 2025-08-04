@@ -41,7 +41,6 @@ const queryClient = new QueryClient({
 });
 
 const criticalResources = [
-  { href: '/placeholder.svg', as: 'image' as const, priority: 'high' as const },
   {
     href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap',
     as: 'style' as const,
@@ -49,48 +48,92 @@ const criticalResources = [
   },
 ];
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <AuthProvider>
-        <TooltipProvider>
-          <ResourcePreloader resources={criticalResources} />
-          <PerformanceMonitor />
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              {/* Routes that use MainLayout */}
-              <Route path="/" element={<MainLayout />}>
-                <Route index element={<Index />} />
-                              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="mein-tiertraining" element={<MyPetTraining />} />
-              <Route path="training" element={<MyPetTraining />} />
-                <Route path="support" element={<Support />} />
-                <Route path="community" element={<Community />} />
-                <Route path="chat" element={<ChatPage />} />
-                <Route path="settings" element={<SettingsPage />} />
-                <Route path="image-analysis" element={<ImageAnalysisPage />} />
-                <Route path="subscription" element={<SubscriptionPage />} />
-                <Route path="agb" element={<AGB />} />
-                <Route path="datenschutz" element={<Datenschutz />} />
-                <Route path="impressum" element={<Impressum />} />
-                <Route path="test-email" element={<TestEmail />} />
-                <Route path="test-email-auth" element={<TestEmailAuth />} />
-                <Route path="chat-diagnostics" element={<ChatDiagnosticsPage />} />
-                <Route path="/login" element={<LoginPage />} />
+// Global error handler to catch Google Ads timeout errors
+const handleGlobalError = (event: ErrorEvent) => {
+  // Ignore Google Ads timeout errors
+  if (event.error && event.error.message && 
+      (event.error.message.includes('googleads') || 
+       event.error.message.includes('doubleclick') ||
+       event.error.message.includes('ERR_TIMED_OUT'))) {
+    console.warn('Google Ads timeout error caught and ignored:', event.error.message);
+    event.preventDefault();
+    return;
+  }
+  
+  // Log other errors but don't prevent default handling
+  console.error('Global error:', event.error);
+};
+
+// Global unhandled promise rejection handler
+const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+  // Ignore Google Ads related promise rejections
+  if (event.reason && event.reason.message && 
+      (event.reason.message.includes('googleads') || 
+       event.reason.message.includes('doubleclick') ||
+       event.reason.message.includes('ERR_TIMED_OUT'))) {
+    console.warn('Google Ads promise rejection caught and ignored:', event.reason.message);
+    event.preventDefault();
+    return;
+  }
+  
+  // Log other promise rejections
+  console.error('Unhandled promise rejection:', event.reason);
+};
+
+const App = () => {
+  // Add global error handlers
+  if (typeof window !== 'undefined') {
+    window.addEventListener('error', handleGlobalError);
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+  }
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <ResourcePreloader resources={criticalResources} />
+            <PerformanceMonitor />
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                {/* Admin routes - outside MainLayout */}
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/*" element={<AdminDashboard />} />
+                
+                {/* Auth callback route */}
                 <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/password-reset" element={<PasswordReset />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+                
+                {/* Routes that use MainLayout */}
+                <Route path="/" element={<MainLayout />}>
+                  <Route index element={<Index />} />
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="mein-tiertraining" element={<MyPetTraining />} />
+                  <Route path="training" element={<MyPetTraining />} />
+                  <Route path="support" element={<Support />} />
+                  <Route path="community" element={<Community />} />
+                  <Route path="chat" element={<ChatPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                  <Route path="image-analysis" element={<ImageAnalysisPage />} />
+                  <Route path="subscription" element={<SubscriptionPage />} />
+                  <Route path="agb" element={<AGB />} />
+                  <Route path="datenschutz" element={<Datenschutz />} />
+                  <Route path="impressum" element={<Impressum />} />
+                  <Route path="test-email" element={<TestEmail />} />
+                  <Route path="test-email-auth" element={<TestEmailAuth />} />
+                  <Route path="chat-diagnostics" element={<ChatDiagnosticsPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

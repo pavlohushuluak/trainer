@@ -19,22 +19,38 @@ export const useGTM = () => {
       // Initialize dataLayer
       window.dataLayer = window.dataLayer || [];
       
-      // GTM script injection with error handling
+      // Use the correct GTM ID from the HTML
+      const gtmId = 'GTM-TVRLCS6X';
+      
+      // GTM script injection with error handling and timeout
       const script = document.createElement('script');
       script.async = true;
-      script.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-YOUR-ID';
+      script.src = `https://www.googletagmanager.com/gtm.js?id=${gtmId}`;
+      
+      // Add timeout to prevent hanging
+      const timeoutId = setTimeout(() => {
+        console.warn('GTM script loading timeout - continuing without analytics');
+        window.dataLayer = window.dataLayer || [];
+      }, 5000); // 5 second timeout
       
       // Add error handling for script loading
       script.onerror = () => {
+        clearTimeout(timeoutId);
         console.warn('GTM script failed to load - continuing without analytics');
+        window.dataLayer = window.dataLayer || [];
       };
       
       script.onload = () => {
+        clearTimeout(timeoutId);
         // Initialize GTM only after successful load
-        window.dataLayer.push({
-          'gtm.start': new Date().getTime(),
-          event: 'gtm.js'
-        });
+        try {
+          window.dataLayer.push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+          });
+        } catch (error) {
+          console.warn('GTM initialization failed:', error);
+        }
       };
       
       document.head.appendChild(script);

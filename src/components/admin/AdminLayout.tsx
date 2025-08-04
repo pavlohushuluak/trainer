@@ -26,13 +26,13 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { signOut } = useAuth();
 
   const navigation = [
-    { name: t('adminLayout.analytics'), href: '/admin/analytics', icon: BarChart3 },
-    { name: t('adminLayout.users'), href: '/admin/users', icon: Users },
-    { name: t('adminLayout.chats'), href: '/admin/chats', icon: MessageCircle },
-    { name: t('adminLayout.payments'), href: '/admin/payments', icon: CreditCard },
-    { name: t('adminLayout.support'), href: '/admin/support', icon: HeadphonesIcon },
-    { name: t('adminLayout.system'), href: '/admin/system', icon: Monitor },
-    { name: t('adminLayout.settings'), href: '/admin/settings', icon: Settings },
+    { name: t('adminLayout.analytics'), href: 'analytics', icon: BarChart3 },
+    { name: t('adminLayout.users'), href: 'users', icon: Users },
+    { name: t('adminLayout.chats'), href: 'chats', icon: MessageCircle },
+    { name: t('adminLayout.payments'), href: 'payments', icon: CreditCard },
+    { name: t('adminLayout.support'), href: 'support', icon: HeadphonesIcon },
+    { name: t('adminLayout.system'), href: 'system', icon: Monitor },
+    { name: t('adminLayout.settings'), href: 'settings', icon: Settings },
   ];
 
   return (
@@ -49,7 +49,8 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
           
           <nav className="flex-1 p-4 space-y-2">
             {navigation.map((item) => {
-              const isActive = location.pathname === item.href;
+              const isActive = location.pathname.endsWith(item.href) || 
+                              (item.href === 'analytics' && location.pathname.endsWith('/admin'));
               return (
                 <Link
                   key={item.name}

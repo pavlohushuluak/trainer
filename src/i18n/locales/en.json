@@ -1733,6 +1733,19 @@
     },
     "advancedNetworkDiagnostics": "Advanced Network Diagnostics"
   },
+  "admin": {
+    "loading": {
+      "checkingPermissions": "Checking admin permissions...",
+      "authenticating": "Authenticating user..."
+    },
+    "access": {
+      "denied": {
+        "title": "Access Denied",
+        "description": "You don't have permission to access this area.",
+        "loginButton": "Go to Admin Login"
+      }
+    }
+  },
   "training": {
     "title": "Training",
     "createPlan": "Create Plan",
