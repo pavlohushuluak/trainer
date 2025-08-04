@@ -24,11 +24,9 @@ export const UserCardHeader = ({ user }: UserCardHeaderProps) => {
           {new Date(user.created_at).toLocaleDateString()}
         </div>
       </CardTitle>
-      <CardDescription>
-        <div className="flex items-center gap-2">
-          <Mail className="h-4 w-4" />
-          {user.id}
-        </div>
+      <CardDescription className="flex items-center gap-2">
+        <Mail className="h-4 w-4" />
+        {user.id}
       </CardDescription>
     </CardHeader>
   );

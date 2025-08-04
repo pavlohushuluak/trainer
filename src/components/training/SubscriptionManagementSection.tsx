@@ -56,11 +56,9 @@ export const SubscriptionManagementSection = () => {
               <Crown className="h-5 w-5 text-yellow-500" />
               <CardTitle>{t('training.subscriptionManagement.title')}</CardTitle>
             </div>
-            <CardDescription>
-              <div className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                {t('training.subscriptionManagement.loading')}
-              </div>
+            <CardDescription className="flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              {t('training.subscriptionManagement.loading')}
             </CardDescription>
           </CardHeader>
         </Card>

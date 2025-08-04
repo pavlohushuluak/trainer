@@ -11,7 +11,7 @@ interface PetLimitInfo {
 }
 
 export const usePetLimitChecker = (): PetLimitInfo & { isLoading: boolean } => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   // Use the same query key as other pet-related queries
   const { data: pets = [], isLoading: petCountLoading } = useQuery({
@@ -27,9 +27,11 @@ export const usePetLimitChecker = (): PetLimitInfo & { isLoading: boolean } => {
       if (error) throw error;
       return data || [];
     },
-    enabled: !!user,
+    enabled: !!user && !authLoading, // Only run when user is available and auth is not loading
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
+    retry: 1, // Reduced retries
+    retryDelay: 500, // Faster retry
   });
 
   const { data: subscription, isLoading: subscriptionLoading } = useQuery({
@@ -45,13 +47,19 @@ export const usePetLimitChecker = (): PetLimitInfo & { isLoading: boolean } => {
 
       if (error) {
         console.error('Error fetching subscription:', error);
+        // Don't throw for missing subscription (normal for free users)
+        if (error.code === 'PGRST116') {
+          return null;
+        }
         return null;
       }
       return data;
     },
-    enabled: !!user,
+    enabled: !!user && !authLoading, // Only run when user is available and auth is not loading
     staleTime: 2 * 60 * 1000, // 2 minutes
     gcTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1, // Reduced retries
+    retryDelay: 500, // Faster retry
   });
 
   const getPetLimit = (subscriptionTier?: string, subscribed?: boolean, tierLimit?: number): number => {
@@ -113,8 +121,8 @@ export const usePetLimitChecker = (): PetLimitInfo & { isLoading: boolean } => {
     }
   };
 
-  // Only show loading if pets are still loading - subscription can be null for free users
-  const isLoading = petCountLoading;
+  // Combine auth loading and query loading states
+  const isLoading = authLoading || petCountLoading || subscriptionLoading;
 
   return {
     currentPetCount: petCount,

@@ -61,6 +61,7 @@ export const useUserQuery = (searchQuery: string) => {
         // Combine subscribers with profile data
         const usersWithDetails: UserWithDetails[] = [];
         const processedEmails = new Set<string>();
+        const processedIds = new Set<string>();
 
         // Process subscribers first
         if (subscribers && subscribers.length > 0) {
@@ -71,8 +72,26 @@ export const useUserQuery = (searchQuery: string) => {
             // Find matching profile
             const profile = profiles?.find(p => p.email === subscriber.email || p.id === subscriber.user_id);
             
+            // Generate unique ID
+            let userId = subscriber.user_id;
+            if (!userId) {
+              // Use email + timestamp for unique fallback ID
+              const timestamp = Date.now();
+              const emailHash = subscriber.email.split('@')[0]; // Use part before @
+              userId = `subscriber_${emailHash}_${timestamp}`;
+            }
+            
+            // Ensure ID is unique
+            let uniqueId = userId;
+            let counter = 1;
+            while (processedIds.has(uniqueId)) {
+              uniqueId = `${userId}_${counter}`;
+              counter++;
+            }
+            processedIds.add(uniqueId);
+            
             const userWithDetails: UserWithDetails = {
-              id: subscriber.user_id || `subscriber_${subscriber.email}`,
+              id: uniqueId,
               email: subscriber.email,
               created_at: profile?.created_at || subscriber.created_at,
               subscription: {
@@ -107,8 +126,17 @@ export const useUserQuery = (searchQuery: string) => {
 
             processedEmails.add(profile.email);
 
+            // Ensure profile ID is unique
+            let uniqueId = profile.id;
+            let counter = 1;
+            while (processedIds.has(uniqueId)) {
+              uniqueId = `${profile.id}_${counter}`;
+              counter++;
+            }
+            processedIds.add(uniqueId);
+
             const userWithDetails: UserWithDetails = {
-              id: profile.id,
+              id: uniqueId,
               email: profile.email,
               created_at: profile.created_at,
               subscription: null

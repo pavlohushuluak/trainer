@@ -20,24 +20,29 @@ export const useSubscriptionStatus = () => {
 
         if (error) {
           console.error('❌ Database subscription query error:', error);
+          // Don't throw error for missing subscription (normal for free users)
+          if (error.code === 'PGRST116') {
+            return null;
+          }
           throw error;
         }
         
         return data;
       } catch (error) {
         console.error('💥 CRITICAL: Direct subscription query failed:', error);
-        throw error;
+        // Return null instead of throwing for better UX
+        return null;
       }
     },
     enabled: !!user && !authLoading, // Only run query when user is available and auth is not loading
-    staleTime: 30 * 1000, // 30 seconds - much shorter for immediate updates
-    gcTime: 2 * 60 * 1000, // 2 minutes cache
+    staleTime: 5 * 60 * 1000, // 5 minutes - longer cache for better performance
+    gcTime: 10 * 60 * 1000, // 10 minutes cache
     refetchInterval: false,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false, // Disable to prevent unnecessary refetches
     refetchOnMount: true,
     refetchOnReconnect: true,
-    retry: 3, // More retries
-    retryDelay: 1000, // 1 second between retries
+    retry: 1, // Reduced retries for faster error feedback
+    retryDelay: 500, // Faster retry
   });
 
   // Combine auth loading and query loading states

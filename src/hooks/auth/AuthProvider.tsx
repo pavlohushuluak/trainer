@@ -6,12 +6,25 @@ import { AuthContext } from './AuthContext';
 import { useAuthOperations } from './useAuthOperations';
 import { useAuthStateHandler } from './useAuthStateHandler';
 import { useOAuthProfileHandler } from './useOAuthProfileHandler';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { signIn, signUp, signOut, signInWithOAuth } = useAuthOperations();
   const { user, session, loading } = useAuthStateHandler();
   const { handleOAuthProfile } = useOAuthProfileHandler();
   const [authError, setAuthError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+
+  // Reset query cache when auth state changes - but only when user changes, not on every loading state change
+  useEffect(() => {
+    if (!loading && user?.id) {
+      console.log('🔄 User authenticated, clearing query cache for fresh data');
+      // Only clear specific queries that depend on user data, not the entire cache
+      queryClient.removeQueries({ queryKey: ['pets'] });
+      queryClient.removeQueries({ queryKey: ['subscription-status'] });
+      queryClient.removeQueries({ queryKey: ['admin-check'] });
+    }
+  }, [user?.id, loading, queryClient]);
 
   // Handle OAuth profile updates with error handling
   const handleOAuthProfileSafely = useCallback(async (user: User) => {

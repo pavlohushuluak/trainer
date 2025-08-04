@@ -9,6 +9,7 @@ export const useAuthStateHandler = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
   const { handleOAuthProfile } = useOAuthProfileHandler();
 
   const trackSignUp = useCallback(() => {
@@ -175,15 +176,24 @@ export const useAuthStateHandler = () => {
   useEffect(() => {
     let mounted = true;
     let sessionInitialized = false;
+    let authStateInitialized = false;
     
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return;
         
+        console.log('🔐 Auth state change:', { event, userEmail: session?.user?.email });
+        
         setSession(session);
         setUser(session?.user ?? null);
-        setLoading(false);
+        
+        // Only set loading to false if we haven't initialized yet
+        if (!authStateInitialized) {
+          authStateInitialized = true;
+          setLoading(false);
+          setInitialized(true);
+        }
 
         // Handle SIGNED_IN events immediately
         if (event === 'SIGNED_IN' && session?.user) {
@@ -213,7 +223,14 @@ export const useAuthStateHandler = () => {
       
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
+      
+      // Only set loading to false if auth state hasn't been initialized yet
+      if (!authStateInitialized) {
+        authStateInitialized = true;
+        setLoading(false);
+        setInitialized(true);
+      }
+      
       sessionInitialized = true;
       
       // Handle redirect for existing sessions
@@ -226,8 +243,19 @@ export const useAuthStateHandler = () => {
       }
     });
 
+    // Fallback: Set loading to false after a reasonable timeout
+    const timeoutId = setTimeout(() => {
+      if (mounted && !authStateInitialized) {
+        console.log('⚠️ Auth initialization timeout - forcing loading to false');
+        authStateInitialized = true;
+        setLoading(false);
+        setInitialized(true);
+      }
+    }, 5000); // 5 second timeout
+
     return () => {
       mounted = false;
+      clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
   }, [handleSignedIn]);
