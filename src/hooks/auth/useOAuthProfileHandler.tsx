@@ -97,7 +97,7 @@ export const useOAuthProfileHandler = () => {
             }
           }
         } else {
-          // Create profile if it doesn't exist
+          // Create profile if it doesn't exist - this is a new user
           const { error: insertError } = await supabase
             .from('profiles')
             .insert({
@@ -111,6 +111,9 @@ export const useOAuthProfileHandler = () => {
           
           if (insertError) {
             console.warn('Error creating OAuth profile:', insertError);
+          } else {
+            // Set localStorage to indicate user has signed up (new OAuth user)
+            localStorage.setItem('alreadySignedUp', 'true');
           }
         }
 

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,13 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [activeTab, setActiveTab] = useState('signin');
+
+  // Check localStorage for alreadySignedUp value on component mount
+  useEffect(() => {
+    const alreadySignedUp = localStorage.getItem('alreadySignedUp') === 'true';
+    setActiveTab(alreadySignedUp ? 'signin' : 'signup');
+  }, []);
 
   // Password strength validation
   const isPasswordStrong = useMemo(() => {
@@ -99,6 +106,7 @@ const LoginPage = () => {
     } catch (err) {
       setError(t('auth.generalError'));
     } finally {
+      localStorage.setItem('alreadySignedUp', 'true');
       setLoading(false);
     }
   };
@@ -129,6 +137,8 @@ const LoginPage = () => {
         }
       } else {
         setMessage(t('auth.registrationSuccess'));
+        // Set localStorage to indicate user has signed up
+        localStorage.setItem('alreadySignedUp', 'true');
         // Clear form after successful registration
         setEmail('');
         setPassword('');
@@ -217,7 +227,7 @@ const LoginPage = () => {
 
             {/* Traditional Login */}
             <div className="space-y-4">
-              <Tabs defaultValue="signin" className="w-full" onValueChange={clearForm}>
+              <Tabs value={activeTab} onValueChange={(value) => { setActiveTab(value); clearForm(); }} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg">
                   <TabsTrigger 
                     value="signin" 
