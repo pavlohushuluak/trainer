@@ -4,7 +4,6 @@ import { SubscriptionManagerHeader } from "./subscription/SubscriptionManagerHea
 import { SubscriptionLoadingState } from "./subscription/SubscriptionLoadingState";
 import { SubscriptionErrorState } from "./subscription/SubscriptionErrorState";
 import { SubscriptionTabs } from "./subscription/SubscriptionTabs";
-import { UpgradeCard } from "./subscription/UpgradeCard";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
@@ -49,11 +48,6 @@ const SubscriptionManager = () => {
 
   return (
     <div className="space-y-6">
-      {/* Prominent Upgrade Card for Non-Subscribers */}
-      {!subscription?.subscribed && !loading && (
-        <UpgradeCard />
-      )}
-
 
       {/* Immediate Status Display - Shows even during loading */}
       {(subscription?.subscribed || subscription?.subscription_status === 'active') && (
