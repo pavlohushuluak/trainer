@@ -4,9 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 export const useSubscriptionStatus = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
-  const { data: subscription, isLoading, refetch, error: queryError } = useQuery({
+  const { data: subscription, isLoading: queryLoading, refetch, error: queryError } = useQuery({
     queryKey: ['subscription-status', user?.id],
     queryFn: async () => {
       if (!user) return null;
@@ -29,7 +29,7 @@ export const useSubscriptionStatus = () => {
         throw error;
       }
     },
-    enabled: !!user,
+    enabled: !!user && !authLoading, // Only run query when user is available and auth is not loading
     staleTime: 30 * 1000, // 30 seconds - much shorter for immediate updates
     gcTime: 2 * 60 * 1000, // 2 minutes cache
     refetchInterval: false,
@@ -39,6 +39,9 @@ export const useSubscriptionStatus = () => {
     retry: 3, // More retries
     retryDelay: 1000, // 1 second between retries
   });
+
+  // Combine auth loading and query loading states
+  const isLoading = authLoading || queryLoading;
 
   const getSubscriptionMode = () => {
     if (isLoading) return 'loading';

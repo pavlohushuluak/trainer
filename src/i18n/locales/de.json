@@ -1759,7 +1759,12 @@
       "currentPlan": "Aktueller Plan",
       "active": "Aktiv",
       "expired": "Abgelaufen",
-      "animals": "Tiere"
+      "animals": "Tiere",
+      "loading": "Abonnement-Informationen werden geladen...",
+      "error": {
+        "title": "Abonnement-Fehler",
+        "description": "Abonnement-Informationen konnten nicht geladen werden. Bitte versuchen Sie, die Seite zu aktualisieren."
+      }
     },
     "rewards": {
       "loadingError": "Fehler beim Laden der Belohnungen",

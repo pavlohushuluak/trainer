@@ -1759,7 +1759,12 @@
       "currentPlan": "Current Plan",
       "active": "Active",
       "expired": "Expired",
-      "animals": "animals"
+      "animals": "animals",
+      "loading": "Loading subscription information...",
+      "error": {
+        "title": "Subscription Error",
+        "description": "Unable to load subscription information. Please try refreshing the page."
+      }
     },
     "rewards": {
       "loadingError": "Error loading rewards",
