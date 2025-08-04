@@ -15,16 +15,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [authError, setAuthError] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  // Reset query cache when auth state changes - but only when user changes, not on every loading state change
+  // Reset query cache when user changes - only when user actually changes, not on every auth state change
+  const [lastUserId, setLastUserId] = useState<string | null>(null);
+  
   useEffect(() => {
-    if (!loading && user?.id) {
-      console.log('🔄 User authenticated, clearing query cache for fresh data');
+    if (!loading && user?.id && user.id !== lastUserId) {
+      console.log('🔄 User changed, clearing query cache for fresh data');
+      setLastUserId(user.id);
       // Only clear specific queries that depend on user data, not the entire cache
       queryClient.removeQueries({ queryKey: ['pets'] });
       queryClient.removeQueries({ queryKey: ['subscription-status'] });
       queryClient.removeQueries({ queryKey: ['admin-check'] });
     }
-  }, [user?.id, loading, queryClient]);
+  }, [user?.id, loading, queryClient, lastUserId]);
 
   // Handle OAuth profile updates with error handling
   const handleOAuthProfileSafely = useCallback(async (user: User) => {

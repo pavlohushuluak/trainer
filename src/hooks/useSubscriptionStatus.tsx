@@ -35,12 +35,12 @@ export const useSubscriptionStatus = () => {
       }
     },
     enabled: !!user && !authLoading, // Only run query when user is available and auth is not loading
-    staleTime: 5 * 60 * 1000, // 5 minutes - longer cache for better performance
-    gcTime: 10 * 60 * 1000, // 10 minutes cache
+    staleTime: 10 * 60 * 1000, // 10 minutes - longer cache to reduce refetches
+    gcTime: 20 * 60 * 1000, // 20 minutes cache
     refetchInterval: false,
     refetchOnWindowFocus: false, // Disable to prevent unnecessary refetches
-    refetchOnMount: true,
-    refetchOnReconnect: true,
+    refetchOnMount: false, // Don't refetch on mount if we have cached data
+    refetchOnReconnect: false, // Disable to prevent unnecessary refetches
     retry: 1, // Reduced retries for faster error feedback
     retryDelay: 500, // Faster retry
   });

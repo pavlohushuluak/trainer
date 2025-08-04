@@ -79,26 +79,22 @@ const MyPetTraining = () => {
         return false;
       }
     },
-    enabled: !!user,
-    staleTime: 60 * 60 * 1000, // Increased to 60 minutes for better performance
+    enabled: !!user && !loading, // Only run when auth is complete
+    staleTime: 60 * 60 * 1000, // 60 minutes - very long cache
     gcTime: 120 * 60 * 1000, // 120 minutes cache
     refetchOnWindowFocus: false,
+    refetchOnMount: false, // Don't refetch on mount if we have cached data
     retry: false,
   });
 
   // OPTIMIZED pet query with improved error handling and faster loading
-  const queryKey = ['pets', user?.id];
-  console.log('🔑 Query Key Debug:', { queryKey, userID: user?.id });
-  
   const { data: rawPets, isLoading: petsLoading, error: petsError, refetch: refetchPets } = useQuery({
-    queryKey: queryKey,
+    queryKey: ['pets', user?.id],
     queryFn: async () => {
       if (!user?.id) {
-        console.log('🚫 Pet query: No user ID available');
         return [];
       }
       
-      console.log('🔄 Starting pets query for user:', user.id);
       const timer = new PerformanceTimer('pets-query');
       const metricKey = startMetric('pets-query', 'query');
       
@@ -121,14 +117,12 @@ const MyPetTraining = () => {
           endMetric(metricKey, 'pets-query');
           // Don't throw for missing data (normal for new users)
           if (error.code === 'PGRST116') {
-            console.log('✅ No pets found, returning empty array');
             return [];
           }
           throw error;
         }
         
         const pets = data || [];
-        console.log('✅ Pets query successful:', { count: pets.length });
         timer.end();
         endMetric(metricKey, 'pets-query');
         return pets;
@@ -141,48 +135,20 @@ const MyPetTraining = () => {
       }
     },
     enabled: !!user?.id && !loading, // Enable when user is available and auth is not loading
-    staleTime: 0, // Always fresh data on reload
-    gcTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes - longer cache to reduce refetches
+    gcTime: 10 * 60 * 1000, // 10 minutes
     retry: 1, // Reduced retries for faster error feedback
     retryDelay: 300, // Faster retry
     refetchOnWindowFocus: false, // Disable to prevent unnecessary refetches
-    refetchOnMount: 'always',
-    // Add fallback to ensure query runs even if there are timing issues
-    refetchOnReconnect: true,
+    refetchOnMount: false, // Don't refetch on mount if we have cached data
+    refetchOnReconnect: false, // Disable to prevent unnecessary refetches
   });
 
-  // Add manual retry mechanism for first visit issues
-  useEffect(() => {
-    if (hasInitialized && user?.id && !petsLoading && !rawPets && !petsError) {
-      console.log('🔄 Manual retry: User initialized but no pets data, triggering refetch');
-      setTimeout(() => {
-        refetchPets();
-      }, 1000);
-    }
-  }, [hasInitialized, user?.id, petsLoading, rawPets, petsError, refetchPets]);
 
-  // Basic query state logging
-  useEffect(() => {
-    if (petsLoading) {
-      console.log('🔄 Pets query loading...');
-    } else if (rawPets) {
-      console.log('✅ Pets loaded:', rawPets.length);
-    }
-  }, [petsLoading, rawPets]);
 
-  // Basic database connectivity check
-  useEffect(() => {
-    if (user?.id && !rawPets && !petsLoading) {
-      console.log('🔍 Checking database connectivity...');
-    }
-  }, [user?.id, rawPets, petsLoading]);
 
-  // Basic auth state logging
-  useEffect(() => {
-    if (user) {
-      console.log('🔍 Auth state:', { userId: user.id, loading, hasInitialized });
-    }
-  }, [user, loading, hasInitialized]);
+
+
 
   // ROBUST PET DATA PROCESSING with faster error handling
   const pets = useMemo(() => {
@@ -243,7 +209,7 @@ const MyPetTraining = () => {
             <p>Raw Pets Count: {rawPets ? rawPets.length : 'Unknown'}</p>
             <p>Pets Error: {petsError ? 'Yes' : 'No'}</p>
             <p>User ID: {user?.id || 'None'}</p>
-            <p>Query Key: {JSON.stringify(queryKey)}</p>
+
             <button 
               onClick={() => {
                 console.log('🧪 Manual refetch triggered');

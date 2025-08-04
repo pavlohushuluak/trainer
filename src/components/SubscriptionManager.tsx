@@ -7,20 +7,25 @@ import { SubscriptionTabs } from "./subscription/SubscriptionTabs";
 import { UpgradeCard } from "./subscription/UpgradeCard";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 
 const SubscriptionManager = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { subscription: subscriptionStatus, isLoading: subscriptionLoading } = useSubscriptionStatus();
   const {
-    subscription,
     invoices,
-    loading,
+    loading: managerLoading,
     checkingOut,
     error,
     checkSubscription,
     handleCheckout,
     handleCustomerPortal
   } = useSubscriptionManager();
+
+  // Use subscription data from useSubscriptionStatus
+  const subscription = subscriptionStatus;
+  const loading = subscriptionLoading || managerLoading;
 
   // Only show loading if we have no subscription data at all
   if (loading && !subscription) {

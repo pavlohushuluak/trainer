@@ -99,12 +99,14 @@ export const useSubscriptionManager = () => {
   // Load data only when user changes
   useEffect(() => {
     if (user) {
-      checkSubscription(false);
+      // Remove duplicate subscription check - use useSubscriptionStatus instead
+      // checkSubscription(false);
       loadInvoices();
+      setLoading(false); // Set loading to false since we're not checking subscription here
     } else {
       setLoading(false);
     }
-  }, [user, checkSubscription, loadInvoices]);
+  }, [user, loadInvoices]);
 
   const handleCheckout = async (priceType: string) => {
     if (checkingOut) return;
