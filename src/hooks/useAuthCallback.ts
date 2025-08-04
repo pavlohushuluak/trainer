@@ -68,7 +68,7 @@ export const useAuthCallback = () => {
 
     // Normal role-based redirect (only if no pending checkout)
     const isAdmin = await checkAdminStatus(userId);
-    const targetUrl = isAdmin ? '/admin/dashboard' : '/mein-tiertraining';
+    const targetUrl = isAdmin ? '/admin/users' : '/mein-tiertraining';
     
     console.log('🔐 OAuth callback: Redirecting to:', targetUrl, 'isAdmin:', isAdmin);
     

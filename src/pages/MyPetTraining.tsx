@@ -50,6 +50,7 @@ const MyPetTraining = () => {
   useEffect(() => {
     // Simplified initialization logic
     if (!loading) {
+      console.log('✅ Auth loading finished, setting hasInitialized to true');
       setHasInitialized(true);
     }
   }, [loading]);
@@ -87,101 +88,116 @@ const MyPetTraining = () => {
 
   // OPTIMIZED pet query with improved error handling and faster loading
   const queryKey = ['pets', user?.id];
+  console.log('🔑 Query Key Debug:', { queryKey, userID: user?.id });
   
   const { data: rawPets, isLoading: petsLoading, error: petsError, refetch: refetchPets } = useQuery({
     queryKey: queryKey,
     queryFn: async () => {
       if (!user?.id) {
+        console.log('🚫 Pet query: No user ID available');
         return [];
       }
       
+      console.log('🔄 Starting pets query for user:', user.id);
+      const timer = new PerformanceTimer('pets-query');
+      const metricKey = startMetric('pets-query', 'query');
+      
       try {
-        const { data, error } = await supabase
+        // Add timeout to prevent hanging queries
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Query timeout')), 10000)
+        );
+
+        const queryPromise = supabase
           .from('pet_profiles')
           .select('id, name, species, breed, age, birth_date, behavior_focus, notes, created_at, updated_at, user_id')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false });
 
+        const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
+
         if (error) {
-          console.error('Pets query failed:', error);
+          console.error('💥 Pets query failed:', error);
+          endMetric(metricKey, 'pets-query');
           // Don't throw for missing data (normal for new users)
           if (error.code === 'PGRST116') {
+            console.log('✅ No pets found, returning empty array');
             return [];
           }
           throw error;
         }
         
-        return data || [];
+        const pets = data || [];
+        console.log('✅ Pets query successful:', { count: pets.length });
+        timer.end();
+        endMetric(metricKey, 'pets-query');
+        return pets;
       } catch (error) {
-        console.error('Pets query error:', error);
+        console.error('❌ Pets query error:', error);
+        timer.end();
+        endMetric(metricKey, 'pets-query');
         // Return empty array instead of throwing for better UX
         return [];
       }
     },
-    enabled: !!user?.id && !loading, // Only run when user is available and auth is not loading
-    staleTime: 5 * 60 * 1000, // 5 minutes - reasonable cache time
-    gcTime: 10 * 60 * 1000, // 10 minutes cache
-    retry: 2, // Allow 2 retries
-    retryDelay: 1000, // 1 second between retries
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
+    enabled: !!user?.id && !loading, // Enable when user is available and auth is not loading
+    staleTime: 0, // Always fresh data on reload
+    gcTime: 1000 * 60 * 5, // 5 minutes
+    retry: 1, // Reduced retries for faster error feedback
+    retryDelay: 300, // Faster retry
+    refetchOnWindowFocus: false, // Disable to prevent unnecessary refetches
+    refetchOnMount: 'always',
+    // Add fallback to ensure query runs even if there are timing issues
     refetchOnReconnect: true,
   });
 
   // Add manual retry mechanism for first visit issues
   useEffect(() => {
     if (hasInitialized && user?.id && !petsLoading && !rawPets && !petsError) {
+      console.log('🔄 Manual retry: User initialized but no pets data, triggering refetch');
       setTimeout(() => {
         refetchPets();
       }, 1000);
     }
   }, [hasInitialized, user?.id, petsLoading, rawPets, petsError, refetchPets]);
 
-  // Debug query state
+  // Basic query state logging
   useEffect(() => {
-    console.log('🔍 Query State Debug:', {
-      user: !!user,
-      userId: user?.id,
-      loading,
-      hasInitialized,
-      petsLoading,
-      rawPets: rawPets ? rawPets.length : 'undefined',
-      petsError,
-      queryEnabled: !!user?.id && !loading,
-      timestamp: new Date().toISOString()
-    });
-  }, [user, loading, hasInitialized, petsLoading, rawPets, petsError]);
-
-  // Direct Supabase test to check database connection
-  useEffect(() => {
-    if (user?.id) {
-      console.log('🧪 Testing direct Supabase connection...');
-      
-      // Test direct database access
-      const testSupabase = async () => {
-        try {
-          const { data, error } = await supabase
-            .from('pet_profiles')
-            .select('count')
-            .eq('user_id', user.id);
-          
-          console.log('🧪 Direct Supabase test result:', { data, error, userID: user.id });
-        } catch (error) {
-          console.error('🧪 Direct Supabase test error:', error);
-        }
-      };
-      
-      testSupabase();
+    if (petsLoading) {
+      console.log('🔄 Pets query loading...');
+    } else if (rawPets) {
+      console.log('✅ Pets loaded:', rawPets.length);
     }
-  }, [user?.id]);
+  }, [petsLoading, rawPets]);
+
+  // Basic database connectivity check
+  useEffect(() => {
+    if (user?.id && !rawPets && !petsLoading) {
+      console.log('🔍 Checking database connectivity...');
+    }
+  }, [user?.id, rawPets, petsLoading]);
+
+  // Basic auth state logging
+  useEffect(() => {
+    if (user) {
+      console.log('🔍 Auth state:', { userId: user.id, loading, hasInitialized });
+    }
+  }, [user, loading, hasInitialized]);
 
   // ROBUST PET DATA PROCESSING with faster error handling
   const pets = useMemo(() => {
+    // If we're still loading and have no data, return empty array
+    if (petsLoading && !rawPets) {
+      return [];
+    }
+
     // If we have no raw pets data, return empty array
     if (!rawPets) {
       return [];
     }
 
+    const timer = new PerformanceTimer('pet-data-processing');
+    
     const processed = rawPets
       .filter((pet) => !!pet?.id)
       .map((pet) => {
@@ -202,6 +218,7 @@ const MyPetTraining = () => {
         };
       });
     
+    timer.end();
     return processed;
   }, [rawPets, t]); // Removed petsLoading from dependencies to prevent unnecessary re-renders
 
@@ -210,7 +227,7 @@ const MyPetTraining = () => {
   }, [pets]);
 
   // TEMPORARY: Simple test to bypass complex loading logic
-  const isTestMode = false; // Set to true to test rendering
+  const isTestMode = false; // Set to false to enable normal page functionality
   
   if (isTestMode) {
     console.log('🧪 TEST MODE: Bypassing loading logic');
@@ -362,6 +379,18 @@ const MyPetTraining = () => {
       </ProtectedRoute>
     );
   }
+
+  console.log('🎯 FINAL RENDER STATE:', {
+    loading,
+    user: !!user,
+    userId: user?.id,
+    petsLoading,
+    rawPets: rawPets ? rawPets.length : 'undefined',
+    pets: pets ? pets.length : 'undefined',
+    shouldShowLoading,
+    petsError,
+    timestamp: new Date().toISOString()
+  });
 
   return (
     <ProtectedRoute>
