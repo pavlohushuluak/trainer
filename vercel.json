@@ -1,15 +1,22 @@
 {
     "rewrites": [
-        {
-            "source": "/(.*)",
-            "destination": "/"
-        }
+      {
+        "source": "/((?!.*\\.(js|css|png|jpg|jpeg|svg|woff2|ttf|ico|json|txt|map|webmanifest)$).*)",
+        "destination": "/"
+      }
     ],
     "redirects": [
-        {
-            "source": "https://tiertrainer24.com/:path*",
-            "destination": "https://www.tiertrainer24.com/:path*",
-            "permanent": true
-        }
+      {
+        "source": "/:path*",
+        "has": [
+          {
+            "type": "host",
+            "value": "tiertrainer24.com"
+          }
+        ],
+        "destination": "https://www.tiertrainer24.com/:path*",
+        "permanent": true
+      }
     ]
-}
+  }
+  
