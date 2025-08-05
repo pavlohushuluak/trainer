@@ -82,7 +82,7 @@ export const ChatModal = ({ isOpen, onClose, pets = [] }: ChatModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-[90vw] h-[85vh] flex flex-col">
+      <DialogContent className="max-w-4xl w-[90vw] max-h-[85vh] overflow-y-auto flex flex-col">
         <ChatHeader 
           selectedPetName={getSelectedPetName()} 
           trainerName={getTrainerName()}
@@ -111,7 +111,7 @@ export const ChatModal = ({ isOpen, onClose, pets = [] }: ChatModalProps) => {
           />
         )}
 
-        <div className="flex-1 min-h-0">
+        <div>
           <ChatMessages 
             messages={messages}
             loading={loading}
