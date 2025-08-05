@@ -3,12 +3,16 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Provider } from "react-redux";
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/auth/AuthProvider";
 import { ThemeProvider } from "@/hooks/ThemeProvider";
 import { PerformanceMonitor } from "@/components/performance/PerformanceMonitor";
 import { ResourcePreloader } from "@/components/performance/ResourcePreloader";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { store } from "@/store";
+import { usePetProfiles } from "@/hooks/usePetProfiles";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import MyPetTraining from "./pages/MyPetTraining";
@@ -90,59 +94,74 @@ const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
   console.error('Unhandled promise rejection:', event.reason);
 };
 
+// Component to handle centralized pet profiles data fetching
+const PetProfilesDataManager = () => {
+  const { fetchPets } = usePetProfiles();
+  
+  // This component doesn't render anything, it just manages data fetching
+  // The actual data fetching is handled by the usePetProfiles hook
+  return null;
+};
+
 const App = () => {
-  // Add global error handlers
-  if (typeof window !== 'undefined') {
+  // Set up global error handlers
+  useEffect(() => {
     window.addEventListener('error', handleGlobalError);
     window.addEventListener('unhandledrejection', handleUnhandledRejection);
-  }
+    
+    return () => {
+      window.removeEventListener('error', handleGlobalError);
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <TooltipProvider>
-            <ResourcePreloader resources={criticalResources} />
-            <PerformanceMonitor />
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                {/* Admin routes - outside MainLayout */}
-                <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin/*" element={<AdminDashboard />} />
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <BrowserRouter>
+                <PerformanceMonitor />
+                <ResourcePreloader resources={criticalResources} />
                 
-                {/* Auth callback route */}
-                <Route path="/auth/callback" element={<AuthCallback />} />
-                <Route path="/password-reset" element={<PasswordReset />} />
+                {/* Centralized pet profiles data manager */}
+                <PetProfilesDataManager />
                 
-                {/* Routes that use MainLayout */}
-                <Route path="/" element={<MainLayout />}>
-                  <Route index element={<Index />} />
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="mein-tiertraining" element={<MyPetTraining />} />
-                  <Route path="training" element={<MyPetTraining />} />
-                  <Route path="support" element={<Support />} />
-                  <Route path="community" element={<Community />} />
-                  <Route path="chat" element={<ChatPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
-                  <Route path="image-analysis" element={<ImageAnalysisPage />} />
-                  <Route path="subscription" element={<SubscriptionPage />} />
-                  <Route path="agb" element={<AGB />} />
-                  <Route path="datenschutz" element={<Datenschutz />} />
-                  <Route path="impressum" element={<Impressum />} />
-                  <Route path="test-email" element={<TestEmail />} />
-                  <Route path="test-email-auth" element={<TestEmailAuth />} />
-                  <Route path="chat-diagnostics" element={<ChatDiagnosticsPage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Route>
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+                <Routes>
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin/*" element={<AdminDashboard />} />
+                  <Route path="/" element={<MainLayout />}>
+                    <Route index element={<Index />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="mein-tiertraining" element={<MyPetTraining />} />
+                    <Route path="support" element={<Support />} />
+                    <Route path="community" element={<Community />} />
+                    <Route path="auth/callback" element={<AuthCallback />} />
+                    <Route path="password-reset" element={<PasswordReset />} />
+                    <Route path="agb" element={<AGB />} />
+                    <Route path="datenschutz" element={<Datenschutz />} />
+                    <Route path="impressum" element={<Impressum />} />
+                    <Route path="test-email" element={<TestEmail />} />
+                    <Route path="test-email-auth" element={<TestEmailAuth />} />
+                    <Route path="chat-diagnostics" element={<ChatDiagnosticsPage />} />
+                    <Route path="chat" element={<ChatPage />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                    <Route path="image-analysis" element={<ImageAnalysisPage />} />
+                    <Route path="login" element={<LoginPage />} />
+                    <Route path="subscription" element={<SubscriptionPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Route>
+                </Routes>
+                
+                <Toaster />
+                <Sonner />
+              </BrowserRouter>
+            </TooltipProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </Provider>
   );
 };
 

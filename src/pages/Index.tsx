@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAuthOperations } from "@/hooks/auth/useAuthOperations";
 import { useSmartLogin } from "@/hooks/useSmartLogin";
 import { usePetDataPrefetch } from "@/hooks/usePetDataPrefetch";
+import { usePetProfiles } from "@/hooks/usePetProfiles";
 
 // Lazy load heavy components with proper default export handling
 const Benefits = lazy(() => import("@/components/Benefits").then(module => ({ default: module.Benefits })));
@@ -199,7 +200,6 @@ const Index = () => {
           <ChatModal 
             isOpen={showChatModal} 
             onClose={() => setShowChatModal(false)}
-            pets={pets}
           />
         </Suspense>
       )}

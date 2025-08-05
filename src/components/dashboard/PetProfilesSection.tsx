@@ -21,11 +21,10 @@ interface Pet {
 }
 
 interface PetProfilesSectionProps {
-  pets: Pet[];
   shouldOpenPetModal?: boolean;
 }
 
-const PetProfilesSection = ({ pets = [], shouldOpenPetModal = false }: PetProfilesSectionProps) => {
+const PetProfilesSection = ({ shouldOpenPetModal = false }: PetProfilesSectionProps) => {
   const [isExpanded, setIsExpanded] = useLocalStorage('pet-profiles-expanded', true);
   const { t } = useTranslations();
 
@@ -53,7 +52,7 @@ const PetProfilesSection = ({ pets = [], shouldOpenPetModal = false }: PetProfil
         
         <CollapsibleContent className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
           <CardContent className="p-6">
-            <PetProfileManager pets={pets} shouldOpenPetModal={shouldOpenPetModal} />
+            <PetProfileManager shouldOpenPetModal={shouldOpenPetModal} />
           </CardContent>
         </CollapsibleContent>
       </Card>

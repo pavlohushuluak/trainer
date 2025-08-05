@@ -54,14 +54,13 @@ const PetProfileManagerSkeleton = () => (
 );
 
 interface LazyPetProfileManagerProps {
-  pets: any[];
   shouldOpenPetModal?: boolean;
 }
 
-export const LazyPetProfileManager = React.memo(({ pets, shouldOpenPetModal = false }: LazyPetProfileManagerProps) => {
+export const LazyPetProfileManager = React.memo(({ shouldOpenPetModal = false }: LazyPetProfileManagerProps) => {
   return (
     <Suspense fallback={<PetProfileManagerSkeleton />}>
-      <PetProfilesSection pets={pets} shouldOpenPetModal={shouldOpenPetModal} />
+      <PetProfilesSection shouldOpenPetModal={shouldOpenPetModal} />
     </Suspense>
   );
 });

@@ -23,6 +23,7 @@ import { devLog, PerformanceTimer } from '@/utils/performance';
 import { usePaymentSuccess } from '@/hooks/usePaymentSuccess';
 import { useTranslations } from '@/hooks/useTranslations';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { usePetProfiles } from '@/hooks/usePetProfiles';
 
 const MyPetTraining = () => {
   const { user, signOut, loading } = useAuth();
@@ -30,6 +31,16 @@ const MyPetTraining = () => {
   const { t } = useTranslations();
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Use Redux for pet profiles data
+  const { 
+    pets, 
+    loading: petsLoading, 
+    error: petsError, 
+    primaryPet,
+    isInitialized: petsInitialized,
+    fetchPets
+  } = usePetProfiles();
 
   // Check if we should open the pet modal from URL parameter
   const shouldOpenPetModal = useMemo(() => {
@@ -96,111 +107,6 @@ const MyPetTraining = () => {
     retry: false,
   });
 
-  // OPTIMIZED pet query with improved error handling and faster loading
-  const { data: rawPets, isLoading: petsLoading, error: petsError, refetch: refetchPets } = useQuery({
-    queryKey: ['pets', user?.id],
-    queryFn: async () => {
-      if (!user?.id) {
-        return [];
-      }
-      
-      const timer = new PerformanceTimer('pets-query');
-      const metricKey = startMetric('pets-query', 'query');
-      
-      try {
-        // Add timeout to prevent hanging queries
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Query timeout')), 10000)
-        );
-
-        const queryPromise = supabase
-          .from('pet_profiles')
-          .select('id, name, species, breed, age, birth_date, behavior_focus, notes, created_at, updated_at, user_id')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false });
-
-        const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
-
-        if (error) {
-          console.error('💥 Pets query failed:', error);
-          endMetric(metricKey, 'pets-query');
-          // Don't throw for missing data (normal for new users)
-          if (error.code === 'PGRST116') {
-            return [];
-          }
-          throw error;
-        }
-        
-        const pets = data || [];
-        timer.end();
-        endMetric(metricKey, 'pets-query');
-        return pets;
-      } catch (error) {
-        console.error('❌ Pets query error:', error);
-        timer.end();
-        endMetric(metricKey, 'pets-query');
-        // Return empty array instead of throwing for better UX
-        return [];
-      }
-    },
-    enabled: !!user?.id && !loading, // Enable when user is available and auth is not loading
-    staleTime: 5 * 60 * 1000, // 5 minutes - longer cache to reduce refetches
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    retry: 1, // Reduced retries for faster error feedback
-    retryDelay: 300, // Faster retry
-    refetchOnWindowFocus: false, // Disable to prevent unnecessary refetches
-    refetchOnMount: false, // Don't refetch on mount if we have cached data
-    refetchOnReconnect: false, // Disable to prevent unnecessary refetches
-  });
-
-
-
-
-
-
-
-  // ROBUST PET DATA PROCESSING with faster error handling
-  const pets = useMemo(() => {
-    // If we're still loading and have no data, return empty array
-    if (petsLoading && !rawPets) {
-      return [];
-    }
-
-    // If we have no raw pets data, return empty array
-    if (!rawPets) {
-      return [];
-    }
-
-    const timer = new PerformanceTimer('pet-data-processing');
-    
-    const processed = rawPets
-      .filter((pet) => !!pet?.id)
-      .map((pet) => {
-        const nameAsString = pet?.name !== undefined && pet?.name !== null ? String(pet.name) : "";
-        const hasValidName = nameAsString.trim().length > 0;
-        const speciesAsString = pet?.species !== undefined && pet?.species !== null ? String(pet.species) : "";
-        const hasValidSpecies = speciesAsString.trim().length > 0;
-
-        return {
-          ...pet,
-          name: hasValidName ? nameAsString.trim() : t('myPetTraining.pets.unnamedPet'),
-          species: hasValidSpecies ? speciesAsString.trim() : t('myPetTraining.pets.defaultSpecies'),
-          breed: pet.breed || undefined,
-          age: pet.age || undefined,
-          birth_date: pet.birth_date || undefined,
-          behavior_focus: pet.behavior_focus || undefined,
-          notes: pet.notes || undefined
-        };
-      });
-    
-    timer.end();
-    return processed;
-  }, [rawPets, t]); // Removed petsLoading from dependencies to prevent unnecessary re-renders
-
-  const primaryPet = useMemo(() => {
-    return pets?.[0];
-  }, [pets]);
-
   // TEMPORARY: Simple test to bypass complex loading logic
   const isTestMode = false; // Set to false to enable normal page functionality
   
@@ -215,19 +121,9 @@ const MyPetTraining = () => {
             <p>User: {user ? user.email : 'None'}</p>
             <p>Pets Loading: {petsLoading ? 'Yes' : 'No'}</p>
             <p>Pets Count: {pets ? pets.length : 'Unknown'}</p>
-            <p>Raw Pets Count: {rawPets ? rawPets.length : 'Unknown'}</p>
             <p>Pets Error: {petsError ? 'Yes' : 'No'}</p>
             <p>User ID: {user?.id || 'None'}</p>
 
-            <button 
-              onClick={() => {
-                console.log('🧪 Manual refetch triggered');
-                refetchPets();
-              }}
-              className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-            >
-              Manual Refetch Pets
-            </button>
             <button 
               onClick={() => {
                 console.log('🧪 Manual direct query test');
@@ -240,7 +136,7 @@ const MyPetTraining = () => {
                     console.log('🧪 Manual direct query result:', { data, error });
                   });
               }}
-              className="bg-green-500 text-white px-4 py-2 rounded mt-4 ml-2"
+              className="bg-green-500 text-white px-4 py-2 rounded mt-4"
             >
               Direct Supabase Test
             </button>
@@ -282,7 +178,7 @@ const MyPetTraining = () => {
 
   // IMPROVED: Better loading state logic with debug info
   // Only show loading if we have a user but pets are still loading and we have no data yet
-  const shouldShowLoading = !!user && petsLoading && !rawPets && !petsError;
+  const shouldShowLoading = !!user && petsLoading && !pets && !petsError;
 
   // Debug logging to understand the issue
   console.log('🔍 MyPetTraining DEBUG:', {
@@ -290,7 +186,6 @@ const MyPetTraining = () => {
     user: !!user,
     userId: user?.id,
     petsLoading: petsLoading,
-    rawPets: rawPets ? rawPets.length : 'undefined',
     pets: pets ? pets.length : 'undefined',
     shouldShowLoading: shouldShowLoading,
     queryEnabled: !!user?.id && !loading,
@@ -326,7 +221,10 @@ const MyPetTraining = () => {
               {t('myPetTraining.page.error.description')}
             </p>
             <button
-              onClick={() => refetchPets()}
+              onClick={() => {
+                console.log('🔄 Retry button clicked - fetching pets from Redux');
+                fetchPets();
+              }}
               className="bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90 transition-colors"
             >
               {t('myPetTraining.page.error.retry')}
@@ -360,7 +258,6 @@ const MyPetTraining = () => {
     user: !!user,
     userId: user?.id,
     petsLoading,
-    rawPets: rawPets ? rawPets.length : 'undefined',
     pets: pets ? pets.length : 'undefined',
     shouldShowLoading,
     petsError,
@@ -399,10 +296,7 @@ const MyPetTraining = () => {
               
               <div id="pet-section" className="mb-8">
                 <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg" />}>
-                  <LazyPetProfileManager 
-                    pets={pets || []} 
-                    shouldOpenPetModal={shouldOpenPetModal}
-                  />
+                  <LazyPetProfileManager shouldOpenPetModal={shouldOpenPetModal} />
                 </Suspense>
               </div>
               
@@ -429,7 +323,6 @@ const MyPetTraining = () => {
               <ChatModal 
                 isOpen={isChatOpen} 
                 onClose={() => setIsChatOpen(false)}
-                pets={pets || []}
               />
             )}
           </div>

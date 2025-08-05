@@ -52,28 +52,28 @@ export const FreeChatLimitDisplay = ({
   if (hasReachedLimit) {
     return (
       <Card className="border-orange-200 bg-orange-50 mb-4">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <AlertCircle className="h-5 w-5 text-orange-600" />
-            <div className="flex-1">
-              <p className="font-medium text-orange-900">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex items-start gap-2 sm:gap-3 mb-3">
+            <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-orange-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-orange-900 text-sm sm:text-base">
                 {t('chat.freeChatLimit.limitReached.title')}
               </p>
-              <p className="text-sm text-orange-700">
+              <p className="text-xs sm:text-sm text-orange-700 mt-1">
                 {t('chat.freeChatLimit.limitReached.description')}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 mb-3 text-sm text-orange-600">
-            <MessageCircle className="h-4 w-4" />
-            <span>{t('chat.freeChatLimit.limitReached.historyNote')}</span>
+          <div className="flex items-center gap-2 mb-3 text-xs sm:text-sm text-orange-600">
+            <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+            <span className="truncate">{t('chat.freeChatLimit.limitReached.historyNote')}</span>
           </div>
           <Button 
             onClick={handleUpgradeClick}
-            className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+            className="w-full bg-orange-600 hover:bg-orange-700 text-white text-sm sm:text-base py-2 sm:py-2.5"
           >
-            <Crown className="h-4 w-4 mr-2" />
-            {t('chat.freeChatLimit.limitReached.button')}
+            <Crown className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+            <span className="truncate">{t('chat.freeChatLimit.limitReached.button')}</span>
           </Button>
         </CardContent>
       </Card>
@@ -82,28 +82,28 @@ export const FreeChatLimitDisplay = ({
 
   return (
     <Card className="border-blue-200 bg-blue-50 mb-4">
-      <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Crown className="h-5 w-5 text-blue-600" />
-              <div>
-                <p className="font-medium text-blue-900">
-                  {t('chat.freeChatLimit.active.title')} {questionsUsed}/{maxQuestions}
-                </p>
-                <p className="text-sm text-blue-700">
-                  {maxQuestions - questionsUsed} {t('chat.freeChatLimit.active.remaining')}
-                </p>
-              </div>
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-start gap-2 sm:gap-3 min-w-0">
+            <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-blue-900 text-sm sm:text-base">
+                {t('chat.freeChatLimit.active.title')} {questionsUsed}/{maxQuestions}
+              </p>
+              <p className="text-xs sm:text-sm text-blue-700 mt-1">
+                {maxQuestions - questionsUsed} {t('chat.freeChatLimit.active.remaining')}
+              </p>
             </div>
-            <Button 
-              onClick={handleUpgradeClick}
-              variant="outline"
-              className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
-              size="sm"
-            >
-              {t('chat.freeChatLimit.active.button')}
-            </Button>
           </div>
+          <Button 
+            onClick={handleUpgradeClick}
+            variant="outline"
+            className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white text-xs sm:text-sm py-1.5 sm:py-2 px-3 sm:px-4 w-full sm:w-auto flex-shrink-0"
+            size="sm"
+          >
+            <span className="truncate">{t('chat.freeChatLimit.active.button')}</span>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

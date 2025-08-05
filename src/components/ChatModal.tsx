@@ -10,29 +10,17 @@ import { PetProfileRequiredCard } from "./chat/PetProfileRequiredCard";
 import { useOptimizedChat } from "./chat/hooks/useOptimizedChat";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 import { useTranslations } from "@/hooks/useTranslations";
-
-interface PetProfile {
-  id: string;
-  name: string;
-  species: string;
-  breed?: string;
-  age?: number;
-  birth_date?: string;
-  behavior_focus?: string;
-  notes?: string;
-  created_at: string;
-  updated_at: string;
-  user_id: string;
-}
+import { usePetProfiles } from "@/hooks/usePetProfiles";
 
 interface ChatModalProps {
   isOpen: boolean;
   onClose: () => void;
-  pets?: PetProfile[];
 }
 
-export const ChatModal = ({ isOpen, onClose, pets = [] }: ChatModalProps) => {
+export const ChatModal = ({ isOpen, onClose }: ChatModalProps) => {
   const { t } = useTranslations();
+  const { pets } = usePetProfiles();
+  
   // Separate subscription hook for immediate status
   const { hasActiveSubscription: premiumStatus, subscriptionMode, isLoading: subscriptionLoading } = useSubscriptionStatus();
   

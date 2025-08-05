@@ -2,43 +2,33 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
-import { UpgradeModal } from "./subscription/UpgradeModal";
-import { usePetLimitChecker } from "./subscription/PetLimitChecker";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
+import { useOptimisticPetActions } from "@/components/pet/hooks/useOptimisticPetActions";
+import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import { usePetLimitChecker } from "@/components/subscription/PetLimitChecker";
+import { devLog } from "@/utils/performance";
 import { PetProfileHeader } from "./pet/PetProfileHeader";
 import { PetProfileAlerts } from "./pet/PetProfileAlerts";
 import { PetProfileContent } from "./pet/PetProfileContent";
-import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
-import { useQueryClient } from "@tanstack/react-query";
-import { useOptimisticPetActions } from "./pet/hooks/useOptimisticPetActions";
-import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
-import { devLog } from "@/utils/performance";
-
-interface PetProfile {
-  id: string;
-  name: string;
-  species: string;
-  breed?: string;
-  age?: number;
-  birth_date?: string;
-  behavior_focus?: string;
-  notes?: string;
-  created_at: string;
-  updated_at: string;
-  user_id: string;
-}
+import { UpgradeModal } from "./subscription/UpgradeModal";
+import { usePetProfiles } from "@/hooks/usePetProfiles";
+import { PetProfile } from "@/store/slices/petProfilesSlice";
 
 interface PetProfileManagerProps {
-  pets: PetProfile[];
   shouldOpenPetModal?: boolean;
 }
 
-const PetProfileManager = React.memo(({ pets = [], shouldOpenPetModal = false }: PetProfileManagerProps) => {
+const PetProfileManager = React.memo(({ shouldOpenPetModal = false }: PetProfileManagerProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [editingPet, setEditingPet] = useState<PetProfile | null>(null);
+
+  // Use Redux for pet profiles data
+  const { pets, createPet, updatePet, removePet } = usePetProfiles();
 
   const { hasActiveSubscription } = useSubscriptionStatus();
   const { optimisticDelete, isPending } = useOptimisticPetActions();
@@ -51,7 +41,7 @@ const PetProfileManager = React.memo(({ pets = [], shouldOpenPetModal = false }:
     subscriptionTier
   } = usePetLimitChecker();
 
-  devLog('🐾 PetProfileManager - Using passed pets:', pets.length);
+  devLog('🐾 PetProfileManager - Using Redux pets:', pets.length);
 
   // Auto-open pet modal if requested via URL parameter
   useEffect(() => {
@@ -107,7 +97,8 @@ const PetProfileManager = React.memo(({ pets = [], shouldOpenPetModal = false }:
     devLog('🐾 PetProfileManager: Starting delete for pet:', petName);
     
     try {
-      await optimisticDelete(petId, petName);
+      // Use Redux action for deletion
+      await removePet(petId);
       devLog('🐾 PetProfileManager: Pet deleted successfully');
     } catch (error) {
       devLog('❌ PetProfileManager: Error deleting pet:', error);
@@ -116,12 +107,12 @@ const PetProfileManager = React.memo(({ pets = [], shouldOpenPetModal = false }:
     }
   };
 
-  // Optimierte Callback-Funktion - keine vollständige Invalidierung
+  // Optimized callback function - no full invalidation needed
   const handlePetSaved = () => {
     devLog('🚀 PetProfileManager: Pet saved - closing dialog immediately (no refresh needed)');
     setIsDialogOpen(false);
     setEditingPet(null);
-    // Keine Query-Invalidierung - optimistische Updates handhaben das bereits
+    // No query invalidation needed - Redux handles the state updates
   };
 
   return (
