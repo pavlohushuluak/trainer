@@ -70,102 +70,121 @@ export const UserCardActions = ({
   };
 
   return (
-    <div className="flex flex-wrap gap-2 pt-4">
-      {!user.subscription?.subscribed ? (
-        <Button 
-          size="sm" 
-          onClick={handleActivate} 
-          disabled={isActivating}
-        >
-          {t('adminUsers.userActions.activate')}
-        </Button>
-      ) : (
-        <Button 
-          size="sm" 
-          variant="secondary" 
-          onClick={handleDeactivate}
-          disabled={isDeactivating}
-        >
-          {t('adminUsers.userActions.deactivate')}
-        </Button>
-      )}
-
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button size="sm" variant="outline">
-            <Settings className="h-3 w-3 mr-1" />
-            {t('adminUsers.userActions.trialPeriod')}
+    <div className="space-y-3 pt-4">
+      {/* Primary actions row */}
+      <div className="flex flex-col sm:flex-row gap-2">
+        {!user.subscription?.subscribed ? (
+          <Button 
+            size="sm" 
+            onClick={handleActivate} 
+            disabled={isActivating}
+            className="w-full sm:w-auto"
+          >
+            {t('adminUsers.userActions.activate')}
           </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('adminUsers.userActions.setTrialPeriod')}</DialogTitle>
-            <DialogDescription>
-              {t('adminUsers.userActions.setTrialFor')} {user.email}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <label htmlFor="trialDays" className="text-right">
-                {t('adminUsers.userActions.days')}:
-              </label>
-              <Select
-                value={trialDays}
-                onValueChange={setTrialDays}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder={t('adminUsers.userActions.selectDays')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="7">{t('adminUsers.userActions.trialDays.7')}</SelectItem>
-                  <SelectItem value="14">{t('adminUsers.userActions.trialDays.14')}</SelectItem>
-                  <SelectItem value="30">{t('adminUsers.userActions.trialDays.30')}</SelectItem>
-                  <SelectItem value="60">{t('adminUsers.userActions.trialDays.60')}</SelectItem>
-                  <SelectItem value="90">{t('adminUsers.userActions.trialDays.90')}</SelectItem>
-                </SelectContent>
-              </Select>
+        ) : (
+          <Button 
+            size="sm" 
+            variant="secondary" 
+            onClick={handleDeactivate}
+            disabled={isDeactivating}
+            className="w-full sm:w-auto"
+          >
+            {t('adminUsers.userActions.deactivate')}
+          </Button>
+        )}
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size="sm" variant="outline" className="w-full sm:w-auto">
+              <Settings className="h-3 w-3 mr-1" />
+              <span className="hidden sm:inline">{t('adminUsers.userActions.trialPeriod')}</span>
+              <span className="sm:hidden">{t('adminUsers.userActions.trialPeriod')}</span>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-sm sm:text-base">{t('adminUsers.userActions.setTrialPeriod')}</DialogTitle>
+              <DialogDescription className="text-xs sm:text-sm">
+                {t('adminUsers.userActions.setTrialFor')} {user.email}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
+                <label htmlFor="trialDays" className="text-sm sm:text-right">
+                  {t('adminUsers.userActions.days')}:
+                </label>
+                <Select
+                  value={trialDays}
+                  onValueChange={setTrialDays}
+                >
+                  <SelectTrigger className="col-span-1 sm:col-span-3">
+                    <SelectValue placeholder={t('adminUsers.userActions.selectDays')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="7">{t('adminUsers.userActions.trialDays.7')}</SelectItem>
+                    <SelectItem value="14">{t('adminUsers.userActions.trialDays.14')}</SelectItem>
+                    <SelectItem value="30">{t('adminUsers.userActions.trialDays.30')}</SelectItem>
+                    <SelectItem value="60">{t('adminUsers.userActions.trialDays.60')}</SelectItem>
+                    <SelectItem value="90">{t('adminUsers.userActions.trialDays.90')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-          </div>
-          <Button type="submit" onClick={handleSetTrial} disabled={isSettingTrial}>
-            {t('adminUsers.userActions.save')}
-          </Button>
-        </DialogContent>
-      </Dialog>
+            <Button type="submit" onClick={handleSetTrial} disabled={isSettingTrial} className="w-full sm:w-auto">
+              {t('adminUsers.userActions.save')}
+            </Button>
+          </DialogContent>
+        </Dialog>
 
-      <Button 
-        size="sm" 
-        variant="outline"
-        onClick={handleToggleTestUser}
-        disabled={isTogglingTestUser}
-      >
-        {user.subscription?.is_test_user ? t('adminUsers.userActions.removeTestUser') : t('adminUsers.userActions.markAsTestUser')}
-      </Button>
-      
-      <CancelSubscriptionDialog
-        user={user}
-        isWithinMoneyBackPeriod={isWithinMoneyBackPeriod}
-        onCancelSubscription={onCancelSubscription}
-        isCancelling={isCancelling}
-      />
+        <Button 
+          size="sm" 
+          variant="outline"
+          onClick={handleToggleTestUser}
+          disabled={isTogglingTestUser}
+          className="w-full sm:w-auto"
+        >
+          <span className="hidden sm:inline">
+            {user.subscription?.is_test_user ? t('adminUsers.userActions.removeTestUser') : t('adminUsers.userActions.markAsTestUser')}
+          </span>
+          <span className="sm:hidden">
+            {user.subscription?.is_test_user ? t('adminUsers.userActions.removeTestUser') : t('adminUsers.userActions.markAsTestUser')}
+          </span>
+        </Button>
+      </div>
 
-      <Button 
-        size="sm" 
-        variant="ghost"
-        onClick={() => onShowDetails(user)}
-      >
-        <Settings className="h-3 w-3 mr-1" />
-        {t('adminUsers.userActions.details')}
-      </Button>
+      {/* Secondary actions row */}
+      <div className="flex flex-col sm:flex-row gap-2">
+        <CancelSubscriptionDialog
+          user={user}
+          isWithinMoneyBackPeriod={isWithinMoneyBackPeriod}
+          onCancelSubscription={onCancelSubscription}
+          isCancelling={isCancelling}
+        />
 
-      <Button 
-        size="sm" 
-        variant="ghost"
-        onClick={handleDelete}
-        disabled={isDeleting}
-      >
-        <Trash2 className="h-3 w-3 mr-1" />
-        {t('adminUsers.userActions.delete')}
-      </Button>
+        <Button 
+          size="sm" 
+          variant="ghost"
+          onClick={() => onShowDetails(user)}
+          className="w-full sm:w-auto"
+        >
+          <Settings className="h-3 w-3 mr-1" />
+          <span className="hidden sm:inline">{t('adminUsers.userActions.details')}</span>
+          <span className="sm:hidden">{t('adminUsers.userActions.details')}</span>
+        </Button>
+
+        <Button 
+          size="sm" 
+          variant="ghost"
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="w-full sm:w-auto text-red-600 hover:text-red-700 hover:bg-red-50"
+        >
+          <Trash2 className="h-3 w-3 mr-1" />
+          <span className="hidden sm:inline">{t('adminUsers.userActions.delete')}</span>
+          <span className="sm:hidden">{t('adminUsers.userActions.delete')}</span>
+        </Button>
+      </div>
     </div>
   );
 };

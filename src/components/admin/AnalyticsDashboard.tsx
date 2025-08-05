@@ -106,17 +106,17 @@ export const AnalyticsDashboard = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{t('adminAnalytics.title')}</h1>
-          <p className="text-muted-foreground">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold">{t('adminAnalytics.title')}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1">
             {t('adminAnalytics.description')}
           </p>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <TimeRangeFilter value={timeRange} onChange={setTimeRange} />
           <Select value={comparison} onValueChange={setComparison}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -129,7 +129,7 @@ export const AnalyticsDashboard = () => {
       </div>
 
       {/* Key Metrics Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <MetricCard
           title={t('adminAnalytics.metrics.totalUsers')}
           value={overviewStats?.totalUsers || 0}
@@ -164,11 +164,11 @@ export const AnalyticsDashboard = () => {
 
       {/* Detailed Analytics Tabs */}
       <Tabs defaultValue="traffic" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="traffic">{t('adminAnalytics.tabs.traffic')}</TabsTrigger>
-          <TabsTrigger value="conversion">{t('adminAnalytics.tabs.conversion')}</TabsTrigger>
-          <TabsTrigger value="subscribers">{t('adminAnalytics.tabs.subscribers')}</TabsTrigger>
-          <TabsTrigger value="support">{t('adminAnalytics.tabs.support')}</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
+          <TabsTrigger value="traffic" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.traffic')}</TabsTrigger>
+          <TabsTrigger value="conversion" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.conversion')}</TabsTrigger>
+          <TabsTrigger value="subscribers" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.subscribers')}</TabsTrigger>
+          <TabsTrigger value="support" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.support')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="traffic">

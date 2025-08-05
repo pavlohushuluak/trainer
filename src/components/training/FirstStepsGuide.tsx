@@ -74,48 +74,53 @@ export const FirstStepsGuide = React.memo(({ pets }: FirstStepsGuideProps) => {
         {steps.map((step, index) => (
           <div 
             key={step.number}
-            className={`flex items-center gap-4 p-4 rounded-lg bg-card/70 border border-border ${
+            className={`flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-lg bg-card/70 border border-border ${
               step.disabled ? 'opacity-50' : 'hover:bg-card/90 transition-colors'
             }`}
           >
-            <div className={`flex items-center justify-center w-10 h-10 rounded-full ${step.color} text-white font-bold text-sm`}>
+            <div className={`flex items-center justify-center w-10 h-10 rounded-full ${step.color} text-white font-bold text-sm flex-shrink-0`}>
               {step.number}
             </div>
             
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                {step.icon}
-                <h3 className="font-semibold text-foreground">{step.title}</h3>
-                {step.disabled && <Badge variant="outline" className="text-xs">{t('training.firstStepsGuide.afterStep')} {step.number - 1}</Badge>}
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2 sm:mb-1">
+                <div className="flex items-center gap-2">
+                  {step.icon}
+                  <h3 className="font-semibold text-foreground text-sm sm:text-base">{step.title}</h3>
+                </div>
+                {step.disabled && <Badge variant="outline" className="text-xs w-fit">{t('training.firstStepsGuide.afterStep')} {step.number - 1}</Badge>}
               </div>
-              <p className="text-sm text-muted-foreground">{step.description}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">{step.description}</p>
             </div>
             
-            {step.onClick && !step.disabled && (
-              <Button 
-                onClick={step.onClick}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                size="sm"
-              >
-                {step.action}
-                <ArrowRight className="h-4 w-4 ml-1" />
-              </Button>
-            )}
-            
-            {step.disabled && (
-              <Badge variant="secondary" className="text-xs">
-                {t('training.firstStepsGuide.locked')}
-              </Badge>
-            )}
+            <div className="flex-shrink-0">
+              {step.onClick && !step.disabled && (
+                <Button 
+                  onClick={step.onClick}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto"
+                  size="sm"
+                >
+                  <span className="hidden sm:inline">{step.action}</span>
+                  <span className="sm:hidden">{step.action}</span>
+                  <ArrowRight className="h-4 w-4 ml-1" />
+                </Button>
+              )}
+              
+              {step.disabled && (
+                <Badge variant="secondary" className="text-xs w-full sm:w-auto text-center">
+                  {t('training.firstStepsGuide.locked')}
+                </Badge>
+              )}
+            </div>
           </div>
         ))}
         
         <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-          <div className="flex items-start gap-3">
-            <BookOpen className="h-5 w-5 text-primary mt-0.5" />
-            <div>
-              <h4 className="font-medium text-foreground mb-1">{t('training.firstStepsGuide.tip.title')}</h4>
-              <p className="text-sm text-muted-foreground">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+            <BookOpen className="h-5 w-5 text-primary mt-0.5 sm:mt-0 flex-shrink-0" />
+            <div className="min-w-0 flex-1">
+              <h4 className="font-medium text-foreground mb-1 text-sm sm:text-base">{t('training.firstStepsGuide.tip.title')}</h4>
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 {t('training.firstStepsGuide.tip.description')}
               </p>
             </div>

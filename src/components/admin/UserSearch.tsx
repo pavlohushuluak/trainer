@@ -15,13 +15,13 @@ export const UserSearch = ({ searchQuery, onSearchChange }: UserSearchProps) => 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Search className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+          <Search className="h-4 w-4 sm:h-5 sm:w-5" />
           {t('adminUsers.search.title')}
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1">
             <Input
               placeholder={t('adminUsers.search.placeholder')}
@@ -30,9 +30,10 @@ export const UserSearch = ({ searchQuery, onSearchChange }: UserSearchProps) => 
               className="w-full"
             />
           </div>
-          <Button variant="outline">
+          <Button variant="outline" className="w-full sm:w-auto">
             <Filter className="h-4 w-4 mr-2" />
-            {t('adminUsers.search.filter')}
+            <span className="hidden sm:inline">{t('adminUsers.search.filter')}</span>
+            <span className="sm:hidden">{t('adminUsers.search.filter')}</span>
           </Button>
         </div>
       </CardContent>
