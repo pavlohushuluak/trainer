@@ -1848,7 +1848,7 @@
       },
       "buttons": {
         "chatWithTrainer": "Chat with trainer",
-        "freeQuestions": "5 questions free",
+        "freeQuestions": "10 questions free",
         "managePetProfile": "Manage pet profile"
       },
       "premium": {
