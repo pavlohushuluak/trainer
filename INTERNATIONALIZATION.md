@@ -1,6 +1,6 @@
 # Internationalization (i18n) Implementation - COMPLETE
 
-This project now supports both German (de) and English (en) languages using `react-i18next`.
+This project now supports both German (de) and English (en) languages using `react-i18next`, with **German (Deutsch) as the default language**.
 
 ## ✅ **COMPLETED IMPLEMENTATION**
 
@@ -10,6 +10,7 @@ This project now supports both German (de) and English (en) languages using `rea
 - ✅ Set up German and English translation files with comprehensive coverage
 - ✅ Initialized i18n in `main.tsx`
 - ✅ Fixed scrollbar disappearing issue with language dropdown
+- ✅ **Set German (Deutsch) as the default language**
 
 ### **🎯 Key Features Implemented**
 - ✅ **Language Switcher Component** - Globe icon in navigation with dropdown
@@ -18,6 +19,21 @@ This project now supports both German (de) and English (en) languages using `rea
 - ✅ **Language Persistence** - Remembers user choice in localStorage
 - ✅ **Fallback Support** - Falls back to German if translation missing
 - ✅ **HTML Support** - Handles rich formatting in translations
+- ✅ **German as Default** - New users see German interface by default
+
+### **🌍 Language Configuration**
+
+#### **Default Language Settings**
+- **Primary Language**: German (Deutsch) - `de`
+- **Secondary Language**: English - `en`
+- **Fallback Language**: German (Deutsch) - `de`
+- **Detection Order**: localStorage → querystring → cookie → navigator → htmlTag
+
+#### **Language Detection Logic**
+1. **User Preference**: Checks localStorage for saved language choice
+2. **Browser Language**: Detects browser language if no preference saved
+3. **Default Fallback**: Always defaults to German if no other language detected
+4. **Database Storage**: Saves user language preference to database for logged-in users
 
 ### **📱 Updated Components & Pages**
 
