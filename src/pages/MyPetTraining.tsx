@@ -22,11 +22,20 @@ import { DataRefreshButton } from '@/components/DataRefreshButton';
 import { devLog, PerformanceTimer } from '@/utils/performance';
 import { usePaymentSuccess } from '@/hooks/usePaymentSuccess';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const MyPetTraining = () => {
   const { user, signOut, loading } = useAuth();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { t } = useTranslations();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Check if we should open the pet modal from URL parameter
+  const shouldOpenPetModal = useMemo(() => {
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get('openPetModal') === 'true';
+  }, [location.search]);
 
   // Handle payment success tracking
   usePaymentSuccess();
@@ -390,7 +399,10 @@ const MyPetTraining = () => {
               
               <div id="pet-section" className="mb-8">
                 <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg" />}>
-                  <LazyPetProfileManager pets={pets || []} />
+                  <LazyPetProfileManager 
+                    pets={pets || []} 
+                    shouldOpenPetModal={shouldOpenPetModal}
+                  />
                 </Suspense>
               </div>
               

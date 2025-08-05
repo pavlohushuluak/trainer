@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { UpgradeModal } from "./subscription/UpgradeModal";
@@ -28,10 +28,11 @@ interface PetProfile {
 }
 
 interface PetProfileManagerProps {
-  pets?: PetProfile[];
+  pets: PetProfile[];
+  shouldOpenPetModal?: boolean;
 }
 
-const PetProfileManager = React.memo(({ pets = [] }: PetProfileManagerProps) => {
+const PetProfileManager = React.memo(({ pets = [], shouldOpenPetModal = false }: PetProfileManagerProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -51,6 +52,45 @@ const PetProfileManager = React.memo(({ pets = [] }: PetProfileManagerProps) => 
   } = usePetLimitChecker();
 
   devLog('🐾 PetProfileManager - Using passed pets:', pets.length);
+
+  // Auto-open pet modal if requested via URL parameter
+  useEffect(() => {
+    if (shouldOpenPetModal) {
+      // Scroll to pet section first
+      const petSection = document.getElementById('pet-section');
+      if (petSection) {
+        petSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Wait a bit for scroll to complete, then handle modal
+        setTimeout(() => {
+          if (canAddMore) {
+            setIsDialogOpen(true);
+          } else {
+            // If user can't add more pets, scroll to subscription management
+            const subscriptionSection = document.querySelector('.subscription-management-section');
+            if (subscriptionSection) {
+              subscriptionSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              // Activate the "Pakete" tab
+              setTimeout(() => {
+                const paketeTab = document.querySelector('[data-value="plans"]') as HTMLElement;
+                if (paketeTab) {
+                  paketeTab.click();
+                }
+              }, 500);
+            }
+          }
+        }, 500);
+      } else {
+        if (canAddMore) {
+          setIsDialogOpen(true);
+        }
+      }
+      
+      // Clear the URL parameter after handling
+      const url = new URL(window.location.href);
+      url.searchParams.delete('openPetModal');
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, [shouldOpenPetModal, canAddMore]);
 
   const handleEdit = (pet: PetProfile) => {
     const metricKey = startMetric('edit-pet', 'user-action');

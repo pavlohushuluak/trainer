@@ -10,8 +10,8 @@ export const PetProfileRequiredCard = () => {
   const { t } = useTranslations();
 
   const handleCreatePetProfile = () => {
-    // Navigate to the pet training page where users can create pet profiles
-    navigate('/mein-tiertraining');
+    // Navigate to the pet training page with parameter to open "Add pet" modal
+    navigate('/mein-tiertraining?openPetModal=true');
   };
 
   return (
