@@ -29,7 +29,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
     { name: t('adminLayout.analytics'), href: 'analytics', icon: BarChart3 },
     { name: t('adminLayout.users'), href: 'users', icon: Users },
     { name: t('adminLayout.chats'), href: 'chats', icon: MessageCircle },
-    { name: t('adminLayout.payments'), href: 'payments', icon: CreditCard },
+    // { name: t('adminLayout.payments'), href: 'payments', icon: CreditCard },
     { name: t('adminLayout.support'), href: 'support', icon: HeadphonesIcon },
     { name: t('adminLayout.system'), href: 'system', icon: Monitor },
     { name: t('adminLayout.settings'), href: 'settings', icon: Settings },
