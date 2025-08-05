@@ -99,7 +99,10 @@ export const TopNavigationBar = ({
         ...(showAdminAccess ? [{
           icon: Shield,
           label: t('navigation.admin'),
-          action: () => navigate('/admin')
+          action: () => {
+            console.log('🔐 Admin button clicked, navigating to /admin');
+            navigate('/admin');
+          }
         }] : []),
         {
           icon: LogOut,

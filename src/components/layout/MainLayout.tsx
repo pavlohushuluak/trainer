@@ -45,20 +45,23 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       const result = await requestCache.get(
         `admin_status_${user.id}`,
         async () => {
-          // Use the database function instead of direct table query
+          // Use the same method as AdminProtectedRoute for consistency
           const { data, error } = await supabase
-            .rpc('is_admin', { _user_id: user.id });
+            .from('admin_users')
+            .select('role, is_active')
+            .eq('user_id', user.id)
+            .eq('is_active', true)
+            .single();
+
+          if (error || !data) return false;
           
-          if (error) {
-            console.warn('Error checking admin status:', error);
-            return false;
-          }
-          
-          return !!data;
+          // Check if user has admin or support role
+          return data.role === 'admin' || data.role === 'support';
         },
         60000 // Cache for 1 minute
       );
       
+      console.log('🔐 Admin status check result:', { userId: user.id, isAdmin: result });
       setIsAdmin(result);
     } catch (error) {
       console.warn('Error checking admin status:', error);
@@ -119,17 +122,15 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       setPets([]);
       setIsAdmin(false);
       
-      // Call signOut - it will handle the redirect
+      // Call signOut - let it handle the redirect
       await signOut();
       
     } catch (error) {
       console.error('🔓 MainLayout logout error:', error);
       // On any error, force redirect
       window.location.replace('/');
-    } finally {
-      // Reset logging out state if we're still here
-      setTimeout(() => setIsLoggingOut(false), 1000);
     }
+    // Remove the finally block to prevent conflicts with auth state handler
   };
 
   // Load data when user changes
@@ -160,6 +161,12 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         showSettings={!!user}
         isAuthenticated={!!user}
       />
+      {/* Debug admin status */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed bottom-4 right-4 bg-black text-white p-2 rounded text-xs z-50">
+          Admin: {isAdmin ? 'Yes' : 'No'} | User: {user?.email || 'None'}
+        </div>
+      )}
       
       {/* Auth Error Display */}
       <AuthErrorDisplay />

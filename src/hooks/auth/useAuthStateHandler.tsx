@@ -210,7 +210,16 @@ export const useAuthStateHandler = () => {
           // Clear any remaining local data
           setUser(null);
           setSession(null);
-          // The redirect is handled by the signOut function itself
+          
+          // Ensure we're not on a protected page after logout
+          const currentPath = window.location.pathname;
+          if (currentPath.startsWith('/admin') || 
+              currentPath.startsWith('/mein-tiertraining') || 
+              currentPath.startsWith('/settings') ||
+              currentPath.startsWith('/chat')) {
+            console.log('🔓 Redirecting from protected page after logout');
+            window.location.replace('/');
+          }
         }
       }
     );
@@ -253,12 +262,22 @@ export const useAuthStateHandler = () => {
       }
     }, 5000); // 5 second timeout
 
+    // Additional fallback: Force loading to false if user is null and we've been loading for too long
+    const forceLoadingTimeout = setTimeout(() => {
+      if (mounted && loading && !user && !session) {
+        console.log('⚠️ Force loading to false - no user or session after timeout');
+        setLoading(false);
+        setInitialized(true);
+      }
+    }, 3000); // 3 second timeout for force loading
+
     return () => {
       mounted = false;
       clearTimeout(timeoutId);
+      clearTimeout(forceLoadingTimeout); // Clear the new force loading timeout
       subscription.unsubscribe();
     };
-  }, [handleSignedIn]);
+  }, [handleSignedIn, user, session, loading]); // Added user, session, loading to dependencies
 
   return { user, session, loading };
 };

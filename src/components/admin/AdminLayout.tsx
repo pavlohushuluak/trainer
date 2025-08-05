@@ -41,10 +41,12 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         {/* Sidebar */}
         <div className="flex flex-col w-64 bg-card border-r border-border">
           <div className="flex items-center justify-center h-16 border-b border-border px-4">
-            <ThemeLogo 
-              className="h-8 w-auto"
-              alt="TierTrainer24 Admin"
-            />
+            <Link to="/" className="flex items-center">
+              <ThemeLogo 
+                className="h-8 w-auto cursor-pointer hover:opacity-80 transition-opacity"
+                alt="TierTrainer24 Admin"
+              />
+            </Link>
           </div>
           
           <nav className="flex-1 p-4 space-y-2">

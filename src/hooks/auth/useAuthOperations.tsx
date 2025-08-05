@@ -42,11 +42,9 @@ export const useAuthOperations = () => {
         console.log('🔓 Supabase logout successful');
       }
       
-      // Step 3: Force immediate redirect (don't wait for auth state change)
+      // Step 3: Force immediate redirect to home page
       console.log('🔓 Forcing redirect to home page...');
-      setTimeout(() => {
-        window.location.replace('/');
-      }, 100);
+      window.location.replace('/');
       
     } catch (error) {
       console.error('🔓 Logout exception:', error);
