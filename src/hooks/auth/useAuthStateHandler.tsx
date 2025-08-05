@@ -11,6 +11,9 @@ export const useAuthStateHandler = () => {
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
   const { handleOAuthProfile } = useOAuthProfileHandler();
+  
+  // Track auth state handler calls to prevent excessive events
+  const [authHandlerCallCount, setAuthHandlerCallCount] = useState(0);
 
   const trackSignUp = useCallback(() => {
     // Track sign up with GTM
@@ -177,13 +180,32 @@ export const useAuthStateHandler = () => {
     let mounted = true;
     let sessionInitialized = false;
     let authStateInitialized = false;
+    let processedSessionId: string | null = null; // Track processed session to prevent duplicates
     
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return;
         
-        console.log('🔐 Auth state change:', { event, userEmail: session?.user?.email });
+        // Track and limit auth state handler calls
+        setAuthHandlerCallCount(prev => {
+          const newCount = prev + 1;
+          console.log(`🔐 Auth state change #${newCount}:`, { event, userEmail: session?.user?.email });
+          
+          // If we've had too many INITIAL_SESSION events, log a warning
+          if (event === 'INITIAL_SESSION' && newCount > 3) {
+            console.warn('⚠️ Too many INITIAL_SESSION events detected:', newCount);
+          }
+          
+          return newCount;
+        });
+        
+        // Prevent processing the same session multiple times
+        const sessionId = session?.user?.id || 'no-user';
+        if (event === 'INITIAL_SESSION' && processedSessionId === sessionId) {
+          console.log('🔐 Skipping duplicate INITIAL_SESSION for same user');
+          return;
+        }
         
         setSession(session);
         setUser(session?.user ?? null);
@@ -197,6 +219,7 @@ export const useAuthStateHandler = () => {
 
         // Handle SIGNED_IN events immediately
         if (event === 'SIGNED_IN' && session?.user) {
+          processedSessionId = sessionId;
           try {
             await handleSignedIn(session);
           } catch (error) {
@@ -207,6 +230,7 @@ export const useAuthStateHandler = () => {
         // Handle SIGNED_OUT events
         if (event === 'SIGNED_OUT') {
           console.log('🔓 SIGNED_OUT event received, user logged out');
+          processedSessionId = null; // Reset processed session
           // Clear any remaining local data
           setUser(null);
           setSession(null);
@@ -230,6 +254,13 @@ export const useAuthStateHandler = () => {
       
       console.log('Initial session check:', session?.user?.email);
       
+      // Prevent processing the same session multiple times
+      const sessionId = session?.user?.id || 'no-user';
+      if (processedSessionId === sessionId) {
+        console.log('🔐 Skipping duplicate initial session check for same user');
+        return;
+      }
+      
       setSession(session);
       setUser(session?.user ?? null);
       
@@ -244,6 +275,7 @@ export const useAuthStateHandler = () => {
       
       // Handle redirect for existing sessions
       if (session?.user) {
+        processedSessionId = sessionId;
         try {
           await handleSignedIn(session, true);
         } catch (error) {
@@ -262,10 +294,11 @@ export const useAuthStateHandler = () => {
       }
     }, 5000); // 5 second timeout
 
-    // Additional fallback: Force loading to false if user is null and we've been loading for too long
+    // Additional fallback: Force loading to false if we've been loading for too long
     const forceLoadingTimeout = setTimeout(() => {
-      if (mounted && loading && !user && !session) {
-        console.log('⚠️ Force loading to false - no user or session after timeout');
+      if (mounted && !authStateInitialized) {
+        console.log('⚠️ Force loading to false - timeout reached');
+        authStateInitialized = true;
         setLoading(false);
         setInitialized(true);
       }
@@ -274,10 +307,10 @@ export const useAuthStateHandler = () => {
     return () => {
       mounted = false;
       clearTimeout(timeoutId);
-      clearTimeout(forceLoadingTimeout); // Clear the new force loading timeout
+      clearTimeout(forceLoadingTimeout);
       subscription.unsubscribe();
     };
-  }, [handleSignedIn, user, session, loading]); // Added user, session, loading to dependencies
+  }, [handleSignedIn]); // Only depend on handleSignedIn, not on user/session/loading
 
   return { user, session, loading };
 };
