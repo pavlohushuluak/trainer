@@ -4,5 +4,12 @@
             "source": "/(.*)",
             "destination": "/"
         }
+    ],
+    "redirects": [
+        {
+            "source": "https://tiertrainer24.com/:path*",
+            "destination": "https://www.tiertrainer24.com/:path*",
+            "permanent": true
+        }
     ]
 }
