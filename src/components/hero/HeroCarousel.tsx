@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Circle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -9,7 +9,8 @@ export const HeroCarousel = () => {
   const { t } = useTranslations();
   const isMobile = useIsMobile();
   
-  const carouselImages = [
+  // Use useMemo to recreate carousel images when mobile state changes
+  const carouselImages = useMemo(() => [
     { 
       src: isMobile ? '/carousel/mobile/1.jpg' : '/carousel/1.jpg', 
       alt: t('hero.carousel.trainingSuccess') 
@@ -34,7 +35,7 @@ export const HeroCarousel = () => {
       src: isMobile ? '/carousel/mobile/6.jpg' : '/carousel/6.jpg', 
       alt: t('hero.carousel.trainingSuccesses') 
     }
-  ];
+  ], [isMobile, t]);
   
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -47,6 +48,7 @@ export const HeroCarousel = () => {
     console.log('📱 HeroCarousel: Mobile state changed:', { 
       isMobile, 
       currentImage: carouselImages[currentIndex]?.src,
+      allImages: carouselImages.map(img => img.src),
       timestamp: new Date().toISOString() 
     });
   }, [isMobile, currentIndex, carouselImages]);
@@ -70,6 +72,23 @@ export const HeroCarousel = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Test mobile image loading in development
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development' && isMobile) {
+      console.log('📱 HeroCarousel: Testing mobile image loading...');
+      carouselImages.forEach((image, index) => {
+        const img = new Image();
+        img.onload = () => {
+          console.log(`📱 HeroCarousel: Mobile image ${index + 1} loaded successfully:`, image.src);
+        };
+        img.onerror = () => {
+          console.error(`📱 HeroCarousel: Mobile image ${index + 1} failed to load:`, image.src);
+        };
+        img.src = image.src;
+      });
+    }
+  }, [isMobile, carouselImages]);
 
   const nextSlide = useCallback(() => {
     if (isTransitioning) return;
@@ -158,6 +177,15 @@ export const HeroCarousel = () => {
               alt={image.alt}
               className="w-full h-full object-cover"
               loading={index === 0 ? "eager" : "lazy"}
+              onError={(e) => {
+                console.error('📱 HeroCarousel: Image failed to load:', image.src);
+                // Fallback to desktop image if mobile image fails
+                if (image.src.includes('/mobile/')) {
+                  const fallbackSrc = image.src.replace('/mobile/', '/');
+                  console.log('📱 HeroCarousel: Falling back to:', fallbackSrc);
+                  e.currentTarget.src = fallbackSrc;
+                }
+              }}
             />
             
             {/* Gradient Overlay */}
@@ -227,8 +255,11 @@ export const HeroCarousel = () => {
 
         {/* Debug indicator for development */}
         {process.env.NODE_ENV === 'development' && (
-          <div className="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-            {isMobile ? '📱 Mobile' : '🖥️ Desktop'}
+          <div className="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded max-w-xs">
+            <div>{isMobile ? '📱 Mobile' : '🖥️ Desktop'}</div>
+            <div className="truncate">
+              {carouselImages[currentIndex]?.src}
+            </div>
           </div>
         )}
       </div>
