@@ -3,17 +3,37 @@ import { ChevronLeft, ChevronRight, Circle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export const HeroCarousel = () => {
   const { t } = useTranslations();
+  const isMobile = useIsMobile();
   
   const carouselImages = [
-    { src: '/carousel/1.jpg', alt: t('hero.carousel.trainingSuccess') },
-    { src: '/carousel/2.jpg', alt: t('hero.carousel.happyDogs') },
-    { src: '/carousel/3.jpg', alt: t('hero.carousel.parkTraining') },
-    { src: '/carousel/4.jpg', alt: t('hero.carousel.professionalTraining') },
-    { src: '/carousel/5.jpg', alt: t('hero.carousel.humanAnimalBond') },
-    { src: '/carousel/6.jpg', alt: t('hero.carousel.trainingSuccesses') }
+    { 
+      src: isMobile ? '/carousel/mobile/1.jpg' : '/carousel/1.jpg', 
+      alt: t('hero.carousel.trainingSuccess') 
+    },
+    { 
+      src: isMobile ? '/carousel/mobile/2.jpg' : '/carousel/2.jpg', 
+      alt: t('hero.carousel.happyDogs') 
+    },
+    { 
+      src: isMobile ? '/carousel/mobile/3.jpg' : '/carousel/3.jpg', 
+      alt: t('hero.carousel.parkTraining') 
+    },
+    { 
+      src: isMobile ? '/carousel/mobile/4.jpg' : '/carousel/4.jpg', 
+      alt: t('hero.carousel.professionalTraining') 
+    },
+    { 
+      src: isMobile ? '/carousel/mobile/5.jpg' : '/carousel/5.jpg', 
+      alt: t('hero.carousel.humanAnimalBond') 
+    },
+    { 
+      src: isMobile ? '/carousel/mobile/6.jpg' : '/carousel/6.jpg', 
+      alt: t('hero.carousel.trainingSuccesses') 
+    }
   ];
   
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -21,6 +41,15 @@ export const HeroCarousel = () => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
+
+  // Update carousel images when mobile state changes
+  useEffect(() => {
+    console.log('📱 HeroCarousel: Mobile state changed:', { 
+      isMobile, 
+      currentImage: carouselImages[currentIndex]?.src,
+      timestamp: new Date().toISOString() 
+    });
+  }, [isMobile, currentIndex, carouselImages]);
 
   // Auto-advance carousel
   useEffect(() => {
@@ -195,6 +224,13 @@ export const HeroCarousel = () => {
             }}
           />
         </div>
+
+        {/* Debug indicator for development */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+            {isMobile ? '📱 Mobile' : '🖥️ Desktop'}
+          </div>
+        )}
       </div>
 
       {/* Mobile Touch Indicators */}
