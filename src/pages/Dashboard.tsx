@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import SubscriptionManager from '@/components/SubscriptionManager';
-import { TopNavigationBar } from '@/components/layout/TopNavigationBar';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { BreadcrumbNavigation } from '@/components/subscription/BreadcrumbNavigation';
 import { useTranslations } from '@/hooks/useTranslations';
 
@@ -58,10 +58,6 @@ const Dashboard = () => {
     }
   }, [toast, t]);
 
-  const handleLogout = () => {
-    navigate('/');
-  };
-
   // Show loading only when absolutely necessary
   if (loading) {
     return (
@@ -77,16 +73,16 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <TopNavigationBar onLogout={handleLogout} isAuthenticated={!!user} />
-      
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <BreadcrumbNavigation />
+    <MainLayout showFooter={false} showSupportButton={false}>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-6">
+            <BreadcrumbNavigation />
+          </div>
+          <SubscriptionManager />
         </div>
-        <SubscriptionManager />
       </div>
-    </div>
+    </MainLayout>
   );
 };
 

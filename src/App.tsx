@@ -20,6 +20,7 @@ import Support from "./pages/Support";
 import Community from "./pages/Community";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminStatusTestPage from "./pages/AdminStatusTestPage";
 import AuthCallback from "./pages/AuthCallback";
 import PasswordReset from "./pages/PasswordReset";
 import NotFound from "./pages/NotFound";
@@ -131,6 +132,7 @@ const App = () => {
                 <Routes>
                   <Route path="/admin/login" element={<AdminLogin />} />
                   <Route path="/admin/*" element={<AdminDashboard />} />
+                  <Route path="/admin/status-test" element={<AdminStatusTestPage />} />
                   <Route path="/" element={<MainLayout />}>
                     <Route index element={<Index />} />
                     <Route path="dashboard" element={<Dashboard />} />

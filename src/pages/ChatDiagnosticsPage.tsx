@@ -1,21 +1,14 @@
 
 import { ChatDiagnostics } from '@/components/chat/ChatDiagnostics';
-import { TopNavigationBar } from '@/components/layout/TopNavigationBar';
-import { useAuth } from '@/hooks/useAuth';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { useTranslations } from '@/hooks/useTranslations';
 
 const ChatDiagnosticsPage = () => {
-  const { signOut } = useAuth();
   const { t } = useTranslations();
 
   return (
+    <MainLayout showFooter={false} showSupportButton={false}>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <TopNavigationBar 
-        onLogout={signOut}
-        showAdminAccess={false}
-        isAuthenticated={true}
-      />
-      
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
@@ -29,6 +22,7 @@ const ChatDiagnosticsPage = () => {
         <ChatDiagnostics />
       </div>
     </div>
+    </MainLayout>
   );
 };
 

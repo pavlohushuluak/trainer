@@ -25,7 +25,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Only clear specific queries that depend on user data, not the entire cache
       queryClient.removeQueries({ queryKey: ['pets'] });
       queryClient.removeQueries({ queryKey: ['subscription-status'] });
-      queryClient.removeQueries({ queryKey: ['admin-check'] });
+      // Don't clear admin-check cache on user change - let it persist
+      // queryClient.removeQueries({ queryKey: ['admin-check'] });
     }
   }, [user?.id, loading, queryClient, lastUserId]);
 

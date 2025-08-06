@@ -42,6 +42,15 @@ export const TopNavigationBar = ({
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Debug logging for admin status
+  useEffect(() => {
+    console.log('🔐 TopNavigationBar: Admin status:', { 
+      isAdmin, 
+      showAdminAccess, 
+      isAuthenticated 
+    });
+  }, [isAdmin, showAdminAccess, isAuthenticated]);
+
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -101,6 +110,7 @@ export const TopNavigationBar = ({
           label: t('navigation.admin'),
           action: () => {
             console.log('🔐 Admin button clicked, navigating to /admin');
+            console.log('🔐 Current location:', window.location.pathname);
             navigate('/admin');
           }
         }] : []),
