@@ -166,7 +166,7 @@ export const TrialConversionMetrics = ({ timeRange }: TrialConversionMetricsProp
             <CardDescription>{t('adminAnalytics.trialConversion.newTrialsAndConversions')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-80">
+            <ChartContainer config={chartConfig}>
               <BarChart data={conversionData?.chartData || []}>
                 <XAxis 
                   dataKey="week" 

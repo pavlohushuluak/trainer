@@ -176,7 +176,7 @@ export const SupportMetrics = ({ timeRange }: SupportMetricsProps) => {
             <CardDescription>{t('adminAnalytics.support.ticketVolumeAndResolution')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-80">
+            <ChartContainer config={chartConfig}>
               <BarChart data={supportData?.chartData || []}>
                 <XAxis 
                   dataKey="week" 

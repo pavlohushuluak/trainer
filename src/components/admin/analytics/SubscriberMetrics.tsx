@@ -189,7 +189,7 @@ export const SubscriberMetrics = ({ timeRange }: SubscriberMetricsProps) => {
             <CardDescription>{t('adminAnalytics.subscribers.growth')}, {t('adminAnalytics.subscribers.churn')} und Netto-Wachstum</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-80">
+            <ChartContainer config={chartConfig}>
               <BarChart data={subscriberData?.chartData || []}>
                 <XAxis 
                   dataKey="month" 
@@ -215,7 +215,7 @@ export const SubscriberMetrics = ({ timeRange }: SubscriberMetricsProps) => {
             <CardDescription>Entwicklung der aktiven Abonnenten über Zeit</CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-80">
+            <ChartContainer config={chartConfig}>
               <LineChart data={subscriberData?.chartData || []}>
                 <XAxis 
                   dataKey="month" 
