@@ -70,6 +70,30 @@ export const detectBrowserLanguage = (): string => {
 };
 
 /**
+ * Get current language from localStorage or default to 'de'
+ */
+export const getCurrentLanguage = (): string => {
+  try {
+    const savedLanguage = localStorage.getItem('i18nextLng');
+    return savedLanguage && ['de', 'en'].includes(savedLanguage) ? savedLanguage : 'de';
+  } catch (error) {
+    console.warn('Error accessing localStorage for language:', error);
+    return 'de';
+  }
+};
+
+/**
+ * Set language and save to localStorage
+ */
+export const setLanguage = (language: 'de' | 'en'): void => {
+  try {
+    localStorage.setItem('i18nextLng', language);
+  } catch (error) {
+    console.warn('Error saving language to localStorage:', error);
+  }
+};
+
+/**
  * Initialize language support for new users (signup) or existing users (login)
  */
 export const initializeUserLanguageSupport = async (userEmail: string, isNewUser: boolean = false) => {

@@ -1,4 +1,5 @@
 import { AdminStatusTest } from '@/components/debug/AdminStatusTest';
+import { LanguagePersistenceTest } from '@/components/debug/LanguagePersistenceTest';
 import { MainLayout } from '@/components/layout/MainLayout';
 
 const AdminStatusTestPage = () => {
@@ -15,7 +16,10 @@ const AdminStatusTestPage = () => {
             </p>
           </div>
           
-          <AdminStatusTest />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <AdminStatusTest />
+            <LanguagePersistenceTest />
+          </div>
         </div>
       </div>
     </MainLayout>

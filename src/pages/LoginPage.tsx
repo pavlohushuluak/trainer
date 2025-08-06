@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 import { ThemeLogo } from '@/components/ui/theme-logo';
 import { useTranslations } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
+import { getCurrentLanguage } from '@/utils/languageSupport';
 
 const LoginPage = () => {
   const { signIn, signUp, user } = useAuth();
@@ -72,7 +73,7 @@ const LoginPage = () => {
     return email && password;
   }, [email, password]);
 
-  const language = localStorage.getItem('i18nextLng') || 'de';
+  const language = getCurrentLanguage();
 
   const upsertLanguageSupport = async (email: string, language: string) => {
     try {

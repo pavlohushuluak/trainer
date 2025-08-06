@@ -6,6 +6,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useTranslations } from '@/hooks/useTranslations';
 import { useAuthContext } from '@/hooks/auth/AuthContext';
 import { saveUserLanguageSupport } from '@/utils/languageSupport';
+import { useLanguagePersistence } from '@/hooks/useLanguagePersistence';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +18,7 @@ export const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
   const { t } = useTranslations();
   const { user } = useAuthContext();
+  const { changeLanguage } = useLanguagePersistence();
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
 
@@ -27,24 +29,25 @@ export const LanguageSwitcher = () => {
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
-  const handleLanguageChange = async (languageCode: string) => {
-    // Update i18n language
-    i18n.changeLanguage(languageCode);
-    
-    // Save to language_support table if user is logged in
-    if (user?.email) {
-      try {
-        await saveUserLanguageSupport(user.email, languageCode);
-        console.log('Language preference saved to database');
-      } catch (error) {
-        console.error('Failed to save language preference:', error);
+  const handleLanguageChange = async (languageCode: 'de' | 'en') => {
+    try {
+      // Use the persistence hook to change language
+      changeLanguage(languageCode);
+      
+      // Save to language_support table if user is logged in
+      if (user?.email) {
+        try {
+          await saveUserLanguageSupport(user.email, languageCode);
+          console.log('Language preference saved to database');
+        } catch (error) {
+          console.error('Failed to save language preference:', error);
+        }
       }
+      
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Error changing language:', error);
     }
-    
-    // Store in localStorage for persistence
-    localStorage.setItem('i18nextLng', languageCode);
-    
-    setIsOpen(false);
   };
 
   // Simple fix: ensure scrollbar is always visible
@@ -77,7 +80,7 @@ export const LanguageSwitcher = () => {
             {languages.map((language) => (
               <button
                 key={language.code}
-                onClick={() => handleLanguageChange(language.code)}
+                onClick={() => handleLanguageChange(language.code as 'de' | 'en')}
                 className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                   i18n.language === language.code
                     ? 'bg-primary text-primary-foreground shadow-sm'
@@ -115,7 +118,7 @@ export const LanguageSwitcher = () => {
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
-            onClick={() => handleLanguageChange(language.code)}
+            onClick={() => handleLanguageChange(language.code as 'de' | 'en')}
             className={`cursor-pointer flex items-center justify-between ${
               i18n.language === language.code ? 'bg-accent' : ''
             }`}

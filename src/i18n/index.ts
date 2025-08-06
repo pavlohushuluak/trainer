@@ -20,8 +20,6 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'de', // Set German as default language
-    fallbackLng: 'de',
     debug: process.env.NODE_ENV === 'development',
     
     interpolation: {
@@ -36,5 +34,25 @@ i18n
       caches: ['localStorage', 'cookie'],
     },
   });
+
+// Initialize language from localStorage on startup
+const initializeLanguage = () => {
+  try {
+    const savedLanguage = localStorage.getItem('i18nextLng');
+    if (savedLanguage && ['de', 'en'].includes(savedLanguage)) {
+      i18n.changeLanguage(savedLanguage);
+    } else {
+      // Set default language in localStorage
+      localStorage.setItem('i18nextLng', 'de');
+    }
+  } catch (error) {
+    console.warn('Could not access localStorage during i18n initialization:', error);
+  }
+};
+
+// Initialize after i18n is ready
+i18n.on('initialized', () => {
+  initializeLanguage();
+});
 
 export default i18n; 

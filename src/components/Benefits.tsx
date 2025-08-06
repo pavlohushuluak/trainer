@@ -17,7 +17,7 @@ export const Benefits = () => {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:gap-8 lg:gap-12 max-w-4xl mx-auto">
+        <div className="grid gap-6 md:gap-4 lg:gap-6 xl:gap-8 max-w-4xl mx-auto">
           {/* Benefit 1 */}
           <Card className="border-2 border-border hover:border-primary/50 transition-all duration-300">
             <CardContent className="p-4 sm:p-6 lg:p-8">
@@ -160,7 +160,7 @@ export const Benefits = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center mt-12 sm:mt-16">
+        <div className="text-center mt-4 sm:mt-16">
           <div className="inline-block bg-primary/10 px-6 sm:px-8 py-4 sm:py-6 rounded-xl sm:rounded-2xl">
             <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">
               {t('benefits.cta.title')}

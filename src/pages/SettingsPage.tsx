@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useThemeContext } from '@/hooks/ThemeProvider';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useLanguagePersistence } from '@/hooks/useLanguagePersistence';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const SettingsPage = () => {
   const { user } = useAuth();
   const { theme, setTheme } = useThemeContext();
-  const { t, changeLanguage, currentLanguage } = useTranslations();
+  const { t } = useTranslations();
+  const { changeLanguage, currentLanguage } = useLanguagePersistence();
 
   if (!user) {
     return (

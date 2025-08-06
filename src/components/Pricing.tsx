@@ -16,7 +16,7 @@ export const Pricing = () => {
   const currentPlans = isYearly ? getSixMonthPlans(t) : getMonthlyPlans(t);
 
   return (
-    <section id="pricing" className="py-20 bg-secondary/30">
+    <section id="pricing" className="py-10 bg-secondary/30">
       <div className="container mx-auto px-4">
         <PricingHeader />
         <PackageContent />

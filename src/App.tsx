@@ -13,6 +13,7 @@ import { ResourcePreloader } from "@/components/performance/ResourcePreloader";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { store } from "@/store";
 import { usePetProfiles } from "@/hooks/usePetProfiles";
+import { LanguageInitializer } from "@/components/LanguageInitializer";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import MyPetTraining from "./pages/MyPetTraining";
@@ -123,6 +124,7 @@ const App = () => {
           <AuthProvider>
             <TooltipProvider>
               <BrowserRouter>
+                <LanguageInitializer />
                 <PerformanceMonitor />
                 <ResourcePreloader resources={criticalResources} />
                 

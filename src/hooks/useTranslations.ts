@@ -5,6 +5,8 @@ export const useTranslations = () => {
 
   const changeLanguage = (language: 'de' | 'en') => {
     i18n.changeLanguage(language);
+    // Ensure localStorage is updated
+    localStorage.setItem('i18nextLng', language);
   };
 
   const currentLanguage = i18n.language as 'de' | 'en';

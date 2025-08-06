@@ -8,6 +8,7 @@ import { TopNavigationBar } from './TopNavigationBar';
 import { Footer } from '../Footer';
 import { SupportButton } from '../support/SupportButton';
 import { AuthErrorDisplay } from '../auth/AuthErrorDisplay';
+import { LanguageInitializer } from '../LanguageInitializer';
 import { requestCache } from '@/utils/requestCache';
 import type { Tables } from '@/integrations/supabase/types';
 
@@ -237,6 +238,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
   return (
     <div className={cn("min-h-screen bg-background flex flex-col", className)}>
+      {/* Language Initializer */}
+      <LanguageInitializer />
+      
       {/* Sticky Navigation Header */}
       <TopNavigationBar 
         primaryPet={pets[0]}
