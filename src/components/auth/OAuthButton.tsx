@@ -44,6 +44,7 @@ export const OAuthButton = ({ provider, onSuccess }: OAuthButtonProps) => {
         variant: "destructive"
       });
     } finally {
+      localStorage.setItem('alreadySignedUp', 'true');
       setLoading(false);
     }
   };
