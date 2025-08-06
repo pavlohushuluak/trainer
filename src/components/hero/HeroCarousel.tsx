@@ -12,27 +12,27 @@ export const HeroCarousel = () => {
   // Use useMemo to recreate carousel images when mobile state changes
   const carouselImages = useMemo(() => [
     { 
-      src: isMobile ? 'https://images.nymia.ai/cdn-cgi/image/w=300/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/1.jpg' : 'https://images.nymia.ai/cdn-cgi/image/w=600/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/1.jpg', 
+      src: isMobile ? '/carousel/mobile/1.jpg' : '/carousel/1.jpg', 
       alt: t('hero.carousel.trainingSuccess') 
     },
     { 
-      src: isMobile ? 'https://images.nymia.ai/cdn-cgi/image/w=300/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/2.jpg' : 'https://images.nymia.ai/cdn-cgi/image/w=600/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/2.jpg', 
+      src: isMobile ? '/carousel/mobile/2.jpg' : '/carousel/2.jpg', 
       alt: t('hero.carousel.happyDogs') 
     },
     { 
-      src: isMobile ? 'https://images.nymia.ai/cdn-cgi/image/w=300/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/3.jpg' : 'https://images.nymia.ai/cdn-cgi/image/w=600/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/3.jpg', 
+      src: isMobile ? '/carousel/mobile/3.jpg' : '/carousel/3.jpg', 
       alt: t('hero.carousel.parkTraining') 
     },
     { 
-      src: isMobile ? 'https://images.nymia.ai/cdn-cgi/image/w=300/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/4.jpg' : 'https://images.nymia.ai/cdn-cgi/image/w=600/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/4.jpg', 
+      src: isMobile ? '/carousel/mobile/4.jpg' : '/carousel/4.jpg', 
       alt: t('hero.carousel.professionalTraining') 
     },
     { 
-      src: isMobile ? 'https://images.nymia.ai/cdn-cgi/image/w=300/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/5.jpg' : 'https://images.nymia.ai/cdn-cgi/image/w=600/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/5.jpg', 
+      src: isMobile ? '/carousel/mobile/5.jpg' : '/carousel/5.jpg', 
       alt: t('hero.carousel.humanAnimalBond') 
     },
     { 
-      src: isMobile ? 'https://images.nymia.ai/cdn-cgi/image/w=300/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/6.jpg' : 'https://images.nymia.ai/cdn-cgi/image/w=600/a880400e-fb6e-4dc8-8ac7-6370ef2f744d/vault/6.jpg', 
+      src: isMobile ? '/carousel/mobile/6.jpg' : '/carousel/6.jpg', 
       alt: t('hero.carousel.trainingSuccesses') 
     }
   ], [isMobile, t]);
