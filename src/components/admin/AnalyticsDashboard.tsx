@@ -164,7 +164,7 @@ export const AnalyticsDashboard = () => {
 
       {/* Detailed Analytics Tabs */}
       <Tabs defaultValue="traffic" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
+        <TabsList className="grid w-full h-full grid-cols-2 sm:grid-cols-4">
           <TabsTrigger value="traffic" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.traffic')}</TabsTrigger>
           <TabsTrigger value="conversion" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.conversion')}</TabsTrigger>
           <TabsTrigger value="subscribers" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.subscribers')}</TabsTrigger>

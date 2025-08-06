@@ -160,7 +160,7 @@ export const TrafficMetrics = ({ timeRange }: TrafficMetricsProps) => {
           <CardDescription>{t('adminAnalytics.traffic.trafficDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="h-80">
+          <ChartContainer config={chartConfig}>
             <LineChart data={trafficData?.chartData || []}>
               <XAxis 
                 dataKey="date" 

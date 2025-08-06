@@ -93,42 +93,42 @@ export const PetFilter = ({ pets, selectedPetFilter, onPetFilterChange, plansCou
 
   return (
     <div className="mb-6">
-      <div className="flex items-center gap-4 mb-2">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-2">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
           <span className="text-sm font-medium text-gray-700">{t('training.petFilter.title')}</span>
           <Select value={selectedPetFilter} onValueChange={handlePetFilterChange}>
-            <SelectTrigger className="w-64 bg-white border-2 border-blue-200 hover:border-blue-300 transition-colors">
+            <SelectTrigger className="w-full sm:w-64 bg-white border-2 border-blue-200 hover:border-blue-300 transition-colors">
               <SelectValue>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">{getFilterDisplayName(selectedPetFilter, validPets, t)}</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="font-medium truncate">{getFilterDisplayName(selectedPetFilter, validPets, t)}</span>
                 </div>
               </SelectValue>
             </SelectTrigger>
-            <SelectContent className="bg-white border-2 border-gray-200 shadow-lg z-50">
+            <SelectContent className="bg-white border-2 border-gray-200 shadow-lg z-50 max-h-60">
               <SelectItem value="all" className="hover:bg-blue-50">
-                <div className="flex items-center gap-2">
-                  <span>🌟</span>
-                  <span className="font-medium">{t('training.petFilter.showAllPets')}</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="flex-shrink-0">🌟</span>
+                  <span className="font-medium truncate">{t('training.petFilter.showAllPets')}</span>
                 </div>
               </SelectItem>
               <SelectItem value="none" className="hover:bg-gray-50">
-                <div className="flex items-center gap-2">
-                  <span>📋</span>
-                  <span>{t('training.petFilter.generalPlans')}</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="flex-shrink-0">📋</span>
+                  <span className="truncate">{t('training.petFilter.generalPlans')}</span>
                 </div>
               </SelectItem>
               <SelectItem value="unassigned" className="hover:bg-orange-50">
-                <div className="flex items-center gap-2">
-                  <span>❓</span>
-                  <span>{t('training.petFilter.unassignedPlans')}</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="flex-shrink-0">❓</span>
+                  <span className="truncate">{t('training.petFilter.unassignedPlans')}</span>
                 </div>
               </SelectItem>
               {validPets.map(pet => (
                 <SelectItem key={pet.id} value={pet.id} className="hover:bg-blue-50">
-                  <div className="flex items-center gap-2">
-                    <span>{getPetIcon(pet.species)}</span>
-                    <span className="font-medium">{pet.name}</span>
-                    <span className="text-gray-500 text-sm">({pet.species})</span>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="flex-shrink-0">{getPetIcon(pet.species)}</span>
+                    <span className="font-medium truncate">{pet.name}</span>
+                    <span className="text-gray-500 text-sm flex-shrink-0">({pet.species})</span>
                   </div>
                 </SelectItem>
               ))}
@@ -137,13 +137,13 @@ export const PetFilter = ({ pets, selectedPetFilter, onPetFilterChange, plansCou
         </div>
         
         {plansCount > 0 && (
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 self-start sm:self-auto">
             {plansCount} {plansCount === 1 ? t('training.petFilter.plan') : t('training.petFilter.plans')}
           </Badge>
         )}
       </div>
       
-      <div className="text-xs text-gray-500">
+      <div className="text-xs text-gray-500 px-1">
         {selectedPetFilter === "all" && t('training.petFilter.description.allPets')}
         {selectedPetFilter === "none" && t('training.petFilter.description.generalPlans')}
         {selectedPetFilter === "unassigned" && t('training.petFilter.description.unassignedPlans')}

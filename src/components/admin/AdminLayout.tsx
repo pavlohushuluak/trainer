@@ -1,5 +1,4 @@
-
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Users, 
   CreditCard, 
@@ -29,7 +28,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { signOut, user, loading: authLoading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pageLoadTime, setPageLoadTime] = useState<number>(0);
-
+  const navigate = useNavigate();
   // Track page load time for debugging
   useEffect(() => {
     const startTime = Date.now();
@@ -143,6 +142,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
             <ThemeLogo 
               className="h-6 w-auto"
               alt="TierTrainer24 Admin"
+              onClick={() => navigate('/')}
             />
             <div className="w-10" /> {/* Spacer for centering */}
           </div>

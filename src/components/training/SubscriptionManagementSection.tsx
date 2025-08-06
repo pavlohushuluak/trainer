@@ -8,7 +8,7 @@ import SubscriptionManager from '@/components/SubscriptionManager';
 import { useTranslation } from 'react-i18next';
 
 export const SubscriptionManagementSection = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { 
     hasActiveSubscription, 
     subscription, 
@@ -71,7 +71,10 @@ export const SubscriptionManagementSection = () => {
       <Card className="shadow-sm border-gray-100">
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>
-            <CardHeader className={`cursor-pointer hover:bg-muted/50 transition-colors rounded-t-lg px-4 sm:px-6 py-4 sm:py-6 ${isOpen? null : 'rounded-b-lg'}`}>
+            <CardHeader 
+              className={`cursor-pointer hover:bg-muted/50 transition-colors rounded-t-lg px-4 sm:px-6 py-4 sm:py-6 ${isOpen? null : 'rounded-b-lg'}`}
+              aria-label={isOpen ? t('training.subscriptionManagement.collapseDetails') : t('training.subscriptionManagement.expandDetails')}
+            >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <Crown className="h-5 w-5 text-yellow-500 flex-shrink-0" />
@@ -90,7 +93,7 @@ export const SubscriptionManagementSection = () => {
                       {tierLimit && tierLimit > 1 && (
                         <span className="text-xs sm:text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full flex items-center gap-1 whitespace-nowrap">
                           <Users className="h-3 w-3 flex-shrink-0" />
-                          {tierLimit === 999 ? '♾️' : tierLimit} {t('training.subscriptionManagement.animals')}
+                          {tierLimit === 999 ? t('training.subscriptionManagement.unlimitedAnimals') : tierLimit} {t('training.subscriptionManagement.animals')}
                         </span>
                       )}
                     </div>
@@ -104,7 +107,36 @@ export const SubscriptionManagementSection = () => {
               </div>
               <CardDescription className="text-sm">
                 {hasActiveSubscription 
-                  ? `${t('training.subscriptionManagement.currentPlan')}: ${subscriptionTierName}${tierLimit ? ` (${tierLimit} ${t('training.subscriptionManagement.animals')})` : ''}${isExpired ? ` - ${t('training.subscriptionManagement.expired')}` : ''}`
+                  ? (() => {
+                      const planName = subscriptionTierName;
+                      const status = isExpired ? t('training.subscriptionManagement.expired') : t('training.subscriptionManagement.active');
+                      
+                      if (tierLimit && tierLimit > 1) {
+                        if (isExpired) {
+                          return t('training.subscriptionManagement.planWithLimitAndStatus', {
+                            plan: planName,
+                            limit: tierLimit === 999 ? t('training.subscriptionManagement.unlimitedAnimals') : tierLimit,
+                            animals: t('training.subscriptionManagement.animals'),
+                            status: status
+                          });
+                        } else {
+                          return t('training.subscriptionManagement.planWithLimit', {
+                            plan: planName,
+                            limit: tierLimit === 999 ? t('training.subscriptionManagement.unlimitedAnimals') : tierLimit,
+                            animals: t('training.subscriptionManagement.animals')
+                          });
+                        }
+                      } else {
+                        if (isExpired) {
+                          return t('training.subscriptionManagement.planWithStatus', {
+                            plan: planName,
+                            status: status
+                          });
+                        } else {
+                          return `${t('training.subscriptionManagement.currentPlan')}: ${planName}`;
+                        }
+                      }
+                    })()
                   : t('training.subscriptionManagement.description')
                 }
               </CardDescription>

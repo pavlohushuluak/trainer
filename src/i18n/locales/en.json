@@ -1776,6 +1776,12 @@
       "expired": "Expired",
       "animals": "animals",
       "loading": "Loading subscription information...",
+      "planWithLimit": "{{plan}} ({{limit}} {{animals}})",
+      "planWithLimitAndStatus": "{{plan}} ({{limit}} {{animals}}) - {{status}}",
+      "planWithStatus": "{{plan}} - {{status}}",
+      "unlimitedAnimals": "unlimited",
+      "expandDetails": "Expand details",
+      "collapseDetails": "Collapse details",
       "error": {
         "title": "Subscription Error",
         "description": "Unable to load subscription information. Please try refreshing the page."
@@ -3182,6 +3188,10 @@
     "downgrade": "Downgrade",
     "billing": "Billing",
     "invoices": "Invoices",
+    "invoicesDescription": "Your payment history and invoices",
+    "noInvoices": "No invoices available yet",
+    "invoice": "Invoice",
+    "paid": "Paid",
     "paymentMethod": "Payment Method",
     "nextBilling": "Next Billing",
     "subscriptionCancelled": "Subscription cancelled",
@@ -3214,6 +3224,8 @@
       "trialInfo": "7 days free trial • Cancel anytime",
       "supportInfo": "Have questions? Contact our support for personal consultation."
     },
+    "maxPlanReached": "You already have the largest package!",
+    "maxPlanDescription": "With max pet slots, you have reached the maximum package.",
     "upgradeModal": {
       "title": "🐾 Expand Your Pet Package!",
       "description": "You have already created {current} of {max} pets. Upgrade to a larger package to add more pets!",
@@ -3235,6 +3247,10 @@
       "upgradeNow": "Upgrade Now",
       "maxPlanReached": "You already have the largest package!",
       "maxPlanDescription": "With {max} pet slots, you have reached the maximum package.",
+      "availableUpgrades": "Available upgrades for your pet package",
+      "currentPetSlots": "You currently have space for {{count}} pets.",
+      "unlimitedPetSlots": "You currently have unlimited space for pets.",
+      "availableUpgradeOptions": "Here are the available upgrade options:",
       "securityInfo": "🔒 Secure & GDPR compliant • Cancel anytime • Immediate activation after payment"
     },
     "trialStatus": {
@@ -3256,9 +3272,28 @@
       "loading": "Trial status is loading...",
       "refreshStatus": "Refresh Status"
     },
+    "moneyBackGuarantee": {
+      "active": "💰 Money-back guarantee active",
+      "day": "day",
+      "days": "days",
+      "remaining": "remaining",
+      "youHaveRemaining": "You still have <strong>{{days}} {{dayText}}</strong> for your risk-free trial period",
+      "guaranteeEnd": "Guarantee end",
+      "completeProtection": "🛡️ Complete Protection",
+      "description": "Cancel within the first 14 days and receive your money back automatically. No questions asked, no hassle – your trust is important to us."
+    },
     "cancellation": {
-      "moneyBackGuarantee": "💰 Money-Back Guarantee",
       "cancelSubscription": "Cancel Subscription",
+      "moneyBackGuarantee": {
+        "active": "💰 Money-back guarantee active",
+        "day": "day",
+        "days": "days",
+        "remaining": "remaining",
+        "youHaveRemaining": "You still have <strong>{{days}} {{dayText}}</strong> for your risk-free trial period",
+        "guaranteeEnd": "Guarantee end",
+        "completeProtection": "🛡️ Complete Protection",
+        "description": "Cancel within the first 14 days and receive your money back automatically. No questions asked, no hassle – your trust is important to us."
+      },
       "errors": {
         "expiredPeriod": {
           "title": "14-Day Money-Back Guarantee Expired",

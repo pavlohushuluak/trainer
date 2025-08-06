@@ -65,10 +65,10 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
           <span className="text-4xl">👑</span>
         </div>
         <h3 className="text-lg font-semibold text-foreground mb-2">
-          Du hast bereits das größte Paket!
+          {t('subscription.maxPlanReached')}
         </h3>
         <p className="text-muted-foreground">
-          Mit {maxPetsAllowed === 999 ? 'unbegrenzten' : maxPetsAllowed} Tierplätzen hast du das maximale Paket erreicht.
+          {t('subscription.maxPlanDescription', { max: maxPetsAllowed === 999 ? t('subscription.unlimited') : maxPetsAllowed })}
         </p>
       </div>
     );
@@ -81,11 +81,15 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
       {subscription.subscribed && (
         <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">
           <h3 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">
-            📈 Verfügbare Upgrades für dein Tierpaket
+            📈 {t('subscription.availableUpgrades')}
           </h3>
           <p className="text-sm text-blue-800 dark:text-blue-300">
-            Du hast aktuell Platz für {maxPetsAllowed === 999 ? 'unbegrenzt' : maxPetsAllowed} Tiere. 
-            Hier sind die verfügbaren Upgrade-Optionen:
+            {maxPetsAllowed === 999 
+              ? t('subscription.unlimitedPetSlots')
+              : t('subscription.currentPetSlots', { count: maxPetsAllowed })
+            }
+            {' '}
+            {t('subscription.availableUpgradeOptions')}
           </p>
         </div>
       )}

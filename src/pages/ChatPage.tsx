@@ -37,7 +37,7 @@ const ChatPage = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">{t('chat.page.loginRequired.title')}</h1>
           <p className="text-muted-foreground">{t('chat.page.loginRequired.description')}</p>
@@ -47,7 +47,7 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       <MainNavigation user={user} />
       
       <div className="max-w-4xl mx-auto p-6">
@@ -87,7 +87,6 @@ const ChatPage = () => {
         <ChatModal
           isOpen={showChatModal}
           onClose={() => setShowChatModal(false)}
-          pets={pets}
         />
       )}
     </div>

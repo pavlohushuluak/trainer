@@ -1776,6 +1776,12 @@
       "expired": "Abgelaufen",
       "animals": "Tiere",
       "loading": "Abonnement-Informationen werden geladen...",
+      "planWithLimit": "{{plan}} ({{limit}} {{animals}})",
+      "planWithLimitAndStatus": "{{plan}} ({{limit}} {{animals}}) - {{status}}",
+      "planWithStatus": "{{plan}} - {{status}}",
+      "unlimitedAnimals": "unbegrenzt",
+      "expandDetails": "Details erweitern",
+      "collapseDetails": "Details reduzieren",
       "error": {
         "title": "Abonnement-Fehler",
         "description": "Abonnement-Informationen konnten nicht geladen werden. Bitte versuchen Sie, die Seite zu aktualisieren."
@@ -3182,6 +3188,10 @@
     "downgrade": "Downgrade",
     "billing": "Abrechnung",
     "invoices": "Rechnungen",
+    "invoicesDescription": "Ihre Zahlungshistorie und Rechnungen",
+    "noInvoices": "Noch keine Rechnungen vorhanden",
+    "invoice": "Rechnung",
+    "paid": "Bezahlt",
     "paymentMethod": "Zahlungsmethode",
     "nextBilling": "Nächste Abrechnung",
     "subscriptionCancelled": "Abonnement gekündigt",
@@ -3214,6 +3224,8 @@
       "trialInfo": "7 Tage kostenlose Testphase • Jederzeit kündbar",
       "supportInfo": "Haben Sie Fragen? Kontaktieren Sie unseren Support für persönliche Beratung."
     },
+    "maxPlanReached": "Sie haben bereits das größte Paket!",
+    "maxPlanDescription": "Mit max Haustier-Slots haben Sie das maximale Paket erreicht.",
     "upgradeModal": {
       "title": "🐾 Erweitern Sie Ihr Haustier-Paket!",
       "description": "Sie haben bereits {current} von {max} Haustieren erstellt. Upgraden Sie zu einem größeren Paket, um weitere Haustiere hinzuzufügen!",
@@ -3235,6 +3247,10 @@
       "upgradeNow": "Jetzt upgraden",
       "maxPlanReached": "Sie haben bereits das größte Paket!",
       "maxPlanDescription": "Mit {max} Haustier-Slots haben Sie das maximale Paket erreicht.",
+      "availableUpgrades": "Verfügbare Upgrades für dein Tierpaket",
+      "currentPetSlots": "Du hast aktuell Platz für {{count}} Tiere.",
+      "unlimitedPetSlots": "Du hast aktuell unbegrenzt Platz für Tiere.",
+      "availableUpgradeOptions": "Hier sind die verfügbaren Upgrade-Optionen:",
       "securityInfo": "🔒 Sicher & DSGVO-konform • Jederzeit kündbar • Sofortige Aktivierung nach Zahlung"
     },
     "trialStatus": {
@@ -3256,9 +3272,28 @@
       "loading": "Teststatus wird geladen...",
       "refreshStatus": "Status aktualisieren"
     },
+    "moneyBackGuarantee": {
+      "active": "💰 Geld-zurück-Garantie aktiv",
+      "day": "Tag",
+      "days": "Tage",
+      "remaining": "verbleibend",
+      "youHaveRemaining": "Du hast noch <strong>{{days}} {{dayText}}</strong> für deine risikofreie Testphase",
+      "guaranteeEnd": "Garantie-Ende",
+      "completeProtection": "🛡️ Vollständiger Schutz",
+      "description": "Kündige innerhalb der ersten 14 Tage und erhalte dein Geld automatisch zurück. Keine Nachfragen, kein Aufwand – dein Vertrauen ist uns wichtig."
+    },
     "cancellation": {
-      "moneyBackGuarantee": "💰 Geld-zurück-Garantie",
       "cancelSubscription": "Abonnement kündigen",
+      "moneyBackGuarantee": {
+        "active": "💰 Geld-zurück-Garantie aktiv",
+        "day": "Tag",
+        "days": "Tage",
+        "remaining": "verbleibend",
+        "youHaveRemaining": "Du hast noch <strong>{{days}} {{dayText}}</strong> für deine risikofreie Testphase",
+        "guaranteeEnd": "Garantie-Ende",
+        "completeProtection": "🛡️ Vollständiger Schutz",
+        "description": "Kündige innerhalb der ersten 14 Tage und erhalte dein Geld automatisch zurück. Keine Nachfragen, kein Aufwand – dein Vertrauen ist uns wichtig."
+      },
       "errors": {
         "expiredPeriod": {
           "title": "14-Tage Geld-zurück-Garantie abgelaufen",

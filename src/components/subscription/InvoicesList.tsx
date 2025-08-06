@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FileText, Euro } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Invoice {
   id: string;
@@ -21,8 +22,11 @@ interface InvoicesListProps {
 }
 
 export const InvoicesList = ({ invoices }: InvoicesListProps) => {
+  const { t, i18n } = useTranslation();
+  
   const formatPrice = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('de-DE', {
+    const locale = i18n.language === 'de' ? 'de-DE' : 'en-US';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: currency.toUpperCase()
     }).format(amount / 100);
@@ -33,16 +37,16 @@ export const InvoicesList = ({ invoices }: InvoicesListProps) => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5" />
-          Rechnungen
+          {t('subscription.invoices')}
         </CardTitle>
         <CardDescription>
-          Ihre Zahlungshistorie und Rechnungen
+          {t('subscription.invoicesDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         {invoices.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
-            Noch keine Rechnungen vorhanden
+            {t('subscription.noInvoices')}
           </div>
         ) : (
           <div className="space-y-3">
@@ -51,15 +55,15 @@ export const InvoicesList = ({ invoices }: InvoicesListProps) => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">
-                      {invoice.invoice_number || `Rechnung ${invoice.id.slice(-8)}`}
+                      {invoice.invoice_number || `${t('subscription.invoice')} ${invoice.id.slice(-8)}`}
                     </span>
                     <Badge variant={invoice.status === 'paid' ? 'default' : 'secondary'}>
-                      {invoice.status === 'paid' ? 'Bezahlt' : invoice.status}
+                      {invoice.status === 'paid' ? t('subscription.paid') : invoice.status}
                     </Badge>
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    {new Date(invoice.created_at).toLocaleDateString('de-DE')}
-                    {invoice.paid_at && ` • Bezahlt: ${new Date(invoice.paid_at).toLocaleDateString('de-DE')}`}
+                    {new Date(invoice.created_at).toLocaleDateString(i18n.language === 'de' ? 'de-DE' : 'en-US')}
+                    {invoice.paid_at && ` • ${t('subscription.paid')}: ${new Date(invoice.paid_at).toLocaleDateString(i18n.language === 'de' ? 'de-DE' : 'en-US')}`}
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
