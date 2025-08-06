@@ -13,9 +13,11 @@ import { useUserActions } from './hooks/useUserActions';
 import { useUserSync } from './hooks/useUserSync';
 import { useUserQuery } from './hooks/useUserQuery';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/hooks/useAuth';
 
 export const UserManagement = () => {
   const { t } = useTranslation();
+  const { user, loading: authLoading } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<UserWithDetails | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -31,6 +33,14 @@ export const UserManagement = () => {
 
   const { syncStripeUsers } = useUserSync();
   const { data: users, isLoading, error, refetch } = useUserQuery(searchQuery);
+
+  console.log('🔍 UserManagement: Render state:', {
+    user: !!user,
+    authLoading,
+    isLoading,
+    usersCount: users?.length || 0,
+    error: error?.message
+  });
 
   const handleShowDetails = (user: UserWithDetails) => {
     setSelectedUser(user);
@@ -50,6 +60,7 @@ export const UserManagement = () => {
   };
 
   const handleRefresh = () => {
+    console.log('🔍 UserManagement: Manual refresh triggered');
     refetch();
   };
 
@@ -57,18 +68,43 @@ export const UserManagement = () => {
     cancelUserSubscription.mutate({ userId, immediateRefund });
   };
 
-  if (isLoading) {
+  // Show loading only when auth is loading or user data is loading
+  if (authLoading || isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">{t('adminUsers.loading')}</p>
+          <p className="text-muted-foreground">
+            {authLoading ? 'Authenticating...' : t('adminUsers.loading')}
+          </p>
         </div>
       </div>
     );
   }
 
+  // Show error if user is not authenticated
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-red-600">
+              <AlertCircle className="h-5 w-5" />
+              Authentication Required
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              Please log in to access the admin panel.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (error) {
+    console.error('🔍 UserManagement: Error state:', error);
     return (
       <div className="flex items-center justify-center h-96">
         <Card className="w-full max-w-md">

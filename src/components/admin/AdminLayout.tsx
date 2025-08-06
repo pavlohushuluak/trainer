@@ -17,7 +17,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { ThemeLogo } from '@/components/ui/theme-logo';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -26,8 +26,28 @@ interface AdminLayoutProps {
 export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { t } = useTranslation();
   const location = useLocation();
-  const { signOut } = useAuth();
+  const { signOut, user, loading: authLoading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [pageLoadTime, setPageLoadTime] = useState<number>(0);
+
+  // Track page load time for debugging
+  useEffect(() => {
+    const startTime = Date.now();
+    setPageLoadTime(startTime);
+    
+    return () => {
+      const loadTime = Date.now() - startTime;
+      console.log('🔍 AdminLayout: Page load time:', loadTime + 'ms');
+    };
+  }, [location.pathname]);
+
+  console.log('🔍 AdminLayout: Render state:', {
+    pathname: location.pathname,
+    user: !!user,
+    authLoading,
+    sidebarOpen,
+    pageLoadTime
+  });
 
   const navigation = [
     { name: t('adminLayout.analytics'), href: 'analytics', icon: BarChart3 },
@@ -77,7 +97,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
           <nav className="flex-1 p-4 space-y-2">
             {navigation.map((item) => {
               const isActive = location.pathname.endsWith(item.href) || 
-                              (item.href === 'analytics' && location.pathname.endsWith('/admin'));
+                              (item.href === 'analytics' && location.pathname.endsWith('/admin/analytics'));
               return (
                 <Link
                   key={item.name}
@@ -132,6 +152,18 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
           </main>
         </div>
       </div>
+
+      {/* Debug panel for development */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed bottom-4 left-4 bg-black text-white p-2 rounded text-xs z-50 max-w-xs">
+          <div>Admin Layout Debug:</div>
+          <div>Path: {location.pathname}</div>
+          <div>User: {user?.email || 'None'}</div>
+          <div>Auth Loading: {authLoading ? 'Yes' : 'No'}</div>
+          <div>Sidebar: {sidebarOpen ? 'Open' : 'Closed'}</div>
+          <div>Load Time: {pageLoadTime ? Date.now() - pageLoadTime + 'ms' : 'N/A'}</div>
+        </div>
+      )}
     </div>
   );
 };

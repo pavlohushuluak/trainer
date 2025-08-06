@@ -10,6 +10,42 @@ import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
 import { LoadingStateManager } from '@/components/training/LoadingStateManager';
 import { ChatModal } from '@/components/ChatModal';
 import { SupportButton } from '@/components/support/SupportButton';
+import { AlertCircle } from 'lucide-react';
+
+// Simple Error Boundary for Lazy Components
+class LazyComponentErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallback?: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode; fallback?: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: any) {
+    console.error('Lazy component error:', error);
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error('Lazy component error caught:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || (
+        <div className="flex items-center justify-center h-32 bg-muted rounded-lg">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <AlertCircle className="h-4 w-4" />
+            <span>Component failed to load</span>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 // Lazy load components
 const HeroStorySection = lazy(() => import('@/components/training/HeroStorySection').then(module => ({ default: module.HeroStorySection })));
@@ -89,7 +125,11 @@ const MyPetTraining = () => {
               <AuthErrorDisplay />
               
               <div className="mb-8">
-                <HeroStorySection onChatOpen={() => setIsChatOpen(true)} />
+                <LazyComponentErrorBoundary>
+                  <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg" />}>
+                    <HeroStorySection onChatOpen={() => setIsChatOpen(true)} />
+                  </Suspense>
+                </LazyComponentErrorBoundary>
               </div>
 
               <LoadingStateManager
@@ -98,33 +138,45 @@ const MyPetTraining = () => {
                 errorMessage={t('myPetTraining.page.error.petProfiles')}
               >
                 {/* First Steps Guide and Progress Overview */}
-                <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg mb-8" />}>
-                  <LazyMainContentGrid pets={pets || []} />
-                </Suspense>
+                <LazyComponentErrorBoundary>
+                  <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg mb-8" />}>
+                    <LazyMainContentGrid pets={pets || []} />
+                  </Suspense>
+                </LazyComponentErrorBoundary>
                 
                 <div id="pet-section" className="mb-8">
-                  <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg" />}>
-                    <LazyPetProfileManager shouldOpenPetModal={shouldOpenPetModal} />
-                  </Suspense>
+                  <LazyComponentErrorBoundary>
+                    <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg" />}>
+                      <LazyPetProfileManager shouldOpenPetModal={shouldOpenPetModal} />
+                    </Suspense>
+                  </LazyComponentErrorBoundary>
                 </div>
                 
-                <Suspense fallback={<div className="h-48 animate-pulse bg-muted rounded-lg mb-8" />}>
-                  <DailyTrackingSection />
-                </Suspense>
+                <LazyComponentErrorBoundary>
+                  <Suspense fallback={<div className="h-48 animate-pulse bg-muted rounded-lg mb-8" />}>
+                    <DailyTrackingSection />
+                  </Suspense>
+                </LazyComponentErrorBoundary>
 
-                <Suspense fallback={<div className="h-48 animate-pulse bg-muted rounded-lg mb-8" />}>
-                  <ImageAnalysisCard primaryPet={primaryPet} />
-                </Suspense>
+                <LazyComponentErrorBoundary>
+                  <Suspense fallback={<div className="h-48 animate-pulse bg-muted rounded-lg mb-8" />}>
+                    <ImageAnalysisCard primaryPet={primaryPet} />
+                  </Suspense>
+                </LazyComponentErrorBoundary>
                 
                 <div className="relative z-10">
-                  <Suspense fallback={<div className="h-56 animate-pulse bg-muted rounded-lg mb-8" />}>
-                    <TrainingPlansCard pets={pets || []} />
-                  </Suspense>
+                  <LazyComponentErrorBoundary>
+                    <Suspense fallback={<div className="h-56 animate-pulse bg-muted rounded-lg mb-8" />}>
+                      <TrainingPlansCard pets={pets || []} />
+                    </Suspense>
+                  </LazyComponentErrorBoundary>
                 </div>
                 
-                <Suspense fallback={<div className="h-40 animate-pulse bg-muted rounded-lg" />}>
-                  <SubscriptionManagementSection />
-                </Suspense>
+                <LazyComponentErrorBoundary>
+                  <Suspense fallback={<div className="h-40 animate-pulse bg-muted rounded-lg" />}>
+                    <SubscriptionManagementSection />
+                  </Suspense>
+                </LazyComponentErrorBoundary>
               </LoadingStateManager>
 
               {isChatOpen && (

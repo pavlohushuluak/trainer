@@ -111,7 +111,7 @@ export const TopNavigationBar = ({
           action: () => {
             console.log('🔐 Admin button clicked, navigating to /admin');
             console.log('🔐 Current location:', window.location.pathname);
-            navigate('/admin');
+            navigate('/admin/users');
           }
         }] : []),
         {

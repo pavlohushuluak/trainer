@@ -2,14 +2,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/hooks/useAuth';
 import { UserWithDetails } from '../types';
 
 export const useUserQuery = (searchQuery: string) => {
   const { t } = useTranslation();
+  const { user, loading: authLoading } = useAuth();
 
   return useQuery({
     queryKey: ['admin-users', searchQuery],
     queryFn: async () => {
+      console.log('🔍 useUserQuery: Starting user data fetch');
       
       try {
         // Get all subscribers first with better error handling
@@ -46,6 +49,7 @@ export const useUserQuery = (searchQuery: string) => {
           throw new Error(`${t('adminHooks.userQuery.errors.fetchSubscribersError')}: ${subscribersError.message}`);
         }
 
+        console.log('🔍 useUserQuery: Fetched subscribers:', subscribers?.length || 0);
 
         // Get all profiles with better error handling
         const { data: profiles, error: profilesError } = await supabase
@@ -57,6 +61,7 @@ export const useUserQuery = (searchQuery: string) => {
           // Continue without profiles instead of throwing
         }
 
+        console.log('🔍 useUserQuery: Fetched profiles:', profiles?.length || 0);
 
         // Combine subscribers with profile data
         const usersWithDetails: UserWithDetails[] = [];
@@ -153,6 +158,7 @@ export const useUserQuery = (searchQuery: string) => {
           return dateB - dateA;
         });
 
+        console.log('🔍 useUserQuery: Returning combined users:', usersWithDetails.length);
         return usersWithDetails;
 
       } catch (error) {
@@ -160,7 +166,11 @@ export const useUserQuery = (searchQuery: string) => {
         throw error;
       }
     },
+    enabled: !!user && !authLoading, // Only run when user is authenticated and auth is not loading
     retry: 3,
-    retryDelay: 1000,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+    staleTime: 30000, // Cache for 30 seconds
+    gcTime: 300000, // Keep in cache for 5 minutes
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 };
