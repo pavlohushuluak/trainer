@@ -27,20 +27,20 @@ export const SubscriptionTabs = ({
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="overview">{t('training.subscriptionTabs.overview')}</TabsTrigger>
-        <TabsTrigger value="plans" data-value="plans">{t('training.subscriptionTabs.plans')}</TabsTrigger>
-        <TabsTrigger value="invoices">{t('training.subscriptionTabs.invoices')}</TabsTrigger>
+      <TabsList className="grid w-full h-full grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-0">
+        <TabsTrigger value="overview" className="text-xs sm:text-sm py-2 sm:py-3">{t('training.subscriptionTabs.overview')}</TabsTrigger>
+        <TabsTrigger value="plans" data-value="plans" className="text-xs sm:text-sm py-2 sm:py-3">{t('training.subscriptionTabs.plans')}</TabsTrigger>
+        <TabsTrigger value="invoices" className="text-xs sm:text-sm py-2 sm:py-3">{t('training.subscriptionTabs.invoices')}</TabsTrigger>
       </TabsList>
 
-      <TabsContent value="overview" className="space-y-4">
+      <TabsContent value="overview" className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
         <SubscriptionOverview 
           subscription={subscription}
           onManageSubscription={onManageSubscription}
         />
       </TabsContent>
 
-      <TabsContent value="plans" className="space-y-4">
+      <TabsContent value="plans" className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
         <SubscriptionPlans
           subscription={subscription}
           checkingOut={checkingOut}
@@ -48,7 +48,7 @@ export const SubscriptionTabs = ({
         />
       </TabsContent>
 
-      <TabsContent value="invoices" className="space-y-4">
+      <TabsContent value="invoices" className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
         <InvoicesList invoices={invoices} />
       </TabsContent>
     </Tabs>
