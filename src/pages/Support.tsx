@@ -46,7 +46,7 @@ const Support = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col">
+    <div className="bg-gradient-to-br from-background via-background to-muted/20 flex flex-col">
 
       {/* Auth Error Display */}
       <AuthErrorDisplay />
@@ -140,7 +140,6 @@ const Support = () => {
       <ChatModal
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
-        pets={pets}
       />
     )}
   </div>

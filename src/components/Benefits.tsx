@@ -6,7 +6,7 @@ import { useTranslations } from "@/hooks/useTranslations";
 export const Benefits = () => {
   const { t } = useTranslations();
   return (
-    <section id="benefits" className="py-12 sm:py-16 lg:py-20 bg-background">
+    <section id="benefits" className="pt-12 sm:pt-16 lg:pt-20 bg-background pb-4">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6">
@@ -160,7 +160,7 @@ export const Benefits = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center mt-4 sm:mt-16">
+        <div className="text-center mt-4 sm:mt-8">
           <div className="inline-block bg-primary/10 px-6 sm:px-8 py-4 sm:py-6 rounded-xl sm:rounded-2xl">
             <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">
               {t('benefits.cta.title')}
