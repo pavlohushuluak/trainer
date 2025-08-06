@@ -2200,6 +2200,11 @@
       }
     }
   },
+  "subscriptionManager": {
+    "premiumActive": "✅ Premium-Abonnement aktiv",
+    "until": "bis",
+    "loadingDetails": "🔄 Aktuelle Abonnement-Details werden geladen..."
+  },
   "auth": {
     "login": "Anmelden",
     "register": "Registrieren",

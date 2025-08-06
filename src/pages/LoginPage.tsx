@@ -170,32 +170,32 @@ const LoginPage = () => {
       <AuthErrorDisplay />
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md space-y-6">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
+        <div className="w-full max-w-md sm:max-w-lg space-y-4 sm:space-y-6">
 
         {/* Main Card */}
         <Card className="border-0 shadow-2xl bg-card/80 backdrop-blur-sm">
-          <CardHeader className="text-center pb-6">
+          <CardHeader className="text-center pb-4 sm:pb-6">
             <div className="mx-auto w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mb-4">
               <Shield className="h-6 w-6 text-primary-foreground" />
             </div>
-            <CardTitle className="text-2xl font-bold text-foreground">
+            <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">
               {t('auth.welcome')}
             </CardTitle>
-            <CardDescription className="text-muted-foreground mt-2">
+            <CardDescription className="text-muted-foreground mt-2 text-sm">
               {t('auth.secureLogin')}
             </CardDescription>
           </CardHeader>
           
-          <CardContent className="space-y-6 px-6 pb-6">
+          <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
             {/* OAuth Section */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="text-center space-y-2">
                 <div className="flex items-center justify-center gap-2 text-primary">
                   <Sparkles className="h-4 w-4" />
                   <h3 className="text-sm font-semibold">{t('auth.fastestLogin')}</h3>
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground px-2">
                   {t('auth.oneClickStart')}
                 </p>
               </div>
@@ -226,9 +226,9 @@ const LoginPage = () => {
             </div>
 
             {/* Traditional Login */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <Tabs value={activeTab} onValueChange={(value) => { setActiveTab(value); clearForm(); }} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg">
+                <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg text-xs sm:text-sm">
                   <TabsTrigger 
                     value="signin" 
                     className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground"
@@ -246,8 +246,8 @@ const LoginPage = () => {
                 </TabsList>
                 
                 {/* Sign In Tab */}
-                <TabsContent value="signin" className="space-y-4 mt-6">
-                  <form onSubmit={handleSignIn} className="space-y-4">
+                <TabsContent value="signin" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
+                  <form onSubmit={handleSignIn} className="space-y-3 sm:space-y-4">
                     <EmailInput
                       id="signin-email"
                       label={t('auth.email')}
@@ -275,7 +275,7 @@ const LoginPage = () => {
                     
                     <Button 
                       type="submit" 
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200" 
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base" 
                       disabled={loading || !isSignInValid}
                     >
                       {loading ? (
@@ -294,10 +294,10 @@ const LoginPage = () => {
                 </TabsContent>
                 
                 {/* Sign Up Tab */}
-                <TabsContent value="signup" className="space-y-4 mt-6">
-                  <form onSubmit={handleSignUp} className="space-y-4">
+                <TabsContent value="signup" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
+                  <form onSubmit={handleSignUp} className="space-y-3 sm:space-y-4">
                     {/* Name Fields */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="firstName" className="text-sm font-medium">
                           {t('auth.firstName')} <span className="text-red-500">*</span>
@@ -354,7 +354,7 @@ const LoginPage = () => {
                     
                     <Button 
                       type="submit" 
-                      className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200" 
+                      className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base" 
                       disabled={loading || !isSignUpValid}
                     >
                       {loading ? (
@@ -395,7 +395,7 @@ const LoginPage = () => {
         </Card>
 
         {/* Footer */}
-        <div className="text-center text-xs text-muted-foreground space-y-2">
+        <div className="text-center text-xs sm:text-sm text-muted-foreground space-y-2 px-2">
           <p>
             {t('auth.termsAgreement')}
           </p>
