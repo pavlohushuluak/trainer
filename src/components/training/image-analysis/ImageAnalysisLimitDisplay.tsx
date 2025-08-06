@@ -85,7 +85,7 @@ export const ImageAnalysisLimitDisplay = ({
 
   return (
     <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 mb-4">
-              <CardContent className="p-4">
+      <CardContent className="p-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
               <Camera className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
@@ -99,16 +99,16 @@ export const ImageAnalysisLimitDisplay = ({
             <Badge variant="outline" className="border-blue-300 dark:border-blue-700 text-blue-800 dark:text-blue-200 bg-white dark:bg-card self-start sm:self-auto">
               {t('imageAnalysis.limitDisplay.free.badge')}
             </Badge>
+        </div>
+        <div className="mt-3">
+          <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-2">
+            <div 
+              className="bg-blue-600 dark:bg-blue-400 h-2 rounded-full transition-all duration-300" 
+              style={{ width: `${(analysesUsed / maxAnalyses) * 100}%` }}
+            ></div>
           </div>
-          <div className="mt-3">
-            <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-2">
-              <div 
-                className="bg-blue-600 dark:bg-blue-400 h-2 rounded-full transition-all duration-300" 
-                style={{ width: `${(analysesUsed / maxAnalyses) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-        </CardContent>
+        </div>
+      </CardContent>
     </Card>
   );
 };

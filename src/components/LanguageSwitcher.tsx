@@ -33,18 +33,18 @@ export const LanguageSwitcher = () => {
     try {
       // Use the persistence hook to change language
       changeLanguage(languageCode);
-      
-      // Save to language_support table if user is logged in
-      if (user?.email) {
-        try {
-          await saveUserLanguageSupport(user.email, languageCode);
-          console.log('Language preference saved to database');
-        } catch (error) {
-          console.error('Failed to save language preference:', error);
-        }
+    
+    // Save to language_support table if user is logged in
+    if (user?.email) {
+      try {
+        await saveUserLanguageSupport(user.email, languageCode);
+        console.log('Language preference saved to database');
+      } catch (error) {
+        console.error('Failed to save language preference:', error);
       }
-      
-      setIsOpen(false);
+    }
+    
+    setIsOpen(false);
     } catch (error) {
       console.error('Error changing language:', error);
     }

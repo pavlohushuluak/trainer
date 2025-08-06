@@ -298,15 +298,16 @@ export const SpecificEmailTestButtons = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       <div className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('adminEmail.testButtons.specificTests.title')}</div>
       
-      {/* Basis E-Mails */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Basic Emails - Mobile Responsive */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
         <Button 
           variant="outline" 
           size="sm"
           onClick={testWelcomeEmail}
+          className="text-xs sm:text-sm"
         >
           {t('adminEmail.testButtons.specificTests.buttons.welcome')}
         </Button>
@@ -314,19 +315,21 @@ export const SpecificEmailTestButtons = () => {
           variant="outline" 
           size="sm"
           onClick={testCheckoutEmail}
+          className="text-xs sm:text-sm"
         >
           {t('adminEmail.testButtons.specificTests.buttons.checkout')}
         </Button>
       </div>
 
-      {/* Auth E-Mails */}
+      {/* Auth Emails - Mobile Responsive */}
       <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
         <div className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">{t('adminEmail.testButtons.specificTests.authEmails')}</div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <Button 
             variant="outline" 
             size="sm"
             onClick={testMagicLinkEmail}
+            className="text-xs sm:text-sm"
           >
             {t('adminEmail.testButtons.specificTests.buttons.magicLink')}
           </Button>
@@ -334,6 +337,7 @@ export const SpecificEmailTestButtons = () => {
             variant="outline" 
             size="sm"
             onClick={testConfirmSignupEmail}
+            className="text-xs sm:text-sm"
           >
             {t('adminEmail.testButtons.specificTests.buttons.confirmSignup')}
           </Button>
@@ -341,20 +345,22 @@ export const SpecificEmailTestButtons = () => {
             variant="outline" 
             size="sm"
             onClick={testInviteUserEmail}
+            className="text-xs sm:text-sm"
           >
             {t('adminEmail.testButtons.specificTests.buttons.inviteUser')}
           </Button>
         </div>
       </div>
 
-      {/* Test-User E-Mails */}
+      {/* Test-User Emails - Mobile Responsive */}
       <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800">
         <div className="text-sm font-medium text-green-800 dark:text-green-200 mb-2">{t('adminEmail.testButtons.specificTests.testUserEmails')}</div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <Button 
             variant="outline" 
             size="sm"
             onClick={testTestUserWelcomeEmail}
+            className="text-xs sm:text-sm"
           >
             {t('adminEmail.testButtons.specificTests.buttons.testUserWelcome')}
           </Button>
@@ -362,18 +368,20 @@ export const SpecificEmailTestButtons = () => {
             variant="outline" 
             size="sm"
             onClick={testTestUserActivationEmail}
+            className="text-xs sm:text-sm"
           >
             {t('adminEmail.testButtons.specificTests.buttons.testUserActivation')}
           </Button>
         </div>
       </div>
 
-      {/* System E-Mails */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* System Emails - Mobile Responsive */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
         <Button 
           variant="outline" 
           size="sm"
           onClick={testSupportEmail}
+          className="text-xs sm:text-sm"
         >
           {t('adminEmail.testButtons.specificTests.buttons.support')}
         </Button>
@@ -381,6 +389,7 @@ export const SpecificEmailTestButtons = () => {
           variant="outline" 
           size="sm"
           onClick={testCancellationEmail}
+          className="text-xs sm:text-sm"
         >
           {t('adminEmail.testButtons.specificTests.buttons.cancellation')}
         </Button>

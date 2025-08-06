@@ -145,33 +145,33 @@ export const ComprehensiveSystemMonitor = () => {
                        summary.passed === summary.total ? 'healthy' : 'unknown';
 
   return (
-    <div className="space-y-6">
-      {/* Header with Summary */}
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header with Summary - Mobile Responsive */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Activity className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
             {t('adminSystem.comprehensiveMonitor.title')}
-            {overallStatus === 'critical' && <AlertTriangle className="h-5 w-5 text-red-500" />}
+            {overallStatus === 'critical' && <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Control Buttons */}
-          <div className="flex flex-wrap gap-2">
+        <CardContent className="space-y-3 sm:space-y-4">
+          {/* Control Buttons - Mobile Responsive */}
+          <div className="flex flex-col sm:flex-row flex-wrap gap-2">
             <Button 
               onClick={runAllTests} 
               disabled={isRunningAll}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 w-full sm:w-auto"
             >
               {isRunningAll ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  {t('adminSystem.comprehensiveMonitor.runningTests')}
+                  <span className="text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.runningTests')}</span>
                 </>
               ) : (
                 <>
                   <PlayCircle className="h-4 w-4" />
-                  {t('adminSystem.comprehensiveMonitor.runAllTests', { count: summary.total })}
+                  <span className="text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.runAllTests', { count: summary.total })}</span>
                 </>
               )}
             </Button>
@@ -180,32 +180,32 @@ export const ComprehensiveSystemMonitor = () => {
               onClick={runCriticalTests} 
               disabled={isRunningAll}
               variant="outline"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 w-full sm:w-auto"
             >
               <AlertTriangle className="h-4 w-4" />
-              {t('adminSystem.comprehensiveMonitor.runCriticalTests', { count: summary.critical })}
+              <span className="text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.runCriticalTests', { count: summary.critical })}</span>
             </Button>
             
             <Button 
               onClick={() => window.location.reload()} 
               variant="outline"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 w-full sm:w-auto"
             >
               <RefreshCw className="h-4 w-4" />
-              {t('adminSystem.comprehensiveMonitor.reset')}
+              <span className="text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.reset')}</span>
             </Button>
           </div>
 
-          {/* Progress Bar */}
+          {/* Progress Bar - Mobile Responsive */}
           {(summary.running > 0 || overallProgress > 0) && (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-xs sm:text-sm">
                 <span>{t('adminSystem.comprehensiveMonitor.testProgress')}</span>
                 <span>{Math.round(overallProgress)}%</span>
               </div>
               <Progress value={overallProgress} className="w-full" />
               {summary.running > 0 && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   {t('adminSystem.comprehensiveMonitor.testsRunning', { 
                     count: summary.running, 
                     plural: summary.running > 1 ? 's' : '' 
@@ -215,34 +215,34 @@ export const ComprehensiveSystemMonitor = () => {
             </div>
           )}
 
-          {/* Summary Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{summary.total}</div>
-              <div className="text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.total')}</div>
+          {/* Summary Stats - Mobile Responsive Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 sm:gap-4">
+            <div className="text-center p-2 sm:p-0">
+              <div className="text-lg sm:text-2xl font-bold text-blue-600">{summary.total}</div>
+              <div className="text-xs sm:text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.total')}</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{summary.passed}</div>
-              <div className="text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.passed')}</div>
+            <div className="text-center p-2 sm:p-0">
+              <div className="text-lg sm:text-2xl font-bold text-green-600">{summary.passed}</div>
+              <div className="text-xs sm:text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.passed')}</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-red-600">{summary.failed}</div>
-              <div className="text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.failed')}</div>
+            <div className="text-center p-2 sm:p-0">
+              <div className="text-lg sm:text-2xl font-bold text-red-600">{summary.failed}</div>
+              <div className="text-xs sm:text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.failed')}</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-yellow-600">{summary.warnings}</div>
-              <div className="text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.warnings')}</div>
+            <div className="text-center p-2 sm:p-0">
+              <div className="text-lg sm:text-2xl font-bold text-yellow-600">{summary.warnings}</div>
+              <div className="text-xs sm:text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.warnings')}</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-500">{summary.running}</div>
-              <div className="text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.running')}</div>
+            <div className="text-center p-2 sm:p-0">
+              <div className="text-lg sm:text-2xl font-bold text-blue-500">{summary.running}</div>
+              <div className="text-xs sm:text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.running')}</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">{summary.critical}</div>
-              <div className="text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.critical')}</div>
+            <div className="text-center p-2 sm:p-0">
+              <div className="text-lg sm:text-2xl font-bold text-orange-600">{summary.critical}</div>
+              <div className="text-xs sm:text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.critical')}</div>
             </div>
-            <div className="text-center">
-              <div className={`text-2xl font-bold ${
+            <div className="text-center p-2 sm:p-0">
+              <div className={`text-lg sm:text-2xl font-bold ${
                 overallStatus === 'healthy' ? 'text-green-600' : 
                 overallStatus === 'critical' ? 'text-red-600' : 
                 'text-yellow-600'
@@ -250,34 +250,52 @@ export const ComprehensiveSystemMonitor = () => {
                 {overallStatus === 'healthy' ? '✓' : 
                  overallStatus === 'critical' ? '✗' : '⚠'}
               </div>
-              <div className="text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.status')}</div>
+              <div className="text-xs sm:text-sm text-gray-600">{t('adminSystem.comprehensiveMonitor.summary.status')}</div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Test Categories and Results */}
+      {/* Test Categories and Results - Mobile Responsive */}
       <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
-          <TabsTrigger value="all">{t('adminSystem.comprehensiveMonitor.categories.all')}</TabsTrigger>
-          <TabsTrigger value="connectivity">{t('adminSystem.comprehensiveMonitor.categories.connectivity')}</TabsTrigger>
-          <TabsTrigger value="database">{t('adminSystem.comprehensiveMonitor.categories.database')}</TabsTrigger>
-          <TabsTrigger value="auth">{t('adminSystem.comprehensiveMonitor.categories.auth')}</TabsTrigger>
-          <TabsTrigger value="email">{t('adminSystem.comprehensiveMonitor.categories.email')}</TabsTrigger>
-          <TabsTrigger value="functions">{t('adminSystem.comprehensiveMonitor.categories.functions')}</TabsTrigger>
-          <TabsTrigger value="performance">{t('adminSystem.comprehensiveMonitor.categories.performance')}</TabsTrigger>
-          <TabsTrigger value="critical">{t('adminSystem.comprehensiveMonitor.categories.critical')}</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 h-auto sm:h-10 overflow-x-auto">
+          <TabsTrigger value="all" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSystem.comprehensiveMonitor.categories.all')}
+          </TabsTrigger>
+          <TabsTrigger value="connectivity" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSystem.comprehensiveMonitor.categories.connectivity')}
+          </TabsTrigger>
+          <TabsTrigger value="database" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSystem.comprehensiveMonitor.categories.database')}
+          </TabsTrigger>
+          <TabsTrigger value="auth" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSystem.comprehensiveMonitor.categories.auth')}
+          </TabsTrigger>
+          <TabsTrigger value="email" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSystem.comprehensiveMonitor.categories.email')}
+          </TabsTrigger>
+          <TabsTrigger value="functions" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSystem.comprehensiveMonitor.categories.functions')}
+          </TabsTrigger>
+          <TabsTrigger value="performance" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSystem.comprehensiveMonitor.categories.performance')}
+          </TabsTrigger>
+          <TabsTrigger value="critical" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSystem.comprehensiveMonitor.categories.critical')}
+          </TabsTrigger>
         </TabsList>
         
-        <TabsContent value={selectedCategory} className="mt-4">
+        <TabsContent value={selectedCategory} className="mt-3 sm:mt-4">
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                   {selectedCategory !== 'all' && getCategoryIcon(selectedCategory)}
-                  {selectedCategory === 'all' ? t('adminSystem.comprehensiveMonitor.categories.all') : 
-                   t(`adminSystem.comprehensiveMonitor.categories.${selectedCategory}`)} Tests
-                  <Badge variant="outline">{filteredResults.length}</Badge>
+                  <span className="text-sm sm:text-base">
+                    {selectedCategory === 'all' ? t('adminSystem.comprehensiveMonitor.categories.all') : 
+                     t(`adminSystem.comprehensiveMonitor.categories.${selectedCategory}`)} Tests
+                  </span>
+                  <Badge variant="outline" className="text-xs sm:text-sm">{filteredResults.length}</Badge>
                 </CardTitle>
                 
                 {selectedCategory !== 'all' && (
@@ -286,7 +304,7 @@ export const ComprehensiveSystemMonitor = () => {
                     variant="outline"
                     onClick={() => runCategoryTests(selectedCategory)}
                     disabled={isRunningAll}
-                    className="flex items-center gap-1"
+                    className="flex items-center gap-1 w-full sm:w-auto text-xs sm:text-sm"
                   >
                     <Play className="h-3 w-3" />
                     {t('adminSystem.comprehensiveMonitor.statusLabels.runCategory')}
@@ -296,83 +314,91 @@ export const ComprehensiveSystemMonitor = () => {
             </CardHeader>
             
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-8">{t('adminSystem.comprehensiveMonitor.tableHeaders.status')}</TableHead>
-                    <TableHead>{t('adminSystem.comprehensiveMonitor.tableHeaders.test')}</TableHead>
-                    <TableHead>{t('adminSystem.comprehensiveMonitor.tableHeaders.category')}</TableHead>
-                    <TableHead>{t('adminSystem.comprehensiveMonitor.tableHeaders.result')}</TableHead>
-                    <TableHead>{t('adminSystem.comprehensiveMonitor.tableHeaders.duration')}</TableHead>
-                    <TableHead>{t('adminSystem.comprehensiveMonitor.tableHeaders.critical')}</TableHead>
-                    <TableHead className="w-20">{t('adminSystem.comprehensiveMonitor.tableHeaders.action')}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredResults.map((result) => (
-                    <TableRow key={result.id}>
-                      <TableCell>{getStatusIcon(result.status)}</TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{result.name}</div>
-                          <div className="text-xs text-gray-500">
-                            {testRunner.getTestSuites()
-                              .flatMap(suite => suite.tests)
-                              .find(test => test.id === result.id)?.description}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          {getCategoryIcon(result.category)}
-                          <span className="capitalize">{result.category}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          {getStatusBadge(result.status)}
-                          <div className="text-xs text-gray-600">{result.message}</div>
-                          {result.details && (
-                            <details className="text-xs text-gray-500">
-                              <summary className="cursor-pointer">{t('adminSystem.comprehensiveMonitor.statusLabels.details')}</summary>
-                              <pre className="mt-1 p-2 bg-gray-50 rounded text-xs overflow-auto">
-                                {JSON.stringify(result.details, null, 2)}
-                              </pre>
-                            </details>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-xs text-gray-500">
-                        {result.duration ? `${result.duration}ms` : '-'}
-                      </TableCell>
-                      <TableCell>
-                        {result.critical ? (
-                          <Badge variant="destructive" className="text-xs">{t('adminSystem.comprehensiveMonitor.statusLabels.critical')}</Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-xs">{t('adminSystem.comprehensiveMonitor.statusLabels.normal')}</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => runSingleTest(result.id)}
-                          disabled={result.status === 'running' || isRunningAll}
-                          className="text-xs"
-                        >
-                          <Play className="h-3 w-3 mr-1" />
-                          {t('adminSystem.comprehensiveMonitor.statusLabels.run')}
-                        </Button>
-                      </TableCell>
+              {/* Mobile Responsive Table */}
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-8 text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.tableHeaders.status')}</TableHead>
+                      <TableHead className="text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.tableHeaders.test')}</TableHead>
+                      <TableHead className="hidden sm:table-cell text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.tableHeaders.category')}</TableHead>
+                      <TableHead className="text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.tableHeaders.result')}</TableHead>
+                      <TableHead className="hidden lg:table-cell text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.tableHeaders.duration')}</TableHead>
+                      <TableHead className="hidden md:table-cell text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.tableHeaders.critical')}</TableHead>
+                      <TableHead className="w-16 sm:w-20 text-xs sm:text-sm">{t('adminSystem.comprehensiveMonitor.tableHeaders.action')}</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredResults.map((result) => (
+                      <TableRow key={result.id}>
+                        <TableCell className="text-xs sm:text-sm">{getStatusIcon(result.status)}</TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium text-xs sm:text-sm">{result.name}</div>
+                            <div className="text-xs text-gray-500 hidden sm:block">
+                              {testRunner.getTestSuites()
+                                .flatMap(suite => suite.tests)
+                                .find(test => test.id === result.id)?.description}
+                            </div>
+                            {/* Mobile: Show category inline */}
+                            <div className="flex items-center gap-1 sm:hidden mt-1">
+                              {getCategoryIcon(result.category)}
+                              <span className="text-xs text-gray-500 capitalize">{result.category}</span>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">
+                          <div className="flex items-center gap-1">
+                            {getCategoryIcon(result.category)}
+                            <span className="capitalize text-xs sm:text-sm">{result.category}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            {getStatusBadge(result.status)}
+                            <div className="text-xs text-gray-600 line-clamp-2">{result.message}</div>
+                            {result.details && (
+                              <details className="text-xs text-gray-500">
+                                <summary className="cursor-pointer">{t('adminSystem.comprehensiveMonitor.statusLabels.details')}</summary>
+                                <pre className="mt-1 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-32">
+                                  {JSON.stringify(result.details, null, 2)}
+                                </pre>
+                              </details>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell text-xs text-gray-500">
+                          {result.duration ? `${result.duration}ms` : '-'}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {result.critical ? (
+                            <Badge variant="destructive" className="text-xs">{t('adminSystem.comprehensiveMonitor.statusLabels.critical')}</Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-xs">{t('adminSystem.comprehensiveMonitor.statusLabels.normal')}</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => runSingleTest(result.id)}
+                            disabled={result.status === 'running' || isRunningAll}
+                            className="text-xs w-full sm:w-auto"
+                          >
+                            <Play className="h-3 w-3 mr-1" />
+                            <span className="hidden sm:inline">{t('adminSystem.comprehensiveMonitor.statusLabels.run')}</span>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
               
               {filteredResults.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  <Activity className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>{t('adminSystem.comprehensiveMonitor.emptyState')}</p>
+                <div className="text-center py-6 sm:py-8 text-gray-500">
+                  <Activity className="h-8 w-8 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-50" />
+                  <p className="text-sm sm:text-base">{t('adminSystem.comprehensiveMonitor.emptyState')}</p>
                 </div>
               )}
             </CardContent>

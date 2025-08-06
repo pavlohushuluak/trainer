@@ -1413,11 +1413,11 @@
   "adminSystem": {
     "comprehensiveMonitor": {
       "title": "Comprehensive System Monitor",
-      "runAllTests": "Run All Tests ({count})",
-      "runCriticalTests": "Run Critical Tests ({count})",
+      "runAllTests": "Run All Tests ({{count}})",
+      "runCriticalTests": "Run Critical Tests ({{count}})",
       "reset": "Reset",
       "testProgress": "Test Progress",
-      "testsRunning": "{count} test{plural} currently running...",
+      "testsRunning": "{{count}} test{{plural}} currently running...",
       "summary": {
         "total": "Total",
         "passed": "Passed",
@@ -1457,7 +1457,7 @@
     },
     "comprehensiveTest": {
       "title": "Comprehensive System Test",
-      "lastRun": "Last run: {date}",
+      "lastRun": "Last run: {{date}}",
       "runFullTest": "Run Full System Test",
       "runningTest": "Running Comprehensive Test...",
       "testProgress": "Test Progress",
@@ -2210,6 +2210,10 @@
     "premiumActive": "✅ Premium subscription active",
     "until": "until",
     "loadingDetails": "🔄 Loading current subscription details..."
+  },
+  "adminEmailTestToggle": {
+    "title": "📧 Email Configuration & Tests",
+    "description": "Manage email delivery and test all email functions"
   },
   "auth": {
     "login": "Login",

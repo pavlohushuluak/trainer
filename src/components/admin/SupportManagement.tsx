@@ -191,22 +191,23 @@ export const SupportManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{t('adminSupport.title')}</h1>
-          <p className="text-muted-foreground">
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header Section - Mobile Responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-xl sm:text-2xl font-bold">{t('adminSupport.title')}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             {t('adminSupport.description')}
           </p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               {t('adminSupport.notifications.createNew')}
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>{t('adminSupport.notifications.createTitle')}</DialogTitle>
               <DialogDescription>
@@ -244,6 +245,7 @@ export const SupportManagement = () => {
                   value={newNotification.message}
                   onChange={(e) => setNewNotification({...newNotification, message: e.target.value})}
                   placeholder={t('adminSupport.notifications.messagePlaceholder')}
+                  rows={3}
                 />
               </div>
               <div>
@@ -255,13 +257,14 @@ export const SupportManagement = () => {
                 />
               </div>
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <DialogFooter className="flex flex-col sm:flex-row gap-2">
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="w-full sm:w-auto">
                 {t('adminSupport.notifications.cancel')}
               </Button>
               <Button 
                 onClick={() => createNotificationMutation.mutate(newNotification)}
                 disabled={createNotificationMutation.isPending || !newNotification.title}
+                className="w-full sm:w-auto"
               >
                 {t('adminSupport.notifications.create')}
               </Button>
@@ -270,15 +273,15 @@ export const SupportManagement = () => {
         </Dialog>
       </div>
 
-      {/* Statistiken */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Statistics Cards - Mobile Responsive Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminSupport.stats.unreadNotifications')}</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">{t('adminSupport.stats.unreadNotifications')}</CardTitle>
+            <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-lg sm:text-2xl font-bold">
               {notifications?.filter(n => n.status === 'unread').length || 0}
             </div>
           </CardContent>
@@ -286,11 +289,11 @@ export const SupportManagement = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminSupport.stats.resolvedTickets')}</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">{t('adminSupport.stats.resolvedTickets')}</CardTitle>
+            <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-lg sm:text-2xl font-bold">
               {notifications?.filter(n => n.status === 'resolved').length || 0}
             </div>
           </CardContent>
@@ -298,41 +301,42 @@ export const SupportManagement = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminSupport.stats.userNotes')}</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">{t('adminSupport.stats.userNotes')}</CardTitle>
+            <Users className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{userNotes?.length || 0}</div>
+            <div className="text-lg sm:text-2xl font-bold">{userNotes?.length || 0}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminSupport.stats.openTickets')}</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">{t('adminSupport.stats.openTickets')}</CardTitle>
+            <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-lg sm:text-2xl font-bold">
               {notifications?.filter(n => n.status === 'read').length || 0}
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Filter */}
+      {/* Filter Section - Mobile Responsive */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Search className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Search className="h-4 w-4 sm:h-5 sm:w-5" />
             {t('adminSupport.filters.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <Input
               placeholder={t('adminSupport.filters.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full"
             />
             
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -350,30 +354,34 @@ export const SupportManagement = () => {
         </CardContent>
       </Card>
 
-      {/* Benachrichtigungen */}
+      {/* Notifications List - Mobile Responsive */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('adminSupport.notificationsList.title')} ({notifications?.length || 0})</CardTitle>
+          <CardTitle className="text-base sm:text-lg">{t('adminSupport.notificationsList.title')} ({notifications?.length || 0})</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {notifications?.map((notification) => (
-              <div key={notification.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-4">
-                  {getTypeIcon(notification.type)}
-                  <div>
-                    <h3 className="font-medium">{notification.title}</h3>
+              <div key={notification.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border rounded-lg gap-3 sm:gap-4">
+                <div className="flex items-start sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                  <div className="flex-shrink-0 mt-1 sm:mt-0">
+                    {getTypeIcon(notification.type)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-sm sm:text-base truncate">{notification.title}</h3>
                     {notification.message && (
-                      <p className="text-sm text-muted-foreground">{notification.message}</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">{notification.message}</p>
                     )}
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {formatDate(notification.created_at)}
                     </p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
-                  {getStatusBadge(notification.status)}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                  <div className="flex-shrink-0">
+                    {getStatusBadge(notification.status)}
+                  </div>
                   
                   {notification.status !== 'resolved' && (
                     <Button
@@ -383,6 +391,7 @@ export const SupportManagement = () => {
                         id: notification.id,
                         status: notification.status === 'unread' ? 'read' : 'resolved'
                       })}
+                      className="w-full sm:w-auto text-xs sm:text-sm"
                     >
                       {notification.status === 'unread' ? t('adminSupport.notificationsList.markAsRead') : t('adminSupport.notificationsList.resolve')}
                     </Button>
@@ -392,9 +401,10 @@ export const SupportManagement = () => {
             ))}
             
             {notifications?.length === 0 && (
-              <p className="text-center text-muted-foreground py-8">
-                {t('adminSupport.notificationsList.noNotifications')}
-              </p>
+              <div className="text-center text-muted-foreground py-8">
+                <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
+                <p className="text-sm sm:text-base">{t('adminSupport.notificationsList.noNotifications')}</p>
+              </div>
             )}
           </div>
         </CardContent>

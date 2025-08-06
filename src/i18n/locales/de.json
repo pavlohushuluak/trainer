@@ -1413,11 +1413,11 @@
   "adminSystem": {
     "comprehensiveMonitor": {
       "title": "Umfassender System-Monitor",
-      "runAllTests": "Alle Tests ausführen ({count})",
-      "runCriticalTests": "Kritische Tests ausführen ({count})",
+      "runAllTests": "Alle Tests ausführen ({{count}})",
+      "runCriticalTests": "Kritische Tests ausführen ({{count}})",
       "reset": "Zurücksetzen",
       "testProgress": "Test-Fortschritt",
-      "testsRunning": "{count} Test{plural} läuft gerade...",
+      "testsRunning": "{{count}} Test{{plural}} läuft gerade...",
       "summary": {
         "total": "Gesamt",
         "passed": "Bestanden",
@@ -1457,7 +1457,7 @@
     },
     "comprehensiveTest": {
       "title": "Umfassender System-Test",
-      "lastRun": "Letzter Lauf: {date}",
+      "lastRun": "Letzter Lauf: {{date}}",
       "runFullTest": "Vollständigen System-Test ausführen",
       "runningTest": "Umfassender Test läuft...",
       "testProgress": "Test-Fortschritt",
@@ -2210,6 +2210,10 @@
     "premiumActive": "✅ Premium-Abonnement aktiv",
     "until": "bis",
     "loadingDetails": "🔄 Aktuelle Abonnement-Details werden geladen..."
+  },
+  "adminEmailTestToggle": {
+    "title": "📧 E-Mail-Konfiguration & Tests",
+    "description": "E-Mail-Versand verwalten und alle E-Mail-Funktionen testen"
   },
   "auth": {
     "login": "Anmelden",

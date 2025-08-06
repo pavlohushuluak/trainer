@@ -33,9 +33,9 @@ export const AdminSettings = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">{t('adminSettings.loading')}</span>
+      <div className="flex items-center justify-center h-48 sm:h-64">
+        <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin" />
+        <span className="ml-2 text-sm sm:text-base">{t('adminSettings.loading')}</span>
       </div>
     );
   }
@@ -43,53 +43,55 @@ export const AdminSettings = () => {
   if (error) {
     console.error('Query error:', error);
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex items-center justify-center h-48 sm:h-64">
         <div className="text-center">
-          <p className="text-red-600">{t('adminSettings.error.title')}</p>
-          <p className="text-sm text-muted-foreground mt-2">{error.message}</p>
+          <p className="text-red-600 text-sm sm:text-base">{t('adminSettings.error.title')}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-2">{error.message}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{t('adminSettings.title')}</h1>
-          <p className="text-muted-foreground">
-            {t('adminSettings.description')}
-          </p>
-        </div>
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header Section - Mobile Responsive */}
+      <div className="space-y-2 sm:space-y-3">
+        <h1 className="text-xl sm:text-2xl font-bold">{t('adminSettings.title')}</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          {t('adminSettings.description')}
+        </p>
       </div>
 
-      <Tabs defaultValue="email" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="email">{t('adminSettings.tabs.email')}</TabsTrigger>
-          <TabsTrigger value="admins">{t('adminSettings.tabs.admins')}</TabsTrigger>
+      {/* Tabs Section - Mobile Responsive */}
+      <Tabs defaultValue="email" className="space-y-3 sm:space-y-4">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 h-auto sm:h-10">
+          <TabsTrigger value="email" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSettings.tabs.email')}
+          </TabsTrigger>
+          <TabsTrigger value="admins" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSettings.tabs.admins')}
+          </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="email" className="space-y-4">
+        <TabsContent value="email" className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
           <EmailManagement />
         </TabsContent>
         
-        <TabsContent value="admins" className="space-y-4">
-          <div className="space-y-6">
-            <DebugCard admins={admins || []} />
+        <TabsContent value="admins" className="space-y-4 sm:space-y-6 mt-3 sm:mt-4">
+          <DebugCard admins={admins || []} />
 
-            <AddAdminForm 
-              onAddAdmin={handleAddAdmin}
-              isAdding={addAdmin.isPending}
-            />
+          <AddAdminForm 
+            onAddAdmin={handleAddAdmin}
+            isAdding={addAdmin.isPending}
+          />
 
-            <AdminUsersList
-              admins={admins || []}
-              onToggleStatus={handleToggleStatus}
-              onRemove={handleRemoveAdmin}
-              isToggling={toggleAdminStatus.isPending}
-              isRemoving={removeAdmin.isPending}
-            />
-          </div>
+          <AdminUsersList
+            admins={admins || []}
+            onToggleStatus={handleToggleStatus}
+            onRemove={handleRemoveAdmin}
+            isToggling={toggleAdminStatus.isPending}
+            isRemoving={removeAdmin.isPending}
+          />
         </TabsContent>
       </Tabs>
     </div>

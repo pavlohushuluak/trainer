@@ -164,13 +164,14 @@ export const EmailModeToggle = ({ testMode, setTestMode, updating, setUpdating }
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
-        <div className="space-y-1">
-          <div className="font-medium flex items-center gap-2 text-foreground">
+      {/* Mode Toggle Card - Mobile Responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center sm:justify-between p-3 sm:p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 gap-3 sm:gap-4">
+        <div className="space-y-1 flex-1">
+          <div className="font-medium flex items-center gap-2 text-foreground text-sm sm:text-base">
             {/* {testMode ? "🧪 Test-Modus aktiv" : "🚀 Live-Modus"} */}
-            {(updating || syncing) && <Loader2 className="h-4 w-4 animate-spin" />}
+            {(updating || syncing) && <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />}
           </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
             {testMode 
               ? t('adminEmail.modeToggle.testDescription')
               : t('adminEmail.modeToggle.liveDescription')
@@ -184,16 +185,17 @@ export const EmailModeToggle = ({ testMode, setTestMode, updating, setUpdating }
         />
       </div>
 
-      <div className="flex gap-2">
+      {/* Action Buttons - Mobile Responsive */}
+      <div className="flex flex-col sm:flex-row gap-2">
         <Button 
           variant="outline" 
           size="sm"
           onClick={syncConfiguration}
           disabled={syncing || updating}
-          className="flex items-center gap-2"
+          className="flex items-center justify-center gap-2 w-full sm:w-auto text-xs sm:text-sm h-9 sm:h-8 px-3 sm:px-2.5 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600 shadow-sm hover:shadow-md transition-all duration-200"
         >
-          <RefreshCw className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
-          {t('adminEmail.modeToggle.syncConfiguration')}
+          <RefreshCw className={`h-3 w-3 sm:h-4 sm:w-4 ${syncing ? 'animate-spin' : ''}`} />
+          <span className="font-medium">{t('adminEmail.modeToggle.syncConfiguration')}</span>
         </Button>
         
         <Button 
@@ -201,13 +203,15 @@ export const EmailModeToggle = ({ testMode, setTestMode, updating, setUpdating }
           size="sm"
           onClick={loadEmailConfig}
           disabled={syncing || updating}
-          className="flex items-center gap-2"
+          className="flex items-center justify-center gap-2 w-full sm:w-auto text-xs sm:text-sm h-9 sm:h-8 px-3 sm:px-2.5 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600 shadow-sm hover:shadow-md transition-all duration-200"
         >
-          {t('adminEmail.modeToggle.reload')}
+          <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
+          <span className="font-medium">{t('adminEmail.modeToggle.reload')}</span>
         </Button>
       </div>
 
-      <div className="text-xs text-gray-600 dark:text-gray-400 p-2 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-200 dark:border-blue-800">
+      {/* Info Box - Mobile Responsive */}
+      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 p-2 sm:p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-200 dark:border-blue-800">
         {t('adminEmail.modeToggle.autoSyncInfo')}
       </div>
     </div>

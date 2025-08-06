@@ -40,7 +40,7 @@ export const SystemMonitoring = () => {
 
   if (!user) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
@@ -53,10 +53,10 @@ export const SystemMonitoring = () => {
 
   if (checkingAdmin) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-center p-8">
-          <Loader2 className="h-8 w-8 animate-spin" />
-          <span className="ml-2">{t('adminSystemMonitoring.checkingPermissions')}</span>
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex items-center justify-center p-6 sm:p-8">
+          <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin" />
+          <span className="ml-2 text-sm sm:text-base">{t('adminSystemMonitoring.checkingPermissions')}</span>
         </div>
       </div>
     );
@@ -64,7 +64,7 @@ export const SystemMonitoring = () => {
 
   if (adminError) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
@@ -77,7 +77,7 @@ export const SystemMonitoring = () => {
 
   if (!isAdmin) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
@@ -89,28 +89,34 @@ export const SystemMonitoring = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('adminSystemMonitoring.title')}</h1>
-        <p className="text-gray-600 mt-2">
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header Section - Mobile Responsive */}
+      <div className="space-y-2 sm:space-y-3">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('adminSystemMonitoring.title')}</h1>
+        <p className="text-sm sm:text-base text-gray-600">
           {t('adminSystemMonitoring.description')}
         </p>
       </div>
       
+      {/* Tabs Section - Mobile Responsive */}
       <Tabs defaultValue="comprehensive" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="comprehensive">{t('adminSystemMonitoring.tabs.comprehensive')}</TabsTrigger>
-          <TabsTrigger value="network">{t('adminSystemMonitoring.tabs.network')}</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 h-auto sm:h-10">
+          <TabsTrigger value="comprehensive" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSystemMonitoring.tabs.comprehensive')}
+          </TabsTrigger>
+          <TabsTrigger value="network" className="text-xs sm:text-sm py-2 sm:py-1.5">
+            {t('adminSystemMonitoring.tabs.network')}
+          </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="comprehensive" className="space-y-4">
+        <TabsContent value="comprehensive" className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
           <ComprehensiveSystemMonitor />
         </TabsContent>
         
-        <TabsContent value="network" className="space-y-4">
+        <TabsContent value="network" className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>{t('adminSystemMonitoring.advancedNetworkDiagnostics')}</CardTitle>
+              <CardTitle className="text-base sm:text-lg">{t('adminSystemMonitoring.advancedNetworkDiagnostics')}</CardTitle>
             </CardHeader>
             <CardContent>
               <NetworkDiagnosticPanel />
