@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, Settings, User, LogOut, Shield, Menu, X, HelpCircle, PawPrint, TrendingUp, Camera, CreditCard, Loader2 } from 'lucide-react';
+import { MessageCircle, Settings, User, LogOut, Shield, Menu, X, HelpCircle, PawPrint, TrendingUp, Camera, CreditCard, Loader2, Target } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useStickyHeader } from '@/hooks/useStickyHeader';
@@ -85,6 +85,11 @@ export const TopNavigationBar = ({
     if (isAuthenticated) {
       // Menu items for logged-in users
       return [
+        {
+          icon: Target,
+          label: t('navigation.myTraining'),
+          action: () => navigate('/mein-tiertraining')
+        },
         {
           icon: HelpCircle,
           label: t('navigation.help'),
@@ -222,7 +227,7 @@ export const TopNavigationBar = ({
                   className="flex items-center gap-3 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <item.icon className="h-4 w-4" />
-                  <span className="hidden lg:block">{item.label}</span>
+                  <span className="hidden xl:block">{item.label}</span>
                 </Button>
               ))}
             </div>

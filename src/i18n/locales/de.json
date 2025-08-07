@@ -102,7 +102,9 @@
     "imageAnalysis": "Bildanalyse",
     "trainerChat": "Trainer-Chat",
     "settings": "Einstellungen",
-    "loggingOut": "Abmeldung läuft..."
+    "loggingOut": "Abmeldung läuft...",
+    "myTraining": "Mein Tiertraining",
+    "myTrainingShort": "Training"
   },
   "hero": {
     "title": "Professionelle Haustiererziehung mit KI",

@@ -102,7 +102,9 @@
     "imageAnalysis": "Image Analysis",
     "trainerChat": "Trainer Chat",
     "settings": "Settings",
-    "loggingOut": "Logging out..."
+    "loggingOut": "Logging out...",
+    "myTraining": "My Pet Training",
+    "myTrainingShort": "Training"
   },
   "hero": {
     "title": "Professional Pet Training with AI",
