@@ -29,7 +29,9 @@ export interface TrainingStep {
   id: string;
   step_number: number;
   title: string;
+  title_en?: string | null;
   description: string;
+  description_en?: string | null;
   is_completed: boolean;
   points_reward: number;
   completed_at: string | null;

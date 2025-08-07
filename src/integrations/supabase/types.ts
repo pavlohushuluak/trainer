@@ -1033,6 +1033,7 @@ export type Database = {
           completed_at: string | null
           created_at: string
           description: string | null
+          description_en: string | null
           id: string
           is_completed: boolean | null
           mastery_status: string | null
@@ -1041,6 +1042,7 @@ export type Database = {
           target_sessions_daily: number | null
           template_repetition_schedule: Json | null
           title: string
+          title_en: string | null
           total_sessions_completed: number | null
           training_plan_id: string
           updated_at: string
@@ -1049,6 +1051,7 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           description?: string | null
+          description_en?: string | null
           id?: string
           is_completed?: boolean | null
           mastery_status?: string | null
@@ -1057,6 +1060,7 @@ export type Database = {
           target_sessions_daily?: number | null
           template_repetition_schedule?: Json | null
           title: string
+          title_en?: string | null
           total_sessions_completed?: number | null
           training_plan_id: string
           updated_at?: string
@@ -1065,6 +1069,7 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           description?: string | null
+          description_en?: string | null
           id?: string
           is_completed?: boolean | null
           mastery_status?: string | null
@@ -1073,6 +1078,7 @@ export type Database = {
           target_sessions_daily?: number | null
           template_repetition_schedule?: Json | null
           title?: string
+          title_en?: string | null
           total_sessions_completed?: number | null
           training_plan_id?: string
           updated_at?: string

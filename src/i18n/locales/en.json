@@ -1770,6 +1770,142 @@
     "stepAdded": "Step added",
     "stepUpdated": "Step updated",
     "stepDeleted": "Step deleted",
+    "viewSwitcher": {
+      "list": "List",
+      "grid": "Grid"
+    },
+    "stepCompleted": {
+      "title": "Step completed! 🎉",
+      "description": "You earned {{points}} points!",
+      "error": {
+        "title": "Error",
+        "description": "An error occurred while completing the step."
+      }
+    },
+    "stepHeader": {
+      "module": "Module {{number}}",
+      "points": "+{{points}} Points",
+      "completedOn": "Completed on {{date}}"
+    },
+    "stepActions": {
+      "saving": "Saving...",
+      "complete": "Complete"
+    },
+    "moduleDetails": {
+      "showDetails": "📚 Show Module Details",
+      "exerciseGoal": {
+        "title": "📌 Exercise Goal",
+        "description": "The animal should learn to understand basic commands and respond to them. Building a trusting relationship between animal and owner."
+      },
+      "stepByStep": {
+        "title": "🧭 Step-by-Step Guide",
+        "step1": {
+          "title": "Step 1",
+          "description": "Prepare the training environment and ensure quiet"
+        },
+        "step2": {
+          "title": "Step 2",
+          "description": "Demonstrate the desired behavior and reward immediately"
+        },
+        "step3": {
+          "title": "Step 3",
+          "description": "Repeat the exercise several times with positive reinforcement"
+        },
+        "errorCorrection": {
+          "title": "Error Correction",
+          "description": "If refused, take a break and try again later"
+        },
+        "speciesAdaptation": {
+          "title": "💡 Species Adaptation",
+          "description": "Adapt rewards according to species (treats, petting, toys)"
+        }
+      },
+      "repetition": {
+        "title": "🔁 Repetition & Duration",
+        "dailyExercise": "Daily Exercise",
+        "dailyExerciseValue": "3-5 minutes per session",
+        "frequency": "Frequency",
+        "frequencyValue": "2-3× per day",
+        "duration": "Training Duration",
+        "durationValue": "1-2 weeks for first progress",
+        "warning": "⚠️ Only practice when calm & motivated – no force!"
+      },
+      "tools": {
+        "title": "🧰 Required Tools & Framework",
+        "equipment": "Equipment",
+        "treats": "Treats",
+        "clicker": "Clicker (optional)",
+        "toys": "Toys as reward",
+        "location": "Location",
+        "locationValue": "Quiet room",
+        "timing": "Timing",
+        "timingValue": "After walk",
+        "speciesAdaptation": "Species Adaptation",
+        "speciesAdaptationValue": "Work quietly with cats"
+      },
+      "tips": {
+        "title": "🧠 Learning Tips & Motivation",
+        "tip1": "Stay calm, friendly and consistent",
+        "tip2": "Reward even small progress visibly",
+        "tip3": "Take training breaks, no constant pressure",
+        "tip4": "Set early on rituals & recognition"
+      },
+      "mistakes": {
+        "title": "🚩 Avoid Common Mistakes",
+        "mistake1": "No scolding or punishment",
+        "mistake2": "Increasing difficulty too quickly",
+        "mistake3": "Missing reward = exercise loses appeal",
+        "mistake4": "Negative associations (training = force)"
+      }
+    },
+    "sessionTracker": {
+      "mastery": {
+        "fullyMastered": "Mastered",
+        "partiallyMastered": "Partially Mastered",
+        "inTraining": "In Training"
+      },
+      "masteryProgress": "{{current}}/10 sessions for mastery",
+      "todaySessions": "Today: {{current}}/{{target}}",
+      "addSession": {
+        "title": "Add Training Session",
+        "duration": "Duration (Minutes)",
+        "durationPlaceholder": "e.g. 5",
+        "notes": "Notes (optional)",
+        "notesPlaceholder": "How did it go?",
+        "button": "Add Session"
+      },
+      "todaySessionsTitle": "Today's Sessions",
+      "sessionNumber": "Session {{number}}",
+      "minutes": "Min.",
+      "moreSessions": "+{{count}} more sessions"
+    },
+    "progressHeader": {
+      "steps": "{{completed}}/{{total}} Steps",
+      "points": "{{points}} Points",
+      "progress": "Progress"
+    },
+    "progressCard": {
+      "generalPlan": "General Plan"
+    },
+    "rewards": {
+      "loadingError": "Error loading rewards",
+      "loadingMessage": "Loading achievements...",
+      "awards": "Awards",
+      "points": "Points",
+      "achievements": "Achievements",
+      "nextBadgeTooltip": "{{steps}} more steps until \"{{name}}\"",
+      "noAwardsYet": "No awards yet",
+      "lastActivity": "Last activity",
+      "badges": {
+        "trainingStarter": "Training Starter",
+        "diligentTrainer": "Diligent Trainer",
+        "trainingExpert": "Training Expert",
+        "trainingMaster": "Training Master",
+        "trainingLegend": "Training Legend",
+        "trainingChampion": "Training Champion",
+        "nextLevel": "Next Level"
+      }
+    },
     "subscriptionManagement": {
       "title": "Subscription Management",
       "description": "Manage your subscription and access premium features",
@@ -1788,16 +1924,6 @@
         "title": "Subscription Error",
         "description": "Unable to load subscription information. Please try refreshing the page."
       }
-    },
-    "rewards": {
-      "loadingError": "Error loading rewards",
-      "loadingMessage": "Loading achievements...",
-      "awards": "Awards",
-      "points": "Points",
-      "achievements": "Achievements",
-      "nextBadgeTooltip": "{{steps}} more steps until \"{{name}}\"",
-      "noAwardsYet": "No awards yet",
-      "lastActivity": "Last activity"
     },
     "plans": {
       "loadingMessage": "Loading training plans...",

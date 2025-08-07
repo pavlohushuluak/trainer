@@ -3,12 +3,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Trash2, Play, CheckCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface TrainingStep {
   id: string;
   step_number: number;
   title: string;
+  title_en?: string | null;
   description: string;
+  description_en?: string | null;
   is_completed: boolean;
   points_reward: number;
   completed_at: string | null;
@@ -205,6 +208,7 @@ const getPetDisplayInfo = (plan: TrainingPlanWithSteps) => {
 };
 
 export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactPlanCardProps) => {
+  const { t } = useTranslations();
   const completedSteps = plan.steps.filter(step => step.is_completed).length;
   const totalSteps = plan.steps.length;
   const progressPercentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
@@ -237,8 +241,8 @@ export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactP
         <div className="space-y-2">
           <Progress value={progressPercentage} className="h-2" />
           <div className="flex justify-between items-center text-xs text-muted-foreground">
-            <span>{completedSteps}/{totalSteps} Schritte</span>
-            <span>{totalPoints} Punkte</span>
+            <span>{t('training.progressHeader.steps', { completed: completedSteps, total: totalSteps })}</span>
+            <span>{t('training.progressHeader.points', { points: totalPoints })}</span>
           </div>
         </div>
       </CardHeader>
@@ -250,7 +254,7 @@ export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactP
             {progressPercentage === 100 ? (
               <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300 dark:border-green-400/50">
                 <CheckCircle className="h-3 w-3 mr-1" />
-                Abgeschlossen
+                {t('training.completedPlanBanner.title')}
               </Badge>
             ) : (
               <Badge variant="outline" className="text-xs">

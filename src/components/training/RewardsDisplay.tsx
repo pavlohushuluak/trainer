@@ -12,14 +12,14 @@ import { EnhancedDailyGoalDisplay } from "./EnhancedDailyGoalDisplay";
 import { useTranslation } from 'react-i18next';
 
 
-const getNextBadgeInfo = (currentBadges: string[], completedSteps: number) => {
+const getNextBadgeInfo = (currentBadges: string[], completedSteps: number, t: any) => {
   const badgeThresholds = [
-    { name: "Trainings-Starter", steps: 1 },
-    { name: "Fleißiger Trainer", steps: 3 },
-    { name: "Trainings-Experte", steps: 5 },
-    { name: "Training-Master", steps: 10 },
-    { name: "Trainings-Legende", steps: 20 },
-    { name: "Trainings-Meister", steps: 50 }
+    { name: t('training.rewards.badges.trainingStarter'), steps: 1 },
+    { name: t('training.rewards.badges.diligentTrainer'), steps: 3 },
+    { name: t('training.rewards.badges.trainingExpert'), steps: 5 },
+    { name: t('training.rewards.badges.trainingMaster'), steps: 10 },
+    { name: t('training.rewards.badges.trainingLegend'), steps: 20 },
+    { name: t('training.rewards.badges.trainingChampion'), steps: 50 }
   ];
   
   for (const badge of badgeThresholds) {
@@ -36,7 +36,7 @@ const getNextBadgeInfo = (currentBadges: string[], completedSteps: number) => {
   if (completedSteps >= highestThreshold) {
     const nextLevel = Math.ceil(completedSteps / 10) * 10 + 10;
     return {
-      name: "Nächstes Level",
+      name: t('training.rewards.badges.nextLevel'),
       stepsNeeded: nextLevel - completedSteps
     };
   }
@@ -58,9 +58,9 @@ export const RewardsDisplay = () => {
   
   const rewardsData = rewards || defaultRewards;
   
-  // Schätze abgeschlossene Schritte basierend auf Punkten (10 Punkte pro Schritt)
+  // Estimate completed steps based on points (10 points per step)
   const estimatedCompletedSteps = Math.floor(rewardsData.total_points / 10);
-  const nextBadge = getNextBadgeInfo(rewardsData.badges, estimatedCompletedSteps);
+  const nextBadge = getNextBadgeInfo(rewardsData.badges, estimatedCompletedSteps, t);
 
   const weeklyGoalProgress = Math.min((estimatedCompletedSteps % 7) * (100/3), 100); // 3x per week goal
 
@@ -136,11 +136,26 @@ export const RewardsDisplay = () => {
               </div>
               <div className="flex flex-wrap gap-1">
                 {rewardsData.badges.length > 0 ? (
-                  rewardsData.badges.map((badge, index) => (
-                    <Badge key={index} variant="secondary" className="bg-primary/10 text-primary text-xs border-primary/20 px-2 py-0.5">
-                      {badge}
-                    </Badge>
-                  ))
+                  rewardsData.badges.map((badge, index) => {
+                    // Map German badge names to translation keys
+                    const getBadgeTranslationKey = (badgeName: string) => {
+                      const badgeMap: { [key: string]: string } = {
+                        'Trainings-Starter': 'training.rewards.badges.trainingStarter',
+                        'Fleißiger Trainer': 'training.rewards.badges.diligentTrainer',
+                        'Trainings-Experte': 'training.rewards.badges.trainingExpert',
+                        'Training-Master': 'training.rewards.badges.trainingMaster',
+                        'Trainings-Legende': 'training.rewards.badges.trainingLegend',
+                        'Trainings-Meister': 'training.rewards.badges.trainingChampion'
+                      };
+                      return badgeMap[badgeName] || badgeName;
+                    };
+                    
+                    return (
+                      <Badge key={index} variant="secondary" className="bg-primary/10 text-primary text-xs border-primary/20 px-2 py-0.5">
+                        {t(getBadgeTranslationKey(badge))}
+                      </Badge>
+                    );
+                  })
                 ) : (
                   <span className="text-xs text-muted-foreground">{t('training.rewards.noAwardsYet')}</span>
                 )}

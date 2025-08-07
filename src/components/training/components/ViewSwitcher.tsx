@@ -1,5 +1,6 @@
 import { LayoutGrid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export type ViewMode = 'list' | 'grid';
 
@@ -9,6 +10,8 @@ interface ViewSwitcherProps {
 }
 
 export const ViewSwitcher = ({ view, onViewChange }: ViewSwitcherProps) => {
+  const { t } = useTranslations();
+  
   return (
     <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
       <Button
@@ -18,7 +21,7 @@ export const ViewSwitcher = ({ view, onViewChange }: ViewSwitcherProps) => {
         className="px-3 py-1.5 h-8"
       >
         <List className="h-4 w-4" />
-        <span className="ml-1 text-xs">Liste</span>
+        <span className="ml-1 text-xs">{t('training.viewSwitcher.list')}</span>
       </Button>
       <Button
         variant={view === 'grid' ? 'default' : 'ghost'}
@@ -27,7 +30,7 @@ export const ViewSwitcher = ({ view, onViewChange }: ViewSwitcherProps) => {
         className="px-3 py-1.5 h-8"
       >
         <LayoutGrid className="h-4 w-4" />
-        <span className="ml-1 text-xs">Raster</span>
+        <span className="ml-1 text-xs">{t('training.viewSwitcher.grid')}</span>
       </Button>
     </div>
   );

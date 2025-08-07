@@ -1770,6 +1770,142 @@
     "stepAdded": "Schritt hinzugefügt",
     "stepUpdated": "Schritt aktualisiert",
     "stepDeleted": "Schritt gelöscht",
+    "viewSwitcher": {
+      "list": "Liste",
+      "grid": "Raster"
+    },
+    "stepCompleted": {
+      "title": "Schritt abgeschlossen! 🎉",
+      "description": "Du hast {{points}} Punkte erhalten!",
+      "error": {
+        "title": "Fehler",
+        "description": "Beim Abschließen des Schritts ist ein Fehler aufgetreten."
+      }
+    },
+    "stepHeader": {
+      "module": "Modul {{number}}",
+      "points": "+{{points}} Punkte",
+      "completedOn": "Abgeschlossen am {{date}}"
+    },
+    "stepActions": {
+      "saving": "Wird gespeichert...",
+      "complete": "Abschließen"
+    },
+    "moduleDetails": {
+      "showDetails": "📚 Modul-Details anzeigen",
+      "exerciseGoal": {
+        "title": "📌 Ziel der Übung",
+        "description": "Das Tier soll lernen, grundlegende Kommandos zu verstehen und darauf zu reagieren. Aufbau einer vertrauensvollen Beziehung zwischen Tier und Halter."
+      },
+      "stepByStep": {
+        "title": "🧭 Schritt-für-Schritt-Anleitung",
+        "step1": {
+          "title": "Schritt 1",
+          "description": "Bereiten Sie die Trainingsumgebung vor und sorgen Sie für Ruhe"
+        },
+        "step2": {
+          "title": "Schritt 2",
+          "description": "Zeigen Sie das gewünschte Verhalten vor und belohnen Sie sofort"
+        },
+        "step3": {
+          "title": "Schritt 3",
+          "description": "Wiederholen Sie die Übung mehrmals mit positiver Verstärkung"
+        },
+        "errorCorrection": {
+          "title": "Fehlerkorrektur",
+          "description": "Bei Verweigerung Pause machen und später nochmals versuchen"
+        },
+        "speciesAdaptation": {
+          "title": "💡 Tierart-Anpassung",
+          "description": "Je nach Tierart Belohnungen anpassen (Leckerli, Streicheln, Spielzeug)"
+        }
+      },
+      "repetition": {
+        "title": "🔁 Wiederholung & Dauer",
+        "dailyExercise": "Tägliche Übung",
+        "dailyExerciseValue": "3-5 Minuten je Session",
+        "frequency": "Häufigkeit",
+        "frequencyValue": "2-3× pro Tag",
+        "duration": "Trainingsdauer",
+        "durationValue": "1-2 Wochen für erste Fortschritte",
+        "warning": "⚠️ Nur bei Ruhe & Motivation üben – kein Zwang!"
+      },
+      "tools": {
+        "title": "🧰 Benötigte Tools & Rahmenbedingungen",
+        "equipment": "Equipment",
+        "treats": "Leckerli",
+        "clicker": "Clicker (optional)",
+        "toys": "Spielzeug als Belohnung",
+        "location": "Ort",
+        "locationValue": "Ruhiger Raum",
+        "timing": "Zeitraum",
+        "timingValue": "Nach dem Spaziergang",
+        "speciesAdaptation": "Tierart-Anpassung",
+        "speciesAdaptationValue": "Bei Katzen leise arbeiten"
+      },
+      "tips": {
+        "title": "🧠 Lerntipps & Motivation",
+        "tip1": "Bleibe ruhig, freundlich und konsequent",
+        "tip2": "Belohne auch kleine Fortschritte sichtbar",
+        "tip3": "Trainingspausen einhalten, kein Dauerdruck",
+        "tip4": "Setze früh auf Rituale & Wiedererkennung"
+      },
+      "mistakes": {
+        "title": "🚩 Typische Fehler vermeiden",
+        "mistake1": "Kein Schimpfen oder Strafen",
+        "mistake2": "Zu schnelles Steigern der Schwierigkeit",
+        "mistake3": "Fehlende Belohnung = Übung verliert Reiz",
+        "mistake4": "Negative Verknüpfungen (Training = Zwang)"
+      }
+    },
+    "sessionTracker": {
+      "mastery": {
+        "fullyMastered": "Gemeistert",
+        "partiallyMastered": "Teilweise Gemeistert",
+        "inTraining": "In Training"
+      },
+      "masteryProgress": "{{current}}/10 Sessions für Meisterschaft",
+      "todaySessions": "Heute: {{current}}/{{target}}",
+      "addSession": {
+        "title": "Trainingseinheit hinzufügen",
+        "duration": "Dauer (Minuten)",
+        "durationPlaceholder": "z.B. 5",
+        "notes": "Notizen (optional)",
+        "notesPlaceholder": "Wie ist es gelaufen?",
+        "button": "Session hinzufügen"
+      },
+      "todaySessionsTitle": "Heutige Sessions",
+      "sessionNumber": "Session {{number}}",
+      "minutes": "Min.",
+      "moreSessions": "+{{count}} weitere Sessions"
+    },
+    "progressHeader": {
+      "steps": "{{completed}}/{{total}} Schritte",
+      "points": "{{points}} Punkte",
+      "progress": "Fortschritt"
+    },
+    "progressCard": {
+      "generalPlan": "Allgemeiner Plan"
+    },
+    "rewards": {
+      "loadingError": "Fehler beim Laden der Belohnungen",
+      "loadingMessage": "Erfolge werden geladen...",
+      "awards": "Auszeichnungen",
+      "points": "Punkte",
+      "achievements": "Erfolge",
+      "nextBadgeTooltip": "{{steps}} weitere Schritte bis \"{{name}}\"",
+      "noAwardsYet": "Noch keine Auszeichnungen",
+      "lastActivity": "Letzte Aktivität",
+      "badges": {
+        "trainingStarter": "Trainings-Starter",
+        "diligentTrainer": "Fleißiger Trainer",
+        "trainingExpert": "Trainings-Experte",
+        "trainingMaster": "Training-Master",
+        "trainingLegend": "Trainings-Legende",
+        "trainingChampion": "Trainings-Meister",
+        "nextLevel": "Nächstes Level"
+      }
+    },
     "subscriptionManagement": {
       "title": "Abonnement-Verwaltung",
       "description": "Verwalten Sie Ihr Abonnement und greifen Sie auf Premium-Features zu",
@@ -1788,16 +1924,6 @@
         "title": "Abonnement-Fehler",
         "description": "Abonnement-Informationen konnten nicht geladen werden. Bitte versuchen Sie, die Seite zu aktualisieren."
       }
-    },
-    "rewards": {
-      "loadingError": "Fehler beim Laden der Belohnungen",
-      "loadingMessage": "Erfolge werden geladen...",
-      "awards": "Auszeichnungen",
-      "points": "Punkte",
-      "achievements": "Erfolge",
-      "nextBadgeTooltip": "{{steps}} weitere Schritte bis \"{{name}}\"",
-      "noAwardsYet": "Noch keine Auszeichnungen",
-      "lastActivity": "Letzte Aktivität"
     },
     "plans": {
       "loadingMessage": "Trainingspläne werden geladen...",

@@ -1,6 +1,7 @@
 
 import { CheckCircle2, Circle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface StepHeaderProps {
   step: {
@@ -14,6 +15,8 @@ interface StepHeaderProps {
 }
 
 export const StepHeader = ({ step }: StepHeaderProps) => {
+  const { t } = useTranslations();
+  
   return (
     <div className="flex items-start gap-3 flex-1">
       {step.is_completed ? (
@@ -23,17 +26,17 @@ export const StepHeader = ({ step }: StepHeaderProps) => {
       )}
       <div className="flex-1">
         <h4 className="font-semibold text-base mb-1">
-          Modul {step.step_number}: {step.title}
+          {t('training.stepHeader.module', { number: step.step_number })}: {step.title}
         </h4>
         <p className="text-sm text-gray-600 mb-2">{step.description}</p>
         
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-xs">
-            +{step.points_reward} Punkte
+            {t('training.stepHeader.points', { points: step.points_reward })}
           </Badge>
           {step.completed_at && (
             <Badge className="bg-green-100 text-green-800 text-xs">
-              Abgeschlossen am {new Date(step.completed_at).toLocaleDateString('de-DE')}
+              {t('training.stepHeader.completedOn', { date: new Date(step.completed_at).toLocaleDateString('de-DE') })}
             </Badge>
           )}
         </div>

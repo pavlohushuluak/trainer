@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslations } from "@/hooks/useTranslations";
 import { useTrainingSessions } from "./hooks/useTrainingSessions";
 
 interface SessionTrackerProps {
@@ -28,6 +29,7 @@ export const SessionTracker = ({
   const [sessionDuration, setSessionDuration] = useState("");
   const [sessionNotes, setSessionNotes] = useState("");
   const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
+  const { t } = useTranslations();
   
   const { 
     todaySessions, 
@@ -68,11 +70,11 @@ export const SessionTracker = ({
   const getMasteryText = () => {
     switch (masteryStatus) {
       case 'fully_mastered':
-        return 'Gemeistert';
+        return t('training.sessionTracker.mastery.fullyMastered');
       case 'partially_mastered':
-        return 'Teilweise Gemeistert';
+        return t('training.sessionTracker.mastery.partiallyMastered');
       default:
-        return 'In Training';
+        return t('training.sessionTracker.mastery.inTraining');
     }
   };
 
@@ -111,7 +113,7 @@ export const SessionTracker = ({
           />
         </div>
         <div className="text-xs text-muted-foreground">
-          {totalSessions}/10 Sessions für Meisterschaft
+          {t('training.sessionTracker.masteryProgress', { current: totalSessions, target: 10 })}
         </div>
       </CardHeader>
 
@@ -120,7 +122,7 @@ export const SessionTracker = ({
           <div className="flex items-center gap-2">
             <Target className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium">
-              Heute: {todaySessions.length}/{targetSessions}
+              {t('training.sessionTracker.todaySessions', { current: todaySessions.length, target: targetSessions })}
             </span>
           </div>
           
@@ -143,30 +145,30 @@ export const SessionTracker = ({
               
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Trainingseinheit hinzufügen</DialogTitle>
+                  <DialogTitle>{t('training.sessionTracker.addSession.title')}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="duration">Dauer (Minuten)</Label>
+                    <Label htmlFor="duration">{t('training.sessionTracker.addSession.duration')}</Label>
                     <Input
                       id="duration"
                       type="number"
-                      placeholder="z.B. 5"
+                      placeholder={t('training.sessionTracker.addSession.durationPlaceholder')}
                       value={sessionDuration}
                       onChange={(e) => setSessionDuration(e.target.value)}
                     />
                   </div>
                   <div>
-                    <Label htmlFor="notes">Notizen (optional)</Label>
+                    <Label htmlFor="notes">{t('training.sessionTracker.addSession.notes')}</Label>
                     <Textarea
                       id="notes"
-                      placeholder="Wie ist es gelaufen?"
+                      placeholder={t('training.sessionTracker.addSession.notesPlaceholder')}
                       value={sessionNotes}
                       onChange={(e) => setSessionNotes(e.target.value)}
                     />
                   </div>
                   <Button onClick={handleAddSession} className="w-full" disabled={isCreating}>
-                    Session hinzufügen
+                    {t('training.sessionTracker.addSession.button')}
                   </Button>
                 </div>
               </DialogContent>
@@ -176,7 +178,7 @@ export const SessionTracker = ({
 
         {todaySessions.length > 0 && (
           <div className="space-y-2">
-            <div className="text-xs font-medium text-muted-foreground">Heutige Sessions:</div>
+            <div className="text-xs font-medium text-muted-foreground">{t('training.sessionTracker.todaySessionsTitle')}:</div>
             {todaySessions.slice(0, 3).map((session, index) => {
               const isExpanded = expandedNotes.has(session.id);
               const hasLongNote = session.notes && session.notes.length > 30;
@@ -186,8 +188,8 @@ export const SessionTracker = ({
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Clock className="h-3 w-3" />
                     <span>
-                      Session {index + 1}
-                      {session.session_duration_minutes && ` (${session.session_duration_minutes} Min.)`}
+                      {t('training.sessionTracker.sessionNumber', { number: index + 1 })}
+                      {session.session_duration_minutes && ` (${session.session_duration_minutes} ${t('training.sessionTracker.minutes')})`}
                     </span>
                     {session.notes && (
                       <MessageSquare className="h-3 w-3 text-primary" />
@@ -216,7 +218,7 @@ export const SessionTracker = ({
             })}
             {todaySessions.length > 3 && (
               <div className="text-xs text-muted-foreground">
-                +{todaySessions.length - 3} weitere Sessions
+                {t('training.sessionTracker.moreSessions', { count: todaySessions.length - 3 })}
               </div>
             )}
           </div>

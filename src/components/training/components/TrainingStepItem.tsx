@@ -4,15 +4,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useConfetti } from "@/hooks/useConfetti";
+import { useTranslations } from "@/hooks/useTranslations";
 import { StepHeader } from "./StepHeader";
 import { StepActions } from "./StepActions";
 import { ModuleDetails } from "./ModuleDetails";
+import { useLocalizedTrainingStep } from "@/utils/trainingStepLocalization";
 
 interface TrainingStep {
   id: string;
   step_number: number;
   title: string;
+  title_en?: string | null;
   description: string;
+  description_en?: string | null;
   is_completed: boolean;
   points_reward: number;
   completed_at: string | null;
@@ -28,6 +32,10 @@ export const TrainingStepItem = ({ step, onStepComplete }: TrainingStepItemProps
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { triggerStepConfetti } = useConfetti();
+  const { t } = useTranslations();
+  
+  // Get localized step content based on user's language
+  const localizedStep = useLocalizedTrainingStep(step);
 
   const handleComplete = async () => {
     if (step.is_completed) return;
@@ -59,16 +67,16 @@ export const TrainingStepItem = ({ step, onStepComplete }: TrainingStepItemProps
       triggerStepConfetti();
 
       toast({
-        title: "Schritt abgeschlossen! 🎉",
-        description: `Du hast ${step.points_reward} Punkte erhalten!`,
+        title: t('training.stepCompleted.title'),
+        description: t('training.stepCompleted.description', { points: step.points_reward }),
       });
       
       onStepComplete();
     } catch (error) {
       console.error('Error completing step:', error);
       toast({
-        title: "Fehler",
-        description: "Beim Abschließen des Schritts ist ein Fehler aufgetreten.",
+        title: t('training.stepCompleted.error.title'),
+        description: t('training.stepCompleted.error.description'),
         variant: "destructive",
       });
     } finally {
@@ -78,16 +86,16 @@ export const TrainingStepItem = ({ step, onStepComplete }: TrainingStepItemProps
 
   return (
     <div className={`border rounded-lg overflow-hidden ${
-      step.is_completed 
+      localizedStep.is_completed 
         ? 'border-green-200 bg-green-50 dark:border-green-400/30 dark:bg-green-950/20' 
         : 'border-border bg-background'
     }`}>
       {/* Step Header */}
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
-          <StepHeader step={step} />
+          <StepHeader step={localizedStep} />
           <StepActions 
-            isCompleted={step.is_completed}
+            isCompleted={localizedStep.is_completed}
             isCompleting={isCompleting}
             onComplete={handleComplete}
           />

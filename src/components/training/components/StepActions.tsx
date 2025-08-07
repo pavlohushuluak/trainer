@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface StepActionsProps {
   isCompleted: boolean;
@@ -8,6 +9,8 @@ interface StepActionsProps {
 }
 
 export const StepActions = ({ isCompleted, isCompleting, onComplete }: StepActionsProps) => {
+  const { t } = useTranslations();
+  
   if (isCompleted) return null;
 
   return (
@@ -17,7 +20,7 @@ export const StepActions = ({ isCompleted, isCompleting, onComplete }: StepActio
       size="sm"
       className="ml-4"
     >
-      {isCompleting ? 'Wird gespeichert...' : 'Abschließen'}
+      {isCompleting ? t('training.stepActions.saving') : t('training.stepActions.complete')}
     </Button>
   );
 };

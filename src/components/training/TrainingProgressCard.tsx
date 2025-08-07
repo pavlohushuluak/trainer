@@ -1,17 +1,21 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { TrainingProgressHeader } from "./components/TrainingProgressHeader";
+import { useTranslations } from "@/hooks/useTranslations";
 import { TrainingStepItem } from "./components/TrainingStepItem";
 import { EmptyStepsState } from "./components/EmptyStepsState";
 import { CompletedPlanBanner } from "./components/CompletedPlanBanner";
 import { Badge } from "@/components/ui/badge";
 import { SessionTracker } from "./SessionTracker";
+import { useLocalizedTrainingStep } from "@/utils/trainingStepLocalization";
 
 export interface TrainingStep {
   id: string;
   step_number: number;
   title: string;
+  title_en?: string | null;
   description: string;
+  description_en?: string | null;
   is_completed: boolean;
   points_reward: number;
   completed_at: string | null;
@@ -92,6 +96,7 @@ export const TrainingProgressCard = ({
   petName,
   petSpecies
 }: TrainingProgressCardProps) => {
+  const { t } = useTranslations();
   const completedSteps = steps.filter(step => step.is_completed).length;
   const totalSteps = steps.length;
   const progressPercentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
@@ -138,7 +143,7 @@ export const TrainingProgressCard = ({
       {!petName && (
         <div className="px-4 pt-3 pb-1">
           <Badge variant="outline" className="bg-muted/50 text-muted-foreground border-border">
-            📋 Allgemeiner Plan
+            📋 {t('training.progressCard.generalPlan')}
           </Badge>
         </div>
       )}
@@ -156,21 +161,24 @@ export const TrainingProgressCard = ({
           <EmptyStepsState />
         ) : (
           <div className="space-y-6">
-            {steps.map((step) => (
-              <div key={step.id} className="space-y-3">
-                <TrainingStepItem
-                  step={step}
-                  onStepComplete={onStepComplete}
-                />
-                <SessionTracker
-                  stepId={step.id}
-                  stepTitle={step.title}
-                  targetSessions={step.target_sessions_daily || 1}
-                  masteryStatus={step.mastery_status || 'in_training'}
-                  totalSessions={step.total_sessions_completed || 0}
-                />
-              </div>
-            ))}
+            {steps.map((step) => {
+              const localizedStep = useLocalizedTrainingStep(step);
+              return (
+                <div key={step.id} className="space-y-3">
+                  <TrainingStepItem
+                    step={localizedStep}
+                    onStepComplete={onStepComplete}
+                  />
+                  <SessionTracker
+                    stepId={step.id}
+                    stepTitle={localizedStep.title}
+                    targetSessions={step.target_sessions_daily || 1}
+                    masteryStatus={step.mastery_status || 'in_training'}
+                    totalSessions={step.total_sessions_completed || 0}
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
 

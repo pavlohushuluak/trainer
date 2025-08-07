@@ -7,7 +7,9 @@ interface TrainingStep {
   id: string;
   step_number: number;
   title: string;
+  title_en?: string | null;
   description: string;
+  description_en?: string | null;
   is_completed: boolean;
   points_reward: number;
   completed_at: string | null;
@@ -51,7 +53,9 @@ export const usePlansWithSteps = (selectedPetFilter: string) => {
               id,
               step_number,
               title,
+              title_en,
               description,
+              description_en,
               is_completed,
               points_reward,
               completed_at,
