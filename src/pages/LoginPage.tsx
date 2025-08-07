@@ -294,16 +294,16 @@ const LoginPage = () => {
                         {t('auth.termsAgreement')}{' '}
                         <button 
                           type="button"
-                          onClick={() => setShowTermsModal(true)}
-                          className="text-primary hover:underline font-medium transition-colors"
+                          onClick={() => navigate('/agb')}
+                          className="min-h-0 text-primary hover:underline font-medium transition-colors"
                         >
                           {t('auth.legal.terms')}
                         </button>
                         {' '}{t('auth.legal.and')}{' '}
                         <button 
                           type="button"
-                          onClick={() => setShowPrivacyModal(true)}
-                          className="text-primary hover:underline font-medium transition-colors"
+                          onClick={() => navigate('/datenschutz')}
+                          className="min-h-0 text-primary hover:underline font-medium transition-colors"
                         >
                           {t('auth.legal.privacy')}
                         </button>
@@ -404,16 +404,16 @@ const LoginPage = () => {
                         {t('auth.termsAgreement')}{' '}
                         <button 
                           type="button"
-                          onClick={() => setShowTermsModal(true)}
-                          className="text-primary hover:underline font-medium transition-colors"
+                          onClick={() => navigate('/agb')}
+                          className="min-h-0 text-primary hover:underline font-medium transition-colors"
                         >
                           {t('auth.legal.terms')}
                         </button>
                         {' '}{t('auth.legal.and')}{' '}
                         <button 
                           type="button"
-                          onClick={() => setShowPrivacyModal(true)}
-                          className="text-primary hover:underline font-medium transition-colors"
+                          onClick={() => navigate('/datenschutz')}
+                          className="min-h-0 text-primary hover:underline font-medium transition-colors"
                         >
                           {t('auth.legal.privacy')}
                         </button>
