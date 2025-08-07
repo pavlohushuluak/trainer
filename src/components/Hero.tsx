@@ -107,7 +107,7 @@ export const Hero = ({ onStartChat }: HeroProps) => {
           <HeroContent isDevelopment={isDevelopment} />
           
           {/* Hero Carousel */}
-          <div className="mb-12">
+          <div className="mb-4 md:mb-8">
             <HeroCarousel />
           </div>
           

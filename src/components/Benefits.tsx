@@ -122,9 +122,9 @@ export const Benefits = () => {
   const handleMouseLeave = () => setIsAutoPlaying(true);
 
   return (
-    <section id="benefits" className="pt-12 sm:pt-16 lg:pt-20 pb-4">
+    <section id="benefits" className="pt-6 md:pt-10 lg:pt-16 pb-4">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 sm:mb-16">
+        <div className="text-center mb-4 md:mb-8">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6">
             {t('benefits.title')}
           </h2>

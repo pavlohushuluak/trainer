@@ -17,7 +17,7 @@ export const MoneyBackGuarantee = ({ currentPlans }: MoneyBackGuaranteeProps) =>
     return null;
   }
   return (
-    <div className="text-center mb-12">
+    <div className="text-center mb-4 md:mb-8">
       <div className="inline-block bg-gradient-to-r from-green-50 dark:from-green-900/20 to-emerald-50 dark:to-emerald-900/20 px-8 py-6 rounded-2xl border-2 border-green-200 dark:border-green-800 shadow-lg">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Shield className="h-8 w-8 text-green-600 dark:text-green-400" />

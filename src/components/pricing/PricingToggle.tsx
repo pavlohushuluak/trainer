@@ -9,7 +9,7 @@ interface PricingToggleProps {
 export const PricingToggle = ({ isYearly, onToggle }: PricingToggleProps) => {
   const { t } = useTranslations();
   return (
-    <div className="flex justify-center mb-12">
+    <div className="flex justify-center mb-4 md:mb-8">
       <div className="bg-secondary border border-border p-1 rounded-lg shadow-sm">
         <button
           onClick={() => onToggle(false)}

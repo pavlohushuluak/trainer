@@ -5,9 +5,9 @@ import { useTranslations } from "@/hooks/useTranslations";
 export const PaymentMethods = () => {
   const { t } = useTranslations();
   return (
-    <div className="text-center mt-12 mb-8">
+    <div className="text-center mt-8 mb-4">
       <h3 className="text-lg font-semibold mb-4">{t('pricing.paymentMethods.title')}</h3>
-      <div className="flex justify-center items-center gap-8 flex-wrap">
+      <div className="flex justify-center items-center gap-4 md:gap-8 flex-wrap">
         <div className="flex items-center gap-2 text-muted-foreground">
           <CreditCard className="h-5 w-5" />
           <span>{t('pricing.paymentMethods.methods.creditCards')}</span>

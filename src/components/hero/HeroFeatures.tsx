@@ -6,7 +6,7 @@ export const HeroFeatures = () => {
   const { t } = useTranslations();
   
   return (
-    <div className="flex flex-wrap justify-center gap-6 mb-10 animate-fade-in-up delay-300">
+    <div className="flex flex-wrap justify-center gap-3 md:gap-6 mb-4 md:mb-8 animate-fade-in-up delay-300">
       <div className="flex items-center gap-2 text-muted-foreground">
         <CheckCircle2 className="h-5 w-5 text-green-500" />
         <span>{t('hero.features.trainerAvailable')}</span>

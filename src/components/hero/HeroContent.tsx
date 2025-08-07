@@ -40,7 +40,7 @@ export const HeroContent = ({ isDevelopment }: HeroContentProps) => {
 
       {/* Subtitle with enhanced styling */}
       <p
-        className="relative text-xl sm:text-2xl lg:text-3xl text-muted-foreground mb-8 max-w-5xl mx-auto leading-relaxed animate-professional-fade-in-up delay-300 font-light"
+        className="relative text-xl sm:text-2xl lg:text-3xl text-muted-foreground mb-4 max-w-5xl mx-auto leading-relaxed animate-professional-fade-in-up delay-300 font-light"
         dangerouslySetInnerHTML={{ __html: t('hero.subtitle') }}
       />
     </>

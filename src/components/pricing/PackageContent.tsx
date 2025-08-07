@@ -5,12 +5,12 @@ import { useTranslations } from "@/hooks/useTranslations";
 export const PackageContent = () => {
   const { t } = useTranslations();
   return (
-    <div className="mb-16">
-      <h3 className="text-2xl font-bold text-center mb-8">
+    <div className="mb-6 md:mb-12">
+      <h3 className="text-2xl font-bold text-center mb-2 md:mb-4">
         {t('pricing.packageContent.title')}
       </h3>
       
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 max-w-7xl mx-auto">
         <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
           <CardHeader className="text-center pb-4">
             <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-2">
