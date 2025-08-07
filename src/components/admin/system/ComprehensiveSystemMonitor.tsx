@@ -126,6 +126,7 @@ export const ComprehensiveSystemMonitor = () => {
       case 'email': return <Mail className="h-4 w-4" />;
       case 'functions': return <Zap className="h-4 w-4" />;
       case 'performance': return <TrendingUp className="h-4 w-4" />;
+      case 'critical': return <AlertTriangle className="h-4 w-4" />;
       default: return <Activity className="h-4 w-4" />;
     }
   };
@@ -133,6 +134,8 @@ export const ComprehensiveSystemMonitor = () => {
   const summary = testRunner.getSummary();
   const filteredResults = selectedCategory === 'all' 
     ? results 
+    : selectedCategory === 'critical'
+    ? results.filter(r => r.critical)
     : results.filter(r => r.category === selectedCategory);
 
   const overallProgress = summary.total > 0 

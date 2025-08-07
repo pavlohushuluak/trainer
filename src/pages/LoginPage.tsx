@@ -98,16 +98,18 @@ const LoginPage = () => {
     setError('');
     
     try {
-      const { error } = await signIn(email, password);
+      const { data, error } = await signIn(email, password);
       if (error) {
-        setError(error.message === 'Invalid login credentials' 
-          ? t('auth.invalidCredentials')
-          : error.message);
+        setError(error.message || t('auth.signInError'));
+      } else if (data?.user) {
+        setMessage(t('auth.signInSuccess'));
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1000);
       }
-    } catch (err) {
-      setError(t('auth.generalError'));
+    } catch (err: any) {
+      setError(err.message || t('auth.signInError'));
     } finally {
-      localStorage.setItem('alreadySignedUp', 'true');
       setLoading(false);
     }
   };
@@ -116,39 +118,24 @@ const LoginPage = () => {
     e.preventDefault();
     if (!isSignUpValid) return;
 
-    console.log(language);
-    await upsertLanguageSupport(email, language);
-
-    setTimeout(async () => {
-      console.log(language);
-      await upsertLanguageSupport(email, language);
-    }, 3000);
-    
     setLoading(true);
     setError('');
-    setMessage('');
     
     try {
-      const { error } = await signUp(email, password, firstName.trim(), lastName.trim(), language);
+      const { data, error } = await signUp(email, password, firstName, lastName, language);
+      
       if (error) {
-        if (error.message.includes('already registered')) {
-          setError(t('auth.emailAlreadyRegistered'));
-        } else {
-          setError(error.message);
-        }
-      } else {
-        setMessage(t('auth.registrationSuccess'));
-        // Set localStorage to indicate user has signed up
+        setError(error.message || t('auth.signUpError'));
+      } else if (data?.user) {
+        setMessage(t('auth.signUpSuccess'));
         localStorage.setItem('alreadySignedUp', 'true');
-        // Clear form after successful registration
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-        setFirstName('');
-        setLastName('');
+        setTimeout(() => {
+          setActiveTab('signin');
+          clearForm();
+        }, 2000);
       }
-    } catch (err) {
-      setError(t('auth.generalError'));
+    } catch (err: any) {
+      setError(err.message || t('auth.signUpError'));
     } finally {
       setLoading(false);
     }
@@ -164,216 +151,181 @@ const LoginPage = () => {
     setMessage('');
   };
 
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    clearForm();
+  };
+
+  const switchToSignIn = () => {
+    setActiveTab('signin');
+    clearForm();
+  };
+
+  // Redirect if already authenticated
+  if (user) {
+    navigate('/dashboard');
+    return null;
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col">
-
-      {/* Auth Error Display */}
-      <AuthErrorDisplay />
-
-      {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
-        <div className="w-full max-w-md sm:max-w-lg space-y-4 sm:space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-6">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <div className="flex justify-center mb-4">
+            <ThemeLogo className="h-12 w-auto" />
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+            {t('auth.welcomeBack')}
+          </h1>
+          <p className="text-muted-foreground text-sm sm:text-base">
+            {t('auth.welcomeDescription')}
+          </p>
+        </div>
 
         {/* Main Card */}
-        <Card className="border-0 shadow-2xl bg-card/80 backdrop-blur-sm">
-          <CardHeader className="text-center pb-4 sm:pb-6">
-            <div className="mx-auto w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mb-4">
-              <Shield className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">
-              {t('auth.welcome')}
-            </CardTitle>
-            <CardDescription className="text-muted-foreground mt-2 text-sm">
-              {t('auth.secureLogin')}
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
-            {/* OAuth Section */}
-            <div className="space-y-3 sm:space-y-4">
-              <div className="text-center space-y-2">
-                <div className="flex items-center justify-center gap-2 text-primary">
-                  <Sparkles className="h-4 w-4" />
-                  <h3 className="text-sm font-semibold">{t('auth.fastestLogin')}</h3>
+        <Card className="shadow-xl border-border/50">
+          <CardContent className="p-6">
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="signin" className="text-sm sm:text-base">
+                  {t('auth.signIn')}
+                </TabsTrigger>
+                <TabsTrigger value="signup" className="text-sm sm:text-base">
+                  {t('auth.signUp')}
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Sign In Tab */}
+              <TabsContent value="signin" className="space-y-4">
+                <form onSubmit={handleSignIn} className="space-y-4">
+                  <EmailInput
+                    id="signin-email"
+                    label={t('auth.email')}
+                    value={email}
+                    onChange={setEmail}
+                    required
+                  />
+                  
+                  <PasswordInput
+                    id="signin-password"
+                    label={t('auth.password')}
+                    value={password}
+                    onChange={setPassword}
+                    required
+                  />
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base" 
+                    disabled={loading || !isSignInValid}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {t('auth.signingIn')}
+                      </>
+                    ) : (
+                      <>
+                        <Shield className="mr-2 h-4 w-4" />
+                        {t('auth.signIn')}
+                      </>
+                    )}
+                  </Button>
+                </form>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-border" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      {t('auth.orContinueWith')}
+                    </span>
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground px-2">
-                  {t('auth.oneClickStart')}
-                </p>
-              </div>
-              
-              <OAuthButton 
-                provider="google"
-                onSuccess={() => {
-                  setError('');
-                  setMessage('');
-                }}
-              />
-              
-              <div className="text-center">
-                <p className="text-xs text-muted-foreground">
-                  {t('auth.secureGoogle')}
-                </p>
-              </div>
-            </div>
 
-            {/* Separator */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-3 text-muted-foreground font-medium">{t('auth.or')}</span>
-              </div>
-            </div>
+                <OAuthButton provider="google" />
+              </TabsContent>
 
-            {/* Traditional Login */}
-            <div className="space-y-3 sm:space-y-4">
-              <Tabs value={activeTab} onValueChange={(value) => { setActiveTab(value); clearForm(); }} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg text-xs sm:text-sm">
-                  <TabsTrigger 
-                    value="signin" 
-                    className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground"
-                  >
-                    <User className="h-4 w-4 mr-2" />
-                    {t('auth.login')}
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="signup"
-                    className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground"
-                  >
-                    <Lock className="h-4 w-4 mr-2" />
-                    {t('auth.register')}
-                  </TabsTrigger>
-                </TabsList>
-                
-                {/* Sign In Tab */}
-                <TabsContent value="signin" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                  <form onSubmit={handleSignIn} className="space-y-3 sm:space-y-4">
-                    <EmailInput
-                      id="signin-email"
-                      label={t('auth.email')}
-                      value={email}
-                      onChange={setEmail}
-                      required
-                    />
-                    
-                    <PasswordInput
-                      id="signin-password"
-                      label={t('auth.password')}
-                      value={password}
-                      onChange={setPassword}
-                      required
-                    />
-                    
-                    <div className="text-right">
-                      <Link 
-                        to="/password-reset" 
-                        className="text-xs text-primary hover:text-primary/80 hover:underline"
-                      >
-                        {t('auth.forgotPassword')}
-                      </Link>
+              {/* Sign Up Tab */}
+              <TabsContent value="signup" className="space-y-4">
+                <form onSubmit={handleSignUp} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label htmlFor="first-name" className="text-sm font-medium">
+                        {t('auth.firstName')}
+                      </Label>
+                      <Input
+                        id="first-name"
+                        type="text"
+                        required
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        className="bg-background border-border focus:border-primary focus:ring-primary"
+                      />
                     </div>
-                    
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base" 
-                      disabled={loading || !isSignInValid}
-                    >
-                      {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {t('auth.loggingIn')}
-                        </>
-                      ) : (
-                        <>
-                          <User className="mr-2 h-4 w-4" />
-                          {t('auth.login')}
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                </TabsContent>
-                
-                {/* Sign Up Tab */}
-                <TabsContent value="signup" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                  <form onSubmit={handleSignUp} className="space-y-3 sm:space-y-4">
-                    {/* Name Fields */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-sm font-medium">
-                          {t('auth.firstName')} <span className="text-red-500">*</span>
-                        </Label>
-                        <Input
-                          id="firstName"
-                          type="text"
-                          placeholder={t('auth.firstNamePlaceholder')}
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                          className="bg-background border-border focus:border-primary focus:ring-primary"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-sm font-medium">
-                          {t('auth.lastName')} <span className="text-red-500">*</span>
-                        </Label>
-                        <Input
-                          id="lastName"
-                          type="text"
-                          placeholder={t('auth.lastNamePlaceholder')}
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                          className="bg-background border-border focus:border-primary focus:ring-primary"
-                        />
-                      </div>
+                    <div>
+                      <Label htmlFor="last-name" className="text-sm font-medium">
+                        {t('auth.lastName')}
+                      </Label>
+                      <Input
+                        id="last-name"
+                        type="text"
+                        required
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        className="bg-background border-border focus:border-primary focus:ring-primary"
+                      />
                     </div>
-                    
-                    <EmailInput
-                      id="signup-email"
-                      label={t('auth.email')}
-                      value={email}
-                      onChange={setEmail}
-                      required
-                    />
-                    
-                    <PasswordInput
-                      id="signup-password"
-                      label={t('auth.password')}
-                      value={password}
-                      onChange={setPassword}
-                      required
-                      minLength={8}
-                      showStrength={true}
-                    />
-                    
-                    <ConfirmPasswordInput
-                      id="confirm-password"
-                      value={confirmPassword}
-                      password={password}
-                      onChange={setConfirmPassword}
-                      required
-                    />
-                    
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base" 
-                      disabled={loading || !isSignUpValid}
-                    >
-                      {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {t('auth.creatingAccount')}
-                        </>
-                      ) : (
-                        <>
-                          <Lock className="mr-2 h-4 w-4" />
-                          {t('auth.createAccount')}
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                </TabsContent>
-              </Tabs>
-            </div>
+                  </div>
+                  
+                  <EmailInput
+                    id="signup-email"
+                    label={t('auth.email')}
+                    value={email}
+                    onChange={setEmail}
+                    required
+                  />
+                  
+                  <PasswordInput
+                    id="signup-password"
+                    label={t('auth.password')}
+                    value={password}
+                    onChange={setPassword}
+                    required
+                    minLength={8}
+                    showStrength={true}
+                  />
+                  
+                  <ConfirmPasswordInput
+                    id="confirm-password"
+                    value={confirmPassword}
+                    password={password}
+                    onChange={setConfirmPassword}
+                    required
+                  />
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base" 
+                    disabled={loading || !isSignUpValid}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {t('auth.creatingAccount')}
+                      </>
+                    ) : (
+                      <>
+                        <Lock className="mr-2 h-4 w-4" />
+                        {t('auth.createAccount')}
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
             
             {/* Error Messages */}
             {error && (
@@ -403,10 +355,7 @@ const LoginPage = () => {
           <p>
             {t('auth.alreadyHaveAccountText')}{' '}
             <button 
-              onClick={() => {
-                const signinTab = document.querySelector('[data-value="signin"]') as HTMLElement;
-                signinTab?.click();
-              }}
+              onClick={switchToSignIn}
               className="text-primary hover:underline font-medium"
             >
               {t('auth.loginNow')}
@@ -415,7 +364,6 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
-  </div>
   );
 };
 

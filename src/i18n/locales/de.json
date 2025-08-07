@@ -2215,6 +2215,46 @@
     "title": "📧 E-Mail-Konfiguration & Tests",
     "description": "E-Mail-Versand verwalten und alle E-Mail-Funktionen testen"
   },
+  "passwordReset": {
+    "title": "Passwort zurücksetzen",
+    "description": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+    "placeholder": "Ihre E-Mail-Adresse",
+    "buttons": {
+      "sendResetLink": "Passwort-Reset-Link senden",
+      "sending": "Wird gesendet..."
+    },
+    "toasts": {
+      "emailRequired": "E-Mail erforderlich",
+      "emailRequiredDescription": "Bitte geben Sie Ihre E-Mail-Adresse ein",
+      "emailSent": "E-Mail gesendet!",
+      "emailSentDescription": "Überprüfen Sie Ihren E-Mail-Posteingang für den Passwort-Reset-Link. Der Link ist 1 Stunde gültig.",
+      "resetError": "Fehler beim Zurücksetzen des Passworts",
+      "rateLimit": "Zu viele Anfragen. Bitte warten Sie einen Moment.",
+      "userNotFound": "Kein Konto mit dieser E-Mail-Adresse gefunden.",
+      "emailNotConfirmed": "Bitte bestätigen Sie zuerst Ihre E-Mail-Adresse."
+    }
+  },
+  "networkDiagnostic": {
+    "title": "Netzwerk-Diagnose",
+    "runDiagnostic": "Vollständige Diagnose ausführen",
+    "running": "Diagnose läuft...",
+    "ok": "OK",
+    "failed": "FEHLGESCHLAGEN",
+    "networkInformation": "Netzwerk-Informationen",
+    "onlineStatus": "Online-Status",
+    "online": "Online",
+    "offline": "Offline",
+    "connectionType": "Verbindungstyp",
+    "downlink": "Downlink",
+    "rtt": "RTT",
+    "supabaseConnectivity": "Supabase-Verbindung",
+    "basicConnection": "Grundverbindung",
+    "authentication": "Authentifizierung",
+    "databaseRead": "Datenbank-Lesen",
+    "databaseWrite": "Datenbank-Schreiben",
+    "edgeFunctions": "Edge-Funktionen",
+    "recommendations": "Empfehlungen"
+  },
   "auth": {
     "login": "Anmelden",
     "register": "Registrieren",

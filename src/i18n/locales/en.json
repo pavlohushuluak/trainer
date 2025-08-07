@@ -2215,6 +2215,46 @@
     "title": "📧 Email Configuration & Tests",
     "description": "Manage email delivery and test all email functions"
   },
+  "passwordReset": {
+    "title": "Reset Password",
+    "description": "Enter your email address and we'll send you a link to reset your password.",
+    "placeholder": "Your email address",
+    "buttons": {
+      "sendResetLink": "Send Password Reset Link",
+      "sending": "Sending..."
+    },
+    "toasts": {
+      "emailRequired": "Email required",
+      "emailRequiredDescription": "Please enter your email address",
+      "emailSent": "Email sent!",
+      "emailSentDescription": "Check your email inbox for the password reset link. The link is valid for 1 hour.",
+      "resetError": "Error resetting password",
+      "rateLimit": "Too many requests. Please wait a moment.",
+      "userNotFound": "No account found with this email address.",
+      "emailNotConfirmed": "Please confirm your email address first."
+    }
+  },
+  "networkDiagnostic": {
+    "title": "Network Diagnostics",
+    "runDiagnostic": "Run Full Diagnostic",
+    "running": "Running Diagnostics...",
+    "ok": "OK",
+    "failed": "FAILED",
+    "networkInformation": "Network Information",
+    "onlineStatus": "Online Status",
+    "online": "Online",
+    "offline": "Offline",
+    "connectionType": "Connection Type",
+    "downlink": "Downlink",
+    "rtt": "RTT",
+    "supabaseConnectivity": "Supabase Connectivity",
+    "basicConnection": "Basic Connection",
+    "authentication": "Authentication",
+    "databaseRead": "Database Read",
+    "databaseWrite": "Database Write",
+    "edgeFunctions": "Edge Functions",
+    "recommendations": "Recommendations"
+  },
   "auth": {
     "login": "Login",
     "register": "Register",

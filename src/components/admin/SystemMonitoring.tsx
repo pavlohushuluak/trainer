@@ -56,7 +56,7 @@ export const SystemMonitoring = () => {
       <div className="space-y-4 sm:space-y-6">
         <div className="flex items-center justify-center p-6 sm:p-8">
           <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin" />
-          <span className="ml-2 text-sm sm:text-base">{t('adminSystemMonitoring.checkingPermissions')}</span>
+          <span className="ml-2 text-sm sm:text-base text-foreground">{t('adminSystemMonitoring.checkingPermissions')}</span>
         </div>
       </div>
     );
@@ -92,8 +92,8 @@ export const SystemMonitoring = () => {
     <div className="space-y-4 sm:space-y-6">
       {/* Header Section - Mobile Responsive */}
       <div className="space-y-2 sm:space-y-3">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('adminSystemMonitoring.title')}</h1>
-        <p className="text-sm sm:text-base text-gray-600">
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{t('adminSystemMonitoring.title')}</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
           {t('adminSystemMonitoring.description')}
         </p>
       </div>
