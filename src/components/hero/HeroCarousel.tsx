@@ -192,12 +192,12 @@ export const HeroCarousel = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
             
             {/* Content Overlay */}
-            <div className="absolute bottom-0 w-full p-4 sm:p-6 md:p-8 lg:p-12 text-white flex justify-center items-center">
-              <div className="w-full text-center sm:text-left">
+            <div className="absolute bottom-0 w-full p-6 sm:p-8 md:p-10 lg:p-12 text-white flex justify-center items-center">
+              <div className="w-full text-center">
                 <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 leading-tight">
                   {image.alt}
                 </h3>
-                <p className="text-xs sm:text-sm md:text-base text-white/90 leading-relaxed">
+                <p className="text-sm sm:text-base md:text-lg text-white/90 leading-relaxed">
                   {t('hero.carousel.description')}
                 </p>
               </div>
@@ -262,16 +262,6 @@ export const HeroCarousel = () => {
             </div>
           </div>
         )}
-      </div>
-
-      {/* Mobile Touch Indicators */}
-      <div className="absolute inset-0 pointer-events-none sm:hidden">
-        <div className="absolute left-2 top-1/2 -translate-y-1/2 w-6 h-6 bg-white/15 rounded-full flex items-center justify-center backdrop-blur-sm">
-          <ChevronLeft className="h-3 w-3 text-white" />
-        </div>
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 bg-white/15 rounded-full flex items-center justify-center backdrop-blur-sm">
-          <ChevronRight className="h-3 w-3 text-white" />
-        </div>
       </div>
 
       {/* Swipe Hint for Mobile */}
