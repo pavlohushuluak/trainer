@@ -78,7 +78,9 @@ export const TrainingStepItem = ({ step, onStepComplete }: TrainingStepItemProps
 
   return (
     <div className={`border rounded-lg overflow-hidden ${
-      step.is_completed ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-white'
+      step.is_completed 
+        ? 'border-green-200 bg-green-50 dark:border-green-400/30 dark:bg-green-950/20' 
+        : 'border-border bg-background'
     }`}>
       {/* Step Header */}
       <div className="p-4">

@@ -10,7 +10,7 @@ interface ViewSwitcherProps {
 
 export const ViewSwitcher = ({ view, onViewChange }: ViewSwitcherProps) => {
   return (
-    <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+    <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
       <Button
         variant={view === 'list' ? 'default' : 'ghost'}
         size="sm"

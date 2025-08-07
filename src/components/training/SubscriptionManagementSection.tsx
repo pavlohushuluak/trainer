@@ -31,17 +31,17 @@ export const SubscriptionManagementSection = () => {
   if (error) {
     return (
       <div className="mt-6 sm:mt-8 subscription-management-section">
-        <Card className="shadow-sm border-red-200 bg-red-50">
-          <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
-              <CardTitle className="text-red-800 text-lg sm:text-xl">{t('training.subscriptionManagement.error.title')}</CardTitle>
-            </div>
-            <CardDescription className="text-red-700 text-sm">
-              {t('training.subscriptionManagement.error.description')}
-            </CardDescription>
-          </CardHeader>
-        </Card>
+              <Card className="shadow-sm border-red-200/50 bg-red-50/50 dark:border-red-400/30 dark:bg-red-950/20">
+        <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400 flex-shrink-0" />
+            <CardTitle className="text-red-800 dark:text-red-200 text-lg sm:text-xl">{t('training.subscriptionManagement.error.title')}</CardTitle>
+          </div>
+          <CardDescription className="text-red-700 dark:text-red-300 text-sm">
+            {t('training.subscriptionManagement.error.description')}
+          </CardDescription>
+        </CardHeader>
+      </Card>
       </div>
     );
   }
@@ -85,13 +85,13 @@ export const SubscriptionManagementSection = () => {
                     <div className="flex items-start sm:items-center gap-2 w-full sm:w-auto">
                       <span className={`text-xs sm:text-sm px-2 py-1 rounded-full whitespace-nowrap ${
                         isExpired 
-                          ? 'bg-red-100 text-red-800' 
-                          : 'bg-green-100 text-green-800'
+                          ? 'bg-red-100 text-red-800 dark:bg-red-950/30 dark:text-red-300' 
+                          : 'bg-green-100 text-green-800 dark:bg-green-950/30 dark:text-green-300'
                       }`}>
                         {subscriptionTierName} {isExpired ? t('training.subscriptionManagement.expired') : t('training.subscriptionManagement.active')}
                       </span>
                       {tierLimit && tierLimit > 1 && (
-                        <span className="text-xs sm:text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full flex items-center gap-1 whitespace-nowrap">
+                        <span className="text-xs sm:text-sm bg-blue-100 text-blue-800 dark:bg-blue-950/30 dark:text-blue-300 px-2 py-1 rounded-full flex items-center gap-1 whitespace-nowrap">
                           <Users className="h-3 w-3 flex-shrink-0" />
                           {tierLimit === 999 ? t('training.subscriptionManagement.unlimitedAnimals') : tierLimit} {t('training.subscriptionManagement.animals')}
                         </span>

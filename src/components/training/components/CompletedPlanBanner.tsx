@@ -18,9 +18,9 @@ export const CompletedPlanBanner = () => {
   }, [triggerCelebration, hasTriggered]);
 
   return (
-    <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+    <div className="mt-4 p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-400/50 rounded-lg">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-green-700">
+        <div className="flex items-center gap-2 text-green-700 dark:text-green-300">
           <CheckCircle className="h-5 w-5" />
           <span className="font-medium">{t('training.completedPlanBanner.title')} 🎉</span>
         </div>
@@ -28,13 +28,13 @@ export const CompletedPlanBanner = () => {
           variant="outline"
           size="sm"
           onClick={triggerCelebration}
-          className="border-green-300 text-green-700 hover:bg-green-100"
+          className="border-green-300 text-green-700 hover:bg-green-100 dark:border-green-400/50 dark:text-green-300 dark:hover:bg-green-950/50"
         >
           <Sparkles className="h-4 w-4 mr-1" />
           {t('training.completedPlanBanner.celebrateAgain')}
         </Button>
       </div>
-      <p className="text-sm text-green-600 mt-1">
+      <p className="text-sm text-green-600 dark:text-green-400 mt-1">
         {t('training.completedPlanBanner.congratulations')}
       </p>
     </div>

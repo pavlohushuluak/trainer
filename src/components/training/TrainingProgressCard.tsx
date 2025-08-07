@@ -100,14 +100,35 @@ export const TrainingProgressCard = ({
   );
 
   const petColor = getPetColor(petSpecies);
-  const borderColor = petName ? `border-l-${petColor}-500` : 'border-l-gray-400';
+  
+  const getBorderColor = () => {
+    if (!petName) return 'border-l-muted-foreground/30';
+    switch (petColor) {
+      case 'blue': return 'border-l-blue-500 dark:border-l-blue-400';
+      case 'purple': return 'border-l-purple-500 dark:border-l-purple-400';
+      case 'green': return 'border-l-green-500 dark:border-l-green-400';
+      case 'yellow': return 'border-l-yellow-500 dark:border-l-yellow-400';
+      default: return 'border-l-muted-foreground/30';
+    }
+  };
+
+  const getBadgeClasses = () => {
+    if (!petName) return 'bg-muted/50 text-muted-foreground border-border';
+    switch (petColor) {
+      case 'blue': return 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-400/50';
+      case 'purple': return 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-300 dark:border-purple-400/50';
+      case 'green': return 'bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300 dark:border-green-400/50';
+      case 'yellow': return 'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-300 dark:border-yellow-400/50';
+      default: return 'bg-muted/50 text-muted-foreground border-border';
+    }
+  };
 
   return (
-    <Card className={`w-full border-l-4 ${borderColor} bg-white shadow-sm hover:shadow-md transition-shadow`}>
+    <Card className={`w-full border-l-4 ${getBorderColor()} bg-background shadow-sm hover:shadow-md transition-shadow`}>
       {/* Pet Badge */}
       {petName && (
         <div className="px-4 pt-3 pb-1">
-          <Badge variant="outline" className={`bg-${petColor}-50 text-${petColor}-700 border-${petColor}-200`}>
+          <Badge variant="outline" className={getBadgeClasses()}>
             {getPetIcon(petSpecies)} {petName}
             {petSpecies && <span className="text-xs ml-1">({petSpecies})</span>}
           </Badge>
@@ -116,7 +137,7 @@ export const TrainingProgressCard = ({
       
       {!petName && (
         <div className="px-4 pt-3 pb-1">
-          <Badge variant="outline" className="bg-gray-50 text-gray-600 border-gray-200">
+          <Badge variant="outline" className="bg-muted/50 text-muted-foreground border-border">
             📋 Allgemeiner Plan
           </Badge>
         </div>

@@ -70,17 +70,72 @@ const getPetColorClasses = (species?: string, isLinked: boolean = true) => {
   const normalizedSpecies = species?.toLowerCase().trim();
   
   const colorMap = {
-    'hund': { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', leftBorder: 'border-l-blue-500' },
-    'dog': { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', leftBorder: 'border-l-blue-500' },
-    'katze': { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200', leftBorder: 'border-l-purple-500' },
-    'cat': { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200', leftBorder: 'border-l-purple-500' },
-    'katz': { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200', leftBorder: 'border-l-purple-500' },
-    'pferd': { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', leftBorder: 'border-l-green-500' },
-    'horse': { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', leftBorder: 'border-l-green-500' },
-    'vogel': { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200', leftBorder: 'border-l-yellow-500' },
-    'bird': { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200', leftBorder: 'border-l-yellow-500' },
-    'orange': { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', leftBorder: 'border-l-orange-500' },
-    'gray': { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200', leftBorder: 'border-l-gray-500' }
+    'hund': { 
+      bg: 'bg-blue-50 dark:bg-blue-950/30', 
+      text: 'text-blue-700 dark:text-blue-300', 
+      border: 'border-blue-200 dark:border-blue-400/50', 
+      leftBorder: 'border-l-blue-500 dark:border-l-blue-400' 
+    },
+    'dog': { 
+      bg: 'bg-blue-50 dark:bg-blue-950/30', 
+      text: 'text-blue-700 dark:text-blue-300', 
+      border: 'border-blue-200 dark:border-blue-400/50', 
+      leftBorder: 'border-l-blue-500 dark:border-l-blue-400' 
+    },
+    'katze': { 
+      bg: 'bg-purple-50 dark:bg-purple-950/30', 
+      text: 'text-purple-700 dark:text-purple-300', 
+      border: 'border-purple-200 dark:border-purple-400/50', 
+      leftBorder: 'border-l-purple-500 dark:border-l-purple-400' 
+    },
+    'cat': { 
+      bg: 'bg-purple-50 dark:bg-purple-950/30', 
+      text: 'text-purple-700 dark:text-purple-300', 
+      border: 'border-purple-200 dark:border-purple-400/50', 
+      leftBorder: 'border-l-purple-500 dark:border-l-purple-400' 
+    },
+    'katz': { 
+      bg: 'bg-purple-50 dark:bg-purple-950/30', 
+      text: 'text-purple-700 dark:text-purple-300', 
+      border: 'border-purple-200 dark:border-purple-400/50', 
+      leftBorder: 'border-l-purple-500 dark:border-l-purple-400' 
+    },
+    'pferd': { 
+      bg: 'bg-green-50 dark:bg-green-950/30', 
+      text: 'text-green-700 dark:text-green-300', 
+      border: 'border-green-200 dark:border-green-400/50', 
+      leftBorder: 'border-l-green-500 dark:border-l-green-400' 
+    },
+    'horse': { 
+      bg: 'bg-green-50 dark:bg-green-950/30', 
+      text: 'text-green-700 dark:text-green-300', 
+      border: 'border-green-200 dark:border-green-400/50', 
+      leftBorder: 'border-l-green-500 dark:border-l-green-400' 
+    },
+    'vogel': { 
+      bg: 'bg-yellow-50 dark:bg-yellow-950/30', 
+      text: 'text-yellow-700 dark:text-yellow-300', 
+      border: 'border-yellow-200 dark:border-yellow-400/50', 
+      leftBorder: 'border-l-yellow-500 dark:border-l-yellow-400' 
+    },
+    'bird': { 
+      bg: 'bg-yellow-50 dark:bg-yellow-950/30', 
+      text: 'text-yellow-700 dark:text-yellow-300', 
+      border: 'border-yellow-200 dark:border-yellow-400/50', 
+      leftBorder: 'border-l-yellow-500 dark:border-l-yellow-400' 
+    },
+    'orange': { 
+      bg: 'bg-orange-50 dark:bg-orange-950/30', 
+      text: 'text-orange-700 dark:text-orange-300', 
+      border: 'border-orange-200 dark:border-orange-400/50', 
+      leftBorder: 'border-l-orange-500 dark:border-l-orange-400' 
+    },
+    'gray': { 
+      bg: 'bg-gray-50 dark:bg-gray-800/30', 
+      text: 'text-gray-700 dark:text-gray-300', 
+      border: 'border-gray-200 dark:border-gray-600/50', 
+      leftBorder: 'border-l-gray-500 dark:border-l-gray-400' 
+    }
   };
 
   const colors = colorMap[normalizedSpecies as keyof typeof colorMap] || colorMap.gray;
@@ -160,7 +215,7 @@ export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactP
   const petInfo = getPetDisplayInfo(plan);
 
   return (
-    <Card className={`relative group h-full border-l-4 ${petInfo.colorClasses.leftBorder} bg-white shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02]`}>
+    <Card className={`relative group h-full border-l-4 ${petInfo.colorClasses.leftBorder} bg-background shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02]`}>
       <CardHeader className="pb-3">
         {/* Pet Badge */}
         <Badge 
@@ -174,14 +229,14 @@ export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactP
         </Badge>
 
         {/* Title */}
-        <h3 className="font-semibold text-lg leading-tight line-clamp-2 text-gray-900">
+        <h3 className="font-semibold text-lg leading-tight line-clamp-2 text-foreground">
           {plan.title}
         </h3>
 
         {/* Progress */}
         <div className="space-y-2">
           <Progress value={progressPercentage} className="h-2" />
-          <div className="flex justify-between items-center text-xs text-gray-600">
+          <div className="flex justify-between items-center text-xs text-muted-foreground">
             <span>{completedSteps}/{totalSteps} Schritte</span>
             <span>{totalPoints} Punkte</span>
           </div>
@@ -193,7 +248,7 @@ export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactP
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             {progressPercentage === 100 ? (
-              <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">
+              <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300 dark:border-green-400/50">
                 <CheckCircle className="h-3 w-3 mr-1" />
                 Abgeschlossen
               </Badge>
