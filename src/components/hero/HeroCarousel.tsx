@@ -229,8 +229,8 @@ export const HeroCarousel = () => {
             {/* Enhanced Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 via-black/10 to-transparent" />
             
-            {/* Enhanced Content Overlay */}
-            <div className="absolute inset-0 flex items-end justify-center p-6 sm:p-8 md:p-12 lg:p-16">
+            {/* Enhanced Content Overlay - Desktop Only */}
+            <div className="absolute inset-0 hidden sm:flex items-end justify-center p-6 sm:p-8 md:p-12 lg:p-16">
               <div className="w-full max-w-4xl text-center text-white">
                 <div className={cn(
                   "transform transition-all duration-700 delay-200",
@@ -238,7 +238,7 @@ export const HeroCarousel = () => {
                     ? "opacity-100 translate-y-0" 
                     : "opacity-0 translate-y-8"
                 )}>
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight drop-shadow-lg">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 leading-tight drop-shadow-lg">
                     {image.title}
                   </h3>
                   <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 leading-relaxed max-w-2xl mx-auto drop-shadow-md">
@@ -357,6 +357,27 @@ export const HeroCarousel = () => {
           </div>
         </div>
       )}
+
+      {/* Mobile Content Section - Below Carousel */}
+      <div className="block sm:hidden">
+        <div className="bg-gradient-to-br from-background to-background/95 backdrop-blur-sm border-t border-border/20">
+          <div className="p-4 sm:p-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className={cn(
+                "transform transition-all duration-700 delay-300",
+                "opacity-100 translate-y-0"
+              )}>
+                <h3 className="text-2xl sm:text-3xl font-bold mb-3 leading-tight text-foreground">
+                  {carouselImages[currentIndex]?.title}
+                </h3>
+                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                  {carouselImages[currentIndex]?.subtitle}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }; 
