@@ -44,10 +44,10 @@ export const TopNavigationBar = ({
 
   // Debug logging for admin status
   useEffect(() => {
-    console.log('🔐 TopNavigationBar: Admin status:', { 
-      isAdmin, 
-      showAdminAccess, 
-      isAuthenticated 
+    console.log('🔐 TopNavigationBar: Admin status:', {
+      isAdmin,
+      showAdminAccess,
+      isAuthenticated
     });
   }, [isAdmin, showAdminAccess, isAuthenticated]);
 
@@ -181,9 +181,9 @@ export const TopNavigationBar = ({
                   <div className="py-2">
                     {/* Theme Toggle and Language Switcher for Mobile */}
                     <div className="px-4 py-3 border-b border-border">
-                      <ThemeToggle 
-                        variant="ghost" 
-                        size="sm" 
+                      <ThemeToggle
+                        variant="ghost"
+                        size="sm"
                         showLabel={true}
                         className="w-full justify-start"
                       />
@@ -211,9 +211,9 @@ export const TopNavigationBar = ({
           ) : (
             /* Desktop Navigation */
             <div className="flex items-center gap-2">
-              <ThemeToggle 
-                variant="ghost" 
-                size="sm" 
+              <ThemeToggle
+                variant="ghost"
+                size="sm"
                 className="mr-2"
               />
               <LanguageSwitcher />
@@ -227,7 +227,14 @@ export const TopNavigationBar = ({
                   className="flex items-center gap-3 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <item.icon className="h-4 w-4" />
-                  <span className="hidden xl:block">{item.label}</span>
+
+                  {
+                    item.icon === LogOut ? (
+                      null
+                    ) : (
+                      <span className="hidden xl:block">{item.label}</span>
+                    )
+                  }
                 </Button>
               ))}
             </div>

@@ -76,10 +76,10 @@ export const Testimonials = () => {
   const handleMouseLeave = () => setIsAutoPlaying(true);
 
   return (
-    <section id="testimonials" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-background to-muted/20">
+    <section id="testimonials" className="md:py-4 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+        <div className="text-center mb-4 md:mb-8">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6">
             {t('testimonials.title')}
           </h2>
@@ -241,7 +241,7 @@ export const Testimonials = () => {
         </div>
 
         {/* Bottom Rating */}
-        <div className="text-center mt-12 sm:mt-16">
+        <div className="text-center mt-4 md:mt-6">
           <div className="inline-flex items-center gap-3 bg-accent/20 px-6 py-3 sm:px-8 sm:py-4 rounded-full border border-accent/30">
             <Star className="w-5 h-5 sm:w-6 sm:h-6 fill-yellow-400 text-yellow-400" />
             <span className="font-semibold text-foreground text-sm sm:text-base">

@@ -49,7 +49,7 @@ export const FAQ = () => {
   }
 ];
   return (
-    <section id="faq" className="py-10 bg-secondary/30">
+    <section id="faq" className="py-4 md:py-8 bg-secondary/30">
       {/* Schema.org FAQ structured data */}
       <script type="application/ld+json">
         {JSON.stringify({
@@ -67,7 +67,7 @@ export const FAQ = () => {
       </script>
 
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div className="text-center mb-4 md:mb-8">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
             {t('faq.title')}
           </h2>

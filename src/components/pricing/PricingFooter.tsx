@@ -5,7 +5,7 @@ export const PricingFooter = () => {
   const { t } = useTranslations();
   
   return (
-    <div className="text-center mt-12 text-sm text-muted-foreground max-w-2xl mx-auto">
+    <div className="text-center mt-6 text-sm text-muted-foreground max-w-2xl mx-auto">
       <p>
         {t('pricing.footer.features')}
       </p>
