@@ -2234,27 +2234,6 @@
       "emailNotConfirmed": "Bitte bestätigen Sie zuerst Ihre E-Mail-Adresse."
     }
   },
-  "networkDiagnostic": {
-    "title": "Netzwerk-Diagnose",
-    "runDiagnostic": "Vollständige Diagnose ausführen",
-    "running": "Diagnose läuft...",
-    "ok": "OK",
-    "failed": "FEHLGESCHLAGEN",
-    "networkInformation": "Netzwerk-Informationen",
-    "onlineStatus": "Online-Status",
-    "online": "Online",
-    "offline": "Offline",
-    "connectionType": "Verbindungstyp",
-    "downlink": "Downlink",
-    "rtt": "RTT",
-    "supabaseConnectivity": "Supabase-Verbindung",
-    "basicConnection": "Grundverbindung",
-    "authentication": "Authentifizierung",
-    "databaseRead": "Datenbank-Lesen",
-    "databaseWrite": "Datenbank-Schreiben",
-    "edgeFunctions": "Edge-Funktionen",
-    "recommendations": "Empfehlungen"
-  },
   "auth": {
     "login": "Anmelden",
     "register": "Registrieren",
