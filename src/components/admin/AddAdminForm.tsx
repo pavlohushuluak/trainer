@@ -34,25 +34,26 @@ export const AddAdminForm = ({ onAddAdmin, isAdding }: AddAdminFormProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
           <UserPlus className="h-5 w-5" />
           {t('adminAddAdmin.title')}
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-sm sm:text-base">
           {t('adminAddAdmin.description')}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="flex gap-4">
+      <CardContent className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1">
             <Input
               placeholder={t('adminAddAdmin.emailPlaceholder')}
               value={newAdminEmail}
               onChange={(e) => setNewAdminEmail(e.target.value)}
+              className="w-full"
             />
           </div>
           <Select value={newAdminRole} onValueChange={(value: 'admin' | 'support') => setNewAdminRole(value)}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -63,13 +64,14 @@ export const AddAdminForm = ({ onAddAdmin, isAdding }: AddAdminFormProps) => {
           <Button 
             onClick={handleSubmit}
             disabled={!newAdminEmail.trim() || isAdding}
+            className="w-full sm:w-auto"
           >
             {isAdding ? (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             ) : (
               <Plus className="h-4 w-4 mr-2" />
             )}
-            {t('adminAddAdmin.addButton')}
+            <span className="text-sm sm:text-base">{t('adminAddAdmin.addButton')}</span>
           </Button>
         </div>
       </CardContent>

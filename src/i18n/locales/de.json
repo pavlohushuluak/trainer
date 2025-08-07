@@ -1689,13 +1689,13 @@
     }
   },
   "adminUsersList": {
-    "title": "Admin-Benutzer ({count})",
+    "title": "Admin-Benutzer ({{count}})",
     "noAdmins": "Noch keine Admin-Benutzer"
   },
   "adminUserCard": {
-    "added": "Hinzugefügt: {date}",
-    "addedBy": "von {email}",
-    "lastLogin": "Letzte Anmeldung: {date}",
+    "added": "Hinzugefügt: {{date}}",
+    "addedBy": "von {{email}}",
+    "lastLogin": "Letzte Anmeldung: {{date}}",
     "status": {
       "active": "Aktiv",
       "inactive": "Inaktiv"
@@ -1706,13 +1706,13 @@
     },
     "removeDialog": {
       "title": "Admin entfernen",
-      "description": "Sind Sie sicher, dass Sie {email} als Admin entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "description": "Sind Sie sicher, dass Sie {{email}} als Admin entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
       "cancel": "Abbrechen",
       "remove": "Entfernen"
     }
   },
   "adminDebug": {
-    "debugInfo": "Debug: {count} admin users found"
+    "debugInfo": "Debug: {{count}} admin users found"
   },
   "adminEmailManagement": {
     "title": "📧 Email Management",

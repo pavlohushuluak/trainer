@@ -120,13 +120,13 @@ export const EmailLogs = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'sent':
-        return <Badge variant="default" className="bg-green-100 text-green-800">✅ Versendet</Badge>;
+        return <Badge variant="default" className="bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 text-xs">✅ Versendet</Badge>;
       case 'failed':
-        return <Badge variant="destructive">❌ Fehler</Badge>;
+        return <Badge variant="destructive" className="text-xs">❌ Fehler</Badge>;
       case 'processed':
-        return <Badge variant="secondary">⚙️ Verarbeitet</Badge>;
+        return <Badge variant="secondary" className="text-xs">⚙️ Verarbeitet</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Badge variant="outline" className="text-xs">{status}</Badge>;
     }
   };
 
@@ -178,7 +178,7 @@ export const EmailLogs = () => {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Lade E-Mail-Logs...</span>
+        <span className="ml-2 text-foreground">Lade E-Mail-Logs...</span>
       </div>
     );
   }
@@ -186,55 +186,55 @@ export const EmailLogs = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
           <Mail className="h-5 w-5" />
           📧 E-Mail-Logs & Historie
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-sm sm:text-base">
           Übersicht aller versendeten E-Mails und deren Status
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 sm:space-y-6">
         {/* Statistics */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
-          <div className="text-center p-3 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{totalCount}</div>
-            <div className="text-sm text-blue-700">Gesamt</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div className="text-center p-2 sm:p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+            <div className="text-lg sm:text-2xl font-bold text-blue-600 dark:text-blue-400">{totalCount}</div>
+            <div className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">Gesamt</div>
           </div>
-          <div className="text-center p-3 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">
+          <div className="text-center p-2 sm:p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+            <div className="text-lg sm:text-2xl font-bold text-green-600 dark:text-green-400">
               {logs.filter(l => l.status === 'sent').length}
             </div>
-            <div className="text-sm text-green-700">Versendet</div>
+            <div className="text-xs sm:text-sm text-green-700 dark:text-green-300">Versendet</div>
           </div>
-          <div className="text-center p-3 bg-red-50 rounded-lg">
-            <div className="text-2xl font-bold text-red-600">
+          <div className="text-center p-2 sm:p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+            <div className="text-lg sm:text-2xl font-bold text-red-600 dark:text-red-400">
               {logs.filter(l => l.status === 'failed').length}
             </div>
-            <div className="text-sm text-red-700">Fehler</div>
+            <div className="text-xs sm:text-sm text-red-700 dark:text-red-300">Fehler</div>
           </div>
-          <div className="text-center p-3 bg-gray-50 rounded-lg">
-            <div className="text-2xl font-bold text-gray-600">
+          <div className="text-center p-2 sm:p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+            <div className="text-lg sm:text-2xl font-bold text-gray-600 dark:text-gray-300">
               {logs.filter(l => l.status === 'processed').length}
             </div>
-            <div className="text-sm text-gray-700">Verarbeitet</div>
+            <div className="text-xs sm:text-sm text-gray-700 dark:text-gray-400">Verarbeitet</div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-3 items-center">
-          <div className="flex items-center gap-2">
-            <Search className="h-4 w-4" />
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3 items-start sm:items-center">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <Search className="h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Suchen nach E-Mail, Betreff..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-64"
+              className="w-full sm:w-64"
             />
           </div>
           
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -246,7 +246,7 @@ export const EmailLogs = () => {
           </Select>
 
           <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48">
               <SelectValue placeholder="E-Mail-Typ" />
             </SelectTrigger>
             <SelectContent>
@@ -260,60 +260,63 @@ export const EmailLogs = () => {
             </SelectContent>
           </Select>
 
-          <Button onClick={refreshLogs} variant="outline" size="sm">
-            🔄 Aktualisieren
-          </Button>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Button onClick={refreshLogs} variant="outline" size="sm" className="flex-1 sm:flex-none">
+              🔄 Aktualisieren
+            </Button>
 
-          <Button onClick={exportLogs} variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-1" />
-            CSV Export
-          </Button>
+            <Button onClick={exportLogs} variant="outline" size="sm" className="flex-1 sm:flex-none">
+              <Download className="h-4 w-4 mr-1" />
+              <span className="hidden sm:inline">CSV Export</span>
+              <span className="sm:hidden">Export</span>
+            </Button>
+          </div>
         </div>
 
         {/* Results count */}
-        <div className="text-sm text-gray-600">
+        <div className="text-xs sm:text-sm text-muted-foreground">
           {filteredLogs.length} von {totalCount} E-Mails
           {searchQuery && ` (gefiltert nach "${searchQuery}")`}
         </div>
 
         {/* Email logs table */}
-        <div className="border rounded-lg">
+        <div className="border rounded-lg border-border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Datum</TableHead>
-                <TableHead>Typ</TableHead>
-                <TableHead>Empfänger</TableHead>
-                <TableHead>Betreff</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Details</TableHead>
+                <TableHead className="text-xs sm:text-sm">Datum</TableHead>
+                <TableHead className="text-xs sm:text-sm">Typ</TableHead>
+                <TableHead className="text-xs sm:text-sm hidden sm:table-cell">Empfänger</TableHead>
+                <TableHead className="text-xs sm:text-sm">Betreff</TableHead>
+                <TableHead className="text-xs sm:text-sm">Status</TableHead>
+                <TableHead className="text-xs sm:text-sm hidden lg:table-cell">Details</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredLogs.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground text-sm">
                     Keine E-Mail-Logs gefunden
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredLogs.map((log) => (
-                  <TableRow key={log.id} className="hover:bg-gray-50">
-                    <TableCell className="font-medium">
+                  <TableRow key={log.id} className="hover:bg-muted/50">
+                    <TableCell className="font-medium text-xs sm:text-sm">
                       {format(new Date(log.created_at), 'dd.MM.yyyy HH:mm', { locale: de })}
                     </TableCell>
-                    <TableCell>{getTypeBadge(log.type)}</TableCell>
-                    <TableCell className="max-w-48 truncate">
+                    <TableCell className="text-xs sm:text-sm">{getTypeBadge(log.type)}</TableCell>
+                    <TableCell className="max-w-32 sm:max-w-48 truncate text-xs sm:text-sm hidden sm:table-cell">
                       {log.recipient_email || '-'}
                     </TableCell>
-                    <TableCell className="max-w-64 truncate">
+                    <TableCell className="max-w-32 sm:max-w-64 truncate text-xs sm:text-sm">
                       {log.title}
                     </TableCell>
-                    <TableCell>{getStatusBadge(log.status)}</TableCell>
-                    <TableCell>
-                      <div className="max-w-96 truncate text-sm text-gray-600">
+                    <TableCell className="text-xs sm:text-sm">{getStatusBadge(log.status)}</TableCell>
+                    <TableCell className="text-xs sm:text-sm hidden lg:table-cell">
+                      <div className="max-w-48 sm:max-w-96 truncate text-muted-foreground">
                         {log.status === 'failed' && log.error_details ? (
-                          <span className="text-red-600">{log.error_details}</span>
+                          <span className="text-red-600 dark:text-red-400">{log.error_details}</span>
                         ) : (
                           log.message
                         )}
@@ -328,8 +331,8 @@ export const EmailLogs = () => {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-600">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs sm:text-sm text-muted-foreground">
               Seite {currentPage} von {totalPages}
             </div>
             <div className="flex gap-2">
@@ -338,6 +341,7 @@ export const EmailLogs = () => {
                 size="sm"
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
+                className="text-xs sm:text-sm"
               >
                 Zurück
               </Button>
@@ -346,6 +350,7 @@ export const EmailLogs = () => {
                 size="sm"
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
+                className="text-xs sm:text-sm"
               >
                 Weiter
               </Button>
