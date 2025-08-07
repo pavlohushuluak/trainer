@@ -2267,8 +2267,9 @@
     "generalError": "An error occurred. Please try again.",
     "emailAlreadyRegistered": "This email address is already registered. Please log in.",
     "registrationSuccess": "Registration successful! Please check your email for confirmation.",
-    "termsAgreement": "By logging in, you agree to our Terms and Privacy Policy.",
+    "termsAgreement": "By logging in, you agree to our",
     "alreadyHaveAccountText": "Already have an account?",
+    "dontHaveAccountText": "Don't have an account?",
     "loginNow": "Login now",
     "oauth": {
       "preparing": "Preparing login",

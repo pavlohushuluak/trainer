@@ -2267,8 +2267,9 @@
     "generalError": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
     "emailAlreadyRegistered": "Diese E-Mail-Adresse ist bereits registriert. Bitte melden Sie sich an.",
     "registrationSuccess": "Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mail zur Bestätigung.",
-    "termsAgreement": "Durch die Anmeldung stimmen Sie unseren AGB und Datenschutzrichtlinien zu.",
+    "termsAgreement": "Durch die Anmeldung stimmen Sie unseren",
     "alreadyHaveAccountText": "Haben Sie bereits ein Konto?",
+    "dontHaveAccountText": "Haben Sie noch kein Konto?",
     "loginNow": "Jetzt anmelden",
     "oauth": {
       "preparing": "Anmeldung wird vorbereitet",

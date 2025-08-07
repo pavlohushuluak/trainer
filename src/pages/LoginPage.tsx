@@ -19,6 +19,9 @@ import { useStickyHeader } from '@/hooks/useStickyHeader';
 import { useTranslations } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
 import { getCurrentLanguage } from '@/utils/languageSupport';
+import { Checkbox } from '@/components/ui/checkbox';
+import { AGBModal } from '@/components/legal/AGBModal';
+import { ImpressumModal } from '@/components/legal/ImpressumModal';
 
 const LoginPage = () => {
   const { signIn, signUp, user } = useAuth();
@@ -36,6 +39,9 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('signin');
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [termsAgreed, setTermsAgreed] = useState(false);
 
   // Check localStorage for alreadySignedUp value on component mount
   useEffect(() => {
@@ -64,12 +70,13 @@ const LoginPage = () => {
            password === confirmPassword && 
            isPasswordStrong &&
            firstName.trim() && 
-           lastName.trim();
-  }, [email, password, confirmPassword, isPasswordStrong, firstName, lastName]);
+           lastName.trim() &&
+           termsAgreed;
+  }, [email, password, confirmPassword, isPasswordStrong, firstName, lastName, termsAgreed]);
 
   const isSignInValid = useMemo(() => {
-    return email && password;
-  }, [email, password]);
+    return email && password && termsAgreed;
+  }, [email, password, termsAgreed]);
 
   const language = getCurrentLanguage();
 
@@ -160,6 +167,7 @@ const LoginPage = () => {
     setLastName('');
     setError('');
     setMessage('');
+    setTermsAgreed(false);
   };
 
   return (
@@ -169,32 +177,32 @@ const LoginPage = () => {
       <AuthErrorDisplay />
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
-        <div className="w-full max-w-md sm:max-w-lg space-y-4 sm:space-y-6">
+      <div className="flex-1 flex items-center justify-center p-3 sm:p-4 lg:p-6">
+        <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg space-y-3 sm:space-y-4 lg:space-y-6">
 
         {/* Main Card */}
         <Card className="border-0 shadow-2xl bg-card/80 backdrop-blur-sm">
-          <CardHeader className="text-center pb-4 sm:pb-6">
-            <div className="mx-auto w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mb-4">
-              <Shield className="h-6 w-6 text-primary-foreground" />
+          <CardHeader className="text-center pb-3 sm:pb-4 lg:pb-6 px-4 sm:px-6">
+            <div className="mx-auto w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+              <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
             </div>
-            <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">
+            <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">
               {t('auth.welcome')}
             </CardTitle>
-            <CardDescription className="text-muted-foreground mt-2 text-sm">
+            <CardDescription className="text-muted-foreground mt-2 text-xs sm:text-sm">
               {t('auth.secureLogin')}
             </CardDescription>
           </CardHeader>
           
-          <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-4 sm:pb-6">
+          <CardContent className="space-y-3 sm:space-y-4 lg:space-y-6 px-3 sm:px-4 lg:px-6 pb-3 sm:pb-4 lg:pb-6">
             {/* OAuth Section */}
-            <div className="space-y-3 sm:space-y-4">
-              <div className="text-center space-y-2">
-                <div className="flex items-center justify-center gap-2 text-primary">
-                  <Sparkles className="h-4 w-4" />
-                  <h3 className="text-sm font-semibold">{t('auth.fastestLogin')}</h3>
+            <div className="space-y-2 sm:space-y-3 lg:space-y-4">
+              <div className="text-center space-y-1 sm:space-y-2">
+                <div className="flex items-center justify-center gap-1 sm:gap-2 text-primary">
+                  <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <h3 className="text-xs sm:text-sm font-semibold">{t('auth.fastestLogin')}</h3>
                 </div>
-                <p className="text-xs text-muted-foreground px-2">
+                <p className="text-xs text-muted-foreground px-1 sm:px-2">
                   {t('auth.oneClickStart')}
                 </p>
               </div>
@@ -220,33 +228,35 @@ const LoginPage = () => {
                 <Separator className="w-full" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-3 text-muted-foreground font-medium">{t('auth.or')}</span>
+                <span className="bg-card px-2 sm:px-3 text-muted-foreground font-medium">{t('auth.or')}</span>
               </div>
             </div>
 
             {/* Traditional Login */}
-            <div className="space-y-3 sm:space-y-4">
+            <div className="space-y-2 sm:space-y-3 lg:space-y-4">
               <Tabs value={activeTab} onValueChange={(value) => { setActiveTab(value); clearForm(); }} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg text-xs sm:text-sm">
                   <TabsTrigger 
                     value="signin" 
-                    className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground"
+                    className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground py-2 sm:py-1.5"
                   >
-                    <User className="h-4 w-4 mr-2" />
-                    {t('auth.login')}
+                    <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden xs:inline">{t('auth.login')}</span>
+                    <span className="xs:hidden">Login</span>
                   </TabsTrigger>
                   <TabsTrigger 
                     value="signup"
-                    className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground"
+                    className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground py-2 sm:py-1.5"
                   >
-                    <Lock className="h-4 w-4 mr-2" />
-                    {t('auth.register')}
+                    <Lock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden xs:inline">{t('auth.register')}</span>
+                    <span className="xs:hidden">Sign Up</span>
                   </TabsTrigger>
                 </TabsList>
                 
                 {/* Sign In Tab */}
-                <TabsContent value="signin" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                  <form onSubmit={handleSignIn} className="space-y-3 sm:space-y-4">
+                <TabsContent value="signin" className="space-y-2 sm:space-y-3 lg:space-y-4 mt-3 sm:mt-4 lg:mt-6">
+                  <form onSubmit={handleSignIn} className="space-y-2 sm:space-y-3 lg:space-y-4">
                     <EmailInput
                       id="signin-email"
                       label={t('auth.email')}
@@ -272,20 +282,51 @@ const LoginPage = () => {
                       </Link>
                     </div>
                     
+                    {/* Terms Agreement Checkbox */}
+                    <div className="flex items-start space-x-2 p-3 bg-muted/30 rounded-lg border border-border/50">
+                      <Checkbox
+                        id="terms-agreement-signin"
+                        checked={termsAgreed}
+                        onCheckedChange={(checked) => setTermsAgreed(checked as boolean)}
+                        className="mt-0.5"
+                      />
+                      <label htmlFor="terms-agreement-signin" className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {t('auth.termsAgreement')}{' '}
+                        <button 
+                          type="button"
+                          onClick={() => setShowTermsModal(true)}
+                          className="text-primary hover:underline font-medium transition-colors"
+                        >
+                          {t('auth.legal.terms')}
+                        </button>
+                        {' '}{t('auth.legal.and')}{' '}
+                        <button 
+                          type="button"
+                          onClick={() => setShowPrivacyModal(true)}
+                          className="text-primary hover:underline font-medium transition-colors"
+                        >
+                          {t('auth.legal.privacy')}
+                        </button>
+                        .
+                      </label>
+                    </div>
+                    
                     <Button 
                       type="submit" 
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base" 
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-xs sm:text-sm lg:text-base py-2 sm:py-2.5" 
                       disabled={loading || !isSignInValid}
                     >
                       {loading ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {t('auth.loggingIn')}
+                          <Loader2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                          <span className="hidden xs:inline">{t('auth.loggingIn')}</span>
+                          <span className="xs:hidden">Logging in...</span>
                         </>
                       ) : (
                         <>
-                          <User className="mr-2 h-4 w-4" />
-                          {t('auth.login')}
+                          <User className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                          <span className="hidden xs:inline">{t('auth.login')}</span>
+                          <span className="xs:hidden">Login</span>
                         </>
                       )}
                     </Button>
@@ -293,12 +334,12 @@ const LoginPage = () => {
                 </TabsContent>
                 
                 {/* Sign Up Tab */}
-                <TabsContent value="signup" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                  <form onSubmit={handleSignUp} className="space-y-3 sm:space-y-4">
+                <TabsContent value="signup" className="space-y-2 sm:space-y-3 lg:space-y-4 mt-3 sm:mt-4 lg:mt-6">
+                  <form onSubmit={handleSignUp} className="space-y-2 sm:space-y-3 lg:space-y-4">
                     {/* Name Fields */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-sm font-medium">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
+                      <div className="space-y-1 sm:space-y-2">
+                        <Label htmlFor="firstName" className="text-xs sm:text-sm font-medium">
                           {t('auth.firstName')} <span className="text-red-500">*</span>
                         </Label>
                         <Input
@@ -307,11 +348,11 @@ const LoginPage = () => {
                           placeholder={t('auth.firstNamePlaceholder')}
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
-                          className="bg-background border-border focus:border-primary focus:ring-primary"
+                          className="bg-background border-border focus:border-primary focus:ring-primary text-xs sm:text-sm py-2 sm:py-2.5"
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-sm font-medium">
+                      <div className="space-y-1 sm:space-y-2">
+                        <Label htmlFor="lastName" className="text-xs sm:text-sm font-medium">
                           {t('auth.lastName')} <span className="text-red-500">*</span>
                         </Label>
                         <Input
@@ -320,7 +361,7 @@ const LoginPage = () => {
                           placeholder={t('auth.lastNamePlaceholder')}
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
-                          className="bg-background border-border focus:border-primary focus:ring-primary"
+                          className="bg-background border-border focus:border-primary focus:ring-primary text-xs sm:text-sm py-2 sm:py-2.5"
                         />
                       </div>
                     </div>
@@ -351,20 +392,50 @@ const LoginPage = () => {
                       required
                     />
                     
+                    {/* Terms Agreement Checkbox */}
+                    <div className="flex items-start space-x-2 p-3 bg-muted/30 rounded-lg border border-border/50">
+                      <Checkbox
+                        id="terms-agreement-signup"
+                        checked={termsAgreed}
+                        onCheckedChange={(checked) => setTermsAgreed(checked as boolean)}
+                        className="mt-0.5"
+                      />
+                      <label htmlFor="terms-agreement-signup" className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {t('auth.termsAgreement')}{' '}
+                        <button 
+                          type="button"
+                          onClick={() => setShowTermsModal(true)}
+                          className="text-primary hover:underline font-medium transition-colors"
+                        >
+                          {t('auth.legal.terms')}
+                        </button>
+                        {' '}{t('auth.legal.and')}{' '}
+                        <button 
+                          type="button"
+                          onClick={() => setShowPrivacyModal(true)}
+                          className="text-primary hover:underline font-medium transition-colors"
+                        >
+                          {t('auth.legal.privacy')}
+                        </button>
+                      </label>
+                    </div>
+                    
                     <Button 
                       type="submit" 
-                      className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base" 
+                      className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-xs sm:text-sm lg:text-base py-2 sm:py-2.5" 
                       disabled={loading || !isSignUpValid}
                     >
                       {loading ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {t('auth.creatingAccount')}
+                          <Loader2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                          <span className="hidden xs:inline">{t('auth.creatingAccount')}</span>
+                          <span className="xs:hidden">Creating...</span>
                         </>
                       ) : (
                         <>
-                          <Lock className="mr-2 h-4 w-4" />
-                          {t('auth.createAccount')}
+                          <Lock className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                          <span className="hidden xs:inline">{t('auth.createAccount')}</span>
+                          <span className="xs:hidden">Sign Up</span>
                         </>
                       )}
                     </Button>
@@ -393,28 +464,9 @@ const LoginPage = () => {
           </CardContent>
         </Card>
 
-        {/* Footer */}
-        <div className="text-center text-xs sm:text-sm text-muted-foreground space-y-3 px-2">
-          {/* Terms and Privacy Policy */}
-          <p className="text-center">
-            {t('auth.termsAgreement')}{' '}
-            <button 
-              onClick={() => navigate('/agb')}
-              className="text-primary hover:underline font-medium transition-colors"
-            >
-              {t('auth.legal.terms')}
-            </button>
-            {' '}{t('auth.legal.and')}{' '}
-            <button 
-              onClick={() => navigate('/datenschutz')}
-              className="text-primary hover:underline font-medium transition-colors"
-            >
-              {t('auth.legal.privacy')}
-            </button>
-          </p>
-          
-          {/* Account Switch Link */}
-          <div className="flex items-center justify-center gap-1">
+        {/* Account Switch Link */}
+        <div className="text-center text-xs sm:text-sm text-muted-foreground px-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1">
             <span>
               {activeTab === 'signin' 
                 ? t('auth.dontHaveAccountText') 
@@ -437,6 +489,10 @@ const LoginPage = () => {
             </button>
           </div>
         </div>
+        
+        {/* Legal Modals */}
+        <AGBModal isOpen={showTermsModal} onClose={() => setShowTermsModal(false)} />
+        <ImpressumModal isOpen={showPrivacyModal} onClose={() => setShowPrivacyModal(false)} />
       </div>
     </div>
   </div>
