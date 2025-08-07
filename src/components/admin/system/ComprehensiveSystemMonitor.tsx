@@ -133,6 +133,8 @@ export const ComprehensiveSystemMonitor = () => {
   const summary = testRunner.getSummary();
   const filteredResults = selectedCategory === 'all' 
     ? results 
+    : selectedCategory === 'critical'
+    ? results.filter(r => r.critical)
     : results.filter(r => r.category === selectedCategory);
 
   const overallProgress = summary.total > 0 
