@@ -8,10 +8,6 @@ import { cn } from "@/lib/utils";
 
 export const Testimonials = () => {
   const { t } = useTranslations();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  
   const testimonials = t('testimonials.stories', { returnObjects: true }) as Array<{
     animal: string;
     name: string;
@@ -19,20 +15,32 @@ export const Testimonials = () => {
     story: string;
     rating: number;
   }>;
+  
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  // Calculate slides for different screen sizes
+  const totalSlides = testimonials.length;
+  const slidesForDesktop = Math.max(1, testimonials.length - 1); // -1 because we show 2 cards, so last slide shows last 2 cards
 
   const nextSlide = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    // On desktop, we have fewer slides since we show 2 cards at once
+    const maxSlides = window.innerWidth >= 768 ? slidesForDesktop : totalSlides;
+    setCurrentIndex((prev) => (prev + 1) % maxSlides);
     setTimeout(() => setIsTransitioning(false), 300);
-  }, [testimonials.length, isTransitioning]);
+  }, [totalSlides, slidesForDesktop, isTransitioning]);
 
   const prevSlide = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    // On desktop, we have fewer slides since we show 2 cards at once
+    const maxSlides = window.innerWidth >= 768 ? slidesForDesktop : totalSlides;
+    setCurrentIndex((prev) => (prev - 1 + maxSlides) % maxSlides);
     setTimeout(() => setIsTransitioning(false), 300);
-  }, [testimonials.length, isTransitioning]);
+  }, [totalSlides, slidesForDesktop, isTransitioning]);
 
   const goToSlide = useCallback((index: number) => {
     if (isTransitioning || index === currentIndex) return;
@@ -40,6 +48,17 @@ export const Testimonials = () => {
     setCurrentIndex(index);
     setTimeout(() => setIsTransitioning(false), 300);
   }, [currentIndex, isTransitioning]);
+
+  // Get current slides based on screen size
+  const getCurrentSlides = () => {
+    if (window.innerWidth >= 768) {
+      // Desktop: show 2 cards, move by 1
+      return [currentIndex, currentIndex + 1].filter(i => i < testimonials.length);
+    } else {
+      // Mobile: show 1 card
+      return [currentIndex];
+    }
+  };
 
   // Auto-play functionality
   useEffect(() => {
@@ -79,55 +98,121 @@ export const Testimonials = () => {
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border border-border/50 shadow-2xl">
             {/* Testimonial Cards */}
             <div className="relative h-[400px] sm:h-[450px] lg:h-[500px]">
-              {testimonials.map((testimonial, index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    "absolute inset-0 transition-all duration-500 ease-in-out",
-                    index === currentIndex
-                      ? "opacity-100 translate-x-0"
-                      : index === (currentIndex - 1 + testimonials.length) % testimonials.length
-                      ? "opacity-0 -translate-x-full"
-                      : "opacity-0 translate-x-full"
-                  )}
-                >
-                  <Card className="h-full border-0 shadow-none bg-transparent">
-                    <CardContent className="h-full flex flex-col justify-center p-8 sm:p-10 lg:p-12">
-                      {/* Quote Icon */}
-                      <div className="text-4xl sm:text-5xl lg:text-6xl text-primary/20 mb-6">
-                        "
-                      </div>
-                      
-                      {/* Testimonial Content */}
-                      <div className="flex-1">
-                        <blockquote className="text-lg sm:text-xl lg:text-2xl text-foreground leading-relaxed mb-6 sm:mb-8">
-                          "{testimonial.story}"
-                        </blockquote>
-                        
-                        {/* Rating */}
-                        <div className="flex gap-1 mb-4 sm:mb-6">
-                          {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} className="w-5 h-5 sm:w-6 sm:h-6 fill-yellow-400 text-yellow-400" />
-                          ))}
+              {/* Mobile: Single card view */}
+              <div className="md:hidden">
+                {testimonials.map((testimonial, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      "absolute inset-0 transition-all duration-500 ease-in-out",
+                      index === currentIndex
+                        ? "opacity-100 translate-x-0"
+                        : index === (currentIndex - 1 + testimonials.length) % testimonials.length
+                        ? "opacity-0 -translate-x-full"
+                        : "opacity-0 translate-x-full"
+                    )}
+                  >
+                    <Card className="h-full border-0 shadow-none bg-transparent">
+                      <CardContent className="h-full flex flex-col justify-center p-8 sm:p-10 lg:p-12">
+                        {/* Quote Icon */}
+                        <div className="text-4xl sm:text-5xl lg:text-6xl text-primary/20 mb-6">
+                          "
                         </div>
                         
-                        {/* Author Info */}
-                        <div className="flex items-center gap-3 sm:gap-4">
-                          <span className="text-3xl sm:text-4xl lg:text-5xl">{testimonial.animal}</span>
-                          <div>
-                            <h3 className="font-semibold text-foreground text-base sm:text-lg">
-                              {testimonial.name}
-                            </h3>
-                            <p className="text-sm sm:text-base text-muted-foreground">
-                              {t('testimonials.withOwner')} {testimonial.owner}
-                            </p>
+                        {/* Testimonial Content */}
+                        <div className="flex-1">
+                          <blockquote className="text-lg sm:text-xl lg:text-2xl text-foreground leading-relaxed mb-6 sm:mb-8">
+                            "{testimonial.story}"
+                          </blockquote>
+                          
+                          {/* Rating */}
+                          <div className="flex gap-1 mb-4 sm:mb-6">
+                            {[...Array(testimonial.rating)].map((_, i) => (
+                              <Star key={i} className="w-5 h-5 sm:w-6 sm:h-6 fill-yellow-400 text-yellow-400" />
+                            ))}
+                          </div>
+                          
+                          {/* Author Info */}
+                          <div className="flex items-center gap-3 sm:gap-4">
+                            <span className="text-3xl sm:text-4xl lg:text-5xl">{testimonial.animal}</span>
+                            <div>
+                              <h3 className="font-semibold text-foreground text-base sm:text-lg">
+                                {testimonial.name}
+                              </h3>
+                              <p className="text-sm sm:text-base text-muted-foreground">
+                                {t('testimonials.withOwner')} {testimonial.owner}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))}
+                      </CardContent>
+                    </Card>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop: Two cards side by side */}
+              <div className="hidden md:block">
+                {testimonials.map((testimonial, index) => {
+                  const currentSlides = getCurrentSlides();
+                  const isVisible = currentSlides.includes(index);
+                  
+                  return (
+                    <div
+                      key={index}
+                      className={cn(
+                        "absolute inset-0 transition-all duration-500 ease-in-out",
+                        isVisible
+                          ? "opacity-100 translate-x-0"
+                          : index < currentIndex
+                          ? "opacity-0 -translate-x-full"
+                          : "opacity-0 translate-x-full"
+                      )}
+                      style={{
+                        transform: isVisible 
+                          ? `translateX(${(index - currentIndex) * 50}%)`
+                          : undefined
+                      }}
+                    >
+                      <Card className="h-full border-0 shadow-none bg-transparent" style={{width: "50%"}}>
+                        <CardContent className="h-full flex flex-col justify-center p-6 lg:p-8">
+                          {/* Quote Icon */}
+                          <div className="text-3xl lg:text-4xl text-primary/20 mb-4">
+                            "
+                          </div>
+                          
+                          {/* Testimonial Content */}
+                          <div className="flex-1">
+                            <blockquote className="text-base lg:text-lg text-foreground leading-relaxed mb-4 lg:mb-6">
+                              "{testimonial.story}"
+                            </blockquote>
+                            
+                            {/* Rating */}
+                            <div className="flex gap-1 mb-3 lg:mb-4">
+                              {[...Array(testimonial.rating)].map((_, i) => (
+                                <Star key={i} className="w-4 h-4 lg:w-5 lg:h-5 fill-yellow-400 text-yellow-400" />
+                              ))}
+                            </div>
+                            
+                            {/* Author Info */}
+                            <div className="flex items-center gap-2 lg:gap-3">
+                              <span className="text-2xl lg:text-3xl">{testimonial.animal}</span>
+                              <div>
+                                <h3 className="font-semibold text-foreground text-sm lg:text-base">
+                                  {testimonial.name}
+                                </h3>
+                                <p className="text-xs lg:text-sm text-muted-foreground">
+                                  {t('testimonials.withOwner')} {testimonial.owner}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Navigation Arrows */}
@@ -168,25 +253,51 @@ export const Testimonials = () => {
 
           {/* Dots Indicator */}
           <div className="flex justify-center items-center gap-2 mt-6 sm:mt-8">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                disabled={isTransitioning}
-                className={cn(
-                  "w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200",
-                  index === currentIndex
-                    ? "bg-primary scale-125"
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                )}
-              />
-            ))}
+            {/* Mobile dots */}
+            <div className="md:hidden">
+              {Array.from({ length: totalSlides }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  disabled={isTransitioning}
+                  className={cn(
+                    "w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200",
+                    index === currentIndex
+                      ? "bg-primary scale-125"
+                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                  )}
+                />
+              ))}
+            </div>
+            
+            {/* Desktop dots */}
+            <div className="hidden md:flex">
+              {Array.from({ length: slidesForDesktop }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  disabled={isTransitioning}
+                  className={cn(
+                    "w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200",
+                    index === currentIndex
+                      ? "bg-primary scale-125"
+                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                  )}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Slide Counter */}
           <div className="text-center mt-4 sm:mt-6">
-            <span className="text-sm sm:text-base text-muted-foreground">
-              {currentIndex + 1} / {testimonials.length}
+            {/* Mobile counter */}
+            <span className="md:hidden text-sm sm:text-base text-muted-foreground">
+              {currentIndex + 1} / {totalSlides}
+            </span>
+            
+            {/* Desktop counter */}
+            <span className="hidden md:inline text-sm sm:text-base text-muted-foreground">
+              {currentIndex + 1} / {slidesForDesktop}
             </span>
           </div>
         </div>
