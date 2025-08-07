@@ -16,8 +16,6 @@ import { ConfirmPasswordInput } from '@/components/auth/ConfirmPasswordInput';
 import { EmailInput } from '@/components/auth/EmailInput';
 import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
 import { useStickyHeader } from '@/hooks/useStickyHeader';
-import { cn } from '@/lib/utils';
-import { ThemeLogo } from '@/components/ui/theme-logo';
 import { useTranslations } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
 import { getCurrentLanguage } from '@/utils/languageSupport';
@@ -396,22 +394,48 @@ const LoginPage = () => {
         </Card>
 
         {/* Footer */}
-        <div className="text-center text-xs sm:text-sm text-muted-foreground space-y-2 px-2">
-          <p>
-            {t('auth.termsAgreement')}
-          </p>
-          <p>
-            {t('auth.alreadyHaveAccountText')}{' '}
+        <div className="text-center text-xs sm:text-sm text-muted-foreground space-y-3 px-2">
+          {/* Terms and Privacy Policy */}
+          <p className="text-center">
+            {t('auth.termsAgreement')}{' '}
             <button 
-              onClick={() => {
-                const signinTab = document.querySelector('[data-value="signin"]') as HTMLElement;
-                signinTab?.click();
-              }}
-              className="text-primary hover:underline font-medium"
+              onClick={() => navigate('/agb')}
+              className="text-primary hover:underline font-medium transition-colors"
             >
-              {t('auth.loginNow')}
+              {t('auth.legal.terms')}
+            </button>
+            {' '}{t('auth.legal.and')}{' '}
+            <button 
+              onClick={() => navigate('/datenschutz')}
+              className="text-primary hover:underline font-medium transition-colors"
+            >
+              {t('auth.legal.privacy')}
             </button>
           </p>
+          
+          {/* Account Switch Link */}
+          <div className="flex items-center justify-center gap-1">
+            <span>
+              {activeTab === 'signin' 
+                ? t('auth.dontHaveAccountText') 
+                : t('auth.alreadyHaveAccountText')
+              }
+            </span>
+            <button 
+              onClick={() => {
+                const targetTab = activeTab === 'signin' ? 'signup' : 'signin';
+                const tabElement = document.querySelector(`[data-value="${targetTab}"]`) as HTMLElement;
+                tabElement?.click();
+                setActiveTab(targetTab);
+              }}
+              className="text-primary hover:underline font-medium transition-colors"
+            >
+              {activeTab === 'signin' 
+                ? t('auth.createAccount') 
+                : t('auth.loginNow')
+              }
+            </button>
+          </div>
         </div>
       </div>
     </div>
