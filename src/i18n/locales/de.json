@@ -3259,6 +3259,14 @@
       "privacy": "Datenschutzerklärung"
     }
   },
+  "checkout": {
+    "loginRequired": "Anmeldung erforderlich",
+    "loginDescription": "Bitte melden Sie sich an, um das Premium-Abonnement zu kaufen",
+    "redirectingToStripe": "Weiterleitung zu Stripe",
+    "guaranteeIncluded": "💰 14-Tage Geld-zurück-Garantie inklusive – Checkout wird in neuem Tab geöffnet",
+    "error": "Fehler",
+    "couldNotCreate": "Checkout konnte nicht erstellt werden"
+  },
   "pets": {
     "title": "Meine Haustiere",
     "editPet": "Haustier bearbeiten",

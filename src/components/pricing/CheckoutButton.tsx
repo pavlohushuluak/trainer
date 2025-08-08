@@ -135,7 +135,7 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            {loading ? t('training.checkoutButton.redirectingToStripe') : children}
+            {loading ? t('checkout.redirectingToStripe') : children}
           </>
         ) : (
           <>

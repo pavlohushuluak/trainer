@@ -2078,7 +2078,7 @@
       "goal": "Exercise Goal",
       "stepByStepGuide": "Step-by-Step Guide",
       "step1": "Step 1",
-      "step2": "Step 2", 
+      "step2": "Step 2",
       "step3": "Step 3",
       "errorCorrection": "Error Correction",
       "speciesAdaptation": "Species Adaptation",
@@ -3258,6 +3258,14 @@
       "and": "and",
       "privacy": "Privacy Policy"
     }
+  },
+  "checkout": {
+    "loginRequired": "Login Required",
+    "loginDescription": "Please sign in to purchase the premium subscription",
+    "redirectingToStripe": "Redirecting to Stripe",
+    "guaranteeIncluded": "💰 14-day money-back guarantee included – Checkout will open in new tab",
+    "error": "Error",
+    "couldNotCreate": "Checkout could not be created"
   },
   "pets": {
     "title": "My Pets",
