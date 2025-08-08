@@ -2046,6 +2046,55 @@
       "celebrateAgain": "Celebrate again!",
       "congratulations": "Congratulations! You have successfully completed all steps."
     },
+    "template": {
+      "difficulty": {
+        "beginner": "Beginner",
+        "advanced": "Advanced",
+        "expert": "Expert"
+      },
+      "category": {
+        "basicTraining": "Basic Training",
+        "breedSpecific": "Breed Specific",
+        "seniorTraining": "Senior Training",
+        "behavior": "Behavior",
+        "socialization": "Socialization"
+      },
+      "fullView": "Full View",
+      "moduleCount": "{{count}} Modules",
+      "for": "For",
+      "age": "Age",
+      "browseModules": "📚 Browse modules ({{count}} available)",
+      "useTemplate": "Use this template",
+      "trainingModules": "Training Modules",
+      "importantTips": "Important Tips",
+      "expectedResults": "Expected Results",
+      "selectTemplate": "Select Training Template",
+      "forWhichPet": "For which pet should the plan be created?",
+      "selectPet": "Select pet",
+      "generalPlan": "General plan (without specific pet)",
+      "backToSelection": "Back to selection"
+    },
+    "exercise": {
+      "goal": "Exercise Goal",
+      "stepByStepGuide": "Step-by-Step Guide",
+      "step1": "Step 1",
+      "step2": "Step 2", 
+      "step3": "Step 3",
+      "errorCorrection": "Error Correction",
+      "speciesAdaptation": "Species Adaptation",
+      "repetitionAndDuration": "Repetition & Duration",
+      "dailyPractice": "Daily Practice",
+      "frequency": "Frequency",
+      "trainingDuration": "Training Duration",
+      "requiredToolsAndConditions": "Required Tools & Conditions",
+      "equipment": "Equipment",
+      "location": "Location",
+      "timeframe": "Timeframe",
+      "learningTipsAndMotivation": "Learning Tips & Motivation",
+      "avoidCommonMistakes": "Avoid Common Mistakes",
+      "instructions": "Instructions",
+      "module": "Module"
+    },
     "motivationalQuotes": {
       "newQuote": "Load new quote",
       "quotes": {

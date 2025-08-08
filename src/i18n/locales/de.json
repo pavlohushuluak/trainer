@@ -2046,6 +2046,55 @@
       "celebrateAgain": "Nochmal feiern!",
       "congratulations": "Herzlichen Glückwunsch! Sie haben alle Schritte erfolgreich abgeschlossen."
     },
+    "template": {
+      "difficulty": {
+        "beginner": "Anfänger",
+        "advanced": "Fortgeschritten",
+        "expert": "Experte"
+      },
+      "category": {
+        "basicTraining": "Grundtraining",
+        "breedSpecific": "Rassespezifisch",
+        "seniorTraining": "Seniorentraining",
+        "behavior": "Verhalten",
+        "socialization": "Sozialisation"
+      },
+      "fullView": "Vollansicht",
+      "moduleCount": "{{count}} Module",
+      "for": "Für",
+      "age": "Alter",
+      "browseModules": "📚 Module durchstöbern ({{count}} verfügbar)",
+      "useTemplate": "Diese Vorlage verwenden",
+      "trainingModules": "Trainingsmodule",
+      "importantTips": "Wichtige Tipps",
+      "expectedResults": "Erwartete Ergebnisse",
+      "selectTemplate": "Trainingsvorlage wählen",
+      "forWhichPet": "Für welches Tier soll der Plan erstellt werden?",
+      "selectPet": "Tier auswählen",
+      "generalPlan": "Allgemeiner Plan (ohne spezifisches Tier)",
+      "backToSelection": "Zurück zur Auswahl"
+    },
+    "exercise": {
+      "goal": "Ziel der Übung",
+      "stepByStepGuide": "Schritt-für-Schritt-Anleitung",
+      "step1": "Schritt 1",
+      "step2": "Schritt 2",
+      "step3": "Schritt 3",
+      "errorCorrection": "Fehlerkorrektur",
+      "speciesAdaptation": "Tierart-Anpassung",
+      "repetitionAndDuration": "Wiederholung & Dauer",
+      "dailyPractice": "Tägliche Übung",
+      "frequency": "Häufigkeit",
+      "trainingDuration": "Trainingsdauer",
+      "requiredToolsAndConditions": "Benötigte Tools & Rahmenbedingungen",
+      "equipment": "Equipment",
+      "location": "Ort",
+      "timeframe": "Zeitraum",
+      "learningTipsAndMotivation": "Lerntipps & Motivation",
+      "avoidCommonMistakes": "Typische Fehler vermeiden",
+      "instructions": "Anleitung",
+      "module": "Modul"
+    },
     "motivationalQuotes": {
       "newQuote": "Neues Zitat laden",
       "quotes": {

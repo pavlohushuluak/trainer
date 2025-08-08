@@ -30,17 +30,17 @@ export const TrainingProgressHeader = ({
 
   return (
     <CardHeader>
-      <div className="flex items-center justify-between">
-        <CardTitle className="flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-yellow-500 dark:text-yellow-400" />
-          {planTitle}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-500 dark:text-yellow-400 flex-shrink-0" />
+          <span className="break-words">{planTitle}</span>
         </CardTitle>
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className={getStatusColor()}>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Badge variant="outline" className={`${getStatusColor()} text-xs sm:text-sm`}>
             {t('training.progressHeader.steps', { completed: completedSteps, total: totalSteps })}
           </Badge>
-          <Badge className="bg-yellow-500 dark:bg-yellow-600 text-white">
-            <Star className="h-3 w-3 mr-1" />
+          <Badge className="bg-yellow-500 dark:bg-yellow-600 text-white text-xs sm:text-sm">
+            <Star className="h-3 w-3 mr-1 flex-shrink-0" />
             {t('training.progressHeader.points', { points: totalPoints })}
           </Badge>
         </div>
@@ -48,13 +48,13 @@ export const TrainingProgressHeader = ({
       
       {/* Progress Bar */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center justify-between text-xs sm:text-sm">
           <span className="font-medium text-foreground">{t('training.progressHeader.progress')}</span>
           <span className={`font-bold ${getStatusColor()}`}>{progressPercentage}%</span>
         </div>
         <Progress 
           value={progressPercentage} 
-          className="h-3"
+          className="h-2 sm:h-3"
         />
       </div>
     </CardHeader>

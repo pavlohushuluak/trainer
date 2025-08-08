@@ -129,7 +129,7 @@ serve(async (req) => {
 
     // Handle plan creation if requested
     if (createPlan && createPlan.title && createPlan.steps) {
-      await createTrainingPlan(supabaseClient, userData.user.id, petId, createPlan);
+      await createTrainingPlan(supabaseClient, userData.user.id, petId, createPlan, openAIApiKey);
     }
 
     // Get pet context
@@ -207,7 +207,7 @@ serve(async (req) => {
         const planData = processPlanCreationFromResponse(aiResponse);
         if (planData) {
           try {
-            await createTrainingPlan(supabaseClient, userData.user.id, petId, planData);
+            await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
             aiResponse = removePlanCreationFromResponse(aiResponse, planData.title);
           } catch (planError) {
             console.error('❌ Error creating plan from AI response:', planError);

@@ -91,8 +91,8 @@ export const TrainingStepItem = ({ step, onStepComplete }: TrainingStepItemProps
         : 'border-border bg-background'
     }`}>
       {/* Step Header */}
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-3">
+      <div className="p-3 sm:p-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-0 mb-3">
           <StepHeader step={localizedStep} />
           <StepActions 
             isCompleted={localizedStep.is_completed}

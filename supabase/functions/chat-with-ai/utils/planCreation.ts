@@ -1,5 +1,6 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { translatePlanData } from "./translation.ts";
 
 export async function createTrainingPlan(
   supabaseClient: any,
@@ -13,15 +14,35 @@ export async function createTrainingPlan(
       description: string;
       points?: number;
     }>;
-  }
+  },
+  openAIApiKey?: string
 ) {
+  // Translate plan data to English if OpenAI key is available
+  let translatedData;
+  if (openAIApiKey) {
+    try {
+      console.log('🔄 Starting translation process for training plan...');
+      translatedData = await translatePlanData(planData, openAIApiKey);
+    } catch (translationError) {
+      console.error('❌ Translation failed, continuing without translations:', translationError);
+      translatedData = {
+        title_en: '',
+        description_en: '',
+        steps_en: planData.steps.map(() => ({ title_en: '', description_en: '' }))
+      };
+    }
+  }
+
+  // Create training plan with English translations
   const { data: planResult, error: planError } = await supabaseClient
     .from('training_plans')
     .insert([{
       user_id: userId,
       pet_id: petId,
       title: planData.title,
+      title_en: translatedData?.title_en || null,
       description: planData.description || '',
+      description_en: translatedData?.description_en || null,
       status: 'in_progress'
     }])
     .select()
@@ -32,12 +53,14 @@ export async function createTrainingPlan(
     throw new Error('Fehler beim Erstellen des Trainingsplans');
   }
 
-  // Create training steps
+  // Create training steps with English translations
   const steps = planData.steps.map((step: any, index: number) => ({
     training_plan_id: planResult.id,
     step_number: index + 1,
     title: step.title,
+    title_en: translatedData?.steps_en[index]?.title_en || null,
     description: step.description,
+    description_en: translatedData?.steps_en[index]?.description_en || null,
     points_reward: step.points || 10
   }));
 

@@ -9,6 +9,7 @@ import { PlanTemplate } from './templateTypes';
 import { TemplateDetailView } from './components/TemplateDetailView';
 import { TemplateList } from './components/TemplateList';
 import { planTemplates } from './PlanTemplates';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface Pet {
   id: string;
@@ -57,6 +58,7 @@ export const TemplateSelectionModal = ({
   pets,
   onSelectTemplate
 }: TemplateSelectionModalProps) => {
+  const { t } = useTranslations();
   const [selectedTemplate, setSelectedTemplate] = useState<PlanTemplate | null>(null);
   const [selectedPetId, setSelectedPetId] = useState<string>(
     pets.length > 0 ? pets[0].id : "none"
@@ -130,7 +132,7 @@ export const TemplateSelectionModal = ({
               </Button>
             )}
             <DialogTitle>
-              {selectedTemplate ? selectedTemplate.title : 'Trainingsvorlage wählen'}
+              {selectedTemplate ? selectedTemplate.title : t('training.template.selectTemplate')}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -139,19 +141,19 @@ export const TemplateSelectionModal = ({
           <div className="space-y-6">
             <TemplateDetailView template={selectedTemplate} />
             
-            <div className="space-y-4 pt-4 border-t">
+            <div className="space-y-4 pt-4 border-t border-border">
               <div className="space-y-2">
-                <Label>Für welches Tier soll der Plan erstellt werden?</Label>
+                <Label className="text-foreground">{t('training.template.forWhichPet')}</Label>
                 <Select value={selectedPetId} onValueChange={setSelectedPetId}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Tier auswählen" />
+                  <SelectTrigger className="bg-background border-border">
+                    <SelectValue placeholder={t('training.template.selectPet')} />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">
-                      🌟 Allgemeiner Plan (ohne spezifisches Tier)
+                  <SelectContent className="bg-background border-border">
+                    <SelectItem value="none" className="text-foreground">
+                      🌟 {t('training.template.generalPlan')}
                     </SelectItem>
                     {pets.map(pet => (
-                      <SelectItem key={pet.id} value={pet.id}>
+                      <SelectItem key={pet.id} value={pet.id} className="text-foreground">
                         {getPetIcon(pet.species)} {pet.name} ({pet.species})
                       </SelectItem>
                     ))}
@@ -161,10 +163,10 @@ export const TemplateSelectionModal = ({
 
               <div className="flex gap-2">
                 <Button onClick={handleBack} variant="outline" className="flex-1">
-                  Zurück zur Auswahl
+                  {t('training.template.backToSelection')}
                 </Button>
                 <Button onClick={handleUseTemplate} className="flex-1">
-                  Diese Vorlage verwenden
+                  {t('training.template.useTemplate')}
                 </Button>
               </div>
             </div>
