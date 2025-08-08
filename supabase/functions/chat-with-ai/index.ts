@@ -42,8 +42,13 @@ const trainerTeam = [
 ];
 
 // Fallback responses wenn OpenAI nicht verfügbar ist
-const getFallbackResponse = (message: string, trainerName: string, petContext: string) => {
-  const responses = [
+const getFallbackResponse = (message: string, trainerName: string, petContext: string, language: string = 'de') => {
+  const responses = language === 'en' ? [
+    `Hello! I'm ${trainerName}, your pet trainer. ⏱️ My AI system is currently overloaded, but I can still give you basic tips.`,
+    `That's an interesting question! As ${trainerName}, I recommend: 🎯 Patience and positive reinforcement are the key to any training.`,
+    `Thank you for your message! 💭 Although my full AI system is currently overloaded, I can tell you: Consistency in training is very important.`,
+    `As ${trainerName}, I advise you: ⭐ Short, regular training sessions (5-10 min) are often more effective than long sessions.`
+  ] : [
     `Hallo! Ich bin ${trainerName}, dein Tiertrainer. ⏱️ Mein KI-System ist momentan überlastet, aber ich kann dir trotzdem grundlegende Tipps geben.`,
     `Das ist eine interessante Frage! Als ${trainerName} empfehle ich dir: 🎯 Geduld und positive Verstärkung sind bei jedem Training das A und O.`,
     `Danke für deine Nachricht! 💭 Obwohl mein vollständiges KI-System gerade überlastet ist, kann ich dir sagen: Konstanz beim Training ist sehr wichtig.`,
@@ -54,23 +59,43 @@ const getFallbackResponse = (message: string, trainerName: string, petContext: s
   const lowerMessage = message.toLowerCase();
   let specificAdvice = '';
   
-  if (lowerMessage.includes('aggression') || lowerMessage.includes('beißen')) {
-    specificAdvice = '\n\n🚨 Bei Aggressionsproblemen: Nie bestrafen, sondern professionelle Hilfe suchen und das Tier aus der Stresssituation nehmen.';
-  } else if (lowerMessage.includes('stubenrein') || lowerMessage.includes('unsauber')) {
-    specificAdvice = '\n\n🏠 Stubenreinheit: Regelmäßige Gassi-Zeiten, sofort nach dem Fressen/Schlafen rausgehen, bei Erfolg belohnen.';
-  } else if (lowerMessage.includes('leine') || lowerMessage.includes('ziehen')) {
-    specificAdvice = '\n\n🦮 Leinentraining: Stehenbleiben wenn gezogen wird, nur weitergehen bei lockerer Leine, Leckerlis als Belohnung.';
-  } else if (lowerMessage.includes('bellen') || lowerMessage.includes('laut')) {
-    specificAdvice = '\n\n🔇 Gegen Bellen: Ursache verstehen, Alternativverhalten trainieren, nie zurückschreien.';
+  if (language === 'en') {
+    if (lowerMessage.includes('aggression') || lowerMessage.includes('bite')) {
+      specificAdvice = '\n\n🚨 For aggression problems: Never punish, but seek professional help and remove the pet from the stressful situation.';
+    } else if (lowerMessage.includes('house') || lowerMessage.includes('potty') || lowerMessage.includes('clean')) {
+      specificAdvice = '\n\n🏠 House training: Regular walk times, go out immediately after eating/sleeping, reward success.';
+    } else if (lowerMessage.includes('leash') || lowerMessage.includes('pull')) {
+      specificAdvice = '\n\n🦮 Leash training: Stop when pulled, only continue with loose leash, treats as reward.';
+    } else if (lowerMessage.includes('bark') || lowerMessage.includes('loud')) {
+      specificAdvice = '\n\n🔇 Against barking: Understand the cause, train alternative behavior, never shout back.';
+    }
+  } else {
+    if (lowerMessage.includes('aggression') || lowerMessage.includes('beißen')) {
+      specificAdvice = '\n\n🚨 Bei Aggressionsproblemen: Nie bestrafen, sondern professionelle Hilfe suchen und das Tier aus der Stresssituation nehmen.';
+    } else if (lowerMessage.includes('stubenrein') || lowerMessage.includes('unsauber')) {
+      specificAdvice = '\n\n🏠 Stubenreinheit: Regelmäßige Gassi-Zeiten, sofort nach dem Fressen/Schlafen rausgehen, bei Erfolg belohnen.';
+    } else if (lowerMessage.includes('leine') || lowerMessage.includes('ziehen')) {
+      specificAdvice = '\n\n🦮 Leinentraining: Stehenbleiben wenn gezogen wird, nur weitergehen bei lockerer Leine, Leckerlis als Belohnung.';
+    } else if (lowerMessage.includes('bellen') || lowerMessage.includes('laut')) {
+      specificAdvice = '\n\n🔇 Gegen Bellen: Ursache verstehen, Alternativverhalten trainieren, nie zurückschreien.';
+    }
   }
   
   const randomResponse = responses[Math.floor(Math.random() * responses.length)];
   
-  if (petContext) {
-    return `${randomResponse}\n\n🐾 Für dein Tier gilt: Belohne erwünschtes Verhalten sofort und ignoriere unerwünschtes Verhalten, anstatt zu bestrafen.${specificAdvice}\n\n💡 *Hinweis: Dies ist eine verkürzte Antwort. Unser vollständiges KI-System ist momentan überlastet - bitte versuche es in wenigen Minuten erneut für eine detailliertere Beratung.*`;
+  if (language === 'en') {
+    if (petContext) {
+      return `${randomResponse}\n\n🐾 For your pet: Reward desired behavior immediately and ignore unwanted behavior instead of punishing.${specificAdvice}\n\n💡 *Note: This is a shortened response. Our full AI system is currently overloaded - please try again in a few minutes for more detailed advice.*`;
+    }
+    
+    return `${randomResponse}\n\n🎓 Basic rule: Positive reinforcement works better than punishment for all animals.${specificAdvice}\n\n💡 *Note: This is a shortened response. Our full AI system is currently overloaded.*`;
+  } else {
+    if (petContext) {
+      return `${randomResponse}\n\n🐾 Für dein Tier gilt: Belohne erwünschtes Verhalten sofort und ignoriere unerwünschtes Verhalten, anstatt zu bestrafen.${specificAdvice}\n\n💡 *Hinweis: Dies ist eine verkürzte Antwort. Unser vollständiges KI-System ist momentan überlastet - bitte versuche es in wenigen Minuten erneut für eine detailliertere Beratung.*`;
+    }
+    
+    return `${randomResponse}\n\n🎓 Grundregel: Positive Verstärkung funktioniert bei allen Tieren besser als Bestrafung.${specificAdvice}\n\n💡 *Hinweis: Dies ist eine verkürzte Antwort. Unser vollständiges KI-System ist momentan überlastet.*`;
   }
-  
-  return `${randomResponse}\n\n🎓 Grundregel: Positive Verstärkung funktioniert bei allen Tieren besser als Bestrafung.${specificAdvice}\n\n💡 *Hinweis: Dies ist eine verkürzte Antwort. Unser vollständiges KI-System ist momentan überlastet.*`;
 };
 
 serve(async (req) => {
@@ -81,6 +106,8 @@ serve(async (req) => {
       status: 200 
     });
   }
+
+  let userLanguage = 'de'; // Default language
 
   try {
     // STAGE 1: Request Analysis
@@ -125,7 +152,8 @@ serve(async (req) => {
       throw new Error('Invalid request body format');
     }
 
-    const { message, sessionId, petId, trainerName, createPlan } = requestBody;
+    const { message, sessionId, petId, trainerName, createPlan, language } = requestBody;
+    userLanguage = language || 'de'; // Default to German if not specified
 
     // Handle plan creation if requested
     if (createPlan && createPlan.title && createPlan.steps) {
@@ -143,7 +171,7 @@ serve(async (req) => {
 
     // ENHANCED OPENAI INTEGRATION WITH COMPREHENSIVE ERROR HANDLING
     if (!openAIApiKey) {
-      aiResponse = getFallbackResponse(message, trainerName, petContext);
+      aiResponse = getFallbackResponse(message, trainerName, petContext, userLanguage);
     } else {
       try {
         // Check if this is a new pet (first conversation EVER with this pet)
@@ -166,7 +194,7 @@ serve(async (req) => {
         const exerciseSuggestions = generateSmartExerciseSuggestions(petData);
 
         // Generate enhanced system prompt with intelligence context
-        let enhancedSystemPrompt = generateSystemPrompt(trainerName, petContext, isNewPet, petData);
+        let enhancedSystemPrompt = generateSystemPrompt(trainerName, petContext, isNewPet, petData, userLanguage);
         
         // Add conversation context if available
         if (conversationAnalysis.hasDiscussedToday.length > 0) {
@@ -232,7 +260,7 @@ serve(async (req) => {
         
         // ENHANCED FALLBACK WITH ERROR CONTEXT
         const errorContext = openaiError instanceof Error ? openaiError.message : 'Unbekannter Fehler';
-        aiResponse = getFallbackResponse(message, trainerName, petContext);
+        aiResponse = getFallbackResponse(message, trainerName, petContext, userLanguage);
         
         // Add error note to response for debugging
         aiResponse += `\n\n💡 *Debug-Info: OpenAI-Service temporär nicht verfügbar (${errorContext.substring(0, 50)}...)*`;
@@ -251,15 +279,21 @@ serve(async (req) => {
     
     // Determine error type for better user feedback
     let errorMessage = 'Chat temporarily unavailable';
-    let userMessage = 'Entschuldigung, der Chat ist momentan nicht verfügbar. Bitte versuche es später erneut.';
+    let userMessage = userLanguage === 'en' 
+      ? 'Sorry, the chat is currently unavailable. Please try again later.'
+      : 'Entschuldigung, der Chat ist momentan nicht verfügbar. Bitte versuche es später erneut.';
     
     if (error instanceof Error) {
       if (error.message.includes('Authentication') || error.message.includes('not authenticated')) {
         errorMessage = 'Authentication failed';
-        userMessage = 'Bitte melden Sie sich erneut an.';
+        userMessage = userLanguage === 'en' 
+          ? 'Please log in again.'
+          : 'Bitte melden Sie sich erneut an.';
       } else if (error.message.includes('OpenAI') || error.message.includes('API')) {
         errorMessage = 'AI service unavailable';
-        userMessage = 'Der TierTrainer ist gerade überlastet. Bitte versuchen Sie es in wenigen Minuten erneut.';
+        userMessage = userLanguage === 'en' 
+          ? 'The PetTrainer is currently overloaded. Please try again in a few minutes.'
+          : 'Der TierTrainer ist gerade überlastet. Bitte versuchen Sie es in wenigen Minuten erneut.';
       }
     }
     

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import { useTranslations } from "@/hooks/useTranslations";
 import { assignTrainerForSession } from "../utils/trainerTeam";
 
 interface PetProfile {
@@ -27,6 +28,7 @@ interface Message {
 
 export const useChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
   const { user } = useAuth();
+  const { currentLanguage } = useTranslations();
   const { startMetric, endMetric } = usePerformanceMonitor('Chat');
   
   // Consolidated state
@@ -247,7 +249,8 @@ export const useChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
           sessionId: sessionId,
           petId: currentSelectedPet === "none" ? null : currentSelectedPet,
           petProfile: selectedPetData,
-          trainerName: sessionTrainerName
+          trainerName: sessionTrainerName,
+          language: currentLanguage
         }
       });
 
@@ -289,7 +292,7 @@ export const useChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
     } finally {
       setIsSending(false);
     }
-  }, [message, sessionId, isSending, selectedPet, pets, sessionTrainerName, startMetric, endMetric, addOptimisticMessage, updateMessage]);
+  }, [message, sessionId, isSending, selectedPet, pets, sessionTrainerName, currentLanguage, startMetric, endMetric, addOptimisticMessage, updateMessage]);
 
   // Handle key press
   const handleKeyPress = useCallback((e: React.KeyboardEvent) => {

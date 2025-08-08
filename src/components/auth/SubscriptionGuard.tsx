@@ -5,7 +5,7 @@ import { Loader2, Crown, Lock, Clock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { SubscriptionModeDisplay } from '../subscription/SubscriptionModeDisplay';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface SubscriptionGuardProps {
   children: React.ReactNode;
@@ -34,7 +34,7 @@ export const SubscriptionGuard = ({
   showUpgradeButton = true,
   showPreview = true 
 }: SubscriptionGuardProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   const { user, loading } = useAuth();
   const { subscriptionMode, subscription, isLoading: subscriptionLoading } = useSubscriptionStatus();
 
@@ -51,9 +51,9 @@ export const SubscriptionGuard = ({
 
   if (!user) {
     return (
-      <Card className="border-orange-200">
+      <Card className="border-orange-200 dark:border-orange-400/50 bg-orange-50 dark:bg-orange-950/30">
         <CardContent className="p-6 text-center">
-          <Lock className="h-8 w-8 mx-auto text-orange-500 mb-2" />
+          <Lock className="h-8 w-8 mx-auto text-orange-500 dark:text-orange-400 mb-2" />
           <p className="text-sm text-muted-foreground">
             {t('auth.subscriptionGuard.loginRequired')}
           </p>
@@ -75,13 +75,13 @@ export const SubscriptionGuard = ({
         <div className="relative">
           {children}
           {/* Upgrade Overlay */}
-          <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center">
-            <Card className="w-full max-w-md mx-4 border-orange-200 bg-orange-50">
+          <div className="absolute inset-0 bg-background/90 dark:bg-background/95 backdrop-blur-sm flex items-center justify-center">
+            <Card className="w-full max-w-md mx-4 border-orange-200 dark:border-orange-400/50 bg-orange-50 dark:bg-orange-950/30">
               <CardHeader className="text-center pb-3">
                 {subscriptionMode === 'trial_expired' ? (
-                  <Clock className="h-8 w-8 mx-auto text-orange-500 mb-2" />
+                  <Clock className="h-8 w-8 mx-auto text-orange-500 dark:text-orange-400 mb-2" />
                 ) : (
-                  <Crown className="h-8 w-8 mx-auto text-yellow-500 mb-2" />
+                  <Crown className="h-8 w-8 mx-auto text-yellow-500 dark:text-yellow-400 mb-2" />
                 )}
                 <CardTitle className="text-sm flex items-center justify-center gap-2">
                   {subscriptionMode === 'trial_expired' ? t('auth.subscriptionGuard.trialExpired') : t('auth.subscriptionGuard.premiumFeature')}
@@ -118,9 +118,9 @@ export const SubscriptionGuard = ({
   const getIcon = () => {
     switch (subscriptionMode) {
       case 'trial_expired':
-        return <Clock className="h-8 w-8 mx-auto text-orange-500 mb-2" />;
+        return <Clock className="h-8 w-8 mx-auto text-orange-500 dark:text-orange-400 mb-2" />;
       default:
-        return <Crown className="h-8 w-8 mx-auto text-yellow-500 mb-2" />;
+        return <Crown className="h-8 w-8 mx-auto text-yellow-500 dark:text-yellow-400 mb-2" />;
     }
   };
 
@@ -134,7 +134,7 @@ export const SubscriptionGuard = ({
   };
 
   return (
-    <Card className="border-orange-200 bg-orange-50">
+    <Card className="border-orange-200 dark:border-orange-400/50 bg-orange-50 dark:bg-orange-950/30">
       <CardHeader className="text-center pb-3">
         {getIcon()}
         <CardTitle className="text-sm flex items-center justify-center gap-2">

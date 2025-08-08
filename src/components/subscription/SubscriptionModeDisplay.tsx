@@ -1,7 +1,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Crown, Clock, Lock, Loader2 } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface SubscriptionModeDisplayProps {
   mode: string;
@@ -10,7 +10,7 @@ interface SubscriptionModeDisplayProps {
 }
 
 export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: SubscriptionModeDisplayProps) => {
-  const { t } = useTranslation();
+  const { t, currentLanguage } = useTranslations();
   
   const getModeDisplay = () => {
     switch (mode) {
@@ -34,7 +34,7 @@ export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: Su
         return {
           icon: <Clock className="h-4 w-4" />,
           label: t('subscription.modeDisplay.sevenDayTrial', { 
-            endDate: trialEnd ? new Date(trialEnd).toLocaleDateString('de-DE') : ''
+            endDate: trialEnd ? new Date(trialEnd).toLocaleDateString(currentLanguage === 'de' ? 'de-DE' : 'en-US') : ''
           }),
           variant: 'outline' as const,
           className: 'bg-blue-50 text-blue-700 border-blue-200'

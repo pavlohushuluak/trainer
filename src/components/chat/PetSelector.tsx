@@ -74,14 +74,14 @@ export const PetSelector = ({ pets, selectedPet, onSelectPet }: PetSelectorProps
   if (pets.length === 1 && selectedPetInfo && !isExpanded) {
     return (
       <div className="mb-4">
-        <div className="flex items-center justify-between p-3 bg-blue-50 rounded-md border border-blue-200">
+        <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-950/30 rounded-md border border-blue-200 dark:border-blue-400/50">
           <div className="flex items-center gap-2">
             <span className="text-lg">{getPetIcon(selectedPetInfo.species)}</span>
             <div>
-              <div className="font-semibold text-blue-900">
-                {t('chat.petSelector.singlePet.trainingWith')} <strong>{selectedPetInfo.name}</strong>
+              <div className="font-semibold text-blue-900 dark:text-blue-200">
+                {t('chat.petSelector.singlePet.trainingWith')} <strong className="text-foreground">{selectedPetInfo.name}</strong>
               </div>
-              <div className="text-xs text-blue-700">
+              <div className="text-xs text-blue-700 dark:text-blue-300">
                 {t('chat.petSelector.singlePet.adviceNote')} {selectedPetInfo.name} ({selectedPetInfo.species})
               </div>
             </div>
@@ -91,7 +91,7 @@ export const PetSelector = ({ pets, selectedPet, onSelectPet }: PetSelectorProps
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(true)}
-              className="text-blue-600 hover:bg-blue-100"
+              className="text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-950/50"
             >
               <ChevronDown className="h-4 w-4" />
             </Button>
@@ -113,7 +113,7 @@ export const PetSelector = ({ pets, selectedPet, onSelectPet }: PetSelectorProps
             variant="ghost"
             size="sm"
             onClick={() => setIsExpanded(false)}
-            className="text-gray-600 hover:bg-gray-100"
+            className="text-muted-foreground hover:bg-muted"
           >
             <ChevronUp className="h-4 w-4" />
           </Button>
@@ -121,14 +121,14 @@ export const PetSelector = ({ pets, selectedPet, onSelectPet }: PetSelectorProps
       </div>
       
       <Select value={selectedPet} onValueChange={onSelectPet}>
-        <SelectTrigger className="bg-blue-50 border-blue-200">
+        <SelectTrigger className="bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-400/50">
           <SelectValue 
             placeholder={t('chat.petSelector.multiplePets.placeholder')} 
           />
         </SelectTrigger>
         <SelectContent>
           {pets.length > 1 && (
-            <SelectItem value="none" className="text-gray-600">
+            <SelectItem value="none" className="text-muted-foreground">
               {t('chat.petSelector.multiplePets.generalAdvice')}
             </SelectItem>
           )}
@@ -137,7 +137,7 @@ export const PetSelector = ({ pets, selectedPet, onSelectPet }: PetSelectorProps
               <div className="flex items-center gap-2">
                 <span className="text-lg">{getPetIcon(pet.species)}</span>
                 <div>
-                  <div className="font-semibold">{pet.name}</div>
+                  <div className="font-semibold text-foreground">{pet.name}</div>
                   <div className="text-xs text-muted-foreground">{t('chat.petSelector.multiplePets.trainingFor')} {pet.species}</div>
                 </div>
               </div>

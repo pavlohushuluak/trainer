@@ -2,6 +2,7 @@
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslations } from "@/hooks/useTranslations";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
 export const useInstantMessageSender = (
@@ -10,6 +11,7 @@ export const useInstantMessageSender = (
   removeMessage: (messageId: string) => void
 ) => {
   const { user } = useAuth();
+  const { currentLanguage } = useTranslations();
   const [isSending, setIsSending] = useState(false);
   const { startMetric, endMetric } = usePerformanceMonitor('InstantMessageSender');
 
@@ -38,7 +40,8 @@ export const useInstantMessageSender = (
           sessionId: sessionId,
           petId: selectedPet === "none" ? null : selectedPet,
           petProfile: selectedPetData,
-          trainerName: sessionTrainerName
+          trainerName: sessionTrainerName,
+          language: currentLanguage
         }
       });
 
@@ -78,7 +81,7 @@ export const useInstantMessageSender = (
     } finally {
       setIsSending(false);
     }
-  }, [user, isSending, addOptimisticMessage, updateMessage, startMetric, endMetric]);
+  }, [user, currentLanguage, isSending, addOptimisticMessage, updateMessage, startMetric, endMetric]);
 
   return {
     sendMessageInstantly,

@@ -49,20 +49,20 @@ export const ChatHeader = ({ selectedPetName, trainerName, selectedPetSpecies }:
         {selectedPetName ? (
           <>
             <span className="text-xl">{petIcon}</span>
-            <span className="text-blue-600">{t('chat.header.trainingWith')} {selectedPetName}</span>
+            <span className="text-blue-600 dark:text-blue-400">{t('chat.header.trainingWith')} {selectedPetName}</span>
           </>
         ) : (
           <>{t('chat.header.generalAdvice')}</>
         )}
       </DialogTitle>
       <DialogDescription className="text-sm">
-        {t('chat.header.trainer')} <strong className="text-blue-600">{trainerName}</strong>
+        {t('chat.header.trainer')} <strong className="text-blue-600 dark:text-blue-400">{trainerName}</strong>
         {selectedPetName ? (
-          <div className="mt-1 text-xs bg-blue-50 p-2 rounded">
-            {t('chat.header.specializedAdvice')} <strong>{selectedPetName}</strong> ({selectedPetSpecies})
+          <div className="mt-1 text-xs bg-blue-50 dark:bg-blue-950/30 p-2 rounded border border-blue-200 dark:border-blue-400/50">
+            {t('chat.header.specializedAdvice')} <strong className="text-foreground">{selectedPetName}</strong> ({selectedPetSpecies})
           </div>
         ) : (
-          <div className="mt-1 text-xs bg-gray-50 p-2 rounded">
+          <div className="mt-1 text-xs bg-muted/50 dark:bg-muted/30 p-2 rounded border border-border">
             {t('chat.header.selectPetAdvice')}
           </div>
         )}
