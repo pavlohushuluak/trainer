@@ -2,7 +2,6 @@
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useTranslations } from "@/hooks/useTranslations";
 import { useOptimisticMessages } from "./useOptimisticMessages";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 
@@ -17,7 +16,6 @@ interface Message {
 
 export const useOptimizedMessageSender = () => {
   const { user } = useAuth();
-  const { currentLanguage } = useTranslations();
   const [loading, setLoading] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
@@ -107,8 +105,7 @@ export const useOptimizedMessageSender = () => {
           sessionId: sessionId,
           petId: selectedPet === "none" ? null : selectedPet,
           petProfile: selectedPetData,
-          trainerName: sessionTrainerName,
-          language: currentLanguage
+          trainerName: sessionTrainerName
         }
       });
 

@@ -2,7 +2,6 @@ import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
-import { useTranslations } from "@/hooks/useTranslations";
 import { assignTrainerForSession } from "../utils/trainerTeam";
 
 const FREE_CHAT_LIMIT = 10; // Gratis-Chat Limit für kostenlose Nutzer
@@ -30,7 +29,6 @@ interface PetProfile {
 
 export const useInstantChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
   const { user } = useAuth();
-  const { currentLanguage } = useTranslations();
   const { hasActiveSubscription, subscriptionMode } = useSubscriptionStatus();
   
   // INSTANT STATE - Available immediately
@@ -270,8 +268,7 @@ export const useInstantChat = (isOpen: boolean, preloadedPets: PetProfile[] = []
           message: userMessage,
           sessionId: sessionId,
           petId: currentSelectedPet === "none" ? null : currentSelectedPet,
-          trainerName: trainerName,
-          language: currentLanguage
+          trainerName: trainerName
         }
       });
 

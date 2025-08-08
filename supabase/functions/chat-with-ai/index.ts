@@ -16,6 +16,7 @@ import {
   generateSmartExerciseSuggestions,
   analyzeConversationContext 
 } from "./utils/chatIntelligence.ts";
+import { getUserLanguage, getFallbackLanguage } from "./utils/languageSupport.ts";
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
@@ -153,7 +154,20 @@ serve(async (req) => {
     }
 
     const { message, sessionId, petId, trainerName, createPlan, language } = requestBody;
-    userLanguage = language || 'de'; // Default to German if not specified
+    
+    // Get user's language preference from database using their email
+    const userEmail = userData.user.email;
+    const dbLanguage = await getUserLanguage(supabaseClient, userEmail);
+    
+    // Use provided language if available, otherwise use database language, fallback to German
+    userLanguage = getFallbackLanguage(language || dbLanguage);
+    
+    console.log('🌍 Language detection:', {
+      providedLanguage: language,
+      dbLanguage: dbLanguage,
+      finalLanguage: userLanguage,
+      userEmail: userEmail
+    });
 
     // Handle plan creation if requested
     if (createPlan && createPlan.title && createPlan.steps) {
