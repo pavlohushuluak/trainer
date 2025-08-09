@@ -170,7 +170,7 @@ export const Benefits = () => {
     setMousePosition({ x: 0, y: 0 });
   };
 
-    // Touch handlers for mobile swipe - both directions
+  // Touch handlers for mobile swipe - both directions
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX);
     setTouchEnd(null);
@@ -182,7 +182,7 @@ export const Benefits = () => {
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
@@ -309,7 +309,7 @@ export const Benefits = () => {
 
   return (
     <section id="benefits" className="pt-6 md:pt-10 lg:pt-16 pb-4">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
         <div className="text-center mb-6 sm:mb-8 md:mb-12">
           <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6 md:mb-8 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent px-2">
             {t('benefits.title')}
@@ -322,7 +322,7 @@ export const Benefits = () => {
         {/* 3D Carousel Container */}
         <div
           ref={carouselRef}
-          className="relative max-w-7xl mx-auto perspective-[1500px]"
+          className="relative mx-auto perspective-[1500px]"
           onMouseEnter={() => !isMobile && setIsHovered(true)}
           onMouseLeave={() => {
             !isMobile && setIsHovered(false);
@@ -332,13 +332,13 @@ export const Benefits = () => {
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          style={{
-            transform: isMobile
-              ? 'none'
-              : `rotateX(${mousePosition.y}deg) rotateY(${mousePosition.x}deg)`,
-            transformStyle: 'preserve-3d',
-            transition: isHovered && !isMobile ? 'transform 0.2s ease-out' : 'transform 0.6s ease-out'
-          }}
+          // style={{
+          //   transform: isMobile
+          //     ? 'none'
+          //     : `rotateX(${mousePosition.y}deg) rotateY(${mousePosition.x}deg)`,
+          //   transformStyle: 'preserve-3d',
+          //   transition: isHovered && !isMobile ? 'transform 0.2s ease-out' : 'transform 0.6s ease-out'
+          // }}
         >
           {/* Enhanced Previous Button */}
           <Button
@@ -381,7 +381,7 @@ export const Benefits = () => {
           </Button>
 
           {/* Main 3D Carousel */}
-          <div className="relative overflow-hidden py-4">
+          <div className="relative overflow-hidden py-20">
             <div className="relative h-[400px] md:h-[450px] lg:h-[480px]">
               {benefits.map((benefit, index) => {
                 const IconComponent = benefit.icon;
@@ -392,7 +392,7 @@ export const Benefits = () => {
                 return (
                   <div
                     key={index}
-                                         className="absolute top-0 left-1/2 w-[85%] md:w-[280px] lg:w-[320px] xl:w-[350px] h-full transition-all duration-1600 ease-out cursor-pointer"
+                    className="absolute top-0 left-1/2 w-[85%] md:w-[280px] lg:w-[320px] xl:w-[350px] h-full transition-all duration-1600 ease-out cursor-pointer"
                     style={{
                       transform: `
                         translateX(-50%) 
@@ -409,15 +409,15 @@ export const Benefits = () => {
                     onClick={() => !isCenter && goToSlide(index)}
                   >
                     <Card
-                                             className={cn(
-                         "h-full border-2 transition-all duration-1600 ease-out shadow-2xl hover:shadow-3xl relative overflow-hidden",
-                         `border-gradient-to-r ${benefit.borderGradient}`
-                       )}
-                                             style={{
-                         transform: `rotateY(${transform.rotateY * 0.3}deg)`,
-                         transformStyle: 'preserve-3d',
-                         transition: 'transform 1.6s ease-out'
-                       }}
+                      className={cn(
+                        "h-full border-2 transition-all duration-1600 ease-out shadow-2xl hover:shadow-3xl relative overflow-hidden",
+                        `border-gradient-to-r ${benefit.borderGradient}`
+                      )}
+                      style={{
+                        transform: `rotateY(${transform.rotateY * 0.3}deg)`,
+                        transformStyle: 'preserve-3d',
+                        transition: 'transform 1.6s ease-out'
+                      }}
                     >
                       {/* Dynamic Gradient Background */}
                       <div className={cn(

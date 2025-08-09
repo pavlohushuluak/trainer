@@ -241,7 +241,7 @@ export const Testimonials = () => {
 
   return (
     <section id="testimonials" className="pt-6 md:pt-10 lg:pt-16 pb-4">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-0">
         <div className="text-center mb-6 sm:mb-8 md:mb-12">
           <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6 md:mb-8 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent px-2">
             {t('testimonials.title')}
@@ -254,7 +254,7 @@ export const Testimonials = () => {
         {/* 3D Carousel Container */}
         <div
           ref={carouselRef}
-          className="relative max-w-7xl mx-auto perspective-[1500px]"
+          className="relative mx-auto perspective-[1500px]"
           onMouseEnter={() => !isMobile && setIsHovered(true)}
           onMouseLeave={() => {
             !isMobile && setIsHovered(false);
@@ -264,13 +264,13 @@ export const Testimonials = () => {
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          style={{
-            transform: isMobile
-              ? 'none'
-              : `rotateX(${mousePosition.y}deg) rotateY(${mousePosition.x}deg)`,
-            transformStyle: 'preserve-3d',
-            transition: isHovered && !isMobile ? 'transform 0.2s ease-out' : 'transform 0.6s ease-out'
-          }}
+          // style={{
+          //   transform: isMobile
+          //     ? 'none'
+          //     : `rotateX(${mousePosition.y}deg) rotateY(${mousePosition.x}deg)`,
+          //   transformStyle: 'preserve-3d',
+          //   transition: isHovered && !isMobile ? 'transform 0.2s ease-out' : 'transform 0.6s ease-out'
+          // }}
         >
           {/* Enhanced Previous Button */}
           <Button
@@ -313,7 +313,7 @@ export const Testimonials = () => {
           </Button>
 
           {/* Main 3D Carousel */}
-          <div className="relative overflow-hidden py-4">
+          <div className="relative overflow-hidden py-20">
             <div className="relative h-[450px] md:h-[400px] lg:h-[420px]">
               {testimonials.map((testimonial, index) => {
                 const screenSize = isMobile ? 'mobile' : window.innerWidth >= 1280 ? 'desktop' : 'tablet';
@@ -437,11 +437,35 @@ export const Testimonials = () => {
         </div>
       </div>
 
-      {/* CSS-in-JS for custom animations */}
+      {/* CSS-in-JS for enhanced 3D effects */}
       <style>
         {`
-          .perspective-1500 {
-            perspective: 1500px;
+          @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+          }
+          
+          .carousel-3d {
+            transform-style: preserve-3d;
+          }
+          
+          .card-glow {
+            position: relative;
+          }
+          
+          .card-glow::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1.6s ease;
+          }
+          
+          .card-glow.active::before {
+            opacity: 1;
           }
         `}
       </style>
