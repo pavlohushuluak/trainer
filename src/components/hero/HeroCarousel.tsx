@@ -329,7 +329,7 @@ export const HeroCarousel = () => {
                         ? "opacity-100 translate-y-0 scale-100" 
                         : "opacity-0 translate-y-8 scale-95"
                     )}>
-                      <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight drop-shadow-2xl bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+                      <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold pb-4 leading-tight drop-shadow-2xl bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
                         {image.title}
                       </h3>
                       <p className="text-lg sm:text-xl md:text-2xl text-white/90 leading-relaxed max-w-3xl mx-auto drop-shadow-lg font-medium">
