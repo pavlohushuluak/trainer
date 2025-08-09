@@ -432,7 +432,6 @@ export const Benefits = () => {
                               "w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center shadow-lg relative overflow-hidden",
                               `bg-gradient-to-br ${benefit.iconGradient}`
                             )}>
-                              <div className="absolute inset-0 bg-white/20 backdrop-blur-sm" />
                               <IconComponent className="w-6 h-6 lg:w-7 lg:h-7 text-white relative z-10" />
                             </div>
                           </div>
