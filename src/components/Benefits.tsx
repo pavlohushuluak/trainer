@@ -309,7 +309,7 @@ export const Benefits = () => {
 
   return (
     <section id="benefits" className="pt-6 md:pt-10 lg:pt-16 pb-4">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-0">
         <div className="text-center mb-6 sm:mb-8 md:mb-12">
           <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6 md:mb-8 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent px-2">
             {t('benefits.title')}
@@ -381,8 +381,8 @@ export const Benefits = () => {
           </Button>
 
           {/* Main 3D Carousel */}
-          <div className="relative overflow-hidden py-20">
-            <div className="relative h-[400px] md:h-[450px] lg:h-[480px]">
+          <div className="relative overflow-hidden pb-20 pt-8">
+            <div className="relative h-[400px] sm:h-[350px] md:h-[460px] lg:h-[480px]">
               {benefits.map((benefit, index) => {
                 const IconComponent = benefit.icon;
                 const screenSize = isMobile ? 'mobile' : window.innerWidth >= 1280 ? 'desktop' : 'tablet';
@@ -392,7 +392,7 @@ export const Benefits = () => {
                 return (
                   <div
                     key={index}
-                    className="absolute top-0 left-1/2 w-[85%] md:w-[280px] lg:w-[320px] xl:w-[350px] h-full transition-all duration-1600 ease-out cursor-pointer"
+                    className="absolute top-0 left-1/2 w-[85%] md:w-[280px] lg:w-[350px] h-full transition-all duration-1600 ease-out cursor-pointer"
                     style={{
                       transform: `
                         translateX(-50%) 
@@ -470,7 +470,7 @@ export const Benefits = () => {
         </div>
 
         {/* Professional Dots Indicator */}
-        <div className="flex justify-center mt-6 sm:mt-8">
+        <div className="flex justify-center mt-[-40px]">
           <div className="flex space-x-3 px-4">
             {benefits.map((_, index) => (
               <button

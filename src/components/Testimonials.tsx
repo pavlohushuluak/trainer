@@ -313,7 +313,7 @@ export const Testimonials = () => {
           </Button>
 
           {/* Main 3D Carousel */}
-          <div className="relative overflow-hidden py-20">
+          <div className="relative overflow-hidden pb-20 pt-8">
             <div className="relative h-[450px] md:h-[400px] lg:h-[420px]">
               {testimonials.map((testimonial, index) => {
                 const screenSize = isMobile ? 'mobile' : window.innerWidth >= 1280 ? 'desktop' : 'tablet';
@@ -351,7 +351,7 @@ export const Testimonials = () => {
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 opacity-20" />
 
                       <CardContent className="h-full flex flex-col justify-center p-6 md:p-8 lg:p-10 relative z-10">
-                        <div className="flex flex-col text-center gap-4 lg:gap-6">
+                        <div className="flex flex-col text-center gap-2 lg:gap-4">
                           {/* Quote Icon */}
                           <div className="text-4xl md:text-5xl lg:text-6xl text-primary/30 leading-none">
                             "
@@ -359,7 +359,7 @@ export const Testimonials = () => {
 
                           {/* Testimonial Content */}
                           <div className="flex-1">
-                            <blockquote className="text-base md:text-lg lg:text-xl text-foreground leading-relaxed mb-6 lg:mb-8 font-medium">
+                            <blockquote className="text-base md:text-lg lg:text-xl text-foreground leading-relaxed mb-4 lg:mb-6 font-medium">
                               "{testimonial.story}"
                             </blockquote>
 
@@ -396,7 +396,7 @@ export const Testimonials = () => {
         </div>
 
         {/* Professional Dots Indicator */}
-        <div className="flex justify-center mt-6 sm:mt-8">
+        <div className="flex justify-center mt-[-40px]">
           <div className="flex space-x-3 px-4">
             {testimonials.map((_, index) => (
               <button
