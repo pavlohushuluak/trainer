@@ -78,6 +78,25 @@ const MyPetTraining = () => {
   // Check if user is admin (this will be handled by MainLayout now)
   const isAdmin = false; // This will be overridden by MainLayout
 
+  // Page refresh effect - refresh the page when component mounts
+  useEffect(() => {
+    // Only refresh if we're not already in a refresh cycle
+    const hasRefreshed = sessionStorage.getItem('mein-tiertraining-refreshed');
+    
+    if (!hasRefreshed) {
+      // Mark that we've refreshed to prevent infinite refresh loops
+      sessionStorage.setItem('mein-tiertraining-refreshed', 'true');
+      
+      // Small delay to ensure the component has mounted
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    } else {
+      // Clear the flag after a successful load to allow future refreshes
+      sessionStorage.removeItem('mein-tiertraining-refreshed');
+    }
+  }, []);
+
   // Show loading only when absolutely necessary
   if (loading) {
     return (
