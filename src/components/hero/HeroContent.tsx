@@ -10,11 +10,6 @@ export const HeroContent = ({ isDevelopment }: HeroContentProps) => {
   const { t } = useTranslations();
   return (
     <>
-      {/* Badge */}
-      <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6 animate-fade-in">
-        <Zap className="h-4 w-4" />
-        <span>{isDevelopment ? t('hero.testAccess') : t('hero.riskFreeTrial')}</span>
-      </div>
 
       {/* Main Headline with Beautiful Gradient Styling */}
       <div className="mb-8 animate-professional-fade-in-up">

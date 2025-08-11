@@ -95,7 +95,7 @@ export const Hero = ({ onStartChat }: HeroProps) => {
         
         <FloatingElements />
 
-        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full mt-10">
+        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full md:mt-10">
           {/* Logo prominently placed at the top */}
           <div className="mb-8 flex justify-center">
             <ThemeLogo 
