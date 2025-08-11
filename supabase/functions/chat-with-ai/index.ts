@@ -155,6 +155,16 @@ serve(async (req) => {
 
     const { message, sessionId, petId, trainerName, createPlan, language } = requestBody;
     
+    // Debug: Log the entire request body to see what's being received
+    console.log('📨 Request body received:', {
+      messageLength: message?.length,
+      sessionId,
+      petId,
+      trainerName,
+      language,
+      hasCreatePlan: !!createPlan
+    });
+    
     // Get user's language preference from database using their email
     const userEmail = userData.user.email;
     const dbLanguage = await getUserLanguage(supabaseClient, userEmail);

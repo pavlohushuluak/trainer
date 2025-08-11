@@ -2,6 +2,7 @@
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslations } from "@/hooks/useTranslations";
 import { useChatErrorHandler } from "../utils/chatErrorHandler";
 import { useChatErrorRecovery } from "./useChatErrorRecovery";
 
@@ -14,6 +15,7 @@ interface Message {
 
 export const useMessageSender = () => {
   const { user } = useAuth();
+  const { currentLanguage } = useTranslations();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
@@ -112,7 +114,8 @@ export const useMessageSender = () => {
             sessionId: sessionId,
             petId: selectedPet === "none" ? null : selectedPet,
             petProfile: selectedPetData,
-            trainerName: sessionTrainerName
+            trainerName: sessionTrainerName,
+            language: currentLanguage
           }
         });
 

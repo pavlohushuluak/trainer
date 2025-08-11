@@ -23,7 +23,6 @@ export const Footer = () => {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <ThemeLogo className="h-8 w-auto" />
-              <h3 className="text-lg font-semibold">Tiertrainer24</h3>
             </div>
             <p className="text-muted-foreground">
               {t('footer.tagline')}

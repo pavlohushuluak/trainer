@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export const ChatDiagnostics = () => {
   const { user } = useAuth();
+  const { currentLanguage } = useTranslations();
   const [diagnostics, setDiagnostics] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -87,7 +89,8 @@ export const ChatDiagnostics = () => {
           message: 'test',
           sessionId: 'diagnostic-test',
           petId: null,
-          trainerName: 'Test'
+          trainerName: 'Test',
+          language: currentLanguage
         }
       });
 

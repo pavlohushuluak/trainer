@@ -1,5 +1,6 @@
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { ChatHeader } from "./chat/ChatHeader";
 import { PetSelector } from "./chat/PetSelector";
 import { ChatMessages } from "./chat/ChatMessages";
@@ -18,7 +19,7 @@ interface ChatModalProps {
 }
 
 export const ChatModal = ({ isOpen, onClose }: ChatModalProps) => {
-  const { t } = useTranslations();
+  const { t, currentLanguage } = useTranslations();
   const { pets } = usePetProfiles();
   
   // Separate subscription hook for immediate status
@@ -76,6 +77,20 @@ export const ChatModal = ({ isOpen, onClose }: ChatModalProps) => {
           trainerName={getTrainerName()}
           selectedPetSpecies={getSelectedPetSpecies()}
         />
+
+        {/* Debug button for language testing */}
+        <div className="p-2 border-b">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => {
+              console.log('🌍 Debug - Current language:', currentLanguage);
+              console.log('🌍 Debug - localStorage:', localStorage.getItem('i18nextLng'));
+            }}
+          >
+            Debug Language: {currentLanguage}
+          </Button>
+        </div>
 
         {/* Tierprofil-Warnung nur wenn keine Tiere vorhanden */}
         {!hasPets && <PetProfileRequiredCard />}

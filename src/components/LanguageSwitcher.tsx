@@ -31,6 +31,8 @@ export const LanguageSwitcher = () => {
 
   const handleLanguageChange = async (languageCode: 'de' | 'en') => {
     try {
+      console.log('🌍 Language switcher - Changing to:', languageCode);
+      
       // Use the persistence hook to change language
       changeLanguage(languageCode);
     

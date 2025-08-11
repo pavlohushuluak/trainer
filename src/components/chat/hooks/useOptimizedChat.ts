@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useFreeChatLimit } from "@/hooks/useFreeChatLimit";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
+import { useTranslations } from "@/hooks/useTranslations";
 import { assignTrainerForSession } from "../utils/trainerTeam";
 
 interface Message {
@@ -32,6 +33,11 @@ export const useOptimizedChat = (
 ) => {
   const { user } = useAuth();
   const { hasActiveSubscription } = useSubscriptionStatus();
+  const { currentLanguage } = useTranslations();
+  
+  // Debug: Log the current language whenever it changes
+  console.log('🌍 useOptimizedChat - Current language:', currentLanguage);
+  
   const {
     usage,
     loading: usageLoading,
@@ -89,6 +95,11 @@ export const useOptimizedChat = (
       setTrainerName(trainer);
     }
   }, [isOpen, trainerName]);
+
+  // Debug: Log language changes
+  useEffect(() => {
+    console.log('🌍 Language changed in useOptimizedChat:', currentLanguage);
+  }, [currentLanguage]);
 
   // Create session ONLY when first message is sent
   const createSessionOnDemand = useCallback(async (): Promise<
@@ -199,6 +210,9 @@ export const useOptimizedChat = (
     const aiMessageId = addOptimisticMessage("💭 Denke nach...", "assistant");
 
     try {
+      // Debug: Log the language being sent
+      console.log('🌍 Sending chat message with language:', currentLanguage);
+      
       const { data, error } = await supabase.functions.invoke("chat-with-ai", {
         body: {
           message: userMessage,
@@ -206,6 +220,7 @@ export const useOptimizedChat = (
           petId: currentSelectedPet,
           petProfile: selectedPetData,
           trainerName: trainerName,
+          language: currentLanguage,
         },
       });
 
@@ -262,6 +277,7 @@ export const useOptimizedChat = (
     selectedPet,
     pets,
     trainerName,
+    currentLanguage,
     addOptimisticMessage,
     updateMessage,
     createSessionOnDemand,
