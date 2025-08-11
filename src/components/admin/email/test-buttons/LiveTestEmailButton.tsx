@@ -3,11 +3,11 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export const LiveTestEmailButton = () => {
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   const [sending, setSending] = useState(false);
 
   const sendLiveTestEmail = async () => {
@@ -38,7 +38,7 @@ export const LiveTestEmailButton = () => {
       
       toast({
         title: t('adminEmail.testButtons.liveTest.success'),
-        description: `Welcome-E-Mail wurde erfolgreich an gl@cooper-ads.com gesendet. E-Mail-ID: ${data?.emailId}`,
+        description: t('adminEmail.testButtons.liveTest.successDescription', { emailId: data?.emailId }),
         duration: 6000
       });
     } catch (error) {
@@ -53,7 +53,7 @@ export const LiveTestEmailButton = () => {
       
       toast({
         title: t('adminEmail.testButtons.liveTest.error'),
-        description: `Fehler: ${errorMessage}`,
+        description: t('adminEmail.testButtons.liveTest.errorDescription', { errorMessage }),
         variant: "destructive",
         duration: 8000
       });
@@ -68,7 +68,7 @@ export const LiveTestEmailButton = () => {
       disabled={sending}
       className="bg-blue-600 hover:bg-blue-700 text-white"
     >
-      {sending ? '📧 Sende...' : t('adminEmail.testButtons.liveTest.title')}
+      {sending ? t('adminEmail.testButtons.specificTests.sending') : t('adminEmail.testButtons.liveTest.title')}
     </Button>
   );
 };

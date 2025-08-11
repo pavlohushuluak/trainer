@@ -101,8 +101,8 @@ export const PetSelectionModal = ({
       }
 
       toast({
-        title: "✅ Auswahl gespeichert",
-        description: `${selectedPets.length} ${selectedPets.length === 1 ? 'Tier bleibt' : 'Tiere bleiben'} aktiv. Die anderen sind archiviert und können jederzeit reaktiviert werden.`
+        title: t('subscription.petSelection.toasts.selectionSaved.title'),
+        description: t('subscription.petSelection.toasts.selectionSaved.description', { selectedCount: selectedPets.length })
       });
       
       onSelectionComplete();

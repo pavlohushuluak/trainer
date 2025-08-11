@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslations } from "@/hooks/useTranslations";
 import { RefreshCw, Gift, RotateCcw, Search } from "lucide-react";
 
 export const TrialManager = () => {
@@ -16,12 +17,13 @@ export const TrialManager = () => {
   const [trialDays, setTrialDays] = useState("7");
   const [trialStatus, setTrialStatus] = useState<any>(null);
   const { toast } = useToast();
+  const { t, currentLanguage } = useTranslations();
 
   const handleTrialAction = async (action: string) => {
     if (!email.trim()) {
       toast({
-        title: "Fehler",
-        description: "Bitte geben Sie eine E-Mail-Adresse ein",
+        title: t('trialManager.toasts.emailRequired.title'),
+        description: t('trialManager.toasts.emailRequired.description'),
         variant: "destructive"
       });
       return;
@@ -42,22 +44,24 @@ export const TrialManager = () => {
       if (action === "check") {
         setTrialStatus(data);
         toast({
-          title: "Status geladen",
-          description: `Trial-Status für ${email} wurde abgerufen`
+          title: t('trialManager.toasts.statusLoaded.title'),
+          description: t('trialManager.toasts.statusLoaded.description', { email })
         });
       } else {
         toast({
-          title: "Erfolgreich",
-          description: data.message || "Aktion erfolgreich durchgeführt"
+          title: t('trialManager.toasts.success.title'),
+          description: data.message || t('trialManager.toasts.success.description')
         });
-        // Automatisch Status neu laden
+        // Automatically reload status
         await handleTrialAction("check");
       }
     } catch (error) {
       console.error('Error managing trial:', error);
       toast({
-        title: "Fehler",
-        description: error instanceof Error ? error.message : "Unbekannter Fehler",
+        title: t('trialManager.toasts.error.title'),
+        description: t('trialManager.toasts.error.description', { 
+          error: error instanceof Error ? error.message : t('trialManager.toasts.unknownError') 
+        }),
         variant: "destructive"
       });
     } finally {
@@ -70,39 +74,39 @@ export const TrialManager = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Gift className="h-5 w-5" />
-          Trial-Management
+          {t('trialManager.title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* E-Mail Eingabe */}
+        {/* Email Input */}
         <div className="space-y-2">
-          <Label htmlFor="email">Benutzer E-Mail</Label>
+          <Label htmlFor="email">{t('trialManager.userEmail')}</Label>
           <Input
             id="email"
             type="email"
-            placeholder="benutzer@example.com"
+            placeholder={t('trialManager.userEmailPlaceholder')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
-        {/* Trial-Tage Auswahl */}
+        {/* Trial Days Selection */}
         <div className="space-y-2">
-          <Label htmlFor="trialDays">Trial-Dauer (Tage)</Label>
+          <Label htmlFor="trialDays">{t('trialManager.trialDuration')}</Label>
           <Select value={trialDays} onValueChange={setTrialDays}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="3">3 Tage</SelectItem>
-              <SelectItem value="7">7 Tage</SelectItem>
-              <SelectItem value="14">14 Tage</SelectItem>
-              <SelectItem value="30">30 Tage</SelectItem>
+              <SelectItem value="3">3 {t('trialManager.status.days')}</SelectItem>
+              <SelectItem value="7">7 {t('trialManager.status.days')}</SelectItem>
+              <SelectItem value="14">14 {t('trialManager.status.days')}</SelectItem>
+              <SelectItem value="30">30 {t('trialManager.status.days')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Aktionen */}
+        {/* Actions */}
         <div className="flex gap-2 flex-wrap">
           <Button
             onClick={() => handleTrialAction("check")}
@@ -110,7 +114,7 @@ export const TrialManager = () => {
             variant="outline"
           >
             <Search className="h-4 w-4 mr-2" />
-            Status prüfen
+            {t('trialManager.actions.checkStatus')}
           </Button>
           
           <Button
@@ -119,7 +123,7 @@ export const TrialManager = () => {
             variant="outline"
           >
             <RotateCcw className="h-4 w-4 mr-2" />
-            Trial zurücksetzen
+            {t('trialManager.actions.resetTrial')}
           </Button>
           
           <Button
@@ -127,40 +131,40 @@ export const TrialManager = () => {
             disabled={loading}
           >
             <Gift className="h-4 w-4 mr-2" />
-            {trialDays} Tage Trial gewähren
+            {t('trialManager.actions.grantTrial', { days: trialDays })}
           </Button>
         </div>
 
-        {/* Status Anzeige */}
+        {/* Status Display */}
         {trialStatus && (
           <div className="mt-6 p-4 bg-muted rounded-lg space-y-3">
-            <h3 className="font-semibold">Trial-Status für {email}</h3>
+            <h3 className="font-semibold">{t('trialManager.status.title', { email })}</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <span className="text-sm text-muted-foreground">Trial verwendet:</span>
+                <span className="text-sm text-muted-foreground">{t('trialManager.status.trialUsed')}</span>
                 <Badge variant={trialStatus.hasUsedTrial ? "destructive" : "default"}>
-                  {trialStatus.hasUsedTrial ? "Ja" : "Nein"}
+                  {trialStatus.hasUsedTrial ? t('trialManager.status.yes') : t('trialManager.status.no')}
                 </Badge>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">Trial berechtigt:</span>
+                <span className="text-sm text-muted-foreground">{t('trialManager.status.trialEligible')}</span>
                 <Badge variant={trialStatus.isEligibleForTrial ? "default" : "secondary"}>
-                  {trialStatus.isEligibleForTrial ? "Ja" : "Nein"}
+                  {trialStatus.isEligibleForTrial ? t('trialManager.status.yes') : t('trialManager.status.no')}
                 </Badge>
               </div>
               {trialStatus.trialDaysRemaining > 0 && (
                 <div>
-                  <span className="text-sm text-muted-foreground">Verbleibende Tage:</span>
+                  <span className="text-sm text-muted-foreground">{t('trialManager.status.remainingDays')}</span>
                   <Badge variant="outline">
-                    {trialStatus.trialDaysRemaining} Tage
+                    {trialStatus.trialDaysRemaining} {t('trialManager.status.days')}
                   </Badge>
                 </div>
               )}
               {trialStatus.specialTrialEnd && (
                 <div>
-                  <span className="text-sm text-muted-foreground">Spezial-Trial bis:</span>
+                  <span className="text-sm text-muted-foreground">{t('trialManager.status.specialTrialEnd')}</span>
                   <Badge variant="outline">
-                    {new Date(trialStatus.specialTrialEnd).toLocaleDateString('de-DE')}
+                    {new Date(trialStatus.specialTrialEnd).toLocaleDateString(currentLanguage === 'de' ? 'de-DE' : 'en-US')}
                   </Badge>
                 </div>
               )}
@@ -170,11 +174,11 @@ export const TrialManager = () => {
 
         {/* Info Text */}
         <div className="text-sm text-muted-foreground bg-blue-50 p-3 rounded">
-          <p><strong>Hinweise:</strong></p>
+          <p><strong>{t('trialManager.info.title')}</strong></p>
           <ul className="list-disc list-inside space-y-1 mt-2">
-            <li>Status prüfen: Zeigt den aktuellen Trial-Status an</li>
-            <li>Trial zurücksetzen: Setzt den Trial-Status zurück (als hätte der Benutzer noch nie einen Trial genutzt)</li>
-            <li>Trial gewähren: Gewährt eine spezielle Trial-Periode mit der gewählten Anzahl Tage</li>
+            <li>{t('trialManager.info.checkStatus')}</li>
+            <li>{t('trialManager.info.resetTrial')}</li>
+            <li>{t('trialManager.info.grantTrial')}</li>
           </ul>
         </div>
       </CardContent>

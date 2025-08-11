@@ -1,11 +1,13 @@
 
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslations } from "@/hooks/useTranslations";
 import { compressVideo, CompressionProgress, DEFAULT_COMPRESSION_OPTIONS } from "../utils/videoCompression";
 import { useVideoValidation } from "./videoValidation";
 
 export const useVideoUploadLogic = (onVideoSelect: (file: File | null) => void) => {
   const { toast } = useToast();
+  const { t } = useTranslations();
   const { validateVideoFile } = useVideoValidation();
   
   const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
@@ -22,7 +24,7 @@ export const useVideoUploadLogic = (onVideoSelect: (file: File | null) => void) 
 
     setOriginalFileSize(file.size);
 
-    // Entscheide ob Komprimierung nötig ist
+    // Decide if compression is needed
     const shouldCompress = file.size > DEFAULT_COMPRESSION_OPTIONS.maxSizeMB * 1024 * 1024;
 
     if (shouldCompress) {
@@ -42,15 +44,18 @@ export const useVideoUploadLogic = (onVideoSelect: (file: File | null) => void) 
         onVideoSelect(compressedFile);
 
         toast({
-          title: "Video komprimiert!",
-          description: `Dateigröße reduziert von ${(file.size / (1024 * 1024)).toFixed(1)}MB auf ${(compressedFile.size / (1024 * 1024)).toFixed(1)}MB`,
+          title: t('community.videoUpload.logic.compressionSuccess.title'),
+          description: t('community.videoUpload.logic.compressionSuccess.description', {
+            originalSize: (file.size / (1024 * 1024)).toFixed(1),
+            compressedSize: (compressedFile.size / (1024 * 1024)).toFixed(1)
+          }),
         });
 
       } catch (error) {
         
         toast({
-          title: "Komprimierung fehlgeschlagen",
-          description: "Das Video wird in Originalgröße verwendet.",
+          title: t('community.videoUpload.logic.compressionFailed.title'),
+          description: t('community.videoUpload.logic.compressionFailed.description'),
           variant: "destructive"
         });
 

@@ -2,11 +2,11 @@
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export const SpecificEmailTestButtons = () => {
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslations();
 
   const handleEmailError = (error: any, actionType: string) => {
     console.error(`${actionType} error:`, error);
@@ -20,7 +20,7 @@ export const SpecificEmailTestButtons = () => {
     
     toast({
       title: t('adminEmail.testButtons.specificTests.error'),
-      description: `Fehler: ${errorMessage}`,
+      description: t('adminEmail.testButtons.specificTests.errorDescription', { errorMessage }),
       variant: "destructive",
       duration: 8000
     });
@@ -29,7 +29,7 @@ export const SpecificEmailTestButtons = () => {
   const handleEmailSuccess = (data: any, emailType: string) => {
     toast({
       title: t('adminEmail.testButtons.specificTests.success'),
-      description: `E-Mail wurde erfolgreich an ${data?.finalRecipient || 'owydwaldt12@gmail.com'} gesendet.`,
+      description: t('adminEmail.testButtons.specificTests.successDescription', { recipient: data?.finalRecipient || 'owydwaldt12@gmail.com' }),
       duration: 4000
     });
   };

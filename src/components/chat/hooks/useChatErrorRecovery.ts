@@ -1,52 +1,54 @@
 
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
 
 export const useChatErrorRecovery = () => {
   const { toast } = useToast();
+  const { t } = useTranslations();
   const [isRecovering, setIsRecovering] = useState(false);
 
   const recoverFromError = useCallback(async (error: any, context: string) => {
     setIsRecovering(true);
 
-    let recoveryAction = 'Bitte versuche es erneut.';
+    let recoveryAction = t('chat.errorRecovery.defaultAction');
     let canRetry = true;
 
     // Analyze error type and suggest specific recovery
     if (error?.message?.includes('timeout')) {
-      recoveryAction = '⏱️ Timeout erkannt. Der TierTrainer wird automatisch erneut versucht...';
+      recoveryAction = t('chat.errorRecovery.timeout');
       canRetry = true;
     } else if (error?.message?.includes('Failed to fetch')) {
-      recoveryAction = '🌐 Netzwerkproblem erkannt. Prüfe deine Internetverbindung und versuche es erneut.';
+      recoveryAction = t('chat.errorRecovery.networkProblem');
       canRetry = true;
     } else if (error?.message?.includes('Session')) {
-      recoveryAction = '🔑 Session-Problem erkannt. Prüfe deine Anmeldung...';
+      recoveryAction = t('chat.errorRecovery.sessionProblem');
       canRetry = true;
       
       // Try to refresh session
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
-          recoveryAction = '🔑 Bitte melde dich erneut an.';
+          recoveryAction = t('chat.errorRecovery.loginRequired');
           canRetry = false;
         }
       } catch (sessionError) {
-        recoveryAction = '🔑 Anmeldung fehlgeschlagen. Bitte lade die Seite neu.';
+        recoveryAction = t('chat.errorRecovery.loginFailed');
         canRetry = false;
       }
     } else if (error?.message?.includes('Chat-Service') || error?.message?.includes('Edge Function')) {
-      recoveryAction = '🤖 Chat-Service ist vorübergehend nicht verfügbar. Bitte versuche es in wenigen Minuten erneut.';
+      recoveryAction = t('chat.errorRecovery.chatServiceUnavailable');
       canRetry = false;
     } else if (error?.message?.includes('OpenAI')) {
-      recoveryAction = '🧠 KI-Service ist vorübergehend nicht verfügbar. Versuche es später erneut.';
+      recoveryAction = t('chat.errorRecovery.aiServiceUnavailable');
       canRetry = false;
     }
 
     // Only show toast for final failures to avoid spam
     if (!canRetry) {
       toast({
-        title: "Chat-Problem erkannt",
+        title: t('chat.errorRecovery.title'),
         description: recoveryAction,
         variant: "destructive"
       });
@@ -54,7 +56,7 @@ export const useChatErrorRecovery = () => {
 
     setIsRecovering(false);
     return { canRetry, recoveryAction };
-  }, [toast]);
+  }, [toast, t]);
 
   return {
     recoverFromError,

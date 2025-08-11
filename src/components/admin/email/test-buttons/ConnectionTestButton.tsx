@@ -2,11 +2,11 @@
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export const ConnectionTestButton = () => {
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslations();
 
   const testEmailConfig = async () => {
     try {
@@ -47,7 +47,7 @@ export const ConnectionTestButton = () => {
       }
       
       // Provide specific guidance based on error type
-      let description = `Edge Functions Fehler: ${errorMessage}`;
+      let description = t('adminEmail.testButtons.connectionTest.errorDescription', { errorMessage });
       
       if (errorMessage.includes('Failed to fetch')) {
         description = t('adminEmail.testButtons.connectionTest.errorDescriptions.failedToFetch');

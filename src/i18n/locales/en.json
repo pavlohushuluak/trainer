@@ -84,6 +84,45 @@
     "feedbackError": {
       "title": "Error",
       "description": "Feedback could not be submitted."
+    },
+    "admin": {
+      "ticketManager": {
+        "loadingError": {
+          "title": "Error loading tickets",
+          "description": "Tickets could not be loaded."
+        },
+        "messageSent": {
+          "title": "Message sent",
+          "description": "Your response has been sent to the user."
+        },
+        "sendError": {
+          "title": "Error sending",
+          "description": "Message could not be sent."
+        }
+      }
+    },
+    "chat": {
+      "welcomeMessage": "Hello 👋 I'm your support assistant – ready to help you and your pet in the best possible way.\n\nWhat's on your mind?",
+      "ticketCreationError": {
+        "title": "Error",
+        "description": "Ticket could not be created."
+      },
+      "messageSendError": {
+        "title": "Message could not be sent",
+        "description": "Please try again."
+      },
+      "satisfaction": {
+        "thankYouMessage": "Great – we're glad that you and your pet found a solution! 🐾❤️\n\nYour request is now complete. If you have questions later, we're happy to be there for you again.",
+        "thankYouToast": {
+          "title": "Thank you!",
+          "description": "Nice that we could help. 🐾"
+        },
+        "escalationMessage": "All right – I'm forwarding your request to our human team. 🤝\n\nWe'll get back to you as quickly as possible directly here in the chat. Your pet and you are in the best hands with us!",
+        "escalationToast": {
+          "title": "Forwarded to team",
+          "description": "Our support team is now taking over for you."
+        }
+      }
     }
   },
   "navigation": {
@@ -627,6 +666,51 @@
       },
       "fileReadError": "Error reading file",
       "noDataError": "No analysis data received"
+    },
+    "logic": {
+      "petProfileRequired": {
+        "title": "Pet profile required",
+        "description": "To save the training plan, please create a pet profile first."
+      },
+      "planSaved": {
+        "title": "Training plan saved! 🎉",
+        "description": "You can find your new plan in the progress area."
+      },
+      "savePlanError": {
+        "title": "Error saving",
+        "description": "The training plan could not be saved."
+      },
+      "analysisSaved": {
+        "title": "Analysis saved! 💾",
+        "description": "The image analysis has been saved to your profile."
+      },
+      "saveAnalysisError": {
+        "title": "Error saving",
+        "description": "The analysis could not be saved."
+      },
+      "trainingPlan": {
+        "goals": {
+          "relaxed": "{{petName}} should behave more relaxed in similar situations",
+          "bonding": "Strengthening the human-animal bond through targeted training",
+          "wellbeing": "Improving body language and well-being"
+        },
+        "steps": {
+          "observation": {
+            "title": "Observation & Relaxation",
+            "description": "Start with quiet observation of {{petName}}. Create a relaxed atmosphere and reward calm behavior.",
+            "difficulty": "Beginner"
+          },
+          "targeted": {
+            "title": "Targeted Exercise",
+            "difficulty": "Advanced"
+          },
+          "reinforcement": {
+            "title": "Positive Reinforcement",
+            "description": "Reward {{petName}} for every small progress. Always end training with a positive experience.",
+            "difficulty": "Beginner"
+          }
+        }
+      }
     }
   },
   "chat": {
@@ -723,6 +807,33 @@
         "generalAdvice": "🌟 General pet advice (no specific pet)",
         "trainingFor": "Training for"
       }
+    },
+    "validation": {
+      "error": "Error",
+      "chatPreparing": "Chat is being prepared... Please try again in a moment!",
+      "loginRequired": {
+        "title": "Error",
+        "description": "You must be logged in to use the chat."
+      },
+      "petProfileRequired": {
+        "title": "Pet profile required",
+        "description": "Create a pet profile first to use the chat."
+      },
+      "freeTrialEnded": {
+        "title": "Free trial ended",
+        "description": "Upgrade to Premium for unlimited consultation."
+      }
+    },
+    "errorRecovery": {
+      "title": "Chat problem detected",
+      "defaultAction": "Please try again.",
+      "timeout": "⏱️ Timeout detected. TierTrainer will automatically retry...",
+      "networkProblem": "🌐 Network problem detected. Check your internet connection and try again.",
+      "sessionProblem": "🔑 Session problem detected. Checking your login...",
+      "loginRequired": "🔑 Please log in again.",
+      "loginFailed": "🔑 Login failed. Please reload the page.",
+      "chatServiceUnavailable": "🤖 Chat service is temporarily unavailable. Please try again in a few minutes.",
+      "aiServiceUnavailable": "🧠 AI service is temporarily unavailable. Try again later."
     }
   },
   "settings": {
@@ -1248,19 +1359,76 @@
         "title": "Test Email Validation",
         "description": "Test email validation and template rendering",
         "success": "✅ Validation successful",
-        "error": "❌ Validation error"
-      },
-      "comprehensiveTest": {
-        "title": "Comprehensive Email Test",
-        "description": "Test all email functions and templates",
-        "success": "✅ All tests successful",
-        "error": "❌ Test failed"
-      },
+        "error": "❌ Validation error",
+        "loading": "Testing email configuration...",
+        "toasts": {
+          "testEmailFailed": {
+            "title": "❌ Test email failed",
+            "description": "Error sending test email: {{error}}"
+          },
+          "testEmailSuccess": {
+            "title": "✅ Test email sent",
+            "description": "Test email was successfully sent (ID: {{emailId}})"
+          },
+          "testEmailPartialFailure": {
+            "title": "⚠️ Email test partially failed",
+            "description": "{{error}}"
+          },
+          "validationError": {
+            "title": "❌ Validation error",
+            "description": "Error: {{error}}"
+          }
+        },
+        "status": {
+          "successful": "Successful",
+          "failed": "Failed",
+          "error": "Error:",
+          "emailId": "Email ID:"
+        },
+        "validation": {
+          "loading": "Validating email setup...",
+          "apiKeyValid": "API key valid",
+          "apiKeyInvalid": "API key invalid",
+          "domainsVerified": "domains verified",
+          "testEmailSent": "Test email successfully sent",
+          "configurationUpdated": "Configuration updated",
+          "domainVerificationRequired": "Domain verification required",
+          "domainNote": "NOTE: Domain mail.tiertrainer24.com must be verified in Resend",
+          "unknownValidationError": "Unknown validation error",
+          "validationFailed": "Validation failed",
+          "solutionSteps": "Solution steps:",
+          "error": "Error:",
+          "status": "Status:",
+          "functional": "Functional",
+          "faulty": "Faulty",
+          "domainVerificationRequiredNote": "(Domain verification required)",
+          "apiKey": "API Key:",
+          "domains": "Domains:",
+          "emailSending": "Email sending:",
+          "testEmailId": "Test email ID:",
+          "lastSync": "Last sync:",
+          "troubleshooting": "Solution steps:"
+        },
+        "sync": {
+          "configurationAlreadySynced": "✅ Configuration already synchronized",
+          "configurationAlreadySyncedDescription": "API key is valid and functional. No synchronization required.",
+          "synchronizationRequired": "⚠️ Synchronization required",
+          "synchronizationRequiredDescription": "Please update the RESEND_API_KEY in Supabase Edge Function Secrets and wait 1-2 minutes.",
+          "synchronizationFailed": "❌ Synchronization failed",
+          "synchronizationFailedDescription": "Error: {{error}}"
+        }
+      }
+    }
+  },
+  "adminEmail": {
+    "testButtons": {
       "liveTest": {
         "title": "Send Live Email",
         "description": "Send a test email to the configured address",
         "success": "✅ Test email sent",
-        "error": "❌ Email could not be sent"
+        "error": "❌ Email could not be sent",
+        "successDescription": "Welcome email was successfully sent to gl@cooper-ads.com. Email ID: {{emailId}}",
+        "errorDescription": "Error: {{errorMessage}}"
       },
       "specificTests": {
         "title": "Specific Email Tests",
@@ -1278,7 +1446,10 @@
           "cancellation": "📅 Test Cancellation"
         },
         "success": "✅ Test email sent",
-        "error": "❌ Test failed"
+        "error": "❌ Test failed",
+        "errorDescription": "Error: {{errorMessage}}",
+        "successDescription": "Email was successfully sent to {{recipient}}.",
+        "sending": "📧 Sending..."
       }
     }
   },
@@ -1343,6 +1514,126 @@
         "cancelledPeriodEndDescription": "Subscription runs until the end of the period.",
         "cancellationError": "Error during cancellation",
         "cancellationErrorDescription": "Cancellation could not be processed."
+      }
+    },
+    "cancellationFlow": {
+      "toasts": {
+        "cancelledWithRefund": {
+          "title": "💰 Cancellation with refund successful",
+          "description": "You have received €{{refundAmount}} back. The money will be in your account within 3-5 business days. Thank you for trying TierTrainer24! 🐾"
+        },
+        "cancelledImmediate": {
+          "title": "💰 Cancellation with immediate termination",
+          "description": "Your subscription has been terminated immediately. Thank you for trying TierTrainer24! 🐾"
+        },
+        "cancelledPeriodEnd": {
+          "title": "Cancellation confirmed",
+          "description": "Sorry to see you go! Your access remains active until {{subscriptionEnd}}."
+        },
+        "cancellationError": {
+          "title": "Cancellation error",
+          "description": "{{errorMessage}}"
+        }
+      },
+      "ui": {
+        "feedback": {
+          "title": "Hey – sorry you're thinking of leaving 😢",
+          "description": "We've put a lot of heart into lovable – and that's exactly why we want to hear what you were missing. Maybe there's a better way than goodbye?",
+          "reasonPlaceholder": "What is the main reason?",
+          "reasons": {
+            "tooLittleUse": "I use it too rarely",
+            "tooExpensive": "It's too expensive for me",
+            "missingFeature": "I'm missing a specific feature",
+            "technicalIssues": "I had technical problems",
+            "other": "Something else"
+          },
+          "otherPlaceholder": "Tell us more...",
+          "cancel": "Cancel",
+          "continue": "Continue"
+        },
+        "offer": {
+          "title": "Thank you for your honest feedback 💛",
+          "description": "Maybe give us another chance? We invite you to a <strong>free month</strong> – completely risk-free, to experience lovable anew.",
+          "freeMonthOffer": {
+            "title": "Free Month Offer",
+            "description": "30 days free • Cancel anytime • All Premium features"
+          },
+          "activateFreeMonth": "✅ Activate free month & continue",
+          "cancelAnyway": "❌ Cancel anyway"
+        },
+        "downgrade": {
+          "title": "Maybe a smaller package?",
+          "description": "Maybe a smaller package just fits better for you? This way you stay with us – without financially burdening yourself.",
+          "basicPackage": {
+            "title": "Basic Package",
+            "description": "Perfect for occasional use",
+            "price": "4.99€",
+            "perMonth": "/month",
+            "save": "💰 Save 5€ per month!",
+            "features": {
+              "chats": "✅ 10 AI-Chats per month",
+              "profile": "✅ 1 pet profile",
+              "plans": "✅ Basic training plans"
+            }
+          },
+          "switchToBasic": "Switch to Basic package now",
+          "cancelAnyway": "Cancel anyway"
+        },
+        "final": {
+          "title": "We thank you from the bottom of our hearts 🙏",
+          "description": "Your access remains active until <strong>{{subscriptionEnd}}</strong> – maybe you'll come back.",
+          "message": "We would be happy about that! 💫",
+          "info": {
+            "email": "📧 You will receive a confirmation email",
+            "reminder": "📅 Reminder 1 week before expiry with reactivation offer"
+          },
+          "cancelFinally": "Cancel finally",
+          "dontCancel": "Don't cancel after all"
+        }
+      },
+      "toasts": {
+        "freeMonthActivated": {
+          "title": "🎉 Free month activated!",
+          "description": "You gave us a second chance – we give everything to make it worth it! 💛"
+        },
+        "downgradeSuccessful": {
+          "title": "Downgrade successful",
+          "description": "You have been switched to the Basic package. Thank you for staying with us! 🌟"
+        },
+        "subscriptionCancelled": {
+          "title": "Subscription cancelled",
+          "description": "We thank you from the bottom of our hearts for your time with us 🙏 Your access remains active until {{subscriptionEnd}}."
+        }
+      }
+    },
+    "enhancedCancellationFlow": {
+      "systemNotifications": {
+        "cancellationSuccessful": "Cancellation successful",
+        "cancellationFailed": "Cancellation error",
+        "cancellationProcessed": "Cancellation successfully processed for {{userEmail}}",
+        "cancellationError": "Cancellation error: {{error}}"
+      },
+      "toasts": {
+        "cancelledWithRefund": {
+          "title": "💰 Cancellation with full refund",
+          "description": "Your subscription has been cancelled and €{{refundAmount}} will be refunded within 3-5 business days. All premium features have been deactivated. You will receive a confirmation email."
+        },
+        "cancelledImmediate": {
+          "title": "✅ Immediate cancellation successful",
+          "description": "Your subscription has been terminated immediately and all premium features deactivated. You will receive a confirmation email."
+        },
+        "cancelledPeriodEnd": {
+          "title": "📅 Cancellation confirmed for period end",
+          "description": "Sorry to see you go! Your access remains active until {{subscriptionEnd}}. You will receive a confirmation email."
+        },
+        "cancellationError": {
+          "title": "❌ Cancellation error",
+          "description": "The cancellation could not be processed: {{error}}. Please try again or contact support."
+        }
+      },
+      "cancellationReasons": {
+        "moneyBackGuarantee": "Money-back guarantee",
+        "regularCancellation": "Regular cancellation"
       }
     },
     "testUserManagement": {
@@ -1748,6 +2039,67 @@
         "description": "You don't have permission to access this area.",
         "loginButton": "Go to Admin Login"
       }
+    },
+    "emailLogs": {
+      "title": "📧 Email Logs & History",
+      "description": "Overview of all sent emails and their status",
+      "loading": "Loading email logs...",
+      "statistics": {
+        "total": "Total",
+        "sent": "Sent",
+        "failed": "Failed",
+        "processed": "Processed"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by email, subject...",
+        "status": "Status",
+        "emailType": "Email Type",
+        "allStatuses": "All Statuses",
+        "allTypes": "All Types",
+        "refresh": "🔄 Refresh",
+        "export": "CSV Export",
+        "exportShort": "Export"
+      },
+      "emailTypes": {
+        "welcome_email": "🎉 Welcome",
+        "checkout_confirmation": "💳 Checkout",
+        "cancellation_email": "📅 Cancellation",
+        "support_notification": "🎫 Support",
+        "payment_notification": "💰 Payment",
+        "email_config_change": "⚙️ Configuration"
+      },
+      "status": {
+        "sent": "✅ Sent",
+        "failed": "❌ Error",
+        "processed": "⚙️ Processed"
+      },
+      "table": {
+        "date": "Date",
+        "type": "Type",
+        "recipient": "Recipient",
+        "subject": "Subject",
+        "status": "Status",
+        "details": "Details",
+        "noLogsFound": "No email logs found"
+      },
+      "pagination": {
+        "page": "Page",
+        "of": "of",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "results": {
+        "showing": "showing",
+        "of": "of",
+        "emails": "emails",
+        "filteredBy": "filtered by"
+      },
+      "toasts": {
+        "loadError": {
+          "title": "Error loading email logs",
+          "description": "Email history could not be loaded."
+        }
+      }
     }
   },
   "training": {
@@ -2019,6 +2371,24 @@
           "title": "❌ Error",
           "description": "Plan could not be created"
         }
+      }
+    },
+    "usePlans": {
+      "createPlan": {
+        "title": "Plan created",
+        "description": "Your new plan has been successfully created."
+      },
+      "createError": {
+        "title": "Error",
+        "description": "An error occurred while creating the plan."
+      },
+      "updatePlan": {
+        "title": "Plan updated",
+        "description": "Your plan has been successfully updated."
+      },
+      "deletePlan": {
+        "title": "Plan deleted",
+        "description": "Your plan has been successfully deleted."
       }
     },
     "emptyPlansState": {
@@ -2460,6 +2830,52 @@
         "default": "Sign in"
       }
     },
+    "authCallback": {
+      "emailConfirmed": {
+        "title": "Email confirmed!",
+        "description": "Your account has been successfully activated. Welcome!"
+      },
+      "emailConfirmedCheckout": {
+        "title": "Email confirmed!",
+        "description": "Your account has been successfully activated. Redirecting to Stripe for {{priceType}}..."
+      },
+      "loginFailed": {
+        "title": "Login failed",
+        "description": "An error occurred during login."
+      },
+      "loginCancelled": {
+        "title": "Login failed",
+        "description": "The login was cancelled."
+      },
+      "linkExpired": {
+        "title": "Login failed",
+        "description": "The link has expired. Please try again."
+      },
+      "invalidLink": {
+        "title": "Invalid link",
+        "description": "The password reset link is invalid or expired."
+      },
+      "confirmationFailed": {
+        "title": "Confirmation failed",
+        "description": "The confirmation link is invalid or expired."
+      },
+      "loginRequired": {
+        "title": "Login required",
+        "description": "Please log in to continue."
+      },
+      "loginSuccessful": {
+        "title": "Login successful!",
+        "description": "Welcome to TierTrainer!"
+      },
+      "alreadyLoggedIn": {
+        "title": "Already logged in!",
+        "description": "You are already successfully logged in."
+      },
+      "unexpectedError": {
+        "title": "Confirmation failed",
+        "description": "An unexpected error occurred."
+      }
+    },
     "confirmPassword": {
       "label": "Confirm password",
       "placeholder": "Confirm password",
@@ -2500,9 +2916,21 @@
     "protectedRoute": {
       "checkingAuth": "Checking authentication..."
     },
-    "loadingScreen": {
+        "loadingScreen": {
       "defaultMessage": "Email is being confirmed...",
       "pleaseWait": "Please wait a moment."
+    },
+    "smartLogin": {
+      "welcomeToast": {
+        "title": "🐾 Welcome!",
+        "description": "You have successfully logged in."
+      }
+    },
+    "stateHandler": {
+      "checkoutError": {
+        "title": "Checkout Error",
+        "description": "Please try again."
+      }
     },
     "emailSignUpTab": {
       "title": {
@@ -2543,6 +2971,55 @@
         },
         "loginFailed": "Sign-in failed",
         "signupFailed": "Registration failed"
+      },
+      "form": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email Address",
+        "password": "Password",
+        "firstNamePlaceholder": "Max",
+        "lastNamePlaceholder": "Mustermann",
+        "emailPlaceholder": "max@example.com",
+        "passwordPlaceholder": "At least 6 characters",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "registerButton": "Register for free now",
+        "registering": "Registration in progress...",
+        "termsAgreement": "By registering, you agree to our",
+        "privacyPolicy": "Privacy Policy",
+        "termsOfService": "Terms of Service"
+      },
+      "errors": {
+        "accountAlreadyExists": {
+          "title": "Account already exists",
+          "description": "An account with this email address already exists. Please log in."
+        },
+        "passwordTooShort": {
+          "title": "Password too short",
+          "description": "The password must be at least 6 characters long."
+        },
+        "invalidEmail": {
+          "title": "Invalid email",
+          "description": "Please enter a valid email address."
+        },
+        "registrationFailed": {
+          "title": "Registration failed",
+          "description": "An unknown error occurred"
+        },
+        "generalError": {
+          "title": "Registration failed",
+          "description": "An unknown error occurred. Please try again."
+        }
+      },
+      "success": {
+        "registrationSuccessful": {
+          "title": "🎉 Registration successful!",
+          "description": "Please check your email inbox and confirm your email address."
+        },
+        "welcome": {
+          "title": "🎉 Welcome!",
+          "description": "Your account has been successfully created."
+        }
       }
     },
     "googleSignUpTab": {
@@ -2899,6 +3376,17 @@
           "question": "Did this answer help you?",
           "yes": "Yes, thanks!",
           "no": "Need more help"
+        },
+        "errorHandler": {
+          "temporaryProblem": "Temporary Problem",
+          "chatError": "Chat Error",
+          "defaultMessage": "Message could not be sent.",
+          "timeout": "⏱️ Timeout - TierTrainer needs longer than usual. Please try again.",
+          "serviceUpdate": "🔧 TierTrainer service is being updated. Please try again in a few minutes.",
+          "networkProblem": "🌐 Network problem detected. Please check your internet connection and try again.",
+          "sessionExpired": "🔑 Your session has expired. Please reload the page and log in again.",
+          "chatServiceUnavailable": "🤖 Chat service is temporarily unavailable. We're working on it - please try again in a few minutes.",
+          "genericError": "💭 {errorMessage}"
         }
       },
       "subscriptionManager": {
@@ -3167,6 +3655,26 @@
         },
         "preview": {
           "compressed": "{percent}% smaller"
+        },
+        "validation": {
+          "invalidFormat": {
+            "title": "Invalid file format",
+            "description": "Please select an MP4, MOV, AVI or WebM file."
+          },
+          "fileTooLarge": {
+            "title": "File too large",
+            "description": "The video must not exceed 50MB."
+          }
+        },
+        "logic": {
+          "compressionSuccess": {
+            "title": "Video compressed!",
+            "description": "File size reduced from {originalSize}MB to {compressedSize}MB"
+          },
+          "compressionFailed": {
+            "title": "Compression failed",
+            "description": "The video will be used in original size."
+          }
         }
       }
     },
@@ -3266,6 +3774,46 @@
     "guaranteeIncluded": "💰 14-day money-back guarantee included – Checkout will open in new tab",
     "error": "Error",
     "couldNotCreate": "Checkout could not be created"
+  },
+  "checkoutRecovery": {
+    "title": "Checkout Problem?",
+    "description": "If the checkout didn't work, you can try again here or report the problem to us.",
+    "retry": {
+      "title": "Try again",
+      "monthlyPremium": "Premium Monthly Subscription",
+      "sixMonthPackage": "6-Month Package"
+    },
+    "report": {
+      "title": "Report problem",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "your@email.com",
+      "reportButton": "Report problem",
+      "reporting": "Reporting..."
+    },
+    "tip": "💡 <strong>Tip:</strong> Also check your spam folder for emails from Stripe or us.",
+    "toasts": {
+      "emailRequired": {
+        "title": "Email required",
+        "description": "Please enter your email address."
+      },
+      "problemReported": {
+        "title": "Problem reported",
+        "description": "We have received your problem and will take care of it immediately."
+      }
+    }
+  },
+  "cancellationConfirmationEmail": {
+    "defaultReason": "User request",
+    "toasts": {
+      "emailSent": {
+        "title": "📧 Confirmation email sent",
+        "description": "You will receive a confirmation of your cancellation by email."
+      },
+      "cancellationSuccessful": {
+        "title": "Cancellation successful",
+        "description": "Your cancellation has been processed. The confirmation email could not be sent."
+      }
+    }
   },
   "pets": {
     "title": "My Pets",
@@ -3587,6 +4135,12 @@
       "selectionRequired": {
         "title": "Selection Required",
         "description": "Please select at least {maxAllowed, plural, one {one pet} other {# pets}}."
+      },
+      "toasts": {
+        "selectionSaved": {
+          "title": "✅ Selection saved",
+          "description": "{selectedCount} {selectedCount, plural, one {pet remains} other {pets remain}} active. The others are archived and can be reactivated anytime."
+        }
       }
     }
   },
@@ -4062,6 +4616,52 @@
       "unknownError": "Unknown error"
     }
   },
+  "trialManager": {
+    "title": "Trial Management",
+    "userEmail": "User Email",
+    "userEmailPlaceholder": "user@example.com",
+    "trialDuration": "Trial Duration (Days)",
+    "actions": {
+      "checkStatus": "Check Status",
+      "resetTrial": "Reset Trial",
+      "grantTrial": "Grant {{days}} Days Trial"
+    },
+    "status": {
+      "title": "Trial Status for {{email}}",
+      "trialUsed": "Trial Used:",
+      "trialEligible": "Trial Eligible:",
+      "remainingDays": "Remaining Days:",
+      "specialTrialEnd": "Special Trial Until:",
+      "yes": "Yes",
+      "no": "No",
+      "days": "Days"
+    },
+    "info": {
+      "title": "Notes:",
+      "checkStatus": "Check Status: Shows the current trial status",
+      "resetTrial": "Reset Trial: Resets the trial status (as if the user never used a trial)",
+      "grantTrial": "Grant Trial: Grants a special trial period with the selected number of days"
+    },
+    "toasts": {
+      "emailRequired": {
+        "title": "Error",
+        "description": "Please enter an email address"
+      },
+      "statusLoaded": {
+        "title": "Status Loaded",
+        "description": "Trial status for {{email}} was retrieved"
+      },
+      "success": {
+        "title": "Success",
+        "description": "Action completed successfully"
+      },
+      "error": {
+        "title": "Error",
+        "description": "{{error}}"
+      },
+      "unknownError": "Unknown error"
+    }
+  },
   "chatDiagnostics": {
     "title": "🔧 Chat System Diagnostics",
     "description": "This diagnostics helps identify and fix problems with the chat system."
@@ -4081,5 +4681,35 @@
     "noteInterface": "The user interface will be displayed in your chosen language",
     "noteSupport": "Support will be provided in your chosen language",
     "refreshPage": "Refresh Page"
+  },
+  "hook": {
+    "loginRequired": {
+      "title": "Error",
+      "description": "You must be logged in to set language preference"
+    },
+    "saved": {
+      "title": "Language preference saved",
+      "description": "Your language preference has been set to {{language}}"
+    },
+    "updated": {
+      "title": "Language preference updated",
+      "description": "Your language preference has been updated to {{language}}"
+    },
+    "deleted": {
+      "title": "Language preference deleted",
+      "description": "Your language preference has been removed"
+    },
+    "deleteLoginRequired": {
+      "title": "Error",
+      "description": "You must be logged in to delete language preference"
+    },
+    "saveError": {
+      "title": "Error",
+      "description": "Failed to save language preference. Please try again."
+    },
+    "deleteError": {
+      "title": "Error",
+      "description": "Failed to delete language preference. Please try again."
+    }
   }
 }

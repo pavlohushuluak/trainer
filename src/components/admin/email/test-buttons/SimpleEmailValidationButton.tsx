@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { CheckCircle, XCircle, Loader2, AlertTriangle } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export const SimpleEmailValidationButton = () => {
   const [loading, setLoading] = useState(false);
   const [lastResult, setLastResult] = useState<any>(null);
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslations();
 
   const validateEmailSetup = async () => {
     setLoading(true);
@@ -31,8 +31,8 @@ export const SimpleEmailValidationButton = () => {
         });
         
         toast({
-          title: t('adminEmail.testButtons.emailValidation.error'),
-          description: `Fehler beim Senden der Test-E-Mail: ${testError.message}`,
+          title: t('adminEmail.testButtons.emailValidation.toasts.testEmailFailed.title'),
+          description: t('adminEmail.testButtons.emailValidation.toasts.testEmailFailed.description', { error: testError.message }),
           variant: "destructive",
           duration: 10000
         });
@@ -42,14 +42,14 @@ export const SimpleEmailValidationButton = () => {
       if (testData?.success) {
         setLastResult({ 
           valid: true, 
-          message: 'E-Mail erfolgreich gesendet',
+          message: t('adminEmail.testButtons.emailValidation.status.successful'),
           emailId: testData.emailId,
           step: 'test_email_send'
         });
         
         toast({
-          title: t('adminEmail.testButtons.emailValidation.success'),
-          description: `Test-E-Mail wurde erfolgreich gesendet (ID: ${testData.emailId})`,
+          title: t('adminEmail.testButtons.emailValidation.toasts.testEmailSuccess.title'),
+          description: t('adminEmail.testButtons.emailValidation.toasts.testEmailSuccess.description', { emailId: testData.emailId }),
           duration: 8000
         });
       } else {
@@ -60,8 +60,8 @@ export const SimpleEmailValidationButton = () => {
         });
         
         toast({
-          title: "⚠️ E-Mail-Test teilweise fehlgeschlagen",
-          description: testData?.error || 'Unbekannter Fehler beim E-Mail-Versand',
+          title: t('adminEmail.testButtons.emailValidation.toasts.testEmailPartialFailure.title'),
+          description: t('adminEmail.testButtons.emailValidation.toasts.testEmailPartialFailure.description', { error: testData?.error || t('adminEmail.testButtons.connectionTest.errorDescriptions.unknown') }),
           variant: "destructive",
           duration: 10000
         });
@@ -76,8 +76,8 @@ export const SimpleEmailValidationButton = () => {
       });
       
       toast({
-        title: t('adminEmail.testButtons.emailValidation.error'),
-        description: `Fehler: ${error.message}`,
+        title: t('adminEmail.testButtons.emailValidation.toasts.validationError.title'),
+        description: t('adminEmail.testButtons.emailValidation.toasts.validationError.description', { error: error.message }),
         variant: "destructive",
         duration: 8000
       });
@@ -113,7 +113,7 @@ export const SimpleEmailValidationButton = () => {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Teste E-Mail-Konfiguration...
+              {t('adminEmail.testButtons.emailValidation.loading')}
             </>
           ) : (
             <>
@@ -126,16 +126,16 @@ export const SimpleEmailValidationButton = () => {
         {lastResult && (
           <div className="mt-3 text-xs">
             <div className={`p-2 rounded text-white ${lastResult.valid ? 'bg-green-600 dark:bg-green-500' : 'bg-red-600 dark:bg-red-500'}`}>
-              <strong>Status:</strong> {lastResult.valid ? 'Erfolgreich' : 'Fehlgeschlagen'}
+              <strong>Status:</strong> {lastResult.valid ? t('adminEmail.testButtons.emailValidation.status.successful') : t('adminEmail.testButtons.emailValidation.status.failed')}
             </div>
             {lastResult.error && (
               <div className="mt-1 p-2 bg-red-100 dark:bg-red-900/20 rounded text-red-700 dark:text-red-300 text-xs border border-red-200 dark:border-red-800">
-                <strong>Fehler:</strong> {lastResult.error}
+                <strong>{t('adminEmail.testButtons.emailValidation.status.error')}</strong> {lastResult.error}
               </div>
             )}
             {lastResult.emailId && (
               <div className="mt-1 p-2 bg-green-100 dark:bg-green-900/20 rounded text-green-700 dark:text-green-300 text-xs border border-green-200 dark:border-green-800">
-                <strong>E-Mail ID:</strong> {lastResult.emailId}
+                <strong>{t('adminEmail.testButtons.emailValidation.status.emailId')}</strong> {lastResult.emailId}
               </div>
             )}
           </div>

@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useAuthOperations } from "@/hooks/auth/useAuthOperations";
 import { Loader2, User, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslations } from "@/hooks/useTranslations";
 import { detectBrowserLanguage } from "@/utils/languageSupport";
 
 interface EmailSignUpTabProps {
@@ -21,6 +22,7 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const { signUp } = useAuthOperations();
   const { toast } = useToast();
+  const { t } = useTranslations();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,26 +46,26 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
         // Handle specific error cases
         if (error.message?.includes('User already registered')) {
           toast({
-            title: "Account bereits vorhanden",
-            description: "Ein Account mit dieser E-Mail-Adresse existiert bereits. Bitte melden Sie sich an.",
+            title: t('auth.emailSignUpTab.errors.accountAlreadyExists.title'),
+            description: t('auth.emailSignUpTab.errors.accountAlreadyExists.description'),
             variant: "destructive",
           });
         } else if (error.message?.includes('Password should be at least 6 characters')) {
           toast({
-            title: "Passwort zu kurz",
-            description: "Das Passwort muss mindestens 6 Zeichen lang sein.",
+            title: t('auth.emailSignUpTab.errors.passwordTooShort.title'),
+            description: t('auth.emailSignUpTab.errors.passwordTooShort.description'),
             variant: "destructive",
           });
         } else if (error.message?.includes('Invalid email')) {
           toast({
-            title: "Ungültige E-Mail",
-            description: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+            title: t('auth.emailSignUpTab.errors.invalidEmail.title'),
+            description: t('auth.emailSignUpTab.errors.invalidEmail.description'),
             variant: "destructive",
           });
         } else {
           toast({
-            title: "Registrierung fehlgeschlagen",
-            description: error.message || "Ein unbekannter Fehler ist aufgetreten",
+            title: t('auth.emailSignUpTab.errors.registrationFailed.title'),
+            description: error.message || t('auth.emailSignUpTab.errors.registrationFailed.description'),
             variant: "destructive",
           });
         }
@@ -74,15 +76,15 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
       if (!data.session) {
         // Email confirmation required
         toast({
-          title: "🎉 Registrierung erfolgreich!",
-          description: "Bitte überprüfen Sie Ihr E-Mail-Postfach und bestätigen Sie Ihre E-Mail-Adresse.",
+          title: t('auth.emailSignUpTab.success.registrationSuccessful.title'),
+          description: t('auth.emailSignUpTab.success.registrationSuccessful.description'),
           duration: 6000,
         });
       } else {
         // Direct login (no email confirmation needed)
         toast({
-          title: "🎉 Willkommen!",
-          description: "Ihr Account wurde erfolgreich erstellt.",
+          title: t('auth.emailSignUpTab.success.welcome.title'),
+          description: t('auth.emailSignUpTab.success.welcome.description'),
           duration: 3000,
         });
 
@@ -100,8 +102,8 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
 
     } catch (error: any) {
       toast({
-        title: "Registrierung fehlgeschlagen",
-        description: "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+        title: t('auth.emailSignUpTab.errors.generalError.title'),
+        description: t('auth.emailSignUpTab.errors.generalError.description'),
         variant: "destructive",
       });
     } finally {
@@ -114,14 +116,14 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
-            Vorname
+            {t('auth.emailSignUpTab.form.firstName')}
           </Label>
           <div className="relative">
             <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
             <Input
               id="firstName"
               type="text"
-              placeholder="Max"
+              placeholder={t('auth.emailSignUpTab.form.firstNamePlaceholder')}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               className="pl-10"
@@ -131,14 +133,14 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
         </div>
         <div className="space-y-2">
           <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
-            Nachname
+            {t('auth.emailSignUpTab.form.lastName')}
           </Label>
           <div className="relative">
             <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
             <Input
               id="lastName"
               type="text"
-              placeholder="Mustermann"
+              placeholder={t('auth.emailSignUpTab.form.lastNamePlaceholder')}
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               className="pl-10"
@@ -150,14 +152,14 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
       
       <div className="space-y-2">
         <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-          E-Mail-Adresse
+          {t('auth.emailSignUpTab.form.email')}
         </Label>
         <div className="relative">
           <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
           <Input
             id="email"
             type="email"
-            placeholder="max@beispiel.de"
+            placeholder={t('auth.emailSignUpTab.form.emailPlaceholder')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="pl-10"
@@ -168,14 +170,14 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
       
       <div className="space-y-2">
         <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-          Passwort
+          {t('auth.emailSignUpTab.form.password')}
         </Label>
         <div className="relative">
           <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
           <Input
             id="password"
             type={showPassword ? "text" : "password"}
-            placeholder="Mindestens 6 Zeichen"
+            placeholder={t('auth.emailSignUpTab.form.passwordPlaceholder')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="pl-10 pr-10"
@@ -186,6 +188,7 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+            aria-label={showPassword ? t('auth.emailSignUpTab.form.hidePassword') : t('auth.emailSignUpTab.form.showPassword')}
           >
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
@@ -200,23 +203,23 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
         {loading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Registrierung läuft...
+            {t('auth.emailSignUpTab.form.registering')}
           </>
         ) : (
-          "Jetzt kostenlos registrieren"
+          t('auth.emailSignUpTab.form.registerButton')
         )}
       </Button>
       
       <p className="text-xs text-gray-500 text-center">
-        Mit der Registrierung stimmen Sie unseren{" "}
+        {t('auth.emailSignUpTab.form.termsAgreement')}{" "}
         <a href="/datenschutz" className="text-primary hover:underline">
-          Datenschutzbestimmungen
+          {t('auth.emailSignUpTab.form.privacyPolicy')}
         </a>{" "}
-        und{" "}
+        {t('auth.or')}{" "}
         <a href="/agb" className="text-primary hover:underline">
-          AGB
+          {t('auth.emailSignUpTab.form.termsOfService')}
         </a>{" "}
-        zu.
+        .
       </p>
     </form>
   );

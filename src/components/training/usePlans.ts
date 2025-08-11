@@ -2,11 +2,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from '@/hooks/useTranslations';
 import { TrainingPlan, Pet, NewPlanData } from './types';
 
 export const usePlans = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslations();
   const queryClient = useQueryClient();
 
   // Fetch pets with caching
@@ -79,14 +81,14 @@ export const usePlans = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['training-plans'] });
       toast({
-        title: "Plan erstellt",
-        description: "Ihr neuer Plan wurde erfolgreich erstellt.",
+        title: t('training.usePlans.createPlan.title'),
+        description: t('training.usePlans.createPlan.description'),
       });
     },
     onError: () => {
       toast({
-        title: "Fehler",
-        description: "Beim Erstellen des Plans ist ein Fehler aufgetreten.",
+        title: t('training.usePlans.createError.title'),
+        description: t('training.usePlans.createError.description'),
         variant: "destructive",
       });
     }
@@ -108,8 +110,8 @@ export const usePlans = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['training-plans'] });
       toast({
-        title: "Plan aktualisiert",
-        description: "Ihr Plan wurde erfolgreich aktualisiert.",
+        title: t('training.usePlans.updatePlan.title'),
+        description: t('training.usePlans.updatePlan.description'),
       });
     }
   });
@@ -127,8 +129,8 @@ export const usePlans = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['training-plans'] });
       toast({
-        title: "Plan gelöscht",
-        description: "Ihr Plan wurde erfolgreich gelöscht.",
+        title: t('training.usePlans.deletePlan.title'),
+        description: t('training.usePlans.deletePlan.description'),
       });
     }
   });

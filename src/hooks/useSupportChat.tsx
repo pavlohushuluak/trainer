@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from '@/hooks/useTranslations';
 import { requestCache } from '@/utils/requestCache';
 
 interface Message {
@@ -18,6 +19,7 @@ interface Message {
 export const useSupportChat = (isOpen: boolean) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslations();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +49,7 @@ export const useSupportChat = (isOpen: boolean) => {
       id: 'welcome',
       sender_type: 'ai',
       sender_id: null,
-      message: `Hallo 👋 Ich bin dein Support-Assistent – bereit, dir und deinem Tier bestmöglich zu helfen.\n\nWas liegt dir auf dem Herzen?`,
+      message: t('support.chat.welcomeMessage'),
       message_type: 'text',
       created_at: new Date().toISOString()
     };
@@ -102,7 +104,7 @@ export const useSupportChat = (isOpen: boolean) => {
     } catch (error) {
       console.warn('Error initializing chat:', error);
     }
-  }, [user]);
+  }, [user, t]);
 
   const createTicket = useCallback(async () => {
     if (!user) return null;
@@ -142,8 +144,8 @@ export const useSupportChat = (isOpen: boolean) => {
       if (!currentTicketId) {
         toast({
           variant: "destructive",
-          title: "Fehler",
-          description: "Ticket konnte nicht erstellt werden."
+          title: t('support.chat.ticketCreationError.title'),
+          description: t('support.chat.ticketCreationError.description')
         });
         setIsLoading(false);
         return;
@@ -200,13 +202,13 @@ export const useSupportChat = (isOpen: boolean) => {
       console.error('Error sending message:', error);
       toast({
         variant: "destructive",
-        title: "Nachricht konnte nicht gesendet werden",
-        description: "Bitte versuche es erneut."
+        title: t('support.chat.messageSendError.title'),
+        description: t('support.chat.messageSendError.description')
       });
     }
 
     setIsLoading(false);
-  }, [newMessage, user, ticketId, messages, toast, createTicket]);
+  }, [newMessage, user, ticketId, messages, toast, createTicket, t]);
 
   const handleSatisfactionFeedback = useCallback(async (isHelpful: boolean) => {
     if (!ticketId || !user) return;
@@ -237,7 +239,7 @@ export const useSupportChat = (isOpen: boolean) => {
         id: (Date.now() + 2).toString(),
         sender_type: 'ai',
         sender_id: null,
-        message: `Super – wir freuen uns, dass du und dein Tier eine Lösung gefunden habt! 🐾❤️\n\nDein Anliegen ist jetzt abgeschlossen. Falls du später noch Fragen hast, sind wir gerne wieder für euch da.`,
+        message: t('support.chat.satisfaction.thankYouMessage'),
         message_type: 'system',
         created_at: new Date().toISOString()
       };
@@ -245,8 +247,8 @@ export const useSupportChat = (isOpen: boolean) => {
       setMessages(prev => [...prev, thankYouMessage]);
       
       toast({
-        title: "Vielen Dank!",
-        description: "Schön, dass wir helfen konnten. 🐾"
+        title: t('support.chat.satisfaction.thankYouToast.title'),
+        description: t('support.chat.satisfaction.thankYouToast.description')
       });
 
       return true; // Signal to close chat
@@ -263,7 +265,7 @@ export const useSupportChat = (isOpen: boolean) => {
         id: (Date.now() + 3).toString(),
         sender_type: 'ai',
         sender_id: null,
-        message: `Alles klar – ich leite deine Anfrage an unser menschliches Team weiter. 🤝\n\nWir melden uns so schnell wie möglich direkt hier im Chat bei dir. Dein Tier und du seid bei uns in den besten Händen!`,
+        message: t('support.chat.satisfaction.escalationMessage'),
         message_type: 'system',
         created_at: new Date().toISOString()
       };
@@ -271,13 +273,13 @@ export const useSupportChat = (isOpen: boolean) => {
       setMessages(prev => [...prev, escalationMessage]);
       
       toast({
-        title: "An Team weitergeleitet",
-        description: "Unser Support-Team übernimmt jetzt für dich."
+        title: t('support.chat.satisfaction.escalationToast.title'),
+        description: t('support.chat.satisfaction.escalationToast.description')
       });
 
       return false;
     }
-  }, [ticketId, user, toast]);
+  }, [ticketId, user, toast, t]);
 
   return {
     messages,

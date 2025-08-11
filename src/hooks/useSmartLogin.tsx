@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from './useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from './use-toast';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface UseSmartLoginProps {
   onLoginSuccess?: () => void;
@@ -21,6 +22,7 @@ export const useSmartLogin = ({
   const [selectedPriceType, setSelectedPriceType] = useState<string | null>(null);
   const { user, session } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslations();
 
   const requireAuth = (action: () => void, priceType?: string) => {
     if (user && session) {
@@ -63,8 +65,8 @@ export const useSmartLogin = ({
     
     // Show success toast immediately
     toast({
-      title: "🐾 Willkommen!",
-      description: "Du bist erfolgreich eingeloggt.",
+      title: t('auth.smartLogin.welcomeToast.title'),
+      description: t('auth.smartLogin.welcomeToast.description'),
       duration: 3000
     });
     

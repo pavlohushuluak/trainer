@@ -7,6 +7,7 @@ import { AlertTriangle, Mail, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { CheckoutButton } from "@/components/pricing/CheckoutButton";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface CheckoutRecoveryProps {
   userEmail?: string;
@@ -18,12 +19,13 @@ export const CheckoutRecovery = ({ userEmail, className = "" }: CheckoutRecovery
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useTranslations();
 
   const handleReportIssue = async () => {
     if (!reportEmail) {
       toast({
-        title: "E-Mail erforderlich",
-        description: "Bitte geben Sie Ihre E-Mail-Adresse ein.",
+        title: t('checkoutRecovery.toasts.emailRequired.title'),
+        description: t('checkoutRecovery.toasts.emailRequired.description'),
         variant: "destructive"
       });
       return;
@@ -35,8 +37,8 @@ export const CheckoutRecovery = ({ userEmail, className = "" }: CheckoutRecovery
     // For now, we'll just show a success message
     setTimeout(() => {
       toast({
-        title: "Problem gemeldet",
-        description: "Wir haben Ihr Problem erhalten und werden uns umgehend darum kümmern.",
+        title: t('checkoutRecovery.toasts.problemReported.title'),
+        description: t('checkoutRecovery.toasts.problemReported.description'),
       });
       setIsSubmitting(false);
     }, 1000);
@@ -47,44 +49,44 @@ export const CheckoutRecovery = ({ userEmail, className = "" }: CheckoutRecovery
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-orange-800">
           <AlertTriangle className="h-5 w-5" />
-          Checkout-Problem?
+          {t('checkoutRecovery.title')}
         </CardTitle>
         <CardDescription className="text-orange-700">
-          Falls der Checkout nicht funktioniert hat, können Sie es hier erneut versuchen oder uns das Problem melden.
+          {t('checkoutRecovery.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-3">
-            <h4 className="font-semibold text-orange-800">Erneut versuchen</h4>
+            <h4 className="font-semibold text-orange-800">{t('checkoutRecovery.retry.title')}</h4>
             <div className="space-y-2">
               <CheckoutButton
                 priceType="monthly-basic"
                 className="w-full"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Premium Monatsabo
+                {t('checkoutRecovery.retry.monthlyPremium')}
               </CheckoutButton>
               <CheckoutButton
                 priceType="6month-basic"
                 className="w-full variant-outline"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
-                6-Monats-Paket
+                {t('checkoutRecovery.retry.sixMonthPackage')}
               </CheckoutButton>
             </div>
           </div>
           
           <div className="space-y-3">
-            <h4 className="font-semibold text-orange-800">Problem melden</h4>
+            <h4 className="font-semibold text-orange-800">{t('checkoutRecovery.report.title')}</h4>
             <div className="space-y-2">
-              <Label htmlFor="report-email">E-Mail-Adresse</Label>
+              <Label htmlFor="report-email">{t('checkoutRecovery.report.emailLabel')}</Label>
               <Input
                 id="report-email"
                 type="email"
                 value={reportEmail}
                 onChange={(e) => setReportEmail(e.target.value)}
-                placeholder="ihre@email.de"
+                placeholder={t('checkoutRecovery.report.emailPlaceholder')}
                 className="bg-white"
               />
               <Button
@@ -98,14 +100,13 @@ export const CheckoutRecovery = ({ userEmail, className = "" }: CheckoutRecovery
                 ) : (
                   <Mail className="h-4 w-4 mr-2" />
                 )}
-                Problem melden
+                {isSubmitting ? t('checkoutRecovery.report.reporting') : t('checkoutRecovery.report.reportButton')}
               </Button>
             </div>
           </div>
         </div>
         
-        <div className="text-xs text-orange-600 bg-orange-100 p-2 rounded">
-          💡 <strong>Tipp:</strong> Überprüfen Sie auch Ihren Spam-Ordner für E-Mails von Stripe oder uns.
+        <div className="text-xs text-orange-600 bg-orange-100 p-2 rounded" dangerouslySetInnerHTML={{ __html: t('checkoutRecovery.tip') }}>
         </div>
       </CardContent>
     </Card>

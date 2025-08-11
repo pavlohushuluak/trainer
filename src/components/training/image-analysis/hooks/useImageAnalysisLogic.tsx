@@ -17,7 +17,7 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const [showPlan, setShowPlan] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
-  const { currentLanguage } = useTranslations();
+  const { currentLanguage, t } = useTranslations();
 
   const handleUploadComplete = (result: any) => {
     setAnalysisResult(result);
@@ -36,28 +36,28 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
         title: `${analysisResult.recommendation} - Training für ${petName}`,
         description: `Basierend auf der Bildanalyse: ${analysisResult.mood_estimation}`,
         goals: [
-          `${petName} soll sich in ähnlichen Situationen entspannter verhalten`,
-          'Stärkung der Mensch-Tier-Bindung durch gezieltes Training',
-          'Verbesserung der Körpersprache und des Wohlbefindens'
+          t('training.imageAnalysis.logic.trainingPlan.goals.relaxed', { petName }),
+          t('training.imageAnalysis.logic.trainingPlan.goals.bonding'),
+          t('training.imageAnalysis.logic.trainingPlan.goals.wellbeing')
         ],
         steps: [
           {
-            title: 'Beobachtung & Entspannung',
-            description: `Beginne mit ruhiger Beobachtung von ${petName}. Schaffe eine entspannte Atmosphäre und belohne ruhiges Verhalten.`,
+            title: t('training.imageAnalysis.logic.trainingPlan.steps.observation.title'),
+            description: t('training.imageAnalysis.logic.trainingPlan.steps.observation.description', { petName }),
             duration_minutes: 10,
-            difficulty: 'Anfänger'
+            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.observation.difficulty')
           },
           {
-            title: 'Gezielte Übung',
+            title: t('training.imageAnalysis.logic.trainingPlan.steps.targeted.title'),
             description: analysisResult.recommendation,
             duration_minutes: 15,
-            difficulty: 'Fortgeschritten'
+            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.targeted.difficulty')
           },
           {
-            title: 'Positive Verstärkung',
-            description: `Belohne ${petName} für jeden kleinen Fortschritt. Beende das Training immer mit einem positiven Erlebnis.`,
+            title: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.title'),
+            description: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.description', { petName }),
             duration_minutes: 5,
-            difficulty: 'Anfänger'
+            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.difficulty')
           }
         ]
       },
@@ -65,28 +65,28 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
         title: `${analysisResult.recommendation} - Training for ${petName}`,
         description: `Based on image analysis: ${analysisResult.mood_estimation}`,
         goals: [
-          `${petName} should behave more relaxed in similar situations`,
-          'Strengthening the human-animal bond through targeted training',
-          'Improving body language and well-being'
+          t('training.imageAnalysis.logic.trainingPlan.goals.relaxed', { petName }),
+          t('training.imageAnalysis.logic.trainingPlan.goals.bonding'),
+          t('training.imageAnalysis.logic.trainingPlan.goals.wellbeing')
         ],
         steps: [
           {
-            title: 'Observation & Relaxation',
-            description: `Start with quiet observation of ${petName}. Create a relaxed atmosphere and reward calm behavior.`,
+            title: t('training.imageAnalysis.logic.trainingPlan.steps.observation.title'),
+            description: t('training.imageAnalysis.logic.trainingPlan.steps.observation.description', { petName }),
             duration_minutes: 10,
-            difficulty: 'Beginner'
+            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.observation.difficulty')
           },
           {
-            title: 'Targeted Exercise',
+            title: t('training.imageAnalysis.logic.trainingPlan.steps.targeted.title'),
             description: analysisResult.recommendation,
             duration_minutes: 15,
-            difficulty: 'Advanced'
+            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.targeted.difficulty')
           },
           {
-            title: 'Positive Reinforcement',
-            description: `Reward ${petName} for every small progress. Always end training with a positive experience.`,
+            title: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.title'),
+            description: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.description', { petName }),
             duration_minutes: 5,
-            difficulty: 'Beginner'
+            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.difficulty')
           }
         ]
       }
@@ -115,8 +115,8 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
 
     if (!selectedPet) {
       toast({
-        title: "Tierprofil benötigt",
-        description: "Um den Trainingsplan zu speichern, erstelle bitte zuerst ein Tierprofil.",
+        title: t('training.imageAnalysis.logic.petProfileRequired.title'),
+        description: t('training.imageAnalysis.logic.petProfileRequired.description'),
         variant: "destructive"
       });
       return;
@@ -152,16 +152,16 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
       if (stepsError) throw stepsError;
 
       toast({
-        title: "Trainingsplan gespeichert! 🎉",
-        description: "Du findest deinen neuen Plan im Fortschrittsbereich.",
+        title: t('training.imageAnalysis.logic.planSaved.title'),
+        description: t('training.imageAnalysis.logic.planSaved.description'),
       });
 
       if (onPlanCreated) onPlanCreated();
     } catch (error) {
       console.error('Error saving plan:', error);
       toast({
-        title: "Fehler beim Speichern",
-        description: "Der Trainingsplan konnte nicht gespeichert werden.",
+        title: t('training.imageAnalysis.logic.savePlanError.title'),
+        description: t('training.imageAnalysis.logic.savePlanError.description'),
         variant: "destructive"
       });
     }
@@ -172,14 +172,14 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
 
     try {
       toast({
-        title: "Analyse gespeichert! 💾",
-        description: "Die Bildanalyse wurde in deinem Profil gespeichert.",
+        title: t('training.imageAnalysis.logic.analysisSaved.title'),
+        description: t('training.imageAnalysis.logic.analysisSaved.description'),
       });
     } catch (error) {
       console.error('Error saving analysis:', error);
       toast({
-        title: "Fehler beim Speichern",
-        description: "Die Analyse konnte nicht gespeichert werden.",
+        title: t('training.imageAnalysis.logic.saveAnalysisError.title'),
+        description: t('training.imageAnalysis.logic.saveAnalysisError.description'),
         variant: "destructive"
       });
     }

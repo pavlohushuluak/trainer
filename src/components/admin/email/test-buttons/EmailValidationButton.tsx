@@ -4,14 +4,14 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { CheckCircle, XCircle, Loader2, AlertTriangle, RefreshCw } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export const EmailValidationButton = () => {
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [lastResult, setLastResult] = useState<any>(null);
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslations();
 
   const validateEmailSetup = async () => {
     setLoading(true);
@@ -35,20 +35,20 @@ export const EmailValidationButton = () => {
         const isSynced = data.details?.apiKeyType === 'valid_and_synced';
         
         let title = t('adminEmail.testButtons.emailValidation.success');
-        let description = `API-Key gültig, ${domainCount} verifizierte Domain(s)`;
+        let description = `${t('adminEmail.testButtons.emailValidation.validation.apiKeyValid')}, ${domainCount} ${t('adminEmail.testButtons.emailValidation.validation.domainsVerified')}`;
         
         if (data.details?.testEmailId) {
-          description += ", Test-E-Mail erfolgreich gesendet";
+          description += `, ${t('adminEmail.testButtons.emailValidation.validation.testEmailSent')}`;
         }
         
         if (isSynced) {
           title = "✅ API-Key erfolgreich synchronisiert";
-          description += " - Konfiguration aktualisiert";
+          description += ` - ${t('adminEmail.testButtons.emailValidation.validation.configurationUpdated')}`;
         }
         
         if (!hasVerifiedDomains) {
-          title = "⚠️ API-Key gültig, Domain-Verifizierung erforderlich";
-          description += ". HINWEIS: Domain mail.tiertrainer24.com muss in Resend verifiziert werden";
+          title = `⚠️ ${t('adminEmail.testButtons.emailValidation.validation.apiKeyValid')}, ${t('adminEmail.testButtons.emailValidation.validation.domainVerificationRequired')}`;
+          description += `. ${t('adminEmail.testButtons.emailValidation.validation.domainNote')}`;
         }
 
         toast({
@@ -58,11 +58,11 @@ export const EmailValidationButton = () => {
           variant: hasVerifiedDomains ? "default" : "destructive"
         });
       } else {
-        const troubleshooting = data?.details?.troubleshooting || "Unbekannter Validierungsfehler";
+        const troubleshooting = data?.details?.troubleshooting || t('adminEmail.testButtons.emailValidation.validation.unknownValidationError');
         
         toast({
           title: t('adminEmail.testButtons.emailValidation.error'),
-          description: `${data?.error || "Validierung fehlgeschlagen"}\n\nLösungsschritte:\n${troubleshooting}`,
+          description: `${data?.error || t('adminEmail.testButtons.emailValidation.validation.validationFailed')}\n\n${t('adminEmail.testButtons.emailValidation.validation.solutionSteps')}\n${troubleshooting}`,
           variant: "destructive",
           duration: 15000
         });
@@ -73,7 +73,7 @@ export const EmailValidationButton = () => {
       
       toast({
         title: t('adminEmail.testButtons.emailValidation.error'),
-        description: `Fehler: ${error.message}`,
+        description: `${t('adminEmail.testButtons.emailValidation.validation.error')} ${error.message}`,
         variant: "destructive",
         duration: 8000
       });
@@ -97,14 +97,14 @@ export const EmailValidationButton = () => {
 
       if (data?.valid) {
         toast({
-          title: "✅ Konfiguration bereits synchronisiert",
-          description: "API-Key ist gültig und funktionsfähig. Keine Synchronisation erforderlich.",
+          title: t('adminEmail.testButtons.emailValidation.sync.configurationAlreadySynced'),
+          description: t('adminEmail.testButtons.emailValidation.sync.configurationAlreadySyncedDescription'),
           duration: 5000
         });
       } else {
         toast({
-          title: "⚠️ Synchronisation erforderlich",
-          description: "Bitte aktualisieren Sie den RESEND_API_KEY in den Supabase Edge Function Secrets und warten Sie 1-2 Minuten.",
+          title: t('adminEmail.testButtons.emailValidation.sync.synchronizationRequired'),
+          description: t('adminEmail.testButtons.emailValidation.sync.synchronizationRequiredDescription'),
           variant: "destructive",
           duration: 10000
         });
@@ -114,8 +114,8 @@ export const EmailValidationButton = () => {
     } catch (error) {
       console.error('Force sync error:', error);
       toast({
-        title: "❌ Synchronisation fehlgeschlagen",
-        description: `Fehler: ${error.message}`,
+        title: t('adminEmail.testButtons.emailValidation.sync.synchronizationFailed'),
+        description: t('adminEmail.testButtons.emailValidation.sync.synchronizationFailedDescription', { error: error.message }),
         variant: "destructive",
         duration: 8000
       });
@@ -162,7 +162,7 @@ export const EmailValidationButton = () => {
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Validiere E-Mail-Setup...
+                {t('adminEmail.testButtons.emailValidation.validation.loading')}
               </>
             ) : (
               <>
@@ -189,43 +189,43 @@ export const EmailValidationButton = () => {
         {lastResult && (
           <div className="text-xs">
             <div className={`p-2 rounded text-white ${lastResult.valid ? 'bg-green-600 dark:bg-green-500' : 'bg-red-600 dark:bg-red-500'}`}>
-              <strong>Status:</strong> {lastResult.valid ? 'Funktionsfähig' : 'Fehlerhaft'}
+              <strong>{t('adminEmail.testButtons.emailValidation.validation.status')}</strong> {lastResult.valid ? t('adminEmail.testButtons.emailValidation.validation.functional') : t('adminEmail.testButtons.emailValidation.validation.faulty')}
               {lastResult.valid && !lastResult.details?.verifiedDomains?.length && (
-                <span className="ml-2 text-yellow-200 dark:text-yellow-100">(Domain-Verifizierung erforderlich)</span>
+                <span className="ml-2 text-yellow-200 dark:text-yellow-100">{t('adminEmail.testButtons.emailValidation.validation.domainVerificationRequiredNote')}</span>
               )}
             </div>
             {lastResult.details && (
               <div className="mt-1 p-2 bg-gray-100 dark:bg-gray-800/50 rounded text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
-                <div>API-Key: {lastResult.details.apiKeyValid ? '✅' : '❌'} 
+                <div>{t('adminEmail.testButtons.emailValidation.validation.apiKey')} {lastResult.details.apiKeyValid ? '✅' : '❌'} 
                   {lastResult.details.apiKeyType && (
                     <span className="ml-1 text-xs">({lastResult.details.apiKeyType})</span>
                   )}
                 </div>
                 <div>
-                  Domains: {lastResult.details.verifiedDomains?.length || 0} verifiziert
+                  {t('adminEmail.testButtons.emailValidation.validation.domains')} {lastResult.details.verifiedDomains?.length || 0} {t('adminEmail.testButtons.emailValidation.validation.domainsVerified')}
                   {lastResult.details.verifiedDomains?.length > 0 && (
                     <span className="ml-1 text-xs">
                       ({lastResult.details.verifiedDomains.join(', ')})
                     </span>
                   )}
                 </div>
-                <div>E-Mail-Versand: {lastResult.details.canSendEmails ? '✅' : '❌'}</div>
+                <div>{t('adminEmail.testButtons.emailValidation.validation.emailSending')} {lastResult.details.canSendEmails ? '✅' : '❌'}</div>
                 {lastResult.details.testEmailId && (
-                  <div>Test-E-Mail ID: {lastResult.details.testEmailId}</div>
+                  <div>{t('adminEmail.testButtons.emailValidation.validation.testEmailId')} {lastResult.details.testEmailId}</div>
                 )}
                 {lastResult.details.syncTimestamp && (
-                  <div>Letzte Sync: {new Date(lastResult.details.syncTimestamp).toLocaleString()}</div>
+                  <div>{t('adminEmail.testButtons.emailValidation.validation.lastSync')} {new Date(lastResult.details.syncTimestamp).toLocaleString()}</div>
                 )}
               </div>
             )}
             {lastResult.error && (
               <div className="mt-1 p-2 bg-red-100 dark:bg-red-900/20 rounded text-red-700 dark:text-red-300 text-xs border border-red-200 dark:border-red-800">
-                <strong>Fehler:</strong> {lastResult.error}
+                <strong>{t('adminEmail.testButtons.emailValidation.validation.error')}</strong> {lastResult.error}
               </div>
             )}
             {lastResult.details?.troubleshooting && (
               <div className="mt-1 p-2 bg-blue-100 dark:bg-blue-900/20 rounded text-blue-700 dark:text-blue-300 text-xs border border-blue-200 dark:border-blue-800">
-                <strong>Lösungsschritte:</strong>
+                <strong>{t('adminEmail.testButtons.emailValidation.validation.troubleshooting')}</strong>
                 <pre className="whitespace-pre-wrap mt-1 text-xs">{lastResult.details.troubleshooting}</pre>
               </div>
             )}

@@ -2,11 +2,11 @@
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export const ComprehensiveFunctionTestButton = () => {
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslations();
 
   const testEmailFunction = async () => {
     try {
@@ -25,7 +25,7 @@ export const ComprehensiveFunctionTestButton = () => {
       
       toast({
         title: t('adminEmail.testButtons.comprehensiveTest.success'),
-        description: `Alle Tests erfolgreich. E-Mails gesendet an ${data?.results?.finalRecipient || 'Test-Adresse'}.`,
+        description: t('adminEmail.testButtons.comprehensiveTest.successDescription', { recipient: data?.results?.finalRecipient || 'Test-Adresse' }),
         duration: 6000
       });
     } catch (error) {
@@ -39,7 +39,7 @@ export const ComprehensiveFunctionTestButton = () => {
       
       toast({
         title: t('adminEmail.testButtons.comprehensiveTest.error'),
-        description: `Fehler: ${errorMessage}`,
+        description: t('adminEmail.testButtons.comprehensiveTest.errorDescription', { errorMessage }),
         variant: "destructive",
         duration: 8000
       });

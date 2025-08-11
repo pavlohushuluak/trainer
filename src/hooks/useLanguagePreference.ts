@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { useToast } from './use-toast';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export interface LanguagePreference {
   id: number;
@@ -14,6 +15,7 @@ export interface LanguagePreference {
 export const useLanguagePreference = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslations();
   const [loading, setLoading] = useState(false);
   const [preference, setPreference] = useState<LanguagePreference | null>(null);
 
@@ -48,8 +50,8 @@ export const useLanguagePreference = () => {
   const setLanguagePreference = useCallback(async (language: 'de' | 'en') => {
     if (!user?.email) {
       toast({
-        title: 'Error',
-        description: 'You must be logged in to set language preference',
+        title: t('languagePreference.hook.loginRequired.title'),
+        description: t('languagePreference.hook.loginRequired.description'),
         variant: 'destructive',
       });
       return false;
@@ -85,8 +87,8 @@ export const useLanguagePreference = () => {
 
         setPreference(insertData);
         toast({
-          title: 'Language preference saved',
-          description: `Your language preference has been set to ${language === 'en' ? 'English' : 'German'}`,
+          title: t('languagePreference.hook.saved.title'),
+          description: t('languagePreference.hook.saved.description', { language: language === 'en' ? 'English' : 'German' }),
         });
         return true;
       }
@@ -97,29 +99,29 @@ export const useLanguagePreference = () => {
 
       setPreference(updateData);
       toast({
-        title: 'Language preference updated',
-        description: `Your language preference has been updated to ${language === 'en' ? 'English' : 'German'}`,
+        title: t('languagePreference.hook.updated.title'),
+        description: t('languagePreference.hook.updated.description', { language: language === 'en' ? 'English' : 'German' }),
       });
       return true;
     } catch (error) {
       console.error('Error setting language preference:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to save language preference. Please try again.',
+        title: t('languagePreference.hook.saveError.title'),
+        description: t('languagePreference.hook.saveError.description'),
         variant: 'destructive',
       });
       return false;
     } finally {
       setLoading(false);
     }
-  }, [user?.email, toast]);
+  }, [user?.email, toast, t]);
 
   // Delete user's language preference
   const deleteLanguagePreference = useCallback(async () => {
     if (!user?.email) {
       toast({
-        title: 'Error',
-        description: 'You must be logged in to delete language preference',
+        title: t('languagePreference.hook.deleteLoginRequired.title'),
+        description: t('languagePreference.hook.deleteLoginRequired.description'),
         variant: 'destructive',
       });
       return false;
@@ -138,22 +140,22 @@ export const useLanguagePreference = () => {
 
       setPreference(null);
       toast({
-        title: 'Language preference deleted',
-        description: 'Your language preference has been removed',
+        title: t('languagePreference.hook.deleted.title'),
+        description: t('languagePreference.hook.deleted.description'),
       });
       return true;
     } catch (error) {
       console.error('Error deleting language preference:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to delete language preference. Please try again.',
+        title: t('languagePreference.hook.deleteError.title'),
+        description: t('languagePreference.hook.deleteError.description'),
         variant: 'destructive',
       });
       return false;
     } finally {
       setLoading(false);
     }
-  }, [user?.email, toast]);
+  }, [user?.email, toast, t]);
 
   return {
     preference,

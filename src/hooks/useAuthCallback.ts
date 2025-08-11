@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from '@/hooks/useTranslations';
 import { getCheckoutFlags, debugCheckoutState } from '@/utils/checkoutStorage';
 
 export const useAuthCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const { t } = useTranslations();
   const [isRecovery, setIsRecovery] = useState(false);
   const [processed, setProcessed] = useState(false);
 
@@ -35,7 +37,7 @@ export const useAuthCallback = () => {
     
     if (successMessage) {
       toast({
-        title: "E-Mail bestätigt!",
+        title: t('auth.authCallback.emailConfirmed.title'),
         description: successMessage,
         duration: 3000
       });
@@ -53,8 +55,8 @@ export const useAuthCallback = () => {
       // Show success message but redirect to home
       if (successMessage) {
         toast({
-          title: "E-Mail bestätigt!",
-          description: `Ihr Konto wurde erfolgreich aktiviert. Weiterleitung zu Stripe für ${data.priceType}...`,
+          title: t('auth.authCallback.emailConfirmedCheckout.title'),
+          description: t('auth.authCallback.emailConfirmedCheckout.description', { priceType: data.priceType }),
           duration: 3000
         });
       }
@@ -96,18 +98,18 @@ export const useAuthCallback = () => {
       // Error handling
       if (error) {
         console.log('🔐 OAuth callback: Error detected:', error);
-        let userMessage = "Ein Fehler ist bei der Anmeldung aufgetreten.";
+        let userMessage = t('auth.authCallback.loginFailed.description');
         
         if (error === 'access_denied') {
-          userMessage = "Die Anmeldung wurde abgebrochen.";
+          userMessage = t('auth.authCallback.loginCancelled.description');
         } else if (errorCode === 'otp_expired' || error === 'expired') {
-          userMessage = "Der Link ist abgelaufen. Bitte versuchen Sie es erneut.";
+          userMessage = t('auth.authCallback.linkExpired.description');
         } else if (errorDescription) {
           userMessage = errorDescription;
         }
         
         toast({
-          title: "Anmeldung fehlgeschlagen",
+          title: t('auth.authCallback.loginFailed.title'),
           description: userMessage,
           variant: "destructive"
         });
@@ -143,8 +145,8 @@ export const useAuthCallback = () => {
           return;
         } catch {
           toast({
-            title: "Ungültiger Link",
-            description: "Der Passwort-Reset-Link ist ungültig oder abgelaufen.",
+            title: t('auth.authCallback.invalidLink.title'),
+            description: t('auth.authCallback.invalidLink.description'),
             variant: "destructive"
           });
           navigate('/password-reset', { replace: true });
@@ -167,14 +169,14 @@ export const useAuthCallback = () => {
           // SIMPLIFIED: Always use role-based redirect (which checks for pending checkout)
           await redirectUserBasedOnRole(
             data.user.id, 
-            "Ihr Konto wurde erfolgreich aktiviert. Willkommen!"
+            t('auth.authCallback.emailConfirmed.description')
           );
           return;
         } catch (error) {
           console.log('🔐 OAuth callback: Code exchange failed:', error);
           toast({
-            title: "Bestätigung fehlgeschlagen",
-            description: "Der Bestätigungslink ist ungültig oder abgelaufen.",
+            title: t('auth.authCallback.confirmationFailed.title'),
+            description: t('auth.authCallback.confirmationFailed.description'),
             variant: "destructive"
           });
           navigate('/', { replace: true });
@@ -202,8 +204,8 @@ export const useAuthCallback = () => {
           navigate('/', { replace: true });
         } else {
           toast({
-            title: "Anmeldung erforderlich",
-            description: "Bitte melden Sie sich an, um fortzufahren.",
+            title: t('auth.authCallback.loginRequired.title'),
+            description: t('auth.authCallback.loginRequired.description'),
             variant: "destructive"
           });
           navigate('/', { replace: true });
@@ -215,14 +217,14 @@ export const useAuthCallback = () => {
       if (sessionData.session.user.app_metadata?.provider) {
         console.log('🔐 OAuth callback: OAuth user detected, showing success message');
         toast({
-          title: "Anmeldung erfolgreich!",
-          description: "Willkommen bei TierTrainer!",
+          title: t('auth.authCallback.loginSuccessful.title'),
+          description: t('auth.authCallback.loginSuccessful.description'),
           duration: 3000
         });
       } else {
         toast({
-          title: "Bereits angemeldet!",
-          description: "Sie sind bereits erfolgreich angemeldet.",
+          title: t('auth.authCallback.alreadyLoggedIn.title'),
+          description: t('auth.authCallback.alreadyLoggedIn.description'),
           duration: 3000
         });
       }
@@ -233,8 +235,8 @@ export const useAuthCallback = () => {
     } catch (error) {
       console.log('🔐 OAuth callback: Unexpected error:', error);
       toast({
-        title: "Bestätigung fehlgeschlagen",
-        description: "Ein unerwarteter Fehler ist aufgetreten.",
+        title: t('auth.authCallback.unexpectedError.title'),
+        description: t('auth.authCallback.unexpectedError.description'),
         variant: "destructive"
       });
       navigate('/', { replace: true });
@@ -244,7 +246,7 @@ export const useAuthCallback = () => {
   useEffect(() => {
     if (processed) return;
     handleAuthCallback();
-  }, [searchParams, navigate, toast, processed]);
+  }, [searchParams, navigate, toast, processed, t]);
 
   return { isRecovery, processed };
 };

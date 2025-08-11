@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useTranslations } from '@/hooks/useTranslations';
 import { useCancellationEmail } from '../cancellation/CancellationConfirmationEmail';
 
 interface UseEnhancedCancellationFlowProps {
@@ -20,6 +21,7 @@ export const useEnhancedCancellationFlow = ({
   onClose
 }: UseEnhancedCancellationFlowProps) => {
   const { toast } = useToast();
+  const { t } = useTranslations();
   const { sendCancellationConfirmation } = useCancellationEmail();
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -27,10 +29,10 @@ export const useEnhancedCancellationFlow = ({
     try {
       await supabase.from('system_notifications').insert({
         type: success ? 'cancellation_successful' : 'cancellation_failed',
-        title: success ? 'Kündigung erfolgreich' : 'Kündigungsfehler',
+        title: success ? t('admin.enhancedCancellationFlow.systemNotifications.cancellationSuccessful') : t('admin.enhancedCancellationFlow.systemNotifications.cancellationFailed'),
         message: success 
-          ? `Kündigung erfolgreich verarbeitet für ${userEmail}`
-          : `Kündigungsfehler: ${error}`,
+          ? t('admin.enhancedCancellationFlow.systemNotifications.cancellationProcessed', { userEmail })
+          : t('admin.enhancedCancellationFlow.systemNotifications.cancellationError', { error }),
         user_id: null,
         status: 'sent'
       });
@@ -87,7 +89,7 @@ export const useEnhancedCancellationFlow = ({
           isRefund: isWithinMoneyBackPeriod && data.refunded,
           refundAmount: data.refundAmount,
           subscriptionEnd,
-          cancellationReason: isWithinMoneyBackPeriod ? 'Geld-zurück-Garantie' : 'Reguläre Kündigung'
+          cancellationReason: isWithinMoneyBackPeriod ? t('admin.enhancedCancellationFlow.cancellationReasons.moneyBackGuarantee') : t('admin.enhancedCancellationFlow.cancellationReasons.regularCancellation')
         });
       }
 
@@ -96,20 +98,20 @@ export const useEnhancedCancellationFlow = ({
       // Enhanced user feedback
       if (isWithinMoneyBackPeriod && data.refunded) {
         toast({
-          title: "💰 Kündigung mit vollständiger Rückerstattung",
-          description: `Ihr Abonnement wurde gekündigt und €${(data.refundAmount / 100).toFixed(2)} werden in 3-5 Werktagen zurückerstattet. Alle Premium-Features wurden deaktiviert. Sie erhalten eine Bestätigungs-E-Mail.`,
+          title: t('admin.enhancedCancellationFlow.toasts.cancelledWithRefund.title'),
+          description: t('admin.enhancedCancellationFlow.toasts.cancelledWithRefund.description', { refundAmount: (data.refundAmount / 100).toFixed(2) }),
           duration: 12000
         });
       } else if (isWithinMoneyBackPeriod) {
         toast({
-          title: "✅ Sofortige Kündigung erfolgreich",
-          description: "Ihr Abonnement wurde sofort beendet und alle Premium-Features deaktiviert. Sie erhalten eine Bestätigungs-E-Mail.",
+          title: t('admin.enhancedCancellationFlow.toasts.cancelledImmediate.title'),
+          description: t('admin.enhancedCancellationFlow.toasts.cancelledImmediate.description'),
           duration: 8000
         });
       } else {
         toast({
-          title: "📅 Kündigung zum Periodenende bestätigt",
-          description: `Schade, dass Sie gehen! Ihr Zugang bleibt bis zum ${subscriptionEnd ? new Date(subscriptionEnd).toLocaleDateString('de-DE') : 'Ablaufdatum'} aktiv. Sie erhalten eine Bestätigungs-E-Mail.`,
+          title: t('admin.enhancedCancellationFlow.toasts.cancelledPeriodEnd.title'),
+          description: t('admin.enhancedCancellationFlow.toasts.cancelledPeriodEnd.description', { subscriptionEnd: subscriptionEnd ? new Date(subscriptionEnd).toLocaleDateString('de-DE') : 'Ablaufdatum' }),
           duration: 8000
         });
       }
@@ -120,8 +122,8 @@ export const useEnhancedCancellationFlow = ({
       await logCancellationAttempt(false, error.message);
       
       toast({
-        title: "❌ Fehler bei der Kündigung",
-        description: `Die Kündigung konnte nicht verarbeitet werden: ${error.message}. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.`,
+        title: t('admin.enhancedCancellationFlow.toasts.cancellationError.title'),
+        description: t('admin.enhancedCancellationFlow.toasts.cancellationError.description', { error: error.message }),
         variant: "destructive",
         duration: 10000
       });

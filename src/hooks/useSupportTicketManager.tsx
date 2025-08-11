@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface AdminTicket {
   id: string;
@@ -34,6 +35,7 @@ interface AdminMessage {
 
 export const useSupportTicketManager = () => {
   const { toast } = useToast();
+  const { t } = useTranslations();
   const [tickets, setTickets] = useState<AdminTicket[]>([]);
   const [selectedTicket, setSelectedTicket] = useState<AdminTicket | null>(null);
   const [messages, setMessages] = useState<AdminMessage[]>([]);
@@ -74,7 +76,8 @@ export const useSupportTicketManager = () => {
       console.error('Error fetching tickets:', error);
       toast({
         variant: "destructive",
-        title: "Fehler beim Laden der Tickets"
+        title: t('support.admin.ticketManager.loadingError.title'),
+        description: t('support.admin.ticketManager.loadingError.description')
       });
     }
     setLoading(false);
@@ -163,14 +166,15 @@ export const useSupportTicketManager = () => {
       fetchTickets();
 
       toast({
-        title: "Nachricht gesendet",
-        description: "Deine Antwort wurde an den Nutzer übermittelt."
+        title: t('support.admin.ticketManager.messageSent.title'),
+        description: t('support.admin.ticketManager.messageSent.description')
       });
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
         variant: "destructive",
-        title: "Fehler beim Senden"
+        title: t('support.admin.ticketManager.sendError.title'),
+        description: t('support.admin.ticketManager.sendError.description')
       });
     }
     setSending(false);

@@ -1,6 +1,7 @@
 
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface CancellationEmailData {
   userEmail: string;
@@ -12,6 +13,7 @@ interface CancellationEmailData {
 
 export const useCancellationEmail = () => {
   const { toast } = useToast();
+  const { t } = useTranslations();
 
   const sendCancellationConfirmation = async (data: CancellationEmailData) => {
     try {
@@ -21,23 +23,23 @@ export const useCancellationEmail = () => {
           isRefund: data.isRefund,
           refundAmount: data.refundAmount,
           subscriptionEnd: data.subscriptionEnd,
-          cancellationReason: data.cancellationReason || 'Nutzerwunsch'
+          cancellationReason: data.cancellationReason || t('cancellationConfirmationEmail.defaultReason')
         }
       });
 
       if (error) throw error;
 
       toast({
-        title: "📧 Bestätigungs-E-Mail versendet",
-        description: "Sie erhalten eine Bestätigung Ihrer Kündigung per E-Mail.",
+        title: t('cancellationConfirmationEmail.toasts.emailSent.title'),
+        description: t('cancellationConfirmationEmail.toasts.emailSent.description'),
         duration: 5000
       });
     } catch (error) {
       console.error('Failed to send cancellation email:', error);
       // Don't block the cancellation process if email fails
       toast({
-        title: "Kündigung erfolgreich",
-        description: "Ihre Kündigung wurde verarbeitet. Die Bestätigungs-E-Mail konnte nicht versendet werden.",
+        title: t('cancellationConfirmationEmail.toasts.cancellationSuccessful.title'),
+        description: t('cancellationConfirmationEmail.toasts.cancellationSuccessful.description'),
         variant: "default",
         duration: 6000
       });

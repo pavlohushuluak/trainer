@@ -1,36 +1,38 @@
 
 import { useToast } from "@/hooks/use-toast";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export const useChatErrorHandler = () => {
   const { toast } = useToast();
+  const { t } = useTranslations();
 
   const handleChatError = (error: any) => {
     console.error('❌ Error in sendMessage:', error);
     
-    let errorMessage = "Nachricht konnte nicht gesendet werden.";
+    let errorMessage = t('support.chat.errorHandler.defaultMessage');
     let isTemporary = true;
     
     if (error?.message?.includes('timeout')) {
-      errorMessage = "⏱️ Zeitüberschreitung - Der TierTrainer braucht länger als gewöhnlich. Bitte versuche es erneut.";
+      errorMessage = t('support.chat.errorHandler.timeout');
       isTemporary = true;
     } else if (error?.message?.includes('not found') || error?.message?.includes('404')) {
-      errorMessage = "🔧 TierTrainer Service wird gerade aktualisiert. Bitte versuche es in wenigen Minuten erneut.";
+      errorMessage = t('support.chat.errorHandler.serviceUpdate');
       isTemporary = true;
     } else if (error?.message?.includes('network') || error?.message?.includes('Failed to fetch')) {
-      errorMessage = "🌐 Netzwerkproblem erkannt. Bitte überprüfe deine Internetverbindung und versuche es erneut.";
+      errorMessage = t('support.chat.errorHandler.networkProblem');
       isTemporary = true;
     } else if (error?.message?.includes('Session')) {
-      errorMessage = "🔑 Deine Sitzung ist abgelaufen. Bitte lade die Seite neu und melde dich erneut an.";
+      errorMessage = t('support.chat.errorHandler.sessionExpired');
       isTemporary = false;
     } else if (error?.message?.includes('Chat-Service') || error?.message?.includes('Edge Function')) {
-      errorMessage = "🤖 Chat-Service ist vorübergehend nicht verfügbar. Wir arbeiten daran - bitte versuche es in wenigen Minuten erneut.";
+      errorMessage = t('support.chat.errorHandler.chatServiceUnavailable');
       isTemporary = true;
     } else if (error?.message) {
-      errorMessage = `💭 ${error.message}`;
+      errorMessage = t('support.chat.errorHandler.genericError', { errorMessage: error.message });
     }
     
     toast({
-      title: isTemporary ? "Temporäres Problem" : "Chat-Fehler",
+      title: isTemporary ? t('support.chat.errorHandler.temporaryProblem') : t('support.chat.errorHandler.chatError'),
       description: errorMessage,
       variant: "destructive",
       duration: isTemporary ? 5000 : 8000

@@ -84,6 +84,45 @@
     "feedbackError": {
       "title": "Fehler",
       "description": "Feedback konnte nicht übermittelt werden."
+    },
+    "admin": {
+      "ticketManager": {
+        "loadingError": {
+          "title": "Fehler beim Laden der Tickets",
+          "description": "Tickets konnten nicht geladen werden."
+        },
+        "messageSent": {
+          "title": "Nachricht gesendet",
+          "description": "Deine Antwort wurde an den Nutzer übermittelt."
+        },
+        "sendError": {
+          "title": "Fehler beim Senden",
+          "description": "Nachricht konnte nicht gesendet werden."
+        }
+      }
+    },
+    "chat": {
+      "welcomeMessage": "Hallo 👋 Ich bin dein Support-Assistent – bereit, dir und deinem Tier bestmöglich zu helfen.\n\nWas liegt dir auf dem Herzen?",
+      "ticketCreationError": {
+        "title": "Fehler",
+        "description": "Ticket konnte nicht erstellt werden."
+      },
+      "messageSendError": {
+        "title": "Nachricht konnte nicht gesendet werden",
+        "description": "Bitte versuche es erneut."
+      },
+      "satisfaction": {
+        "thankYouMessage": "Super – wir freuen uns, dass du und dein Tier eine Lösung gefunden habt! 🐾❤️\n\nDein Anliegen ist jetzt abgeschlossen. Falls du später noch Fragen hast, sind wir gerne wieder für euch da.",
+        "thankYouToast": {
+          "title": "Vielen Dank!",
+          "description": "Schön, dass wir helfen konnten. 🐾"
+        },
+        "escalationMessage": "Alles klar – ich leite deine Anfrage an unser menschliches Team weiter. 🤝\n\nWir melden uns so schnell wie möglich direkt hier im Chat bei dir. Dein Tier und du seid bei uns in den besten Händen!",
+        "escalationToast": {
+          "title": "An Team weitergeleitet",
+          "description": "Unser Support-Team übernimmt jetzt für dich."
+        }
+      }
     }
   },
   "navigation": {
@@ -627,6 +666,51 @@
       },
       "fileReadError": "Fehler beim Lesen der Datei",
       "noDataError": "Keine Analysedaten erhalten"
+    },
+    "logic": {
+      "petProfileRequired": {
+        "title": "Tierprofil benötigt",
+        "description": "Um den Trainingsplan zu speichern, erstelle bitte zuerst ein Tierprofil."
+      },
+      "planSaved": {
+        "title": "Trainingsplan gespeichert! 🎉",
+        "description": "Du findest deinen neuen Plan im Fortschrittsbereich."
+      },
+      "savePlanError": {
+        "title": "Fehler beim Speichern",
+        "description": "Der Trainingsplan konnte nicht gespeichert werden."
+      },
+      "analysisSaved": {
+        "title": "Analyse gespeichert! 💾",
+        "description": "Die Bildanalyse wurde in deinem Profil gespeichert."
+      },
+      "saveAnalysisError": {
+        "title": "Fehler beim Speichern",
+        "description": "Die Analyse konnte nicht gespeichert werden."
+      },
+      "trainingPlan": {
+        "goals": {
+          "relaxed": "{{petName}} soll sich in ähnlichen Situationen entspannter verhalten",
+          "bonding": "Stärkung der Mensch-Tier-Bindung durch gezieltes Training",
+          "wellbeing": "Verbesserung der Körpersprache und des Wohlbefindens"
+        },
+        "steps": {
+          "observation": {
+            "title": "Beobachtung & Entspannung",
+            "description": "Beginne mit ruhiger Beobachtung von {{petName}}. Schaffe eine entspannte Atmosphäre und belohne ruhiges Verhalten.",
+            "difficulty": "Anfänger"
+          },
+          "targeted": {
+            "title": "Gezielte Übung",
+            "difficulty": "Fortgeschritten"
+          },
+          "reinforcement": {
+            "title": "Positive Verstärkung",
+            "description": "Belohne {{petName}} für jeden kleinen Fortschritt. Beende das Training immer mit einem positiven Erlebnis.",
+            "difficulty": "Anfänger"
+          }
+        }
+      }
     }
   },
   "chat": {
@@ -723,6 +807,33 @@
         "generalAdvice": "🌟 Allgemeine Haustierberatung (kein spezifisches Haustier)",
         "trainingFor": "Training für"
       }
+    },
+    "validation": {
+      "error": "Fehler",
+      "chatPreparing": "Chat wird vorbereitet... Versuche es gleich nochmal!",
+      "loginRequired": {
+        "title": "Fehler",
+        "description": "Sie müssen angemeldet sein, um den Chat zu nutzen."
+      },
+      "petProfileRequired": {
+        "title": "Tierprofil erforderlich",
+        "description": "Lege zuerst ein Tierprofil an, um den Chat zu nutzen."
+      },
+      "freeTrialEnded": {
+        "title": "Gratis-Test beendet",
+        "description": "Upgrade zu Premium für unbegrenzte Beratung."
+      }
+    },
+    "errorRecovery": {
+      "title": "Chat-Problem erkannt",
+      "defaultAction": "Bitte versuche es erneut.",
+      "timeout": "⏱️ Timeout erkannt. Der TierTrainer wird automatisch erneut versucht...",
+      "networkProblem": "🌐 Netzwerkproblem erkannt. Prüfe deine Internetverbindung und versuche es erneut.",
+      "sessionProblem": "🔑 Session-Problem erkannt. Prüfe deine Anmeldung...",
+      "loginRequired": "🔑 Bitte melde dich erneut an.",
+      "loginFailed": "🔑 Anmeldung fehlgeschlagen. Bitte lade die Seite neu.",
+      "chatServiceUnavailable": "🤖 Chat-Service ist vorübergehend nicht verfügbar. Bitte versuche es in wenigen Minuten erneut.",
+      "aiServiceUnavailable": "🧠 KI-Service ist vorübergehend nicht verfügbar. Versuche es später erneut."
     }
   },
   "settings": {
@@ -1248,19 +1359,80 @@
         "title": "E-Mail-Validierung testen",
         "description": "Testen Sie E-Mail-Validierung und Vorlagen-Rendering",
         "success": "✅ Validierung erfolgreich",
-        "error": "❌ Validierungsfehler"
+        "error": "❌ Validierungsfehler",
+        "loading": "Teste E-Mail-Konfiguration...",
+        "toasts": {
+          "testEmailFailed": {
+            "title": "❌ Test-E-Mail fehlgeschlagen",
+            "description": "Fehler beim Senden der Test-E-Mail: {{error}}"
+          },
+          "testEmailSuccess": {
+            "title": "✅ Test-E-Mail gesendet",
+            "description": "Test-E-Mail wurde erfolgreich gesendet (ID: {{emailId}})"
+          },
+          "testEmailPartialFailure": {
+            "title": "⚠️ E-Mail-Test teilweise fehlgeschlagen",
+            "description": "{{error}}"
+          },
+          "validationError": {
+            "title": "❌ Validierungsfehler",
+            "description": "Fehler: {{error}}"
+          }
+        },
+        "status": {
+          "successful": "Erfolgreich",
+          "failed": "Fehlgeschlagen",
+          "error": "Fehler:",
+          "emailId": "E-Mail ID:"
+        },
+        "validation": {
+          "loading": "Validiere E-Mail-Setup...",
+          "apiKeyValid": "API-Key gültig",
+          "apiKeyInvalid": "API-Key ungültig",
+          "domainsVerified": "verifizierte Domain(s)",
+          "testEmailSent": "Test-E-Mail erfolgreich gesendet",
+          "configurationUpdated": "Konfiguration aktualisiert",
+          "domainVerificationRequired": "Domain-Verifizierung erforderlich",
+          "domainNote": "HINWEIS: Domain mail.tiertrainer24.com muss in Resend verifiziert werden",
+          "unknownValidationError": "Unbekannter Validierungsfehler",
+          "validationFailed": "Validierung fehlgeschlagen",
+          "solutionSteps": "Lösungsschritte:",
+          "error": "Fehler:",
+          "status": "Status:",
+          "functional": "Funktionsfähig",
+          "faulty": "Fehlerhaft",
+          "domainVerificationRequiredNote": "(Domain-Verifizierung erforderlich)",
+          "apiKey": "API-Key:",
+          "domains": "Domains:",
+          "emailSending": "E-Mail-Versand:",
+          "testEmailId": "Test-E-Mail ID:",
+          "lastSync": "Letzte Sync:",
+          "troubleshooting": "Lösungsschritte:"
+        },
+        "sync": {
+          "configurationAlreadySynced": "✅ Konfiguration bereits synchronisiert",
+          "configurationAlreadySyncedDescription": "API-Key ist gültig und funktionsfähig. Keine Synchronisation erforderlich.",
+          "synchronizationRequired": "⚠️ Synchronisation erforderlich",
+          "synchronizationRequiredDescription": "Bitte aktualisieren Sie den RESEND_API_KEY in den Supabase Edge Function Secrets und warten Sie 1-2 Minuten.",
+          "synchronizationFailed": "❌ Synchronisation fehlgeschlagen",
+          "synchronizationFailedDescription": "Fehler: {{error}}"
+        }
       },
       "comprehensiveTest": {
         "title": "Umfassender E-Mail-Test",
         "description": "Testen Sie alle E-Mail-Funktionen und Vorlagen",
         "success": "✅ Alle Tests erfolgreich",
-        "error": "❌ Test fehlgeschlagen"
+        "error": "❌ Test fehlgeschlagen",
+        "successDescription": "Alle Tests erfolgreich. E-Mails gesendet an {{recipient}}.",
+        "errorDescription": "Fehler: {{errorMessage}}"
       },
       "liveTest": {
         "title": "Live-E-Mail senden",
         "description": "Senden Sie eine Test-E-Mail an die konfigurierte Adresse",
         "success": "✅ Test-E-Mail gesendet",
-        "error": "❌ E-Mail konnte nicht gesendet werden"
+        "error": "❌ E-Mail konnte nicht gesendet werden",
+        "successDescription": "Willkommens-E-Mail wurde erfolgreich an gl@cooper-ads.com gesendet. E-Mail-ID: {{emailId}}",
+        "errorDescription": "Fehler: {{errorMessage}}"
       },
       "specificTests": {
         "title": "Spezifische E-Mail-Tests",
@@ -1278,7 +1450,10 @@
           "cancellation": "📅 Kündigung testen"
         },
         "success": "✅ Test-E-Mail gesendet",
-        "error": "❌ Test fehlgeschlagen"
+        "error": "❌ Test fehlgeschlagen",
+        "errorDescription": "Fehler: {{errorMessage}}",
+        "successDescription": "E-Mail wurde erfolgreich an {{recipient}} gesendet.",
+        "sending": "📧 Sende..."
       }
     }
   },
@@ -1343,6 +1518,124 @@
         "cancelledPeriodEndDescription": "Subscription runs until the end of the period.",
         "cancellationError": "Error during cancellation",
         "cancellationErrorDescription": "Cancellation could not be processed."
+      }
+    },
+    "cancellationFlow": {
+      "toasts": {
+        "cancelledWithRefund": {
+          "title": "💰 Kündigung mit Rückerstattung erfolgreich",
+          "description": "Du hast €{{refundAmount}} zurückerhalten. Das Geld wird in 3-5 Werktagen auf deinem Konto sein. Danke, dass du TierTrainer24 ausprobiert hast! 🐾"
+        },
+        "cancelledImmediate": {
+          "title": "💰 Kündigung mit sofortiger Beendigung",
+          "description": "Dein Abonnement wurde sofort beendet. Danke, dass du TierTrainer24 ausprobiert hast! 🐾"
+        },
+        "cancelledPeriodEnd": {
+          "title": "Kündigung bestätigt",
+          "description": "Schade, dass du gehst! Dein Zugang bleibt bis zum {{subscriptionEnd}} aktiv."
+        },
+        "cancellationError": {
+          "title": "Fehler bei der Kündigung",
+          "description": "{{errorMessage}}"
+        },
+        "freeMonthActivated": {
+          "title": "🎉 Gratismonat aktiviert!",
+          "description": "Du hast uns eine zweite Chance gegeben – wir geben alles, damit sie sich lohnt! 💛"
+        },
+        "downgradeSuccessful": {
+          "title": "Downgrade erfolgreich",
+          "description": "Du wurdest zum Basic-Paket gewechselt. Danke, dass du bei uns bleibst! 🌟"
+        },
+        "subscriptionCancelled": {
+          "title": "Subscription gekündigt",
+          "description": "Wir danken dir von Herzen für deine Zeit mit uns 🙏 Dein Zugang bleibt bis zum {{subscriptionEnd}} aktiv."
+        }
+      },
+      "ui": {
+        "feedback": {
+          "title": "Hey – schade, dass du überlegst zu gehen 😢",
+          "description": "Wir haben viel Herz in lovable gesteckt – und genau deshalb möchten wir hören, was dir gefehlt hat. Vielleicht gibt's einen besseren Weg als Goodbye?",
+          "reasonPlaceholder": "Was ist der Hauptgrund?",
+          "reasons": {
+            "tooLittleUse": "Ich nutze es zu selten",
+            "tooExpensive": "Es ist mir zu teuer",
+            "missingFeature": "Es fehlt mir ein bestimmtes Feature",
+            "technicalIssues": "Ich hatte technische Probleme",
+            "other": "Etwas anderes"
+          },
+          "otherPlaceholder": "Erzähl uns mehr...",
+          "cancel": "Abbrechen",
+          "continue": "Weiter"
+        },
+        "offer": {
+          "title": "Danke für dein ehrliches Feedback 💛",
+          "description": "Vielleicht gibst du uns noch eine Chance? Wir laden dich ein zu einem <strong>Gratismonat</strong> – ganz ohne Risiko, um lovable neu zu erleben.",
+          "freeMonthOffer": {
+            "title": "Gratismonat-Angebot",
+            "description": "30 Tage kostenlos • Jederzeit kündbar • Alle Premium-Features"
+          },
+          "activateFreeMonth": "✅ Gratismonat aktivieren & weitermachen",
+          "cancelAnyway": "❌ Trotzdem kündigen"
+        },
+        "downgrade": {
+          "title": "Vielleicht ein kleineres Paket?",
+          "description": "Vielleicht passt einfach ein kleineres Paket besser zu dir? So bleibst du dabei – ohne dich finanziell zu belasten.",
+          "basicPackage": {
+            "title": "Basic-Paket",
+            "description": "Perfekt für gelegentliche Nutzung",
+            "price": "4,99€",
+            "perMonth": "/Monat",
+            "save": "💰 Spare 5€ pro Monat!",
+            "features": {
+              "chats": "✅ 10 AI-Chats pro Monat",
+              "profile": "✅ 1 Tierprofil",
+              "plans": "✅ Basis-Trainingspläne"
+            }
+          },
+          "switchToBasic": "Jetzt zum Basic-Paket wechseln",
+          "cancelAnyway": "Doch lieber kündigen"
+        },
+        "final": {
+          "title": "Wir danken dir von Herzen 🙏",
+          "description": "Dein Zugang bleibt bis zum <strong>{{subscriptionEnd}}</strong> aktiv – vielleicht kommst du ja wieder zurück.",
+          "message": "Wir wären glücklich darüber! 💫",
+          "info": {
+            "email": "📧 Du erhältst eine Bestätigungs-E-Mail",
+            "reminder": "📅 Erinnerung 1 Woche vor Ablauf mit Reaktivierungsangebot"
+          },
+          "cancelFinally": "Endgültig kündigen",
+          "dontCancel": "Doch nicht kündigen"
+        }
+      }
+    },
+    "enhancedCancellationFlow": {
+      "systemNotifications": {
+        "cancellationSuccessful": "Kündigung erfolgreich",
+        "cancellationFailed": "Kündigungsfehler",
+        "cancellationProcessed": "Kündigung erfolgreich verarbeitet für {{userEmail}}",
+        "cancellationError": "Kündigungsfehler: {{error}}"
+      },
+      "toasts": {
+        "cancelledWithRefund": {
+          "title": "💰 Kündigung mit vollständiger Rückerstattung",
+          "description": "Ihr Abonnement wurde gekündigt und €{{refundAmount}} werden in 3-5 Werktagen zurückerstattet. Alle Premium-Features wurden deaktiviert. Sie erhalten eine Bestätigungs-E-Mail."
+        },
+        "cancelledImmediate": {
+          "title": "✅ Sofortige Kündigung erfolgreich",
+          "description": "Ihr Abonnement wurde sofort beendet und alle Premium-Features deaktiviert. Sie erhalten eine Bestätigungs-E-Mail."
+        },
+        "cancelledPeriodEnd": {
+          "title": "📅 Kündigung zum Periodenende bestätigt",
+          "description": "Schade, dass Sie gehen! Ihr Zugang bleibt bis zum {{subscriptionEnd}} aktiv. Sie erhalten eine Bestätigungs-E-Mail."
+        },
+        "cancellationError": {
+          "title": "❌ Fehler bei der Kündigung",
+          "description": "Die Kündigung konnte nicht verarbeitet werden: {{error}}. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support."
+        }
+      },
+      "cancellationReasons": {
+        "moneyBackGuarantee": "Geld-zurück-Garantie",
+        "regularCancellation": "Reguläre Kündigung"
       }
     },
     "testUserManagement": {
@@ -1748,6 +2041,67 @@
         "description": "Sie haben keine Berechtigung, auf diesen Bereich zuzugreifen.",
         "loginButton": "Zur Admin-Anmeldung"
       }
+    },
+    "emailLogs": {
+      "title": "📧 E-Mail-Logs & Historie",
+      "description": "Übersicht aller versendeten E-Mails und deren Status",
+      "loading": "Lade E-Mail-Logs...",
+      "statistics": {
+        "total": "Gesamt",
+        "sent": "Versendet",
+        "failed": "Fehler",
+        "processed": "Verarbeitet"
+      },
+      "filters": {
+        "searchPlaceholder": "Suchen nach E-Mail, Betreff...",
+        "status": "Status",
+        "emailType": "E-Mail-Typ",
+        "allStatuses": "Alle Status",
+        "allTypes": "Alle Typen",
+        "refresh": "🔄 Aktualisieren",
+        "export": "CSV Export",
+        "exportShort": "Export"
+      },
+      "emailTypes": {
+        "welcome_email": "🎉 Willkommen",
+        "checkout_confirmation": "💳 Checkout",
+        "cancellation_email": "📅 Kündigung",
+        "support_notification": "🎫 Support",
+        "payment_notification": "💰 Zahlung",
+        "email_config_change": "⚙️ Konfiguration"
+      },
+      "status": {
+        "sent": "✅ Versendet",
+        "failed": "❌ Fehler",
+        "processed": "⚙️ Verarbeitet"
+      },
+      "table": {
+        "date": "Datum",
+        "type": "Typ",
+        "recipient": "Empfänger",
+        "subject": "Betreff",
+        "status": "Status",
+        "details": "Details",
+        "noLogsFound": "Keine E-Mail-Logs gefunden"
+      },
+      "pagination": {
+        "page": "Seite",
+        "of": "von",
+        "previous": "Zurück",
+        "next": "Weiter"
+      },
+      "results": {
+        "showing": "zeige",
+        "of": "von",
+        "emails": "E-Mails",
+        "filteredBy": "gefiltert nach"
+      },
+      "toasts": {
+        "loadError": {
+          "title": "Fehler beim Laden der E-Mail-Logs",
+          "description": "Die E-Mail-Historie konnte nicht geladen werden."
+        }
+      }
     }
   },
   "training": {
@@ -2019,6 +2373,24 @@
           "title": "❌ Error",
           "description": "Plan could not be created"
         }
+      }
+    },
+    "usePlans": {
+      "createPlan": {
+        "title": "Plan erstellt",
+        "description": "Ihr neuer Plan wurde erfolgreich erstellt."
+      },
+      "createError": {
+        "title": "Fehler",
+        "description": "Beim Erstellen des Plans ist ein Fehler aufgetreten."
+      },
+      "updatePlan": {
+        "title": "Plan aktualisiert",
+        "description": "Ihr Plan wurde erfolgreich aktualisiert."
+      },
+      "deletePlan": {
+        "title": "Plan gelöscht",
+        "description": "Ihr Plan wurde erfolgreich gelöscht."
       }
     },
     "emptyPlansState": {
@@ -2460,6 +2832,52 @@
         "default": "Anmelden"
       }
     },
+    "authCallback": {
+      "emailConfirmed": {
+        "title": "E-Mail bestätigt!",
+        "description": "Ihr Konto wurde erfolgreich aktiviert. Willkommen!"
+      },
+      "emailConfirmedCheckout": {
+        "title": "E-Mail bestätigt!",
+        "description": "Ihr Konto wurde erfolgreich aktiviert. Weiterleitung zu Stripe für {{priceType}}..."
+      },
+      "loginFailed": {
+        "title": "Anmeldung fehlgeschlagen",
+        "description": "Ein Fehler ist bei der Anmeldung aufgetreten."
+      },
+      "loginCancelled": {
+        "title": "Anmeldung fehlgeschlagen",
+        "description": "Die Anmeldung wurde abgebrochen."
+      },
+      "linkExpired": {
+        "title": "Anmeldung fehlgeschlagen",
+        "description": "Der Link ist abgelaufen. Bitte versuchen Sie es erneut."
+      },
+      "invalidLink": {
+        "title": "Ungültiger Link",
+        "description": "Der Passwort-Reset-Link ist ungültig oder abgelaufen."
+      },
+      "confirmationFailed": {
+        "title": "Bestätigung fehlgeschlagen",
+        "description": "Der Bestätigungslink ist ungültig oder abgelaufen."
+      },
+      "loginRequired": {
+        "title": "Anmeldung erforderlich",
+        "description": "Bitte melden Sie sich an, um fortzufahren."
+      },
+      "loginSuccessful": {
+        "title": "Anmeldung erfolgreich!",
+        "description": "Willkommen bei TierTrainer!"
+      },
+      "alreadyLoggedIn": {
+        "title": "Bereits angemeldet!",
+        "description": "Sie sind bereits erfolgreich angemeldet."
+      },
+      "unexpectedError": {
+        "title": "Bestätigung fehlgeschlagen",
+        "description": "Ein unerwarteter Fehler ist aufgetreten."
+      }
+    },
     "confirmPassword": {
       "label": "Passwort bestätigen",
       "placeholder": "Passwort bestätigen",
@@ -2504,6 +2922,18 @@
       "defaultMessage": "E-Mail wird bestätigt...",
       "pleaseWait": "Bitte warten Sie einen Moment."
     },
+    "smartLogin": {
+      "welcomeToast": {
+        "title": "🐾 Willkommen!",
+        "description": "Du bist erfolgreich eingeloggt."
+      }
+    },
+    "stateHandler": {
+      "checkoutError": {
+        "title": "Checkout-Fehler",
+        "description": "Bitte versuchen Sie es erneut."
+      }
+    },
     "emailSignUpTab": {
       "title": {
         "login": "Mit E-Mail anmelden",
@@ -2543,6 +2973,55 @@
         },
         "loginFailed": "Anmeldung fehlgeschlagen",
         "signupFailed": "Registrierung fehlgeschlagen"
+      },
+      "form": {
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "email": "E-Mail-Adresse",
+        "password": "Passwort",
+        "firstNamePlaceholder": "Max",
+        "lastNamePlaceholder": "Mustermann",
+        "emailPlaceholder": "max@beispiel.de",
+        "passwordPlaceholder": "Mindestens 6 Zeichen",
+        "showPassword": "Passwort anzeigen",
+        "hidePassword": "Passwort ausblenden",
+        "registerButton": "Jetzt kostenlos registrieren",
+        "registering": "Registrierung läuft...",
+        "termsAgreement": "Mit der Registrierung stimmen Sie unseren",
+        "privacyPolicy": "Datenschutzbestimmungen",
+        "termsOfService": "AGB"
+      },
+      "errors": {
+        "accountAlreadyExists": {
+          "title": "Account bereits vorhanden",
+          "description": "Ein Account mit dieser E-Mail-Adresse existiert bereits. Bitte melden Sie sich an."
+        },
+        "passwordTooShort": {
+          "title": "Passwort zu kurz",
+          "description": "Das Passwort muss mindestens 6 Zeichen lang sein."
+        },
+        "invalidEmail": {
+          "title": "Ungültige E-Mail",
+          "description": "Bitte geben Sie eine gültige E-Mail-Adresse ein."
+        },
+        "registrationFailed": {
+          "title": "Registrierung fehlgeschlagen",
+          "description": "Ein unbekannter Fehler ist aufgetreten"
+        },
+        "generalError": {
+          "title": "Registrierung fehlgeschlagen",
+          "description": "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+        }
+      },
+      "success": {
+        "registrationSuccessful": {
+          "title": "🎉 Registrierung erfolgreich!",
+          "description": "Bitte überprüfen Sie Ihr E-Mail-Postfach und bestätigen Sie Ihre E-Mail-Adresse."
+        },
+        "welcome": {
+          "title": "🎉 Willkommen!",
+          "description": "Ihr Account wurde erfolgreich erstellt."
+        }
       }
     },
     "googleSignUpTab": {
@@ -2899,6 +3378,17 @@
           "question": "Hat Ihnen diese Antwort geholfen?",
           "yes": "Ja, danke!",
           "no": "Brauche mehr Hilfe"
+        },
+        "errorHandler": {
+          "temporaryProblem": "Temporäres Problem",
+          "chatError": "Chat-Fehler",
+          "defaultMessage": "Nachricht konnte nicht gesendet werden.",
+          "timeout": "⏱️ Zeitüberschreitung - Der TierTrainer braucht länger als gewöhnlich. Bitte versuche es erneut.",
+          "serviceUpdate": "🔧 TierTrainer Service wird gerade aktualisiert. Bitte versuche es in wenigen Minuten erneut.",
+          "networkProblem": "🌐 Netzwerkproblem erkannt. Bitte überprüfe deine Internetverbindung und versuche es erneut.",
+          "sessionExpired": "🔑 Deine Sitzung ist abgelaufen. Bitte lade die Seite neu und melde dich erneut an.",
+          "chatServiceUnavailable": "🤖 Chat-Service ist vorübergehend nicht verfügbar. Wir arbeiten daran - bitte versuche es in wenigen Minuten erneut.",
+          "genericError": "💭 {errorMessage}"
         }
       },
       "subscriptionManager": {
@@ -3167,6 +3657,26 @@
         },
         "preview": {
           "compressed": "{percent}% kleiner"
+        },
+        "validation": {
+          "invalidFormat": {
+            "title": "Ungültiges Dateiformat",
+            "description": "Bitte wähle eine MP4, MOV, AVI oder WebM Datei aus."
+          },
+          "fileTooLarge": {
+            "title": "Datei zu groß",
+            "description": "Das Video darf maximal 50MB groß sein."
+          }
+        },
+        "logic": {
+          "compressionSuccess": {
+            "title": "Video komprimiert!",
+            "description": "Dateigröße reduziert von {originalSize}MB auf {compressedSize}MB"
+          },
+          "compressionFailed": {
+            "title": "Komprimierung fehlgeschlagen",
+            "description": "Das Video wird in Originalgröße verwendet."
+          }
         }
       }
     },
@@ -3266,6 +3776,46 @@
     "guaranteeIncluded": "💰 14-Tage Geld-zurück-Garantie inklusive – Checkout wird in neuem Tab geöffnet",
     "error": "Fehler",
     "couldNotCreate": "Checkout konnte nicht erstellt werden"
+  },
+  "checkoutRecovery": {
+    "title": "Checkout-Problem?",
+    "description": "Falls der Checkout nicht funktioniert hat, können Sie es hier erneut versuchen oder uns das Problem melden.",
+    "retry": {
+      "title": "Erneut versuchen",
+      "monthlyPremium": "Premium Monatsabo",
+      "sixMonthPackage": "6-Monats-Paket"
+    },
+    "report": {
+      "title": "Problem melden",
+      "emailLabel": "E-Mail-Adresse",
+      "emailPlaceholder": "ihre@email.de",
+      "reportButton": "Problem melden",
+      "reporting": "Meldung läuft..."
+    },
+    "tip": "💡 <strong>Tipp:</strong> Überprüfen Sie auch Ihren Spam-Ordner für E-Mails von Stripe oder uns.",
+    "toasts": {
+      "emailRequired": {
+        "title": "E-Mail erforderlich",
+        "description": "Bitte geben Sie Ihre E-Mail-Adresse ein."
+      },
+      "problemReported": {
+        "title": "Problem gemeldet",
+        "description": "Wir haben Ihr Problem erhalten und werden uns umgehend darum kümmern."
+      }
+    }
+  },
+  "cancellationConfirmationEmail": {
+    "defaultReason": "Nutzerwunsch",
+    "toasts": {
+      "emailSent": {
+        "title": "📧 Bestätigungs-E-Mail versendet",
+        "description": "Sie erhalten eine Bestätigung Ihrer Kündigung per E-Mail."
+      },
+      "cancellationSuccessful": {
+        "title": "Kündigung erfolgreich",
+        "description": "Ihre Kündigung wurde verarbeitet. Die Bestätigungs-E-Mail konnte nicht versendet werden."
+      }
+    }
   },
   "pets": {
     "title": "Meine Haustiere",
@@ -3587,6 +4137,12 @@
       "selectionRequired": {
         "title": "Auswahl erforderlich",
         "description": "Bitte wähle mindestens {maxAllowed, plural, one {ein Tier} other {# Tiere}} aus."
+      },
+      "toasts": {
+        "selectionSaved": {
+          "title": "✅ Auswahl gespeichert",
+          "description": "{selectedCount} {selectedCount, plural, one {Tier bleibt} other {Tiere bleiben}} aktiv. Die anderen sind archiviert und können jederzeit reaktiviert werden."
+        }
       }
     }
   },
@@ -4062,6 +4618,52 @@
       "unknownError": "Unbekannter Fehler"
     }
   },
+  "trialManager": {
+    "title": "Trial-Management",
+    "userEmail": "Benutzer E-Mail",
+    "userEmailPlaceholder": "benutzer@example.com",
+    "trialDuration": "Trial-Dauer (Tage)",
+    "actions": {
+      "checkStatus": "Status prüfen",
+      "resetTrial": "Trial zurücksetzen",
+      "grantTrial": "{{days}} Tage Trial gewähren"
+    },
+    "status": {
+      "title": "Trial-Status für {{email}}",
+      "trialUsed": "Trial verwendet:",
+      "trialEligible": "Trial berechtigt:",
+      "remainingDays": "Verbleibende Tage:",
+      "specialTrialEnd": "Spezial-Trial bis:",
+      "yes": "Ja",
+      "no": "Nein",
+      "days": "Tage"
+    },
+    "info": {
+      "title": "Hinweise:",
+      "checkStatus": "Status prüfen: Zeigt den aktuellen Trial-Status an",
+      "resetTrial": "Trial zurücksetzen: Setzt den Trial-Status zurück (als hätte der Benutzer noch nie einen Trial genutzt)",
+      "grantTrial": "Trial gewähren: Gewährt eine spezielle Trial-Periode mit der gewählten Anzahl Tage"
+    },
+    "toasts": {
+      "emailRequired": {
+        "title": "Fehler",
+        "description": "Bitte geben Sie eine E-Mail-Adresse ein"
+      },
+      "statusLoaded": {
+        "title": "Status geladen",
+        "description": "Trial-Status für {{email}} wurde abgerufen"
+      },
+      "success": {
+        "title": "Erfolgreich",
+        "description": "Aktion erfolgreich durchgeführt"
+      },
+      "error": {
+        "title": "Fehler",
+        "description": "{{error}}"
+      },
+      "unknownError": "Unbekannter Fehler"
+    }
+  },
   "chatDiagnostics": {
     "title": "🔧 Chat-System-Diagnose",
     "description": "Diese Diagnose hilft dabei, Probleme mit dem Chat-System zu identifizieren und zu beheben."
@@ -4081,5 +4683,35 @@
     "noteInterface": "Die Benutzeroberfläche wird in Ihrer gewählten Sprache angezeigt",
     "noteSupport": "Der Support wird in Ihrer gewählten Sprache bereitgestellt",
     "refreshPage": "Seite neu laden"
+  },
+  "hook": {
+    "loginRequired": {
+      "title": "Fehler",
+      "description": "Sie müssen angemeldet sein, um die Spracheinstellung zu ändern"
+    },
+    "saved": {
+      "title": "Spracheinstellung gespeichert",
+      "description": "Ihre Spracheinstellung wurde auf {{language}} gesetzt"
+    },
+    "updated": {
+      "title": "Spracheinstellung aktualisiert",
+      "description": "Ihre Spracheinstellung wurde auf {{language}} aktualisiert"
+    },
+    "deleted": {
+      "title": "Spracheinstellung gelöscht",
+      "description": "Ihre Spracheinstellung wurde entfernt"
+    },
+    "deleteLoginRequired": {
+      "title": "Fehler",
+      "description": "Sie müssen angemeldet sein, um die Spracheinstellung zu löschen"
+    },
+    "saveError": {
+      "title": "Fehler",
+      "description": "Spracheinstellung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut."
+    },
+    "deleteError": {
+      "title": "Fehler",
+      "description": "Spracheinstellung konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
+    }
   }
 }

@@ -4,6 +4,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useOAuthProfileHandler } from './useOAuthProfileHandler';
 import { getCheckoutFlags, clearCheckoutFlags, debugCheckoutState } from '@/utils/checkoutStorage';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export const useAuthStateHandler = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -11,6 +12,7 @@ export const useAuthStateHandler = () => {
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
   const { handleOAuthProfile } = useOAuthProfileHandler();
+  const { t } = useTranslations();
   
   // Track auth state handler calls to prevent excessive events
   const [authHandlerCallCount, setAuthHandlerCallCount] = useState(0);
@@ -54,8 +56,8 @@ export const useAuthStateHandler = () => {
         
         const { toast } = await import('@/hooks/use-toast');
         toast({
-          title: "Checkout-Fehler",
-          description: "Bitte versuchen Sie es erneut.",
+          title: t('auth.stateHandler.checkoutError.title'),
+          description: t('auth.stateHandler.checkoutError.description'),
           variant: "destructive",
         });
         
@@ -73,7 +75,7 @@ export const useAuthStateHandler = () => {
       clearCheckoutFlags();
       window.location.href = '/#pricing';
     }
-  }, []);
+  }, [t]);
 
   const handleSignedIn = useCallback(async (session: Session, skipAutoRedirect = false) => {
     const user = session.user;

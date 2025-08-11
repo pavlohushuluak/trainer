@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ImageAnalysisResult } from './ImageAnalysisResult';
 import { TrainingPlanPreview } from './TrainingPlanPreview';
 import { RotateCcw } from 'lucide-react';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface Pet {
   id: string;
@@ -31,13 +32,31 @@ export const AnalysisDisplaySection = ({
   onSavePlan,
   onStartOver
 }: AnalysisDisplaySectionProps) => {
+  const { currentLanguage } = useTranslations();
+
+  // Language-specific translations
+  const translations = {
+    de: {
+      analysisFor: 'Analyse für',
+      yourPet: 'dein Tier',
+      newImage: 'Neues Bild'
+    },
+    en: {
+      analysisFor: 'Analysis for',
+      yourPet: 'your pet',
+      newImage: 'New image'
+    }
+  };
+
+  const t = translations[currentLanguage as keyof typeof translations] || translations.de;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">📸 Analyse für {selectedPet?.name || 'dein Tier'}</h3>
+        <h3 className="text-lg font-semibold">📸 {t.analysisFor} {selectedPet?.name || t.yourPet}</h3>
         <Button variant="outline" size="sm" onClick={onStartOver}>
           <RotateCcw className="h-4 w-4 mr-2" />
-          Neues Bild
+          {t.newImage}
         </Button>
       </div>
 
