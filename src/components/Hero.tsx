@@ -99,7 +99,7 @@ export const Hero = ({ onStartChat }: HeroProps) => {
           {/* Logo prominently placed at the top */}
           <div className="mb-8 flex justify-center">
             <ThemeLogo 
-              className="h-16 w-auto"
+              className="hidden md:block md:h-16 w-auto"
               onClick={() => navigate('/')}
             />
           </div>
