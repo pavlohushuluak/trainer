@@ -2320,7 +2320,44 @@
       "title": "AI Image Analysis",
       "description": "Upload a photo of your pet and receive detailed behavior analysis with training recommendations",
       "freeForAll": "Free for everyone!",
-      "freeDescription": "This feature is available for all users."
+      "freeDescription": "This feature is available for all users.",
+      "logic": {
+        "analysisSaved": {
+          "title": "Analysis Saved",
+          "description": "Your pet's behavior analysis has been saved successfully."
+        },
+        "planSaved": {
+          "title": "Training Plan Saved",
+          "description": "Your personalized training plan has been saved successfully."
+        },
+        "trainingPlan": {
+          "goals": {
+            "relaxed": "Help your pet feel more relaxed and comfortable in their environment",
+            "bonding": "Strengthen the bond between you and your pet through positive interactions",
+            "wellbeing": "Improve your pet's overall wellbeing and emotional state"
+          },
+          "steps": {
+            "observation": {
+              "title": "Observation & Assessment",
+              "duration": "10 min",
+              "difficulty": "Beginner",
+              "description": "Carefully observe your pet's current behavior and mood to understand their baseline state."
+            },
+            "targeted": {
+              "title": "Targeted Training",
+              "duration": "15 min",
+              "difficulty": "Intermediate",
+              "description": "Perfect moment for a new, light exercise or simply some cuddle time together."
+            },
+            "reinforcement": {
+              "title": "Positive Reinforcement",
+              "duration": "5 min",
+              "difficulty": "Beginner",
+              "description": "Reward and reinforce positive behaviors to strengthen the training bond."
+            }
+          }
+        }
+      }
     },
     "heroStory": {
       "title": "Welcome to TierTrainer! 🐾",

@@ -2322,7 +2322,44 @@
       "title": "KI-Bildanalyse",
       "description": "Laden Sie ein Foto Ihres Haustiers hoch und erhalten Sie detaillierte Verhaltensanalyse mit Trainingsempfehlungen",
       "freeForAll": "Kostenlos für alle!",
-      "freeDescription": "Diese Funktion ist für alle Benutzer verfügbar."
+      "freeDescription": "Diese Funktion ist für alle Benutzer verfügbar.",
+      "logic": {
+        "analysisSaved": {
+          "title": "Analyse gespeichert",
+          "description": "Die Verhaltensanalyse Ihres Haustiers wurde erfolgreich gespeichert."
+        },
+        "planSaved": {
+          "title": "Trainingsplan gespeichert",
+          "description": "Ihr personalisierter Trainingsplan wurde erfolgreich gespeichert."
+        },
+        "trainingPlan": {
+          "goals": {
+            "relaxed": "Helfen Sie Ihrem Haustier, sich in seiner Umgebung entspannter und wohler zu fühlen",
+            "bonding": "Stärken Sie die Bindung zwischen Ihnen und Ihrem Haustier durch positive Interaktionen",
+            "wellbeing": "Verbessern Sie das allgemeine Wohlbefinden und den emotionalen Zustand Ihres Haustiers"
+          },
+          "steps": {
+            "observation": {
+              "title": "Beobachtung & Bewertung",
+              "duration": "10 min",
+              "difficulty": "Anfänger",
+              "description": "Beobachten Sie sorgfältig das aktuelle Verhalten und die Stimmung Ihres Haustiers, um ihren Grundzustand zu verstehen."
+            },
+            "targeted": {
+              "title": "Gezieltes Training",
+              "duration": "15 min",
+              "difficulty": "Fortgeschritten",
+              "description": "Perfekter Moment für eine neue, leichte Übung oder einfach Kuschelzeit zusammen."
+            },
+            "reinforcement": {
+              "title": "Positive Verstärkung",
+              "description": "Belohnen und verstärken Sie positives Verhalten, um die Trainingsbindung zu stärken.",
+              "duration": "5 min",
+              "difficulty": "Anfänger"
+            }
+          }
+        }
+      }
     },
     "heroStory": {
       "title": "Willkommen bei TierTrainer! 🐾",
