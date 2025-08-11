@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Heart, Lightbulb, Target } from 'lucide-react';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface AnalysisResult {
   summary_text: string;
@@ -19,6 +20,32 @@ interface ImageAnalysisResultProps {
 }
 
 export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis }: ImageAnalysisResultProps) => {
+  const { currentLanguage } = useTranslations();
+
+  // Language-specific translations
+  const translations = {
+    de: {
+      whatISee: 'Was ich in dem Bild sehe',
+      mood: 'Stimmung:',
+      confidence: 'Vertrauen:',
+      myRecommendation: 'Meine Empfehlung',
+      createTrainingPlan: 'Trainingsplan erstellen',
+      saveAnalysis: 'Analyse speichern',
+      learningMessage: 'Du lernst, dein Tier besser zu lesen – und stärkst eure Verbindung.'
+    },
+    en: {
+      whatISee: 'What I see in the image',
+      mood: 'Mood:',
+      confidence: 'Confidence:',
+      myRecommendation: 'My recommendation',
+      createTrainingPlan: 'Create training plan',
+      saveAnalysis: 'Save analysis',
+      learningMessage: 'You learn to read your pet better – and strengthen your bond.'
+    }
+  };
+
+  const t = translations[currentLanguage as keyof typeof translations] || translations.de;
+
   // Clean up the analysis text by removing unwanted quotes and formatting
   const cleanText = (text: string) => {
     if (!text) return '';
@@ -31,17 +58,60 @@ export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis }: Im
 
   const getMoodColor = (mood: string) => {
     const cleanMood = cleanText(mood).toLowerCase();
+    
+    // Support both German and English mood keywords
     switch (cleanMood) {
+      // German moods
       case 'entspannt':
-      case 'ruhig': return 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300';
+      case 'ruhig':
+      // English moods
+      case 'relaxed':
+      case 'calm':
+      case 'peaceful':
+      case 'content':
+        return 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300';
+      
+      // German moods
       case 'aufmerksam':
-      case 'fokussiert': return 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300';
+      case 'fokussiert':
+      // English moods
+      case 'attentive':
+      case 'focused':
+      case 'concentrated':
+      case 'alert':
+        return 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300';
+      
+      // German moods
       case 'angespannt':
-      case 'gestresst': return 'bg-orange-100 dark:bg-orange-900/20 text-orange-800 dark:text-orange-300';
-      case 'ängstlich': return 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300';
+      case 'gestresst':
+      // English moods
+      case 'tense':
+      case 'stressed':
+      case 'nervous':
+      case 'restless':
+        return 'bg-orange-100 dark:bg-orange-900/20 text-orange-800 dark:text-orange-300';
+      
+      // German moods
+      case 'ängstlich':
+      // English moods
+      case 'anxious':
+      case 'uncertain':
+      case 'reserved':
+      case 'shy':
+        return 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300';
+      
+      // German moods
       case 'verspielt':
-      case 'fröhlich': return 'bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300';
-      default: return 'bg-gray-100 dark:bg-gray-900/20 text-gray-800 dark:text-gray-300';
+      case 'fröhlich':
+      // English moods
+      case 'playful':
+      case 'happy':
+      case 'lively':
+      case 'active':
+        return 'bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300';
+      
+      default: 
+        return 'bg-gray-100 dark:bg-gray-900/20 text-gray-800 dark:text-gray-300';
     }
   };
 
@@ -64,7 +134,7 @@ export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis }: Im
         <CardHeader className="pb-4">
           <CardTitle className="text-lg flex items-center gap-2 text-blue-800 dark:text-blue-200">
             <Heart className="h-5 w-5 text-red-500" />
-            Was ich in dem Bild sehe
+            {t.whatISee}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -75,13 +145,13 @@ export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis }: Im
           </div>
           
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Stimmung:</span>
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{t.mood}</span>
             <Badge className={getMoodColor(result.mood_estimation)}>
               {cleanText(result.mood_estimation)}
             </Badge>
             {result.confidence_level && (
               <Badge variant="outline" className="text-xs">
-                Vertrauen: {cleanText(result.confidence_level)}
+                {t.confidence} {cleanText(result.confidence_level)}
               </Badge>
             )}
           </div>
@@ -92,7 +162,7 @@ export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis }: Im
         <CardHeader className="pb-4">
           <CardTitle className="text-lg flex items-center gap-2 text-green-800 dark:text-green-200">
             <Lightbulb className="h-5 w-5 text-yellow-500" />
-            Meine Empfehlung
+            {t.myRecommendation}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -111,12 +181,12 @@ export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis }: Im
                 {onCreatePlan && (
                   <Button onClick={onCreatePlan} className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white text-sm sm:text-base min-h-[44px]">
                     <Target className="h-4 w-4 mr-2 flex-shrink-0" />
-                    Trainingsplan erstellen
+                    {t.createTrainingPlan}
                   </Button>
                 )}
                 {onSaveAnalysis && (
                   <Button variant="outline" onClick={onSaveAnalysis} className="text-sm sm:text-base min-h-[44px]">
-                    💾 Analyse speichern
+                    💾 {t.saveAnalysis}
                   </Button>
                 )}
               </div>
@@ -129,7 +199,7 @@ export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis }: Im
         <div className="flex items-center justify-center gap-2">
           <span className="text-lg">💡</span>
           <strong className="text-gray-700 dark:text-gray-300">
-            Du lernst, dein Tier besser zu lesen – und stärkst eure Verbindung.
+            {t.learningMessage}
           </strong>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface UseImageUploadProps {
   onUploadComplete: (result: any) => void;
@@ -25,6 +26,7 @@ export const useImageUpload = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { currentLanguage } = useTranslations();
 
   const validateFile = (file: File): boolean => {
     if (!canAnalyze) {
@@ -93,7 +95,8 @@ export const useImageUpload = ({
         body: { 
           image: base64,
           petName: petName,
-          petSpecies: petSpecies
+          petSpecies: petSpecies,
+          language: currentLanguage
         }
       });
 

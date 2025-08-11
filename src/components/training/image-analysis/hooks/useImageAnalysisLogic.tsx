@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface Pet {
   id: string;
@@ -16,6 +17,7 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const [showPlan, setShowPlan] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { currentLanguage } = useTranslations();
 
   const handleUploadComplete = (result: any) => {
     setAnalysisResult(result);
@@ -26,10 +28,11 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const handleCreatePlan = async () => {
     if (!analysisResult) return;
 
-    const petName = selectedPet?.name || 'dein Tier';
+    const petName = selectedPet?.name || (currentLanguage === 'en' ? 'your pet' : 'dein Tier');
     
-    try {
-      const planData = {
+    // Language-specific training plan content
+    const planContent = {
+      de: {
         title: `${analysisResult.recommendation} - Training für ${petName}`,
         description: `Basierend auf der Bildanalyse: ${analysisResult.mood_estimation}`,
         goals: [
@@ -56,19 +59,54 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
             duration_minutes: 5,
             difficulty: 'Anfänger'
           }
+        ]
+      },
+      en: {
+        title: `${analysisResult.recommendation} - Training for ${petName}`,
+        description: `Based on image analysis: ${analysisResult.mood_estimation}`,
+        goals: [
+          `${petName} should behave more relaxed in similar situations`,
+          'Strengthening the human-animal bond through targeted training',
+          'Improving body language and well-being'
         ],
+        steps: [
+          {
+            title: 'Observation & Relaxation',
+            description: `Start with quiet observation of ${petName}. Create a relaxed atmosphere and reward calm behavior.`,
+            duration_minutes: 10,
+            difficulty: 'Beginner'
+          },
+          {
+            title: 'Targeted Exercise',
+            description: analysisResult.recommendation,
+            duration_minutes: 15,
+            difficulty: 'Advanced'
+          },
+          {
+            title: 'Positive Reinforcement',
+            description: `Reward ${petName} for every small progress. Always end training with a positive experience.`,
+            duration_minutes: 5,
+            difficulty: 'Beginner'
+          }
+        ]
+      }
+    };
+
+    const content = planContent[currentLanguage as keyof typeof planContent] || planContent.de;
+    
+    try {
+      const planData = {
+        title: content.title,
+        description: content.description,
+        goals: content.goals,
+        steps: content.steps,
         estimated_days: 7
       };
 
       setTrainingPlan(planData);
       setShowPlan(true);
     } catch (error) {
-      console.error('Error creating plan:', error);
-      toast({
-        title: "Fehler",
-        description: "Trainingsplan konnte nicht erstellt werden.",
-        variant: "destructive"
-      });
+      console.error('Error creating training plan:', error);
     }
   };
 
