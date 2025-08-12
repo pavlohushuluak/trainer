@@ -169,46 +169,46 @@ const extractPetNameFromTitle = (title: string): string | null => {
   return null;
 };
 
-// Get display information for pet
-const getPetDisplayInfo = (plan: TrainingPlanWithSteps) => {
-  // If we have pet information from relation, use it
-  if (plan.pet_name && plan.pet_species) {
-    const colorClasses = getPetColorClasses(plan.pet_species, true);
-    return {
-      name: plan.pet_name,
-      species: plan.pet_species,
-      icon: getPetIcon(plan.pet_species),
-      colorClasses,
-      isLinked: true
-    };
-  }
+export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactPlanCardProps) => {
+  const { t } = useTranslations();
   
-  // Try to extract pet name from title
-  const extractedName = extractPetNameFromTitle(plan.title);
-  if (extractedName) {
-    const colorClasses = getPetColorClasses('orange', false);
+  // Get display information for pet
+  const getPetDisplayInfo = (plan: TrainingPlanWithSteps) => {
+    // If we have pet information from relation, use it
+    if (plan.pet_name && plan.pet_species) {
+      const colorClasses = getPetColorClasses(plan.pet_species, true);
+      return {
+        name: plan.pet_name,
+        species: plan.pet_species,
+        icon: getPetIcon(plan.pet_species),
+        colorClasses,
+        isLinked: true
+      };
+    }
+    
+    // Try to extract pet name from title
+    const extractedName = extractPetNameFromTitle(plan.title);
+    if (extractedName) {
+      const colorClasses = getPetColorClasses('orange', false);
+      return {
+        name: extractedName,
+        species: undefined,
+        icon: '🐾',
+        colorClasses,
+        isLinked: false
+      };
+    }
+    
+    // Fallback to general
+    const colorClasses = getPetColorClasses('gray', false);
     return {
-      name: extractedName,
+      name: t('training.general'),
       species: undefined,
-      icon: '🐾',
+      icon: '📋',
       colorClasses,
       isLinked: false
     };
-  }
-  
-  // Fallback to general
-  const colorClasses = getPetColorClasses('gray', false);
-  return {
-    name: 'Allgemein',
-    species: undefined,
-    icon: '📋',
-    colorClasses,
-    isLinked: false
   };
-};
-
-export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactPlanCardProps) => {
-  const { t } = useTranslations();
   const completedSteps = plan.steps.filter(step => step.is_completed).length;
   const totalSteps = plan.steps.length;
   const progressPercentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;

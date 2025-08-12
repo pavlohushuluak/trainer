@@ -1,6 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface CancellationActionsProps {
   isWithinMoneyBackPeriod: boolean;
@@ -15,6 +16,8 @@ export const CancellationActions = ({
   onConfirm,
   onCancel
 }: CancellationActionsProps) => {
+  const { t } = useTranslations();
+  
   return (
     <div className="flex flex-col gap-2 pt-4">
       <Button 
@@ -26,12 +29,12 @@ export const CancellationActions = ({
         {isProcessing ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            Wird gekündigt...
+            {t('subscription.cancellation.actions.processing')}
           </>
         ) : (
           isWithinMoneyBackPeriod 
-            ? "✅ Kündigen & Geld zurückerhalten" 
-            : "Endgültig kündigen"
+            ? t('subscription.cancellation.actions.cancelAndRefund')
+            : t('subscription.cancellation.actions.cancelPermanently')
         )}
       </Button>
       <Button 
@@ -40,7 +43,7 @@ export const CancellationActions = ({
         className="w-full"
         disabled={isProcessing}
       >
-        Doch nicht kündigen
+        {t('subscription.cancellation.actions.dontCancel')}
       </Button>
     </div>
   );

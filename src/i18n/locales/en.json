@@ -1338,6 +1338,35 @@
       }
     },
     "testButtons": {
+      "liveTest": {
+        "title": "Send Live Email",
+        "description": "Send a test email to the configured address",
+        "success": "✅ Test email sent",
+        "error": "❌ Email could not be sent",
+        "successDescription": "Welcome email was successfully sent to gl@cooper-ads.com. Email ID: {{emailId}}",
+        "errorDescription": "Error: {{errorMessage}}"
+      },
+      "specificTests": {
+        "title": "Specific Email Tests",
+        "authEmails": "🔐 Auth Emails",
+        "testUserEmails": "🧪 Test User Emails",
+        "buttons": {
+          "welcome": "📧 Test Welcome",
+          "checkout": "🎉 Test Checkout",
+          "magicLink": "🔗 Magic Link",
+          "confirmSignup": "✅ Confirm Signup",
+          "inviteUser": "🎁 Invite User",
+          "testUserWelcome": "🧪 Test User Welcome",
+          "testUserActivation": "🔓 Test User Activation",
+          "support": "🎫 Test Support",
+          "cancellation": "📅 Test Cancellation"
+        },
+        "success": "✅ Test email sent",
+        "error": "❌ Test failed",
+        "errorDescription": "Error: {{errorMessage}}",
+        "successDescription": "Email was successfully sent to {{recipient}}.",
+        "sending": "📧 Sending..."
+      },
       "title": "🧪 Email Tests",
       "info": "💡 All other test emails are forwarded to <strong>owydwaldt12@gmail.com</strong>",
       "connectionTest": {
@@ -1420,39 +1449,6 @@
       }
     }
   },
-  "adminEmail": {
-    "testButtons": {
-      "liveTest": {
-        "title": "Send Live Email",
-        "description": "Send a test email to the configured address",
-        "success": "✅ Test email sent",
-        "error": "❌ Email could not be sent",
-        "successDescription": "Welcome email was successfully sent to gl@cooper-ads.com. Email ID: {{emailId}}",
-        "errorDescription": "Error: {{errorMessage}}"
-      },
-      "specificTests": {
-        "title": "Specific Email Tests",
-        "authEmails": "🔐 Auth Emails",
-        "testUserEmails": "🧪 Test User Emails",
-        "buttons": {
-          "welcome": "📧 Test Welcome",
-          "checkout": "🎉 Test Checkout",
-          "magicLink": "🔗 Magic Link",
-          "confirmSignup": "✅ Confirm Signup",
-          "inviteUser": "🎁 Invite User",
-          "testUserWelcome": "🧪 Test User Welcome",
-          "testUserActivation": "🔓 Test User Activation",
-          "support": "🎫 Test Support",
-          "cancellation": "📅 Test Cancellation"
-        },
-        "success": "✅ Test email sent",
-        "error": "❌ Test failed",
-        "errorDescription": "Error: {{errorMessage}}",
-        "successDescription": "Email was successfully sent to {{recipient}}.",
-        "sending": "📧 Sending..."
-      }
-    }
-  },
   "adminHooks": {
     "adminUsers": {
       "errors": {
@@ -1517,24 +1513,6 @@
       }
     },
     "cancellationFlow": {
-      "toasts": {
-        "cancelledWithRefund": {
-          "title": "💰 Cancellation with refund successful",
-          "description": "You have received €{{refundAmount}} back. The money will be in your account within 3-5 business days. Thank you for trying TierTrainer24! 🐾"
-        },
-        "cancelledImmediate": {
-          "title": "💰 Cancellation with immediate termination",
-          "description": "Your subscription has been terminated immediately. Thank you for trying TierTrainer24! 🐾"
-        },
-        "cancelledPeriodEnd": {
-          "title": "Cancellation confirmed",
-          "description": "Sorry to see you go! Your access remains active until {{subscriptionEnd}}."
-        },
-        "cancellationError": {
-          "title": "Cancellation error",
-          "description": "{{errorMessage}}"
-        }
-      },
       "ui": {
         "feedback": {
           "title": "Hey – sorry you're thinking of leaving 😢",
@@ -1592,6 +1570,22 @@
         }
       },
       "toasts": {
+        "cancelledWithRefund": {
+          "title": "💰 Cancellation with refund successful",
+          "description": "You have received €{{refundAmount}} back. The money will be in your account within 3-5 business days. Thank you for trying TierTrainer24! 🐾"
+        },
+        "cancelledImmediate": {
+          "title": "💰 Cancellation with immediate termination",
+          "description": "Your subscription has been terminated immediately. Thank you for trying TierTrainer24! 🐾"
+        },
+        "cancelledPeriodEnd": {
+          "title": "Cancellation confirmed",
+          "description": "Sorry to see you go! Your access remains active until {{subscriptionEnd}}."
+        },
+        "cancellationError": {
+          "title": "Cancellation error",
+          "description": "{{errorMessage}}"
+        },
         "freeMonthActivated": {
           "title": "🎉 Free month activated!",
           "description": "You gave us a second chance – we give everything to make it worth it! 💛"
@@ -2103,6 +2097,7 @@
     }
   },
   "training": {
+    "general": "General",
     "title": "Training",
     "createPlan": "Create Plan",
     "editPlan": "Edit Plan",
@@ -4020,6 +4015,10 @@
     },
     "maxPlanReached": "You already have the largest package!",
     "maxPlanDescription": "With max pet slots, you have reached the maximum package.",
+    "availableUpgrades": "Available upgrades for your pet package",
+    "currentPetSlots": "You currently have space for {{count}} pets.",
+    "unlimitedPetSlots": "You currently have unlimited space for pets.",
+    "availableUpgradeOptions": "Here are the available upgrade options:",
     "upgradeModal": {
       "title": "🐾 Expand Your Pet Package!",
       "description": "You have already created {current} of {max} pets. Upgrade to a larger package to add more pets!",
@@ -4039,12 +4038,6 @@
       "morePets": "more pets",
       "processing": "Processing...",
       "upgradeNow": "Upgrade Now",
-      "maxPlanReached": "You already have the largest package!",
-      "maxPlanDescription": "With {max} pet slots, you have reached the maximum package.",
-      "availableUpgrades": "Available upgrades for your pet package",
-      "currentPetSlots": "You currently have space for {{count}} pets.",
-      "unlimitedPetSlots": "You currently have unlimited space for pets.",
-      "availableUpgradeOptions": "Here are the available upgrade options:",
       "securityInfo": "🔒 Secure & GDPR compliant • Cancel anytime • Immediate activation after payment"
     },
     "trialStatus": {
@@ -4077,6 +4070,18 @@
       "description": "Cancel within the first 14 days and receive your money back automatically. No questions asked, no hassle – your trust is important to us."
     },
     "cancellation": {
+      "regularCancellation": {
+        "title": "Regular Cancellation",
+        "description": "The 14-day money-back period has expired, but your access remains active until the end of the current period.",
+        "accessUntil": "Access until",
+        "expiryDate": "Expiry date"
+      },
+      "actions": {
+        "processing": "Cancelling...",
+        "cancelAndRefund": "✅ Cancel & Get Money Back",
+        "cancelPermanently": "Cancel Permanently",
+        "dontCancel": "Don't Cancel"
+      },
       "cancelSubscription": "Cancel Subscription",
       "moneyBackGuarantee": {
         "active": "💰 Money-back guarantee active",

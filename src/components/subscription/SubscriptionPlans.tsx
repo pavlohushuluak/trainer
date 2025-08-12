@@ -32,10 +32,10 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
   const getPlans = (): PricingPlan[] => {
     const allPlans = isYearly ? getSixMonthPlans(t) : getMonthlyPlans(t);
     
-    // Wenn der Nutzer bereits ein Premium-Abonnement hat, nur größere Pakete anzeigen
+    // If user already has premium subscription, only show larger packages
     if (subscription.subscribed && maxPetsAllowed) {
       return allPlans.filter(plan => {
-        // Extrahiere die Anzahl der erlaubten Tiere aus dem Plan
+        // Extract the number of allowed pets from the plan
         const planPets = getPlanMaxPets(plan.id);
         return planPets > maxPetsAllowed;
       });
@@ -44,7 +44,7 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
     return allPlans;
   };
 
-  // Hilfsfunktion um die maximale Anzahl Tiere aus der Plan-ID zu extrahieren
+  // Helper function to extract maximum number of pets from plan ID
   const getPlanMaxPets = (planId: string): number => {
     if (planId.includes('unlimited')) return 999;
     if (planId.includes('5-8')) return 8;

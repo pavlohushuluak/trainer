@@ -2105,6 +2105,7 @@
     }
   },
   "training": {
+    "general": "Allgemein",
     "title": "Training",
     "createPlan": "Plan erstellen",
     "editPlan": "Plan bearbeiten",
@@ -4022,6 +4023,10 @@
     },
     "maxPlanReached": "Sie haben bereits das größte Paket!",
     "maxPlanDescription": "Mit max Haustier-Slots haben Sie das maximale Paket erreicht.",
+    "availableUpgrades": "Verfügbare Upgrades für dein Tierpaket",
+    "currentPetSlots": "Du hast aktuell Platz für {{count}} Tiere.",
+    "unlimitedPetSlots": "Du hast aktuell unbegrenzt Platz für Tiere.",
+    "availableUpgradeOptions": "Hier sind die verfügbaren Upgrade-Optionen:",
     "upgradeModal": {
       "title": "🐾 Erweitern Sie Ihr Haustier-Paket!",
       "description": "Sie haben bereits {current} von {max} Haustieren erstellt. Upgraden Sie zu einem größeren Paket, um weitere Haustiere hinzuzufügen!",
@@ -4041,12 +4046,6 @@
       "morePets": "weitere Haustiere",
       "processing": "Verarbeitung...",
       "upgradeNow": "Jetzt upgraden",
-      "maxPlanReached": "Sie haben bereits das größte Paket!",
-      "maxPlanDescription": "Mit {max} Haustier-Slots haben Sie das maximale Paket erreicht.",
-      "availableUpgrades": "Verfügbare Upgrades für dein Tierpaket",
-      "currentPetSlots": "Du hast aktuell Platz für {{count}} Tiere.",
-      "unlimitedPetSlots": "Du hast aktuell unbegrenzt Platz für Tiere.",
-      "availableUpgradeOptions": "Hier sind die verfügbaren Upgrade-Optionen:",
       "securityInfo": "🔒 Sicher & DSGVO-konform • Jederzeit kündbar • Sofortige Aktivierung nach Zahlung"
     },
     "trialStatus": {
@@ -4079,6 +4078,18 @@
       "description": "Kündige innerhalb der ersten 14 Tage und erhalte dein Geld automatisch zurück. Keine Nachfragen, kein Aufwand – dein Vertrauen ist uns wichtig."
     },
     "cancellation": {
+      "regularCancellation": {
+        "title": "Reguläre Kündigung",
+        "description": "Die 14-Tage-Geld-zurück-Frist ist abgelaufen, aber dein Zugang bleibt bis zum Ende der aktuellen Periode aktiv.",
+        "accessUntil": "Zugang bis",
+        "expiryDate": "Ablaufdatum"
+      },
+      "actions": {
+        "processing": "Wird gekündigt...",
+        "cancelAndRefund": "✅ Kündigen & Geld zurückerhalten",
+        "cancelPermanently": "Endgültig kündigen",
+        "dontCancel": "Doch nicht kündigen"
+      },
       "cancelSubscription": "Abonnement kündigen",
       "moneyBackGuarantee": {
         "active": "💰 Geld-zurück-Garantie aktiv",
