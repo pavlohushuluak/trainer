@@ -35,107 +35,94 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   // Check if we're on the Index page (root path)
   const isIndexPage = location.pathname === '/';
 
-  // Check if user is admin using React Query (same as AdminProtectedRoute)
-  const { data: isAdmin, isLoading: checkingAdmin, error: adminError } = useQuery({
-    queryKey: ['admin-check', user?.id],
-    queryFn: async () => {
-      if (!user) {
-        console.log('🔐 Admin check: No user, returning false');
+  // Direct admin check without React Query to avoid hanging issues
+  const [isAdmin, setIsAdmin] = useState<boolean | undefined>(undefined);
+  const [checkingAdmin, setCheckingAdmin] = useState(false);
+  const [adminError, setAdminError] = useState<Error | null>(null);
+
+  // Direct admin check function
+  const checkAdminStatus = useCallback(async (userId: string) => {
+    console.log('🔐 Admin check: Direct check started for user:', userId);
+    setCheckingAdmin(true);
+    setAdminError(null);
+    
+    try {
+      // Check network connectivity first
+      if (!navigator.onLine) {
+        console.log('🔐 Admin check: No network connectivity, defaulting to non-admin');
+        setIsAdmin(false);
+        setAdminError(new Error('No network connectivity'));
         return false;
       }
+
+      console.log("🔐 Admin check: Starting Supabase query for user:", userId);
       
-      console.log('🔐 Admin check: Checking admin status for user:', user.id);
-      
-      try {
-        const { data, error } = await supabase
-          .from('admin_users')
-          .select('role, is_active')
-          .eq('user_id', user.id)
-          .eq('is_active', true)
-          .single();
+      // Add timeout to the Supabase query
+      const queryPromise = supabase
+        .from('admin_users')
+        .select('role, is_active')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+        .single();
 
-        if (error) {
-          console.log('🔐 Admin check: Error or no admin record found:', error.message);
-          return false;
-        }
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => {
+          console.log('🔐 Admin check: Supabase query timeout triggered after 5 seconds');
+          reject(new Error('Supabase query timeout after 5 seconds'));
+        }, 5000);
+      });
 
-        if (!data) {
-          console.log('🔐 Admin check: No admin data found');
-          return false;
-        }
+      console.log('🔐 Admin check: Starting Promise.race between query and timeout');
+      const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
+      console.log('🔐 Admin check: Promise.race completed');
 
-        const isUserAdmin = data.role === 'admin' || data.role === 'support';
-        console.log('🔐 Admin check: Result:', { 
-          userId: user.id, 
-          role: data.role, 
-          isActive: data.is_active, 
-          isAdmin: isUserAdmin 
-        });
-        
-        return isUserAdmin;
-      } catch (error) {
-        console.error('🔐 Admin check: Unexpected error:', error);
+      console.log('🔐 Admin check: Supabase response received', {
+        data: data ? { role: data.role, is_active: data.is_active } : null,
+        error: error?.message || null,
+        hasData: !!data,
+        hasError: !!error
+      });
+
+      if (error) {
+        console.log('🔐 Admin check: Supabase error:', error.message);
+        setIsAdmin(false);
+        setAdminError(new Error(error.message));
         return false;
       }
-    },
-    enabled: !!user && !loading, // Only run when user is available and auth is not loading
-    staleTime: 300000, // Cache for 5 minutes (increased from 1 minute)
-    gcTime: 600000, // Keep in cache for 10 minutes (increased from 5 minutes)
-    retry: 3, // Increased retries
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
-    refetchOnWindowFocus: false, // Don't refetch on window focus
-    refetchOnMount: false, // Don't refetch on mount if we have cached data
-  });
 
-  // Fallback admin check - if the query fails or is loading for too long, try a direct check
-  const [fallbackAdminStatus, setFallbackAdminStatus] = useState<boolean | null>(null);
-  
-  useEffect(() => {
-    if (user && !loading && !checkingAdmin && isAdmin === false && fallbackAdminStatus === null) {
-      // If the main query returned false but we're not sure, do a fallback check
-      const checkAdminFallback = async () => {
-        try {
-          console.log('🔐 Fallback admin check for user:', user.id);
-          const { data, error } = await supabase
-            .from('admin_users')
-            .select('role, is_active')
-            .eq('user_id', user.id)
-            .eq('is_active', true)
-            .single();
+      if (!data) {
+        console.log('🔐 Admin check: No admin data found in database');
+        setIsAdmin(false);
+        return false;
+      }
 
-          const fallbackResult = !error && data && (data.role === 'admin' || data.role === 'support');
-          console.log('🔐 Fallback admin check result:', fallbackResult);
-          setFallbackAdminStatus(fallbackResult);
-        } catch (error) {
-          console.error('🔐 Fallback admin check error:', error);
-          setFallbackAdminStatus(false);
-        }
-      };
-
-      // Only run fallback check if main query has been running for more than 2 seconds
-      const timer = setTimeout(checkAdminFallback, 2000);
-      return () => clearTimeout(timer);
+      const isUserAdmin = data.role === 'admin' || data.role === 'support';
+      console.log('🔐 Admin check: Final result:', { 
+        userId: userId, 
+        role: data.role, 
+        isActive: data.is_active, 
+        isAdmin: isUserAdmin,
+        timestamp: new Date().toISOString()
+      });
+      
+      setIsAdmin(isUserAdmin);
+      return isUserAdmin;
+    } catch (error) {
+      console.error('🔐 Admin check: Unexpected error in direct check:', error);
+      setIsAdmin(false);
+      setAdminError(error as Error);
+      return false;
+    } finally {
+      setCheckingAdmin(false);
     }
-  }, [user, loading, checkingAdmin, isAdmin, fallbackAdminStatus]);
+  }, []);
 
-  // Use fallback status if main query failed or is taking too long
-  const finalAdminStatus = isAdmin !== undefined ? isAdmin : fallbackAdminStatus;
-
-  // Persist admin status to localStorage as additional fallback
+  // Trigger admin check when user changes
   useEffect(() => {
-    if (user && finalAdminStatus !== null) {
-      const adminKey = `admin_status_${user.id}`;
-      localStorage.setItem(adminKey, JSON.stringify({
-        isAdmin: finalAdminStatus,
-        timestamp: Date.now(),
-        userId: user.id
-      }));
-    }
-  }, [user, finalAdminStatus]);
-
-  // Load admin status from localStorage on mount as initial fallback
-  useEffect(() => {
-    if (user && isAdmin === undefined && fallbackAdminStatus === null) {
+    if (user && !loading) {
+      console.log('🔐 Admin check: User available, starting check');
+      
+      // Check if we have cached admin status first
       const adminKey = `admin_status_${user.id}`;
       const stored = localStorage.getItem(adminKey);
       
@@ -145,18 +132,93 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
           const isExpired = Date.now() - parsed.timestamp > 300000; // 5 minutes
           
           if (!isExpired && parsed.userId === user.id) {
-            console.log('🔐 Loading admin status from localStorage:', parsed.isAdmin);
-            setFallbackAdminStatus(parsed.isAdmin);
+            console.log('🔐 Admin check: Using cached admin status:', parsed.isAdmin);
+            setIsAdmin(parsed.isAdmin);
+            setCheckingAdmin(false);
+            return; // Skip the database query
           } else {
+            console.log('🔐 Admin check: Cached admin status expired, removing');
             localStorage.removeItem(adminKey);
           }
         } catch (error) {
-          console.error('🔐 Error parsing stored admin status:', error);
+          console.error('🔐 Admin check: Error parsing cached admin status:', error);
           localStorage.removeItem(adminKey);
         }
       }
+      
+      checkAdminStatus(user.id);
+    } else if (!user) {
+      console.log('🔐 Admin check: No user, resetting state');
+      setIsAdmin(undefined);
+      setCheckingAdmin(false);
+      setAdminError(null);
     }
-  }, [user, isAdmin, fallbackAdminStatus]);
+  }, [user, loading, checkAdminStatus]);
+
+  // Debug admin check state
+  console.log('🔐 MainLayout: Admin check state', {
+    userId: user?.id,
+    authLoading: loading,
+    checkingAdmin,
+    isAdmin,
+    adminError: adminError?.message,
+    queryEnabled: !!user && !loading,
+    timestamp: new Date().toISOString()
+  });
+
+  // Simple timeout for admin check to prevent hanging
+  useEffect(() => {
+    if (checkingAdmin && user && !loading) {
+      const timeoutId = setTimeout(() => {
+        console.log('🔐 Admin check: Emergency timeout reached (6s), forcing completion');
+        if (isAdmin === undefined) {
+          console.log('🔐 Admin check: Setting admin status to false due to timeout');
+          setIsAdmin(false);
+          setCheckingAdmin(false);
+        }
+      }, 6000); // Increased to 6 seconds to allow for Supabase timeout
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [checkingAdmin, user, loading, isAdmin]);
+
+  // Use direct admin status
+  const finalAdminStatus = isAdmin;
+  
+  // Handle admin check errors
+  useEffect(() => {
+    if (adminError) {
+      console.log('🔐 Admin check: Error detected:', adminError.message);
+    }
+  }, [adminError]);
+  
+  // Force timeout for admin check to prevent endless loading
+  useEffect(() => {
+    if (checkingAdmin && user && !loading) {
+      const timeoutId = setTimeout(() => {
+        console.log('🔐 Admin check: Emergency timeout reached (3s), forcing completion');
+        if (isAdmin === undefined) {
+          console.log('🔐 Admin check: Setting admin status to false due to timeout');
+          setIsAdmin(false);
+          setCheckingAdmin(false);
+        }
+      }, 3000); // 3 second timeout
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [checkingAdmin, user, loading, isAdmin]);
+
+  // Persist admin status to localStorage for caching
+  useEffect(() => {
+    if (user && finalAdminStatus !== undefined) {
+      const adminKey = `admin_status_${user.id}`;
+      localStorage.setItem(adminKey, JSON.stringify({
+        isAdmin: finalAdminStatus,
+        timestamp: Date.now(),
+        userId: user.id
+      }));
+    }
+  }, [user, finalAdminStatus]);
 
   // Fetch user's pets
   const fetchPets = useCallback(async () => {
@@ -208,7 +270,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       
       // Clear local state immediately
       setPets([]);
-      setFallbackAdminStatus(null);
+      setIsAdmin(undefined);
+      setCheckingAdmin(false);
+      setAdminError(null);
       
       // Call signOut - let it handle the redirect
       await signOut();
@@ -255,7 +319,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         <div className="fixed bottom-4 right-4 bg-black text-white p-2 rounded text-xs z-50 max-w-xs">
           <div>Admin: {finalAdminStatus ? 'Yes' : 'No'}</div>
           <div>Main Query: {isAdmin !== undefined ? (isAdmin ? 'Yes' : 'No') : 'Loading'}</div>
-          <div>Fallback: {fallbackAdminStatus !== null ? (fallbackAdminStatus ? 'Yes' : 'No') : 'Not Run'}</div>
+          <div>Direct Check: {isAdmin !== undefined ? (isAdmin ? 'Yes' : 'No') : 'Loading'}</div>
           <div>User: {user?.email || 'None'}</div>
           <div>Loading: {checkingAdmin ? 'Yes' : 'No'}</div>
           <div>Auth Loading: {loading ? 'Yes' : 'No'}</div>

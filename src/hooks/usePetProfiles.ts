@@ -37,8 +37,16 @@ export const usePetProfiles = () => {
 
   // Actions
   const fetchPets = useCallback(() => {
+    console.log('🔐 usePetProfiles: fetchPets called', {
+      userId: user?.id,
+      hasUser: !!user?.id
+    });
+    
     if (user?.id) {
+      console.log('🔐 usePetProfiles: Dispatching fetchPetProfiles for user', user.id);
       dispatch(fetchPetProfiles(user.id));
+    } else {
+      console.log('🔐 usePetProfiles: No user ID, skipping fetch');
     }
   }, [dispatch, user?.id]);
 
@@ -64,7 +72,15 @@ export const usePetProfiles = () => {
 
   // Auto-fetch pets when user changes
   useEffect(() => {
+    console.log('🔐 usePetProfiles: Auto-fetch effect triggered', {
+      userId: user?.id,
+      isInitialized,
+      cacheStatus,
+      shouldFetch: user?.id && (!isInitialized || cacheStatus.isStale)
+    });
+    
     if (user?.id && (!isInitialized || cacheStatus.isStale)) {
+      console.log('🔐 usePetProfiles: Triggering fetchPets');
       fetchPets();
     }
   }, [user?.id, isInitialized, cacheStatus.isStale, fetchPets]);

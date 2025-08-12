@@ -31,16 +31,26 @@ const Support = () => {
     fetchPets
   } = usePetProfiles();
 
-  console.log('🎯 FINAL RENDER STATE:', {
+  // Debug pet data fetching
+  console.log('🎯 SUPPORT PAGE PET DATA DEBUG:', {
     loading,
     user: !!user,
     userId: user?.id,
     petsLoading,
     pets: pets ? pets.length : 'undefined',
-    shouldShowLoading: false,
     petsError,
+    isInitialized: petsInitialized,
+    petsData: pets,
     timestamp: new Date().toISOString()
   });
+
+  // Manual fetch if needed
+  React.useEffect(() => {
+    if (user?.id && !petsLoading && (!pets || pets.length === 0) && !petsError) {
+      console.log('🔐 Support: Manually triggering pet fetch');
+      fetchPets();
+    }
+  }, [user?.id, petsLoading, pets, petsError, fetchPets]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col">

@@ -35,19 +35,30 @@ const initialState: PetProfilesState = {
 export const fetchPetProfiles = createAsyncThunk(
   'petProfiles/fetchPets',
   async (userId: string, { rejectWithValue }) => {
+    console.log('🔐 fetchPetProfiles thunk: Starting fetch for user', userId);
+    
     try {
+      console.log('🔐 fetchPetProfiles thunk: Making Supabase query');
       const { data, error } = await supabase
         .from('pet_profiles')
         .select('id, name, species, breed, age, birth_date, behavior_focus, notes, created_at, updated_at, user_id')
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
 
+      console.log('🔐 fetchPetProfiles thunk: Supabase response', {
+        data: data?.length || 0,
+        error: error?.message || null
+      });
+
       if (error) {
+        console.log('🔐 fetchPetProfiles thunk: Supabase error', error);
         throw error;
       }
 
+      console.log('🔐 fetchPetProfiles thunk: Returning data', data?.length || 0);
       return data || [];
     } catch (error: any) {
+      console.log('🔐 fetchPetProfiles thunk: Caught error', error);
       return rejectWithValue(error.message || 'Failed to fetch pet profiles');
     }
   }
@@ -151,16 +162,24 @@ const petProfilesSlice = createSlice({
     // Fetch pet profiles
     builder
       .addCase(fetchPetProfiles.pending, (state) => {
+        console.log('🔐 Redux: fetchPetProfiles.pending');
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchPetProfiles.fulfilled, (state, action) => {
+        console.log('🔐 Redux: fetchPetProfiles.fulfilled', {
+          petsCount: action.payload?.length || 0,
+          pets: action.payload
+        });
         state.loading = false;
         state.pets = action.payload;
         state.lastFetched = Date.now();
         state.isInitialized = true;
       })
       .addCase(fetchPetProfiles.rejected, (state, action) => {
+        console.log('🔐 Redux: fetchPetProfiles.rejected', {
+          error: action.payload
+        });
         state.loading = false;
         state.error = action.payload as string;
       });
