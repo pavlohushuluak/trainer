@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Clock, Target, Lightbulb, Trophy, CheckCircle } from 'lucide-react';
 import { TrainingPlan } from './types';
-import { PlanTemplate, planTemplates } from './PlanTemplates';
+import { PlanTemplate, getPlanTemplates } from './PlanTemplates';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface PlanDetailModalProps {
   isOpen: boolean;
@@ -19,7 +20,12 @@ export const PlanDetailModal = ({
   onClose,
   plan
 }: PlanDetailModalProps) => {
+  const { currentLanguage } = useTranslations();
+  
   if (!plan) return null;
+
+  // Get templates based on current language
+  const planTemplates = getPlanTemplates(currentLanguage);
 
   // Try to find the template this plan was based on
   const template = planTemplates.find(t => t.title === plan.title);

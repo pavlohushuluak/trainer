@@ -8,7 +8,7 @@ import { ArrowLeft } from 'lucide-react';
 import { PlanTemplate } from './templateTypes';
 import { TemplateDetailView } from './components/TemplateDetailView';
 import { TemplateList } from './components/TemplateList';
-import { planTemplates } from './PlanTemplates';
+import { getPlanTemplates } from './PlanTemplates';
 import { useTranslations } from '@/hooks/useTranslations';
 
 interface Pet {
@@ -58,11 +58,14 @@ export const TemplateSelectionModal = ({
   pets,
   onSelectTemplate
 }: TemplateSelectionModalProps) => {
-  const { t } = useTranslations();
+  const { t, currentLanguage } = useTranslations();
   const [selectedTemplate, setSelectedTemplate] = useState<PlanTemplate | null>(null);
   const [selectedPetId, setSelectedPetId] = useState<string>(
     pets.length > 0 ? pets[0].id : "none"
   );
+
+  // Get templates based on current language
+  const planTemplates = getPlanTemplates(currentLanguage);
 
   // Get user species from pets
   const userSpecies = pets.map(pet => pet.species);

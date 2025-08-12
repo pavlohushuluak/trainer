@@ -1,12 +1,13 @@
 
-import { PlanTemplate, planTemplates, getTemplatesByAge, getTemplatesByBreed } from './PlanTemplates';
+import { PlanTemplate, planTemplates, getTemplatesByAge, getTemplatesByBreed, getPlanTemplates } from './PlanTemplates';
 import { Pet } from './types';
 
-export const getFilteredTemplatesBySpecies = (userSpecies: string[]): PlanTemplate[] => {
+export const getFilteredTemplatesBySpecies = (userSpecies: string[], language: string = 'de'): PlanTemplate[] => {
   // Normalize user species by trimming whitespace and converting to lowercase
   const normalizedUserSpecies = userSpecies.map(species => species.trim().toLowerCase());
   
-  const filteredTemplates = planTemplates.filter(template => {
+  const templates = getPlanTemplates(language);
+  const filteredTemplates = templates.filter(template => {
     const hasMatchingSpecies = template.species.some(templateSpecies => {
       const normalizedTemplateSpecies = templateSpecies.trim().toLowerCase();
       
@@ -35,25 +36,25 @@ export const getFilteredTemplatesBySpecies = (userSpecies: string[]): PlanTempla
   return filteredTemplates;
 };
 
-export const getFilteredTemplatesByPets = (pets: Pet[]): PlanTemplate[] => {
+export const getFilteredTemplatesByPets = (pets: Pet[], language: string = 'de'): PlanTemplate[] => {
   if (pets.length === 0) {
-    return planTemplates;
+    return getPlanTemplates(language);
   }
   
   // Get all unique species from pets
   const userSpecies = getUserSpeciesFromPets(pets);
-  let filteredTemplates = getFilteredTemplatesBySpecies(userSpecies);
+  let filteredTemplates = getFilteredTemplatesBySpecies(userSpecies, language);
   
   // Further filter by age and breed for each pet
   const petSpecificTemplates: PlanTemplate[] = [];
   
   pets.forEach(pet => {
-    let petTemplates = getFilteredTemplatesBySpecies([pet.species]);
+    let petTemplates = getFilteredTemplatesBySpecies([pet.species], language);
     
     // Filter by age if available
     if (pet.age !== undefined && pet.age !== null) {
       petTemplates = petTemplates.filter(template => {
-        const ageTemplates = getTemplatesByAge(pet.age!);
+        const ageTemplates = getTemplatesByAge(pet.age!, language);
         return ageTemplates.includes(template);
       });
     }
@@ -61,7 +62,7 @@ export const getFilteredTemplatesByPets = (pets: Pet[]): PlanTemplate[] => {
     // Filter by breed if available
     if (pet.breed) {
       petTemplates = petTemplates.filter(template => {
-        const breedTemplates = getTemplatesByBreed(pet.breed!);
+        const breedTemplates = getTemplatesByBreed(pet.breed!, language);
         return breedTemplates.includes(template);
       });
     }
