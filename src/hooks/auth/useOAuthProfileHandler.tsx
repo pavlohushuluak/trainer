@@ -1,9 +1,10 @@
 
+import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 
 export const useOAuthProfileHandler = () => {
-  const handleOAuthProfile = async (user: User) => {
+  const handleOAuthProfile = useCallback(async (user: User) => {
     // Skip if no user metadata or if user doesn't have OAuth data
     if (!user?.user_metadata || !user.app_metadata?.provider) {
       return;
@@ -144,7 +145,7 @@ export const useOAuthProfileHandler = () => {
         console.warn('Error processing OAuth profile data:', error);
       }
     }, 1000); // Increased delay to ensure session is fully established
-  };
+  }, []); // Empty dependency array since this function doesn't depend on any props or state
 
   return { handleOAuthProfile };
 };

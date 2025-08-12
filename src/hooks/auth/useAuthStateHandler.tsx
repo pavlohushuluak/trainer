@@ -1,10 +1,9 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useOAuthProfileHandler } from './useOAuthProfileHandler';
 import { getCheckoutFlags, clearCheckoutFlags, debugCheckoutState } from '@/utils/checkoutStorage';
-import { useTranslations } from '@/hooks/useTranslations';
 
 export const useAuthStateHandler = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -12,7 +11,9 @@ export const useAuthStateHandler = () => {
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
   const { handleOAuthProfile } = useOAuthProfileHandler();
-  const { t } = useTranslations();
+  
+  // Use ref to track if component is mounted
+  const mountedRef = useRef(true);
 
   const trackSignUp = useCallback(() => {
     // Track sign up with GTM
@@ -53,8 +54,8 @@ export const useAuthStateHandler = () => {
         
         const { toast } = await import('@/hooks/use-toast');
         toast({
-          title: t('auth.stateHandler.checkoutError.title'),
-          description: t('auth.stateHandler.checkoutError.description'),
+          title: 'Checkout Error',
+          description: 'There was an error processing your checkout. Please try again.',
           variant: "destructive",
         });
         
@@ -72,7 +73,7 @@ export const useAuthStateHandler = () => {
       clearCheckoutFlags();
       window.location.href = '/#pricing';
     }
-  }, [t]);
+  }, []);
 
   const handleSignedIn = useCallback(async (session: Session, skipAutoRedirect = false) => {
     const user = session.user;
@@ -176,7 +177,7 @@ export const useAuthStateHandler = () => {
   }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin, executeCheckoutRedirect]);
 
   useEffect(() => {
-    let mounted = true;
+    mountedRef.current = true;
     let hasInitialized = false;
     let processedSessionId: string | null = null;
     
@@ -185,7 +186,7 @@ export const useAuthStateHandler = () => {
     // Single auth state listener - this will handle both initial session and subsequent changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (!mounted) return;
+        if (!mountedRef.current) return;
         
         console.log(`🔐 Auth state change:`, { 
           event, 
@@ -201,16 +202,32 @@ export const useAuthStateHandler = () => {
           return;
         }
         
-        // Update state
-        setSession(session);
-        setUser(session?.user ?? null);
+        // Batch state updates to prevent multiple re-renders
+        const newUser = session?.user ?? null;
+        const shouldInitialize = !hasInitialized;
         
-        // Initialize only once
-        if (!hasInitialized) {
+        if (shouldInitialize) {
           hasInitialized = true;
+          setSession(session);
+          setUser(newUser);
           setLoading(false);
           setInitialized(true);
           console.log('🔐 Auth state handler initialized');
+        } else {
+          // Only update if values actually changed
+          setSession(prevSession => {
+            if (prevSession?.access_token !== session?.access_token) {
+              return session;
+            }
+            return prevSession;
+          });
+          
+          setUser(prevUser => {
+            if (prevUser?.id !== newUser?.id) {
+              return newUser;
+            }
+            return prevUser;
+          });
         }
 
         // Handle specific events
@@ -225,8 +242,21 @@ export const useAuthStateHandler = () => {
         } else if (event === 'SIGNED_OUT') {
           console.log('🔓 User signed out');
           processedSessionId = null;
-          setUser(null);
-          setSession(null);
+          
+          // Only update state if user was actually signed in
+          setUser(prevUser => {
+            if (prevUser !== null) {
+              return null;
+            }
+            return prevUser;
+          });
+          
+          setSession(prevSession => {
+            if (prevSession !== null) {
+              return null;
+            }
+            return prevSession;
+          });
           
           // Redirect from protected pages after logout
           const currentPath = window.location.pathname;
@@ -252,7 +282,7 @@ export const useAuthStateHandler = () => {
 
     // Single timeout fallback for safety
     const timeoutId = setTimeout(() => {
-      if (mounted && !hasInitialized) {
+      if (mountedRef.current && !hasInitialized) {
         console.log('⚠️ Auth initialization timeout - forcing loading to false');
         hasInitialized = true;
         setLoading(false);
@@ -261,7 +291,7 @@ export const useAuthStateHandler = () => {
     }, 3000); // 3 second timeout
 
     return () => {
-      mounted = false;
+      mountedRef.current = false;
       clearTimeout(timeoutId);
       subscription.unsubscribe();
       console.log('🔐 useAuthStateHandler: Cleanup completed');
