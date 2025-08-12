@@ -9,12 +9,15 @@ import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog
 import { useToast } from "@/hooks/use-toast";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, AlertCircle } from "lucide-react";
-import { format, differenceInYears } from "date-fns";
-import { de } from "date-fns/locale";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CalendarIcon, AlertCircle, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { format, differenceInYears, addYears, subYears, getYear } from "date-fns";
+import { de, enUS } from "date-fns/locale";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { usePetProfiles } from "@/hooks/usePetProfiles";
-import { useTranslation } from "react-i18next";
+import { useTranslations } from "@/hooks/useTranslations";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 interface PetProfile {
   id: string;
@@ -35,7 +38,7 @@ interface PetProfileFormProps {
 }
 
 const PetProfileForm = ({ editingPet, onPetSaved, onClose }: PetProfileFormProps) => {
-  const { t } = useTranslation();
+  const { t, currentLanguage } = useTranslations();
   const { user } = useAuth();
   const { toast } = useToast();
   const { createPet, updatePet } = usePetProfiles();
@@ -51,6 +54,7 @@ const PetProfileForm = ({ editingPet, onPetSaved, onClose }: PetProfileFormProps
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   // Function to calculate age from birth date
   const calculateAge = (birthDate: Date) => {
@@ -94,6 +98,42 @@ const PetProfileForm = ({ editingPet, onPetSaved, onClose }: PetProfileFormProps
       };
     });
   };
+
+  // Year selection functions
+  const handleYearChange = (year: string) => {
+    const newYear = parseInt(year);
+    const newDate = new Date(currentDate);
+    newDate.setFullYear(newYear);
+    setCurrentDate(newDate);
+  };
+
+  const handlePreviousYear = () => {
+    setCurrentDate(prev => subYears(prev, 1));
+  };
+
+  const handleNextYear = () => {
+    setCurrentDate(prev => addYears(prev, 1));
+  };
+
+  const handlePreviousMonth = () => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setMonth(prev.getMonth() - 1);
+      return newDate;
+    });
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setMonth(prev.getMonth() + 1);
+      return newDate;
+    });
+  };
+
+  // Generate year options (current year - 50 to current year + 5)
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 56 }, (_, i) => currentYear - 50 + i);
 
   // Lightweight validation - nur die wichtigsten Felder
   const validateForm = () => {
@@ -217,25 +257,142 @@ const PetProfileForm = ({ editingPet, onPetSaved, onClose }: PetProfileFormProps
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full justify-start text-left font-normal"
+                className="w-full justify-start text-left font-normal hover:bg-accent/50 transition-all duration-200 group"
                 disabled={loading}
               >
-                <CalendarIcon className="mr-2 h-4 w-4" />
+                <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 {formData.birth_date ? (
-                  format(formData.birth_date, "PPP", { locale: de })
+                  <span className="text-foreground font-medium">
+                    {format(formData.birth_date, "PPP", { locale: currentLanguage === 'en' ? enUS : de })}
+                  </span>
                 ) : (
-                  <span>{t('pets.form.selectDate')}</span>
+                  <span className="text-muted-foreground">{t('pets.form.selectDate')}</span>
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={formData.birth_date}
-                onSelect={handleBirthDateChange}
-                initialFocus
-                disabled={loading}
-              />
+            <PopoverContent className="w-auto p-0 border-0 shadow-2xl" align="start">
+              <div className="bg-gradient-to-br from-background via-background to-muted/20 rounded-lg border border-border/50 backdrop-blur-sm">
+                {/* Enhanced Navigation Header */}
+                <div className="p-3 border-b border-border/50 bg-gradient-to-r from-primary/5 to-secondary/5">
+                  <div className="flex items-center justify-between mb-3">
+                    {/* Year Navigation */}
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handlePreviousYear}
+                        className="h-8 w-8 p-0 hover:bg-accent/50"
+                      >
+                        <ChevronsLeft className="h-4 w-4" />
+                      </Button>
+                      <Select value={getYear(currentDate).toString()} onValueChange={handleYearChange}>
+                        <SelectTrigger className="w-20 h-8 text-sm font-medium">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-60">
+                          {yearOptions.map((year) => (
+                            <SelectItem key={year} value={year.toString()}>
+                              {year}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleNextYear}
+                        className="h-8 w-8 p-0 hover:bg-accent/50"
+                      >
+                        <ChevronsRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    
+                    {/* Month Navigation */}
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handlePreviousMonth}
+                        className="h-8 w-8 p-0 hover:bg-accent/50"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <span className="text-sm font-semibold text-foreground min-w-[80px] text-center">
+                        {format(currentDate, "MMMM", { locale: currentLanguage === 'en' ? enUS : de })}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleNextMonth}
+                        className="h-8 w-8 p-0 hover:bg-accent/50"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-1">
+                  <Calendar
+                    mode="single"
+                    selected={formData.birth_date}
+                    onSelect={handleBirthDateChange}
+                    month={currentDate}
+                    onMonthChange={setCurrentDate}
+                    initialFocus
+                    disabled={loading}
+                    className="rounded-md"
+                    classNames={{
+                      months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+                      month: "space-y-4",
+                      caption: "hidden", // Hide default caption since we have custom navigation
+                      nav: "space-x-1 flex items-center",
+                      nav_button: cn(
+                        buttonVariants({ variant: "outline" }),
+                        "h-8 w-8 bg-background/80 hover:bg-accent/50 border-border/50 p-0 opacity-70 hover:opacity-100 transition-all duration-200"
+                      ),
+                      nav_button_previous: "absolute left-1",
+                      nav_button_next: "absolute right-1",
+                      table: "w-full border-collapse space-y-1",
+                      head_row: "flex",
+                      head_cell:
+                        "text-muted-foreground rounded-md w-10 font-medium text-[0.8rem] uppercase tracking-wider",
+                      row: "flex w-full mt-2",
+                      cell: "h-10 w-10 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                      day: cn(
+                        buttonVariants({ variant: "ghost" }),
+                        "h-10 w-10 p-0 font-normal aria-selected:opacity-100 hover:bg-accent/80 transition-all duration-200 rounded-md"
+                      ),
+                      day_range_end: "day-range-end",
+                      day_selected:
+                        "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground shadow-lg transform scale-105 transition-all duration-200",
+                      day_today: "bg-accent/80 text-accent-foreground font-semibold ring-2 ring-primary/20",
+                      day_outside:
+                        "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+                      day_disabled: "text-muted-foreground opacity-30 cursor-not-allowed",
+                      day_range_middle:
+                        "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                      day_hidden: "invisible",
+                    }}
+                    components={{
+                      IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" {...props} />,
+                      IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" {...props} />,
+                    }}
+                  />
+                </div>
+                {formData.birth_date && (
+                  <div className="px-3 py-2 bg-gradient-to-r from-primary/10 to-secondary/10 border-t border-border/50 rounded-b-lg">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">
+                        {t('pets.form.selectedDate')}:
+                      </span>
+                      <span className="font-medium text-foreground">
+                        {format(formData.birth_date, "dd.MM.yyyy", { locale: currentLanguage === 'en' ? enUS : de })}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </PopoverContent>
           </Popover>
         </div>
