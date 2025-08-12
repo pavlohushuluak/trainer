@@ -3,16 +3,14 @@ import React, { useMemo, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Clock, CheckCircle, AlertCircle } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface TicketHistoryCardProps {
   ticket: any;
   onTicketClick: (ticket: any) => void;
 }
 
-const getStatusBadge = (status: string) => {
-  const { t } = useTranslation();
-  
+const getStatusBadge = (status: string, t: any) => {
   const variants: Record<string, { variant: any; icon: any; label: string }> = {
     open: { variant: "default", icon: AlertCircle, label: t('support.ticketHistory.status.open') },
     in_progress: { variant: "secondary", icon: Clock, label: t('support.ticketHistory.status.inProgress') },
@@ -44,13 +42,13 @@ const getCategoryColor = (category: string) => {
 };
 
 export const TicketHistoryCard = React.memo(({ ticket, onTicketClick }: TicketHistoryCardProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   
   const handleClick = useCallback(() => {
     onTicketClick(ticket);
   }, [onTicketClick, ticket]);
 
-  const statusBadge = useMemo(() => getStatusBadge(ticket.status), [ticket.status]);
+  const statusBadge = useMemo(() => getStatusBadge(ticket.status, t), [ticket.status, t]);
   const categoryBadge = useMemo(() => (
     <Badge className={getCategoryColor(ticket.category)}>
       {ticket.category}

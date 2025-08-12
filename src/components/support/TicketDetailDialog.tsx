@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface TicketDetailDialogProps {
   selectedTicket: any;
@@ -14,9 +14,7 @@ interface TicketDetailDialogProps {
   onFeedbackClick: () => void;
 }
 
-const getStatusBadge = (status: string) => {
-  const { t } = useTranslation();
-  
+const getStatusBadge = (status: string, t: any) => {
   const variants: Record<string, { variant: any; icon: any; label: string }> = {
     open: { variant: "default", icon: null, label: t('support.ticketDetail.status.open') },
     in_progress: { variant: "secondary", icon: null, label: t('support.ticketDetail.status.inProgress') },
@@ -51,7 +49,7 @@ export const TicketDetailDialog = ({
   onClose, 
   onFeedbackClick 
 }: TicketDetailDialogProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   
   return (
     <Dialog open={!!selectedTicket} onOpenChange={onClose}>
@@ -59,7 +57,7 @@ export const TicketDetailDialog = ({
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>{selectedTicket?.subject}</span>
-            {selectedTicket && getStatusBadge(selectedTicket.status)}
+            {selectedTicket && getStatusBadge(selectedTicket.status, t)}
           </DialogTitle>
         </DialogHeader>
         

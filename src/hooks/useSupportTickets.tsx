@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 import { requestCache } from '@/utils/requestCache';
 
 interface SupportTicket {
@@ -36,7 +36,7 @@ interface SupportMessage {
 export const useSupportTickets = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [loading, setLoading] = useState(false);
 
