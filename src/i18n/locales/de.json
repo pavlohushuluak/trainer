@@ -2841,7 +2841,15 @@
           "title": "Fehler",
           "description": "Nachricht konnte nicht gesendet werden"
         }
+      },
+      "checkoutButton": {
+        "loginForPremium": "Für Premium anmelden",
+        "loginDescription": "Bitte melden Sie sich an, um auf Premium-Trainingsfunktionen zuzugreifen"
       }
+    },
+    "checkoutButton": {
+      "loginForPremium": "Für Premium anmelden",
+      "loginDescription": "Bitte melden Sie sich an, um auf Premium-Trainingsfunktionen zuzugreifen"
     }
   },
   "subscriptionManager": {

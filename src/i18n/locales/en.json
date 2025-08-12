@@ -2833,7 +2833,15 @@
           "title": "Error",
           "description": "Message could not be sent"
         }
+      },
+      "checkoutButton": {
+        "loginForPremium": "Login for Premium",
+        "loginDescription": "Please log in to access premium training features"
       }
+    },
+    "checkoutButton": {
+      "loginForPremium": "Login for Premium",
+      "loginDescription": "Please log in to access premium training features"
     }
   },
   "subscriptionManager": {
