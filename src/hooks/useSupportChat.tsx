@@ -19,7 +19,7 @@ interface Message {
 export const useSupportChat = (isOpen: boolean) => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { t } = useTranslations();
+  const { t, currentLanguage } = useTranslations();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -173,7 +173,8 @@ export const useSupportChat = (isOpen: boolean) => {
           message: messageToSend,
           ticketId: currentTicketId,
           userId: user.id,
-          chatHistory: messages.filter(m => m.id !== 'welcome')
+          chatHistory: messages.filter(m => m.id !== 'welcome'),
+          language: currentLanguage
         }
       });
 

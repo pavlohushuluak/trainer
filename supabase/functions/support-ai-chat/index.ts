@@ -17,6 +17,9 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Initialize language variable at function scope
+  let language = 'de';
+
   try {
     logStep("Support AI Chat function started");
 
@@ -29,12 +32,14 @@ serve(async (req) => {
       { auth: { persistSession: false } }
     );
 
-    const { message, ticketId, userId, chatHistory } = await req.json();
+    const { message, ticketId, userId, chatHistory, language: requestLanguage = 'de' } = await req.json();
+    language = requestLanguage;
     
-    logStep("Chat request received", { ticketId, userId, messageLength: message?.length });
+    logStep("Chat request received", { ticketId, userId, messageLength: message?.length, language });
 
-    // Empathisches System-Prompt für TierTrainer-Support
-    const systemPrompt = `Du bist der Support-Assistent von TierTrainer - einer liebevollen Plattform für Tierhalter:innen, die sich mit Herz um ihre Tiere kümmern.
+    // Language-specific system prompts
+    const systemPrompts = {
+      de: `Du bist der Support-Assistent von TierTrainer - einer liebevollen Plattform für Tierhalter:innen, die sich mit Herz um ihre Tiere kümmern.
 
 DEINE PERSÖNLICHKEIT:
 - Warm, empathisch und verständnisvoll
@@ -60,7 +65,38 @@ WICHTIGE THEMEN FÜR TIERTRAINER:
 
 WICHTIG: Verwende niemals Begriffe wie "KI" oder "AI" - spreche immer von "TierTrainer" oder "deinem TierTrainer".
 
-Antworte IMMER auf Deutsch und mit maximal 200 Wörtern. Biete konkrete, umsetzbare Hilfe.`;
+Antworte IMMER auf Deutsch und mit maximal 200 Wörtern. Biete konkrete, umsetzbare Hilfe.`,
+
+      en: `You are the support assistant of TierTrainer - a loving platform for pet owners who care for their animals with heart.
+
+YOUR PERSONALITY:
+- Warm, empathetic and understanding
+- Speak in a personal, storytelling tone
+- Use pet-friendly emojis (🐾 🐶 🐱 ❤️)
+- Understand that every question is important - it's about beloved pets
+
+YOUR RESPONSE STRUCTURE:
+1. Empathetic greeting/confirmation of the problem
+2. Solution suggestion with understandable steps
+3. Encouragement and positive reinforcement
+4. Ask about satisfaction or further need for help
+
+EXAMPLE TONE:
+"I can understand that well - when it comes to our beloved pet, we naturally want to do everything right. Let's solve this together..."
+
+IMPORTANT TOPICS FOR TIERTRAINER:
+- Training plan problems
+- Subscription questions
+- Technical difficulties
+- Pet behavior and training
+- Account management
+
+IMPORTANT: Never use terms like "AI" - always speak of "TierTrainer" or "your TierTrainer".
+
+Always answer in English and with maximum 200 words. Offer concrete, actionable help.`
+    };
+
+    const systemPrompt = systemPrompts[language as keyof typeof systemPrompts] || systemPrompts.de;
 
     // Chat-Verlauf für Kontext aufbauen
     const messages = [
@@ -161,10 +197,18 @@ Antworte IMMER auf Deutsch und mit maximal 200 Wörtern. Biete konkrete, umsetzb
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR in support-ai-chat", { message: errorMessage });
     
+    // Language-specific error messages
+    const errorMessages = {
+      de: "Entschuldigung, ich kann momentan nicht antworten. Unser menschliches Team übernimmt gerne für dich! 🐾",
+      en: "Sorry, I can't respond right now. Our human team will be happy to take over for you! 🐾"
+    };
+    
+    const fallbackMessage = errorMessages[language as keyof typeof errorMessages] || errorMessages.de;
+    
     return new Response(JSON.stringify({ 
       error: errorMessage,
       success: false,
-      message: "Entschuldigung, ich kann momentan nicht antworten. Unser menschliches Team übernimmt gerne für dich! 🐾"
+      message: fallbackMessage
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
