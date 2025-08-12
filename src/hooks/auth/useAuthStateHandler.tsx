@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useOAuthProfileHandler } from './useOAuthProfileHandler';
@@ -13,9 +13,6 @@ export const useAuthStateHandler = () => {
   const [initialized, setInitialized] = useState(false);
   const { handleOAuthProfile } = useOAuthProfileHandler();
   const { t } = useTranslations();
-  
-  // Use ref to track initialization to prevent multiple setups
-  const initializationRef = useRef(false);
 
   const trackSignUp = useCallback(() => {
     // Track sign up with GTM
@@ -176,15 +173,9 @@ export const useAuthStateHandler = () => {
         window.location.href = '/mein-tiertraining';
       }
     }
-  }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin, executeCheckoutRedirect, t]);
+  }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin, executeCheckoutRedirect]);
 
   useEffect(() => {
-    // Prevent multiple initializations using ref
-    if (initializationRef.current) {
-      console.log('🔐 useAuthStateHandler: Already initialized (ref), skipping');
-      return;
-    }
-
     let mounted = true;
     let hasInitialized = false;
     let processedSessionId: string | null = null;
@@ -217,7 +208,6 @@ export const useAuthStateHandler = () => {
         // Initialize only once
         if (!hasInitialized) {
           hasInitialized = true;
-          initializationRef.current = true;
           setLoading(false);
           setInitialized(true);
           console.log('🔐 Auth state handler initialized');
