@@ -13,7 +13,7 @@ import { CalendarIcon, AlertCircle } from "lucide-react";
 import { format, differenceInYears } from "date-fns";
 import { de } from "date-fns/locale";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useOptimisticPetActions } from "./hooks/useOptimisticPetActions";
+import { usePetProfiles } from "@/hooks/usePetProfiles";
 import { useTranslation } from "react-i18next";
 
 interface PetProfile {
@@ -38,7 +38,7 @@ const PetProfileForm = ({ editingPet, onPetSaved, onClose }: PetProfileFormProps
   const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { optimisticCreate, optimisticUpdate } = useOptimisticPetActions();
+  const { createPet, updatePet } = usePetProfiles();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -126,6 +126,7 @@ const PetProfileForm = ({ editingPet, onPetSaved, onClose }: PetProfileFormProps
 
     try {
       const petData = {
+        user_id: user.id,
         name: formData.name.trim(),
         species: formData.species.trim(),
         breed: formData.breed?.trim() || undefined,
@@ -136,13 +137,20 @@ const PetProfileForm = ({ editingPet, onPetSaved, onClose }: PetProfileFormProps
       };
 
       if (editingPet) {
-        await optimisticUpdate(editingPet.id, petData);
+        await updatePet(editingPet.id, petData);
       } else {
-        await optimisticCreate(petData);
+        await createPet(petData);
       }
 
+      // Show success toast
+      toast({
+        title: editingPet ? t('pets.toast.updated.title') : t('pets.toast.created.title'),
+        description: editingPet 
+          ? t('pets.toast.updated.description', { name: petData.name })
+          : t('pets.toast.created.description', { name: petData.name }),
+      });
       
-      // Sofort schließen und Erfolg zeigen - kein Warten auf DB
+      // Close dialog and show success
       onPetSaved();
       
     } catch (error: any) {

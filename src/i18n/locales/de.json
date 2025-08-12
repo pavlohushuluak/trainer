@@ -3904,12 +3904,12 @@
     },
     "delete": {
       "title": "🗑️ Haustierprofil löschen",
-      "confirmation": "Sind Sie sicher, dass Sie das Haustierprofil von {name} löschen möchten?",
-      "confirmationStrong": "Sind Sie <strong>absolut sicher</strong>, dass Sie das Haustierprofil von <strong>{name}</strong> löschen möchten?",
+      "confirmation": "Sind Sie sicher, dass Sie das Haustierprofil von {{name}} löschen möchten?",
+              "confirmationStrong": "Sind Sie <strong>absolut sicher</strong>, dass Sie das Haustierprofil von <strong>{{name}}</strong> löschen möchten?",
       "warning": "Diese Aktion kann nicht rückgängig gemacht werden.",
       "irreversible": "⚠️ Diese Aktion kann NICHT rückgängig gemacht werden!",
       "dataLoss": "Alle Daten, Chat-Verläufe und Trainingspläne für dieses Haustier gehen dauerhaft verloren.",
-      "confirmName": "Geben Sie den Namen \"<strong>{name}</strong>\" ein, um zu bestätigen und fortzufahren.",
+              "confirmName": "Geben Sie den Namen \"<strong>{{name}}</strong>\" ein, um zu bestätigen und fortzufahren.",
       "confirm": "Löschen",
       "permanently": "Endgültig löschen"
     },
@@ -3947,23 +3947,23 @@
     "toast": {
       "created": {
         "title": "✅ Haustierprofil erstellt!",
-        "description": "{name} wurde erfolgreich zu Ihren Haustieren hinzugefügt"
+        "description": "{{name}} wurde erfolgreich zu Ihren Haustieren hinzugefügt"
       },
       "updated": {
         "title": "✅ Haustierprofil aktualisiert!",
-        "description": "{name} wurde erfolgreich aktualisiert"
+        "description": "{{name}} wurde erfolgreich aktualisiert"
       },
       "saved": {
         "title": "💾 Gespeichert",
-        "description": "{name} wurde erfolgreich in der Datenbank gespeichert"
+        "description": "{{name}} wurde erfolgreich in der Datenbank gespeichert"
       },
       "deleted": {
         "title": "🗑️ Haustierprofil gelöscht",
-        "description": "{name} wurde aus Ihren Haustieren entfernt"
+        "description": "{{name}} wurde aus Ihren Haustieren entfernt"
       },
       "deletedConfirmed": {
         "title": "✅ Löschung bestätigt",
-        "description": "Haustierprofil von {name} wurde endgültig gelöscht"
+        "description": "Haustierprofil von {{name}} wurde endgültig gelöscht"
       },
       "error": {
         "title": "❌ Fehler",

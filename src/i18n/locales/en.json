@@ -3896,12 +3896,12 @@
     },
     "delete": {
       "title": "🗑️ Delete Pet Profile",
-      "confirmation": "Are you sure you want to delete the pet profile of {name}?",
-      "confirmationStrong": "Are you <strong>absolutely sure</strong> that you want to delete the pet profile of <strong>{name}</strong>?",
+      "confirmation": "Are you sure you want to delete the pet profile of {{name}}?",
+              "confirmationStrong": "Are you <strong>absolutely sure</strong> that you want to delete the pet profile of <strong>{{name}}</strong>?",
       "warning": "This action cannot be undone.",
       "irreversible": "⚠️ This action CANNOT be undone!",
       "dataLoss": "All data, chat histories, and training plans for this pet will be permanently lost.",
-      "confirmName": "Type the name \"<strong>{name}</strong>\" to confirm and proceed.",
+              "confirmName": "Type the name \"<strong>{{name}}</strong>\" to confirm and proceed.",
       "confirm": "Delete",
       "permanently": "Delete Permanently"
     },
@@ -3939,23 +3939,23 @@
     "toast": {
       "created": {
         "title": "✅ Pet Profile Created!",
-        "description": "{name} has been successfully added to your pets"
+        "description": "{{name}} has been successfully added to your pets"
       },
       "updated": {
         "title": "✅ Pet Profile Updated!",
-        "description": "{name} has been successfully updated"
+        "description": "{{name}} has been successfully updated"
       },
       "saved": {
         "title": "💾 Saved",
-        "description": "{name} has been successfully saved to the database"
+        "description": "{{name}} has been successfully saved to the database"
       },
       "deleted": {
         "title": "🗑️ Pet Profile Deleted",
-        "description": "{name} has been removed from your pets"
+        "description": "{{name}} has been removed from your pets"
       },
       "deletedConfirmed": {
         "title": "✅ Deletion Confirmed",
-        "description": "Pet profile of {name} has been permanently deleted"
+        "description": "Pet profile of {{name}} has been permanently deleted"
       },
       "error": {
         "title": "❌ Error",

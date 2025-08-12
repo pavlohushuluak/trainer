@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
-import { useOptimisticPetActions } from "@/components/pet/hooks/useOptimisticPetActions";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import { usePetLimitChecker } from "@/components/subscription/PetLimitChecker";
 import { devLog } from "@/utils/performance";
@@ -28,10 +27,9 @@ const PetProfileManager = React.memo(({ shouldOpenPetModal = false }: PetProfile
   const [editingPet, setEditingPet] = useState<PetProfile | null>(null);
 
   // Use Redux for pet profiles data
-  const { pets, createPet, updatePet, removePet } = usePetProfiles();
+  const { pets, createPet, updatePet, removePet, loading } = usePetProfiles();
 
   const { hasActiveSubscription } = useSubscriptionStatus();
-  const { optimisticDelete, isPending } = useOptimisticPetActions();
   const { startMetric, endMetric } = usePerformanceMonitor('PetProfileManager');
   
   const { 
@@ -138,7 +136,7 @@ const PetProfileManager = React.memo(({ shouldOpenPetModal = false }: PetProfile
         pets={pets}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        isPending={isPending}
+        isPending={() => loading}
       />
 
       <UpgradeModal
