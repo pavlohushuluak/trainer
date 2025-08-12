@@ -20,16 +20,6 @@ export const HeroButtons = ({ handleGoToTraining, onStartChat }: HeroButtonsProp
         <Camera className="mr-2 h-5 w-5 flex-shrink-0" />
         <span className="text-center">{t('hero.startTraining')}</span>
       </Button>
-      
-      <Button 
-        onClick={onStartChat || handleGoToTraining}
-        variant="outline" 
-        size="lg"
-        className="w-full max-w-xs sm:max-w-none sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground min-h-[48px]"
-      >
-        <MessageCircle className="mr-2 h-5 w-5 flex-shrink-0" />
-        <span className="text-center">{t('hero.startChat')}</span>
-      </Button>
     </div>
   );
 };

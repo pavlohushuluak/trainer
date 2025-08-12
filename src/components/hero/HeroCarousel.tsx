@@ -398,38 +398,6 @@ export const HeroCarousel = () => {
           />
         </div>
 
-        {/* Enhanced 3D Auto-play Controls - Hidden on Mobile */}
-        <div 
-          className={cn(
-            "absolute top-6 right-6 flex items-center gap-3 transition-all duration-500 z-20 hidden sm:flex",
-            isHovered ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-4 scale-90"
-          )}
-          style={{
-            transform: `translateZ(50px) ${isHovered ? 'translateY(0)' : 'translateY(-16px)'}`,
-            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}
-        >
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleAutoPlay}
-            className="bg-black/40 hover:bg-black/60 text-white backdrop-blur-xl border border-white/30 h-12 w-12 transition-all duration-300 shadow-xl hover:shadow-2xl"
-            aria-label={isAutoPlaying ? "Pause auto-play" : "Start auto-play"}
-          >
-            {isAutoPlaying ? (
-              <Pause className="h-5 w-5" />
-            ) : (
-              <Play className="h-5 w-5" />
-            )}
-          </Button>
-          
-          {/* Enhanced Slide Counter */}
-          <div className="bg-black/40 backdrop-blur-xl border border-white/30 rounded-xl px-4 py-2 text-white text-sm font-semibold shadow-xl">
-            <span className="text-primary font-bold">{currentIndex + 1}</span>
-            <span className="text-white/70"> / {carouselImages.length}</span>
-          </div>
-        </div>
-
         {/* Debug indicator for development - Hidden on Mobile */}
         {process.env.NODE_ENV === 'development' && (
           <div 
@@ -494,7 +462,7 @@ export const HeroCarousel = () => {
       </div>
 
       {/* Enhanced Mobile Content Section - Below Carousel */}
-      <div className="block sm:hidden mt-6">
+      {/* <div className="block sm:hidden mt-6">
         <div className="bg-gradient-to-br from-background via-background/95 to-background/90 backdrop-blur-xl border border-border/30 rounded-2xl shadow-2xl">
           <div className="p-6">
             <div className="max-w-4xl mx-auto text-center">
@@ -512,7 +480,7 @@ export const HeroCarousel = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }; 
