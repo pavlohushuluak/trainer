@@ -307,7 +307,7 @@ export const HeroCarousel = () => {
                     {[...Array(6)].map((_, i) => (
                       <Sparkles
                         key={i}
-                        className="absolute text-white/30 animate-pulse"
+                        className="absolute text-white/30"
                         style={{
                           left: `${20 + i * 15}%`,
                           top: `${30 + i * 10}%`,
@@ -420,7 +420,7 @@ export const HeroCarousel = () => {
       {/* Enhanced Swipe Hint for Mobile */}
       {showSwipeHint && (
         <div className="absolute inset-0 pointer-events-none sm:hidden z-30">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/70 backdrop-blur-xl rounded-2xl px-6 py-4 text-white text-sm font-medium animate-pulse border border-white/30 shadow-2xl">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/70 backdrop-blur-xl rounded-2xl px-6 py-4 text-white text-sm font-medium border border-white/30 shadow-2xl">
             <div className="flex items-center gap-3">
               <Maximize2 className="h-5 w-5" />
               {t('hero.carousel.swipeHint')}
@@ -452,9 +452,9 @@ export const HeroCarousel = () => {
               )}
               aria-label={`Go to slide ${index + 1}`}
             >
-              {/* Animated glow effect for active dot */}
+              {/* Glow effect for active dot */}
               {index === currentIndex && (
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 animate-pulse sm:from-white/20 sm:via-white/10 sm:to-white/20" />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 sm:from-white/20 sm:via-white/10 sm:to-white/20" />
               )}
             </button>
           ))}
