@@ -3,14 +3,14 @@ import React, { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
+import { useTranslations } from "@/hooks/useTranslations";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Heart, MessageCircle, CheckCircle, Clock, User, Play, Trash2, MoreVertical } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { de } from "date-fns/locale";
+import { de, enUS } from "date-fns/locale";
 import { CommentSection } from "./CommentSection";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -35,7 +35,7 @@ interface PostCardProps {
 }
 
 // Demo-Nutzer-Namen für Posts ohne user_id
-const getDemoAuthorName = (postId: string) => {
+const getDemoAuthorName = (postId: string, t: (key: string) => string) => {
   const demoNames = {
     '11111111-1111-1111-1111-111111111111': 'Sarah M.',
     '22222222-2222-2222-2222-222222222222': 'Michael K.',
@@ -53,32 +53,32 @@ const getDemoAuthorName = (postId: string) => {
     'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee': 'Jennifer P.',
     'ffffffff-ffff-ffff-ffff-ffffffffffff': 'Marco D.'
   };
-  return demoNames[postId as keyof typeof demoNames] || 'Tierbesitzer';
+  return demoNames[postId as keyof typeof demoNames] || t('community.postCard.user.petOwner');
 };
 
 // Utility functions
 const getCategoryColor = (category: string) => {
   const colors = {
-    'hund': 'border-blue-200 text-blue-800 bg-blue-50',
-    'katze': 'border-purple-200 text-purple-800 bg-purple-50',
-    'pferd': 'border-green-200 text-green-800 bg-green-50',
-    'kleintiere': 'border-orange-200 text-orange-800 bg-orange-50',
-    'voegel': 'border-cyan-200 text-cyan-800 bg-cyan-50',
-    'sonstige': 'border-gray-200 text-gray-800 bg-gray-50'
+    'hund': 'border-blue-200 text-blue-700 bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:bg-blue-950/20',
+    'katze': 'border-purple-200 text-purple-700 bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:bg-purple-950/20',
+    'pferd': 'border-green-200 text-green-700 bg-green-50 dark:border-green-700 dark:text-green-300 dark:bg-green-950/20',
+    'kleintiere': 'border-orange-200 text-orange-700 bg-orange-50 dark:border-orange-700 dark:text-orange-300 dark:bg-orange-950/20',
+    'voegel': 'border-cyan-200 text-cyan-700 bg-cyan-50 dark:border-cyan-700 dark:text-cyan-300 dark:bg-cyan-950/20',
+    'sonstige': 'border-gray-200 text-gray-700 bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-950/20'
   };
   return colors[category as keyof typeof colors] || colors.sonstige;
 };
 
-const getCategoryLabel = (category: string) => {
+const getCategoryLabel = (category: string, t: (key: string) => string) => {
   const labels = {
-    'hund': 'Hund',
-    'katze': 'Katze', 
-    'pferd': 'Pferd',
-    'kleintiere': 'Kleintiere',
-    'voegel': 'Vögel',
-    'sonstige': 'Sonstige'
+    'hund': t('community.postCard.categories.dog'),
+    'katze': t('community.postCard.categories.cat'), 
+    'pferd': t('community.postCard.categories.horse'),
+    'kleintiere': t('community.postCard.categories.smallAnimals'),
+    'voegel': t('community.postCard.categories.birds'),
+    'sonstige': t('community.postCard.categories.other')
   };
-  return labels[category as keyof typeof labels] || 'Allgemein';
+  return labels[category as keyof typeof labels] || t('community.postCard.categories.general');
 };
 
 const getPostTypeIcon = (postType: string) => {
@@ -95,7 +95,7 @@ export const PostCard = ({ post }: PostCardProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { t } = useTranslation();
+  const { t, currentLanguage } = useTranslations();
   const [showComments, setShowComments] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -283,9 +283,9 @@ export const PostCard = ({ post }: PostCardProps) => {
   // Determine author name: use demo name for posts without user_id, otherwise use profile data
   const authorName = post.user_id 
     ? (userProfile 
-        ? `${userProfile.first_name || ''} ${userProfile.last_name || ''}`.trim() || 'Tierbesitzer'
-        : 'Tierbesitzer')
-    : getDemoAuthorName(post.id);
+        ? `${userProfile.first_name || ''} ${userProfile.last_name || ''}`.trim() || t('community.postCard.user.petOwner')
+        : t('community.postCard.user.petOwner'))
+    : getDemoAuthorName(post.id, t);
 
   return (
     <>
@@ -300,18 +300,33 @@ export const PostCard = ({ post }: PostCardProps) => {
               </Avatar>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-medium text-gray-900">{authorName}</span>
+                  <span className="font-medium text-foreground">{authorName}</span>
                   {post.pet_profiles && (
-                    <span className="text-sm text-gray-500">
-                      {t('community.postCard.withPet', { name: post.pet_profiles.name, species: post.pet_profiles.species })}
+                    <span className="text-sm text-muted-foreground">
+                      {(() => {
+                        // Handle both array and object cases
+                        const petProfile = Array.isArray(post.pet_profiles) 
+                          ? post.pet_profiles[0] 
+                          : post.pet_profiles;
+                        
+                        if (!petProfile) return null;
+                        
+                        const petName = petProfile.name || 'Unknown Pet';
+                        const petSpecies = petProfile.species || 'Unknown Species';
+                        
+                        return `${t('community.postCard.withPet')} ${petName} (${petSpecies})`;
+                      })()}
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock className="h-3 w-3" />
-                  {formatDistanceToNow(new Date(post.created_at), { addSuffix: true, locale: de })}
+                  {formatDistanceToNow(new Date(post.created_at), { 
+                    addSuffix: true, 
+                    locale: currentLanguage === 'de' ? de : enUS 
+                  })}
                   {post.is_solved && (
-                    <div className="flex items-center gap-1 text-green-600">
+                    <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
                       <CheckCircle className="h-3 w-3" />
                       <span className="text-xs">{t('community.postCard.solved')}</span>
                     </div>
@@ -321,7 +336,7 @@ export const PostCard = ({ post }: PostCardProps) => {
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="outline" className={getCategoryColor(post.category)}>
-                {getCategoryLabel(post.category)}
+                {getCategoryLabel(post.category, t)}
               </Badge>
               <span className="text-lg">{getPostTypeIcon(post.post_type)}</span>
               
@@ -349,8 +364,8 @@ export const PostCard = ({ post }: PostCardProps) => {
         </CardHeader>
 
         <CardContent>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{post.title}</h3>
-          <p className="text-gray-700 mb-4 whitespace-pre-wrap">{post.content}</p>
+          <h3 className="text-lg font-semibold text-foreground mb-2">{post.title}</h3>
+          <p className="text-muted-foreground mb-4 whitespace-pre-wrap">{post.content}</p>
 
           {/* Enhanced Video Section with Thumbnail */}
           {post.video_url && (
@@ -374,8 +389,8 @@ export const PostCard = ({ post }: PostCardProps) => {
                 {/* Play Overlay */}
                 {!isVideoPlaying && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all">
-                    <div className="bg-white bg-opacity-90 rounded-full p-4 group-hover:scale-110 transition-transform">
-                      <Play className="h-8 w-8 text-gray-800" />
+                    <div className="bg-white bg-opacity-90 dark:bg-gray-800 dark:bg-opacity-90 rounded-full p-4 group-hover:scale-110 transition-transform">
+                      <Play className="h-8 w-8 text-gray-800 dark:text-gray-200" />
                     </div>
                   </div>
                 )}
@@ -397,7 +412,7 @@ export const PostCard = ({ post }: PostCardProps) => {
               </div>
               
               {post.video_size && (
-                <div className="text-center text-xs text-gray-500 mt-2">
+                <div className="text-center text-xs text-muted-foreground mt-2">
                   {t('community.postCard.video.fileSize', { size: (post.video_size / (1024 * 1024)).toFixed(1) })}
                   {post.video_thumbnail_url && (
                     <span className="ml-2">{t('community.postCard.video.withThumbnail')}</span>
@@ -407,14 +422,14 @@ export const PostCard = ({ post }: PostCardProps) => {
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-4 border-t">
+          <div className="flex items-center justify-between pt-4 border-t border-border">
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => likeMutation.mutate()}
                 disabled={!user || likeMutation.isPending}
-                className={`flex items-center gap-2 ${userLike ? 'text-red-600' : 'text-gray-600'}`}
+                className={`flex items-center gap-2 ${userLike ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'}`}
               >
                 <Heart className={`h-4 w-4 ${userLike ? 'fill-current' : ''}`} />
                 {post.likes_count || 0}
@@ -424,7 +439,7 @@ export const PostCard = ({ post }: PostCardProps) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowComments(!showComments)}
-                className="flex items-center gap-2 text-gray-600"
+                className="flex items-center gap-2 text-muted-foreground"
               >
                 <MessageCircle className="h-4 w-4" />
                 {post.comments_count || 0}

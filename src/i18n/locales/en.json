@@ -50,9 +50,6 @@
       "title": "Your Pet is Close to Our Hearts ❤️",
       "description": "Every question is important. Whether technical problem or training tip – we'll find the best solution together for you and your pet."
     },
-    "ticketHistory": {
-      "title": "Your Support Requests"
-    },
     "emptyState": {
       "title": "You haven't submitted any support requests yet.",
       "subtitle": "Use the support chat when you need help! 🐾"
@@ -196,7 +193,8 @@
     "settings": "Settings",
     "loggingOut": "Logging out...",
     "myTraining": "My Pet Training",
-    "myTrainingShort": "Training"
+    "myTrainingShort": "Training",
+    "community": "Community"
   },
   "hero": {
     "title": "Professional Pet Training with AI",
@@ -3001,7 +2999,7 @@
     "protectedRoute": {
       "checkingAuth": "Checking authentication..."
     },
-        "loadingScreen": {
+    "loadingScreen": {
       "defaultMessage": "Email is being confirmed...",
       "pleaseWait": "Please wait a moment."
     },
@@ -3524,7 +3522,9 @@
       },
       "notFound": {
         "title": "Oops! Page not found",
-        "returnHome": "Return to Home"
+        "description": "The page you're looking for doesn't exist or has been moved.",
+        "returnHome": "Return to Home",
+        "attemptedPath": "Attempted path"
       },
       "subscriptionPage": {
         "loginRequired": {
@@ -3645,7 +3645,7 @@
         }
       },
       "postCard": {
-        "withPet": "with {name} ({species})",
+        "withPet": "with",
         "solved": "Solved",
         "deletePost": "Delete Post",
         "deleteDialog": {
@@ -3668,6 +3668,18 @@
           "deleteSuccessDescription": "Your post was successfully deleted.",
           "deleteError": "Error deleting",
           "deleteErrorDescription": "The post could not be deleted."
+        },
+        "categories": {
+          "dog": "Dog",
+          "cat": "Cat",
+          "horse": "Horse",
+          "smallAnimals": "Small Animals",
+          "birds": "Birds",
+          "other": "Other",
+          "general": "General"
+        },
+        "user": {
+          "petOwner": "Pet Owner"
         }
       },
       "comments": {
@@ -3852,6 +3864,603 @@
       "privacy": "Privacy Policy"
     }
   },
+  "communityPage": {
+    "title": "TierTrainer Community",
+    "description": "Exchange ideas with other pet owners, share successes and get tips!",
+    "newPost": "New Post",
+    "stats": {
+      "members": "Members",
+      "posts": "Posts",
+      "likes": "Likes"
+    }
+  },
+  "community": {
+    "feed": {
+      "loadingError": {
+        "title": "Error Loading Posts",
+        "description": "An unknown error occurred",
+        "retryButton": "Try Again",
+        "reloadButton": "Reload Page"
+      },
+      "emptyState": {
+        "title": "No Posts Yet",
+        "description": "Be the first to share your experiences!",
+        "filteredDescription": "No posts found for the selected filters.",
+        "showAllButton": "Show All Posts"
+      }
+    },
+    "dashboard": {
+      "welcome": {
+        "title": "Welcome back! 🐾",
+        "withPet": "Ready for the next training session with {petName}?",
+        "noPet": "Create your first pet profile and start training!",
+        "buttons": {
+          "chatWithTrainer": "Chat with trainer",
+          "managePetProfile": "Manage pet profile"
+        }
+      },
+      "upgrade": {
+        "title": "Premium features available! ✨",
+        "description": "Expand your training with a premium package.",
+        "button": "Discover Premium"
+      },
+      "quickStats": {
+        "today": "🎯 Today",
+        "trainingTime": "Training time",
+        "pointsCollected": "Points collected",
+        "exercises": "Exercises",
+        "subscription": {
+          "title": "Your Package",
+          "premium": "Premium",
+          "free": "Free",
+          "activeUntil": "Active until {date}",
+          "noActiveSubscription": "No active subscription",
+          "unknown": "Unknown",
+          "manage": "Manage"
+        }
+      }
+    },
+    "debug": {
+      "imageAnalysis": {
+        "title": "🔍 Image Analysis Debug",
+        "fields": {
+          "userId": "User ID",
+          "subscription": "Subscription",
+          "analysesUsed": "Analyses Used",
+          "maxAnalyses": "Max Analyses",
+          "remaining": "Remaining",
+          "hasReachedLimit": "Has Reached Limit",
+          "canAnalyze": "Can Analyze",
+          "loading": "Loading",
+          "error": "Error"
+        },
+        "values": {
+          "noUser": "No user",
+          "active": "Active",
+          "inactive": "Inactive",
+          "yes": "Yes",
+          "no": "No"
+        },
+        "buttons": {
+          "testIncrement": "Test Increment",
+          "resetUsage": "Reset Usage"
+        },
+        "note": "Check browser console for detailed logs"
+      }
+    },
+    "hero": {
+      "testAccess": "🚀 Test Access",
+      "riskFreeTrial": "🚀 Risk-Free Trial",
+      "mainTitle": "AI-Powered<br/><span class=\"text-primary\">Pet Training</span><br/>at Home",
+      "subtitle": "Professional training plans, personalized exercises, and 24/7 AI support for happy, well-behaved pets.",
+      "startTraining": "Start Training",
+      "startChat": "Start Chat",
+      "features": {
+        "trainerAvailable": "24/7 Trainer Available",
+        "customized": "Personalized",
+        "imageAnalysis": "AI Image Analysis"
+      },
+      "viewPricing": "View Pricing",
+      "socialProof": {
+        "rating": "4.9/5",
+        "description": "Over 1,000+ satisfied pet owners"
+      },
+      "developmentMode": "Development Mode",
+      "carousel": {
+        "trainingSuccess": "Training Success",
+        "happyDogs": "Happy Dogs",
+        "parkTraining": "Park Training",
+        "professionalTraining": "Professional Training",
+        "humanAnimalBond": "Human-Animal Bond",
+        "trainingSuccesses": "Training Successes",
+        "description": "Experience the power of AI-powered pet training",
+        "swipeHint": "Swipe to navigate"
+      }
+    },
+    "performance": {
+      "title": "Performance",
+      "loading": "Loading...",
+      "status": {
+        "slow": "🐌 SLOW",
+        "medium": "⚠️ MEDIUM",
+        "fast": "✅ FAST"
+      },
+      "petSection": {
+        "title": "Pet Section Performance"
+      },
+      "actions": {
+        "clear": "Clear"
+      },
+      "summary": {
+        "average": "Average",
+        "slow": "Slow"
+      },
+      "noMetrics": {
+        "description": "No metrics available.",
+        "action": "Perform actions in the pet section."
+      },
+      "improvements": {
+        "title": "Improvement Suggestions",
+        "tooSlow": "too slow"
+      }
+    },
+    "pricing": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "perMonth": "/month",
+      "perYear": "/year",
+      "guarantee": "💰 14-Day Money-Back Guarantee",
+      "recommended": "RECOMMENDED - SAVE 25%",
+      "equivalentTo": "equivalent to",
+      "insteadOf": "instead of",
+      "saveYearly": "Save €29.80 yearly",
+      "loading": "Loading...",
+      "startNow": "Start Now",
+      "saveNow": "Save Now",
+      "signUpAndBuy": "Sign Up & Buy Now",
+      "signUpAndSave": "Sign Up & Save Now",
+      "quickSignUp": "🚀 Quick signup with Google or Email",
+      "price": "Price",
+      "selectPlan": "Select Plan",
+      "features": {
+        "guarantee": "💰 14 days money-back guarantee",
+        "allPremium": "All premium features with your pet trainer (Text & Voice & Images)",
+        "cancelAnytime": "Cancel anytime"
+      },
+      "checkout": {
+        "loginRequired": "Login Required",
+        "loginDescription": "Please sign in to purchase the premium subscription",
+        "redirectingToStripe": "Redirecting to Stripe",
+        "guaranteeIncluded": "💰 14-day money-back guarantee included – Checkout will open in new tab",
+        "error": "Error",
+        "couldNotCreate": "Checkout could not be created"
+      },
+      "amazonPay": {
+        "configError": "Amazon Pay configuration not received",
+        "error": "Amazon Pay Error",
+        "unknownError": "An unknown error occurred",
+        "title": "Amazon Pay",
+        "integrationPlaceholder": "Amazon Pay integration would be initialized here",
+        "loading": "Loading Amazon Pay...",
+        "payWith": "Pay with Amazon Pay",
+        "loginForPayment": "Login for Amazon Pay",
+        "loginDescription": "Please sign in to pay with Amazon Pay."
+      },
+      "confirmation": {
+        "title": "🐾 Your free training starts now!",
+        "sixMonths": "6 months",
+        "month": "month",
+        "todayFree": "Today: €0.00 - Completely free",
+        "sevenDaysFree": "7 days free training for your pet 🐾",
+        "youStart": "You start:",
+        "trainingFor": "Training for",
+        "textVoiceImages": "Text, Voice & Images",
+        "individualPlans": "Individual training plans",
+        "subscriptionStarts": "Subscription starts on",
+        "thenPrice": "Then",
+        "cancelBefore": "Cancel before = completely free",
+        "cancellationInfo": "✅ Cancel anytime with 1 click<br/>💝 Cancel before {date} = €0 cost<br/>🔒 Secure processing via Stripe",
+        "preparing": "Preparing...",
+        "startFreeNow": "Start Free Now"
+      },
+      "trialDetails": {
+        "yourSelection": "Your Selection",
+        "perSixMonths": "/6 months",
+        "equivalentTo": "equivalent to",
+        "notSatisfied": "Not satisfied? Money back. Automatically. 🐾",
+        "startFreeNow": "Start Free Now",
+        "guaranteeIncluded": "💰 14 days money-back guarantee included",
+        "cancelFirst14Days": "🛡️ Cancel within first 14 days = money back",
+        "noQuestions": "No questions asked. Automatically."
+      },
+      "freeTrial": {
+        "guarantee": "💰 14 Days Money-Back Guarantee",
+        "startToday": "Start today. Not satisfied? Money back. Automatically.",
+        "description": "Cancel within 14 days of purchase and receive the full amount back – no questions, no hassle. Your trust is important to us."
+      }
+    },
+    "support": {
+      "emptyState": {
+        "title": "No support tickets yet",
+        "subtitle": "You haven't created any support requests yet."
+      },
+      "ticketHistory": {
+        "title": "Support Ticket History",
+        "status": {
+          "open": "Open",
+          "inProgress": "In Progress",
+          "waitingUser": "Waiting for Response",
+          "resolved": "Resolved",
+          "closed": "Closed"
+        },
+        "rating": "Rating",
+        "resolvedByAI": "Resolved by AI"
+      },
+      "chat": {
+        "title": "TierTrainer Support 🐾",
+        "ticketNumber": "Ticket #{id}",
+        "thinking": "I'm thinking..."
+      },
+      "ticketDetail": {
+        "ticketId": "Ticket ID",
+        "created": "Created",
+        "category": "Category",
+        "priority": "Priority",
+        "chatHistory": "Chat History",
+        "giveFeedback": "Give Feedback",
+        "status": {
+          "open": "Open",
+          "inProgress": "In Progress",
+          "waitingUser": "Waiting for Response",
+          "resolved": "Resolved",
+          "closed": "Closed"
+        }
+      },
+      "feedback": {
+        "title": "How satisfied were you with our support?",
+        "description": "Your feedback helps us be even better for you and your pet.",
+        "selectRating": "Select a rating",
+        "veryUnsatisfied": "Very unsatisfied 😞",
+        "unsatisfied": "Unsatisfied 😐",
+        "ok": "OK 🙂",
+        "satisfied": "Satisfied 😊",
+        "verySatisfied": "Very satisfied! 🎉",
+        "additionalComments": "Would you like to tell us anything else? (optional)",
+        "placeholder": "Share your thoughts with us...",
+        "cancel": "Cancel",
+        "sendFeedback": "Send Feedback"
+      },
+      "chatInput": {
+        "placeholder": "Write us your question... 🐾",
+        "helpMessage": "We're here to help you and your pet"
+      },
+      "satisfactionRequest": {
+        "question": "Did this answer help you?",
+        "yes": "Yes, thanks!",
+        "no": "Need more help"
+      },
+      "errorHandler": {
+        "temporaryProblem": "Temporary Problem",
+        "chatError": "Chat Error",
+        "defaultMessage": "Message could not be sent.",
+        "timeout": "⏱️ Timeout - TierTrainer needs longer than usual. Please try again.",
+        "serviceUpdate": "🔧 TierTrainer service is being updated. Please try again in a few minutes.",
+        "networkProblem": "🌐 Network problem detected. Please check your internet connection and try again.",
+        "sessionExpired": "🔑 Your session has expired. Please reload the page and log in again.",
+        "chatServiceUnavailable": "🤖 Chat service is temporarily unavailable. We're working on it - please try again in a few minutes.",
+        "genericError": "💭 {errorMessage}"
+      }
+    },
+    "subscriptionManager": {
+      "premiumActive": "✅ Premium subscription active",
+      "until": "until",
+      "loadingDetails": "🔄 Loading current subscription details..."
+    },
+    "networkDiagnostic": {
+      "title": "Network Diagnostics",
+      "runDiagnostic": "Run Full Diagnostic",
+      "running": "Running Diagnostics...",
+      "ok": "OK",
+      "failed": "FAILED",
+      "networkInformation": "Network Information",
+      "onlineStatus": "Online Status",
+      "online": "Online",
+      "offline": "Offline",
+      "connectionType": "Connection Type",
+      "downlink": "Downlink",
+      "rtt": "RTT",
+      "supabaseConnectivity": "Supabase Connectivity",
+      "basicConnection": "Basic Connection",
+      "authentication": "Authentication",
+      "databaseRead": "Database Read",
+      "databaseWrite": "Database Write",
+      "edgeFunctions": "Edge Functions",
+      "recommendations": "Recommendations"
+    },
+    "tableOfContents": {
+      "navigation": "Navigation",
+      "start": "Start",
+      "whyTierTrainer": "Why TierTrainer?",
+      "pricing": "Pricing & Packages",
+      "successStories": "Success Stories",
+      "faq": "FAQ"
+    },
+    "dataRefreshButton": {
+      "refreshing": "Refreshing...",
+      "refreshData": "Refresh Data",
+      "toast": {
+        "success": {
+          "title": "Data updated",
+          "description": "All data has been successfully refreshed"
+        },
+        "error": {
+          "title": "Refresh failed",
+          "description": "Error refreshing data. Please try again."
+        }
+      }
+    },
+    "notFound": {
+      "title": "Oops! Page not found",
+      "description": "The page you're looking for doesn't exist or has been moved.",
+      "returnHome": "Return to Home",
+      "attemptedPath": "Attempted path"
+    },
+    "subscriptionPage": {
+      "loginRequired": {
+        "title": "Login Required",
+        "description": "You must be logged in to manage your subscription."
+      },
+      "title": "Manage Subscription",
+      "subtitle": "Manage your TierTrainer24 subscription and payment details.",
+      "currentSubscription": {
+        "title": "Current Subscription",
+        "description": "Your current plan and status",
+        "planName": "Premium Plan",
+        "planDescription": "Full access to all features",
+        "active": "Active",
+        "nextPayment": "Next Payment",
+        "amount": "Amount"
+      },
+      "includedFeatures": {
+        "title": "Included Features",
+        "description": "What's included in your current plan",
+        "unlimitedChat": "Unlimited AI Chat Conversations",
+        "personalizedPlans": "Personalized Training Plans",
+        "imageAnalysis": "Image Analysis Feature",
+        "communityAccess": "Community Access",
+        "mobileApp": "Mobile App Access",
+        "prioritySupport": "Priority Support"
+      },
+      "paymentDetails": {
+        "title": "Payment Details",
+        "description": "Your payment method and invoices",
+        "paymentMethod": "Payment Method",
+        "changePaymentMethod": "Change Payment Method",
+        "viewInvoices": "View Invoices"
+      },
+      "manageSubscription": {
+        "title": "Manage Subscription",
+        "description": "Options for your subscription",
+        "info": "You can cancel your subscription or change your plan at any time.",
+        "changePlan": "Change Plan",
+        "pauseSubscription": "Pause Subscription",
+        "cancel": "Cancel"
+      }
+    },
+    "adminEmailTestToggle": {
+      "title": "📧 Email Configuration & Tests",
+      "description": "Manage email delivery and test all email functions"
+    },
+    "filters": {
+      "categories": {
+        "title": "Categories",
+        "all": "All Categories",
+        "dog": "Dogs",
+        "cat": "Cats",
+        "horse": "Horses",
+        "smallAnimals": "Small Animals",
+        "birds": "Birds",
+        "other": "Other"
+      },
+      "postTypes": {
+        "title": "Post Types",
+        "all": "All Types",
+        "question": "Questions",
+        "tip": "Tips",
+        "success": "Success Stories",
+        "discussion": "Discussions"
+      },
+      "activeFilters": {
+        "label": "Active Filters:",
+        "clearAll": "Clear All Filters"
+      }
+    },
+    "createPost": {
+      "label": "Create New Post",
+      "postType": {
+        "label": "Post Type",
+        "question": "❓ Question",
+        "tip": "💡 Tip",
+        "success": "🎉 Success",
+        "discussion": "💬 Discussion"
+      },
+      "category": {
+        "label": "Animal Type",
+        "dog": "Dog",
+        "cat": "Cat",
+        "horse": "Horse",
+        "smallAnimals": "Small Animals",
+        "birds": "Birds",
+        "other": "Other"
+      },
+      "pet": {
+        "label": "Pet (optional)",
+        "placeholder": "No pet selected",
+        "noPet": "No pet",
+        "loading": "Loading pets..."
+      },
+      "title": {
+        "label": "Create New Post",
+        "placeholder": "Give your post a meaningful title..."
+      },
+      "content": {
+        "label": "Content *",
+        "placeholder": "Describe your concern, share your experiences, or ask your question...",
+        "charCount": "{count}/2000 characters"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "publish": "Publish Post",
+        "uploadingVideo": "Uploading video...",
+        "creating": "Creating..."
+      },
+      "toasts": {
+        "missingFields": "Missing Information",
+        "missingFieldsDescription": "Title and content are required.",
+        "success": "Post created!",
+        "successWithVideo": "Your post with video was successfully shared in the community.",
+        "successWithoutVideo": "Your post was successfully shared in the community.",
+        "error": "Error",
+        "errorDescription": "Post could not be created."
+      }
+    },
+    "postCard": {
+      "categories": {
+        "dog": "Dog",
+        "cat": "Cat",
+        "horse": "Horse",
+        "smallAnimals": "Small Animals",
+        "birds": "Birds",
+        "other": "Other",
+        "general": "General"
+      },
+      "user": {
+        "petOwner": "Pet Owner"
+      },
+      "withPet": "with",
+      "solved": "Solved",
+      "deletePost": "Delete Post",
+      "deleteDialog": {
+        "title": "Delete Post",
+        "description": "Are you sure you want to delete this post? This action cannot be undone.",
+        "videoWarning": "The associated video and all comments will also be deleted.",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "deleting": "Deleting..."
+      },
+      "video": {
+        "preview": "Preview",
+        "fileSize": "File size: {size} MB",
+        "withThumbnail": "• With thumbnail"
+      },
+      "toasts": {
+        "actionError": "Error",
+        "actionErrorDescription": "Action could not be performed",
+        "deleteSuccess": "Post deleted",
+        "deleteSuccessDescription": "Your post was successfully deleted.",
+        "deleteError": "Error deleting",
+        "deleteErrorDescription": "The post could not be deleted."
+      }
+    },
+    "comments": {
+      "title": "Comments ({count})",
+      "loading": "Loading comments...",
+      "unknownUser": "Unknown User",
+      "solution": "Solution",
+      "placeholder": "Write a comment...",
+      "posting": "Posting...",
+      "comment": "Comment",
+      "toasts": {
+        "success": "Comment added",
+        "successDescription": "Your comment was successfully posted.",
+        "error": "Error",
+        "errorDescription": "Comment could not be posted."
+      }
+    },
+    "shareSuccess": {
+      "rewards": {
+        "points": "Points",
+        "streak": "Day Streak",
+        "badges": "Badges"
+      },
+      "pet": {
+        "label": "Pet",
+        "noPet": "No pet selected"
+      },
+      "title": {
+        "label": "Share your success with the community!",
+        "placeholder": "What have you achieved?",
+        "generateButton": "💡 Generate title suggestion"
+      },
+      "content": {
+        "label": "Tell us about your success *",
+        "placeholder": "Describe what you achieved, how you did it, and what might help others...",
+        "charCount": "{count}/2000 characters"
+      },
+      "buttons": {
+        "shareLater": "Share later",
+        "shareSuccess": "🎉 Share success",
+        "sharing": "Sharing..."
+      },
+      "toasts": {
+        "missingFields": "Missing Information",
+        "missingFieldsDescription": "Title and description are required.",
+        "success": "Success shared! 🎉",
+        "successDescription": "Your success story was shared in the community.",
+        "error": "Error",
+        "errorDescription": "Success could not be shared."
+      }
+    },
+    "videoUpload": {
+      "label": "Upload video (optional)",
+      "compressing": "Video is being compressed",
+      "uploadArea": {
+        "title": "Click here to upload a video",
+        "compression": "Automatic compression for faster uploads",
+        "formats": "MP4, MOV, AVI or WebM • Max. 50MB",
+        "selectButton": "Select video"
+      },
+      "compressionProgress": {
+        "title": "Video Compression",
+        "stages": {
+          "loading": "Loading video...",
+          "compressing": "Compressing video...",
+          "finalizing": "Finalizing compression...",
+          "processing": "Processing..."
+        },
+        "timeNote": "This may take several minutes depending on video size"
+      },
+      "preview": {
+        "compressed": "{percent}% smaller"
+      },
+      "validation": {
+        "invalidFormat": {
+          "title": "Invalid file format",
+          "description": "Please select an MP4, MOV, AVI or WebM file."
+        },
+        "fileTooLarge": {
+          "title": "File too large",
+          "description": "The video must not exceed 50MB."
+        }
+      },
+      "logic": {
+        "compressionSuccess": {
+          "title": "Video compressed!",
+          "description": "File size reduced from {originalSize}MB to {compressedSize}MB"
+        },
+        "compressionFailed": {
+          "title": "Compression failed",
+          "description": "The video will be used in original size."
+        }
+      }
+    }
+  },
+  "notFound": {
+    "title": "Oops! Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "returnHome": "Return to Home",
+    "attemptedPath": "Attempted path"
+  },
   "checkout": {
     "loginRequired": "Login Required",
     "loginDescription": "Please sign in to purchase the premium subscription",
@@ -3950,11 +4559,11 @@
     "delete": {
       "title": "🗑️ Delete Pet Profile",
       "confirmation": "Are you sure you want to delete the pet profile of {{name}}?",
-              "confirmationStrong": "Are you <strong>absolutely sure</strong> that you want to delete the pet profile of <strong>{{name}}</strong>?",
+      "confirmationStrong": "Are you <strong>absolutely sure</strong> that you want to delete the pet profile of <strong>{{name}}</strong>?",
       "warning": "This action cannot be undone.",
       "irreversible": "⚠️ This action CANNOT be undone!",
       "dataLoss": "All data, chat histories, and training plans for this pet will be permanently lost.",
-              "confirmName": "Type the name \"<strong>{{name}}</strong>\" to confirm and proceed.",
+      "confirmName": "Type the name \"<strong>{{name}}</strong>\" to confirm and proceed.",
       "confirm": "Delete",
       "permanently": "Delete Permanently"
     },
@@ -3970,9 +4579,9 @@
       "speciesPlaceholder": "e.g. Dog, Cat, Horse",
       "breed": "Breed",
       "breedPlaceholder": "e.g. Golden Retriever",
-              "birthDate": "Birth Date",
-        "selectDate": "Select date",
-        "selectedDate": "Selected date",
+      "birthDate": "Birth Date",
+      "selectDate": "Select date",
+      "selectedDate": "Selected date",
       "age": "Age",
       "agePlaceholder": "Will be calculated automatically",
       "ageCalculated": "Age will be calculated automatically from birth date",

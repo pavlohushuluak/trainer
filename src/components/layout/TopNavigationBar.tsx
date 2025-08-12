@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, Settings, User, LogOut, Shield, Menu, X, HelpCircle, PawPrint, TrendingUp, Camera, CreditCard, Loader2, Target } from 'lucide-react';
+import { MessageCircle, Settings, User, LogOut, Shield, Menu, X, HelpCircle, PawPrint, TrendingUp, Camera, CreditCard, Loader2, Target, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useStickyHeader } from '@/hooks/useStickyHeader';
@@ -89,6 +89,11 @@ export const TopNavigationBar = ({
           icon: Target,
           label: t('navigation.myTraining'),
           action: () => navigate('/mein-tiertraining')
+        },
+        {
+          icon: Users,
+          label: t('navigation.community'),
+          action: () => navigate('/community')
         },
         {
           icon: HelpCircle,
