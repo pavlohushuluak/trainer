@@ -10,7 +10,7 @@ import { useSupportChat } from '@/hooks/useSupportChat';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { SatisfactionRequest } from './SatisfactionRequest';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface SupportChatProps {
   isOpen: boolean;
@@ -18,7 +18,7 @@ interface SupportChatProps {
 }
 
 export const SupportChat = ({ isOpen, onClose }: SupportChatProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   
   const {
     messages,
@@ -55,6 +55,11 @@ export const SupportChat = ({ isOpen, onClose }: SupportChatProps) => {
     }
   }, [handleSatisfactionFeedback, onClose]);
 
+  // Memoize messages to prevent unnecessary re-renders
+  const memoizedMessages = useMemo(() => messages.map((message) => (
+    <ChatMessage key={message.id} message={message} />
+  )), [messages]);
+
   if (!isOpen) return null;
 
   return (
@@ -87,9 +92,7 @@ export const SupportChat = ({ isOpen, onClose }: SupportChatProps) => {
         <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
           <ScrollArea className="flex-1 min-h-0">
             <div className="space-y-4 p-4">
-              {useMemo(() => messages.map((message) => (
-                <ChatMessage key={message.id} message={message} />
-              )), [messages])}
+              {memoizedMessages}
               
               {showSatisfactionRequest && (
                 <SatisfactionRequest onFeedback={handleFeedback} />

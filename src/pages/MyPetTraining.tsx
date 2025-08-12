@@ -78,17 +78,21 @@ const MyPetTraining = () => {
   // Check if user is admin (this will be handled by MainLayout now)
   const isAdmin = false; // This will be overridden by MainLayout
 
-  // Page refresh effect - refresh the page when component mounts
+  // Page refresh effect - refresh the page only once when user navigates to it
   useEffect(() => {
-    // Only refresh if we're not already in a refresh cycle
+    // Check if we've already refreshed this session
     const hasRefreshed = sessionStorage.getItem('mein-tiertraining-refreshed');
     
     if (!hasRefreshed) {
       // Mark that we've refreshed to prevent infinite refresh loops
       sessionStorage.setItem('mein-tiertraining-refreshed', 'true');
-    } else {
-      // Clear the flag after a successful load to allow future refreshes
-      sessionStorage.removeItem('mein-tiertraining-refreshed');
+      
+      // Refresh the page after a short delay to ensure proper loading
+      const refreshTimer = setTimeout(() => {
+        window.location.reload();
+      }, 100);
+      
+      return () => clearTimeout(refreshTimer);
     }
   }, []);
 

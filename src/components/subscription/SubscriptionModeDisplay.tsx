@@ -2,6 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Crown, Clock, Lock, Loader2 } from "lucide-react";
 import { useTranslations } from "@/hooks/useTranslations";
+import { cn } from "@/lib/utils";
 
 interface SubscriptionModeDisplayProps {
   mode: string;
@@ -19,7 +20,7 @@ export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: Su
           icon: <Loader2 className="h-4 w-4 animate-spin" />,
           label: t('subscription.modeDisplay.loading'),
           variant: 'secondary' as const,
-          className: 'bg-gray-100'
+          className: 'bg-muted text-muted-foreground'
         };
       
       case 'free':
@@ -27,7 +28,7 @@ export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: Su
           icon: <Lock className="h-4 w-4" />,
           label: t('subscription.modeDisplay.freeMode'),
           variant: 'secondary' as const,
-          className: 'bg-gray-100 text-gray-700'
+          className: 'bg-muted text-muted-foreground border-border'
         };
       
       case 'trial':
@@ -37,7 +38,7 @@ export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: Su
             endDate: trialEnd ? new Date(trialEnd).toLocaleDateString(currentLanguage === 'de' ? 'de-DE' : 'en-US') : ''
           }),
           variant: 'outline' as const,
-          className: 'bg-blue-50 text-blue-700 border-blue-200'
+          className: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800'
         };
       
       case 'trial_expired':
@@ -45,7 +46,7 @@ export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: Su
           icon: <Clock className="h-4 w-4" />,
           label: t('subscription.modeDisplay.trialExpired'),
           variant: 'destructive' as const,
-          className: 'bg-red-50 text-red-700'
+          className: 'bg-destructive/10 text-destructive border-destructive/20'
         };
       
       case 'premium':
@@ -64,7 +65,7 @@ export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: Su
           icon: <Crown className="h-4 w-4" />,
           label: getTierDisplayName(subscriptionTier),
           variant: 'default' as const,
-          className: 'bg-green-100 text-green-800 border-green-200'
+          className: 'bg-primary/10 text-primary border-primary/20 dark:bg-primary/20 dark:text-primary-foreground dark:border-primary/30'
         };
       
       default:
@@ -72,7 +73,7 @@ export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: Su
           icon: <Lock className="h-4 w-4" />,
           label: t('subscription.modeDisplay.unknown'),
           variant: 'secondary' as const,
-          className: 'bg-gray-100'
+          className: 'bg-muted text-muted-foreground'
         };
     }
   };
@@ -82,7 +83,10 @@ export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: Su
   return (
     <Badge 
       variant={display.variant}
-      className={`flex items-center gap-1 text-xs ${display.className}`}
+      className={cn(
+        "flex items-center gap-1 text-xs font-medium transition-colors",
+        display.className
+      )}
     >
       {display.icon}
       {display.label}

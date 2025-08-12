@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useOAuthProfileHandler } from './useOAuthProfileHandler';
@@ -14,8 +14,8 @@ export const useAuthStateHandler = () => {
   const { handleOAuthProfile } = useOAuthProfileHandler();
   const { t } = useTranslations();
   
-  // Track auth state handler calls to prevent excessive events
-  const [authHandlerCallCount, setAuthHandlerCallCount] = useState(0);
+  // Use ref to track initialization to prevent multiple setups
+  const initializationRef = useRef(false);
 
   const trackSignUp = useCallback(() => {
     // Track sign up with GTM
@@ -176,68 +176,69 @@ export const useAuthStateHandler = () => {
         window.location.href = '/mein-tiertraining';
       }
     }
-  }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin, executeCheckoutRedirect]);
+  }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin, executeCheckoutRedirect, t]);
 
   useEffect(() => {
+    // Prevent multiple initializations using ref
+    if (initializationRef.current) {
+      console.log('🔐 useAuthStateHandler: Already initialized (ref), skipping');
+      return;
+    }
+
     let mounted = true;
-    let sessionInitialized = false;
-    let authStateInitialized = false;
-    let processedSessionId: string | null = null; // Track processed session to prevent duplicates
+    let hasInitialized = false;
+    let processedSessionId: string | null = null;
     
-    // Set up auth state listener FIRST
+    console.log('🔐 useAuthStateHandler: Initializing auth state handler');
+    
+    // Single auth state listener - this will handle both initial session and subsequent changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return;
         
-        // Track and limit auth state handler calls
-        setAuthHandlerCallCount(prev => {
-          const newCount = prev + 1;
-          console.log(`🔐 Auth state change #${newCount}:`, { event, userEmail: session?.user?.email });
-          
-          // If we've had too many INITIAL_SESSION events, log a warning
-          if (event === 'INITIAL_SESSION' && newCount > 3) {
-            console.warn('⚠️ Too many INITIAL_SESSION events detected:', newCount);
-          }
-          
-          return newCount;
+        console.log(`🔐 Auth state change:`, { 
+          event, 
+          userEmail: session?.user?.email,
+          hasInitialized,
+          processedSessionId: processedSessionId === session?.user?.id
         });
         
-        // Prevent processing the same session multiple times
+        // Prevent duplicate processing of the same session
         const sessionId = session?.user?.id || 'no-user';
         if (event === 'INITIAL_SESSION' && processedSessionId === sessionId) {
           console.log('🔐 Skipping duplicate INITIAL_SESSION for same user');
           return;
         }
         
+        // Update state
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Only set loading to false if we haven't initialized yet
-        if (!authStateInitialized) {
-          authStateInitialized = true;
+        // Initialize only once
+        if (!hasInitialized) {
+          hasInitialized = true;
+          initializationRef.current = true;
           setLoading(false);
           setInitialized(true);
+          console.log('🔐 Auth state handler initialized');
         }
 
-        // Handle SIGNED_IN events immediately
+        // Handle specific events
         if (event === 'SIGNED_IN' && session?.user) {
           processedSessionId = sessionId;
+          console.log('🔐 User signed in, handling redirect logic');
           try {
             await handleSignedIn(session);
           } catch (error) {
             console.warn('Error in auth state change handler:', error);
           }
-        }
-        
-        // Handle SIGNED_OUT events
-        if (event === 'SIGNED_OUT') {
-          console.log('🔓 SIGNED_OUT event received, user logged out');
-          processedSessionId = null; // Reset processed session
-          // Clear any remaining local data
+        } else if (event === 'SIGNED_OUT') {
+          console.log('🔓 User signed out');
+          processedSessionId = null;
           setUser(null);
           setSession(null);
           
-          // Ensure we're not on a protected page after logout
+          // Redirect from protected pages after logout
           const currentPath = window.location.pathname;
           if (currentPath.startsWith('/admin') || 
               currentPath.startsWith('/mein-tiertraining') || 
@@ -246,73 +247,36 @@ export const useAuthStateHandler = () => {
             console.log('🔓 Redirecting from protected page after logout');
             window.location.replace('/');
           }
+        } else if (event === 'INITIAL_SESSION' && session?.user) {
+          // Handle initial session (existing user)
+          processedSessionId = sessionId;
+          console.log('🔐 Initial session found, handling redirect logic');
+          try {
+            await handleSignedIn(session, true);
+          } catch (error) {
+            console.warn('Error handling initial session:', error);
+          }
         }
       }
     );
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (!mounted) return;
-      
-      console.log('Initial session check:', session?.user?.email);
-      
-      // Prevent processing the same session multiple times
-      const sessionId = session?.user?.id || 'no-user';
-      if (processedSessionId === sessionId) {
-        console.log('🔐 Skipping duplicate initial session check for same user');
-        return;
-      }
-      
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      // Only set loading to false if auth state hasn't been initialized yet
-      if (!authStateInitialized) {
-        authStateInitialized = true;
-        setLoading(false);
-        setInitialized(true);
-      }
-      
-      sessionInitialized = true;
-      
-      // Handle redirect for existing sessions
-      if (session?.user) {
-        processedSessionId = sessionId;
-        try {
-          await handleSignedIn(session, true);
-        } catch (error) {
-          console.warn('Error handling existing session:', error);
-        }
-      }
-    });
-
-    // Fallback: Set loading to false after a reasonable timeout
+    // Single timeout fallback for safety
     const timeoutId = setTimeout(() => {
-      if (mounted && !authStateInitialized) {
+      if (mounted && !hasInitialized) {
         console.log('⚠️ Auth initialization timeout - forcing loading to false');
-        authStateInitialized = true;
+        hasInitialized = true;
         setLoading(false);
         setInitialized(true);
       }
-    }, 5000); // 5 second timeout
-
-    // Additional fallback: Force loading to false if we've been loading for too long
-    const forceLoadingTimeout = setTimeout(() => {
-      if (mounted && !authStateInitialized) {
-        console.log('⚠️ Force loading to false - timeout reached');
-        authStateInitialized = true;
-        setLoading(false);
-        setInitialized(true);
-      }
-    }, 3000); // 3 second timeout for force loading
+    }, 3000); // 3 second timeout
 
     return () => {
       mounted = false;
       clearTimeout(timeoutId);
-      clearTimeout(forceLoadingTimeout);
       subscription.unsubscribe();
+      console.log('🔐 useAuthStateHandler: Cleanup completed');
     };
-  }, [handleSignedIn]); // Only depend on handleSignedIn, not on user/session/loading
+  }, [handleSignedIn]);
 
   return { user, session, loading };
 };

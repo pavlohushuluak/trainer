@@ -102,6 +102,9 @@
       }
     },
     "chat": {
+      "title": "Support-Chat",
+      "thinking": "Denke nach...",
+      "ticketNumber": "Ticket #{{id}}",
       "welcomeMessage": "Hallo 👋 Ich bin dein Support-Assistent – bereit, dir und deinem Tier bestmöglich zu helfen.\n\nWas liegt dir auf dem Herzen?",
       "ticketCreationError": {
         "title": "Fehler",
@@ -123,6 +126,56 @@
           "description": "Unser Support-Team übernimmt jetzt für dich."
         }
       }
+    },
+    "chatInput": {
+      "placeholder": "Schreiben Sie hier Ihre Nachricht...",
+      "helpMessage": "Drücken Sie Enter zum Senden, Shift+Enter für neue Zeile"
+    },
+    "satisfactionRequest": {
+      "question": "War das hilfreich?",
+      "yes": "Ja",
+      "no": "Nein"
+    },
+    "feedback": {
+      "title": "Wie zufrieden waren Sie mit unserem Support?",
+      "description": "Ihr Feedback hilft uns, unseren Service für Sie und andere Haustierbesitzer zu verbessern.",
+      "selectRating": "Bewertung auswählen",
+      "veryUnsatisfied": "Sehr unzufrieden",
+      "unsatisfied": "Unzufrieden",
+      "ok": "OK",
+      "satisfied": "Zufrieden",
+      "verySatisfied": "Sehr zufrieden",
+      "additionalComments": "Zusätzliche Kommentare (optional)",
+      "placeholder": "Erzählen Sie uns mehr über Ihre Erfahrung...",
+      "cancel": "Abbrechen",
+      "sendFeedback": "Feedback senden"
+    },
+    "ticketHistory": {
+      "title": "Support-Ticket-Verlauf",
+      "status": {
+        "open": "Offen",
+        "inProgress": "In Bearbeitung",
+        "waitingUser": "Warten auf Benutzer",
+        "resolved": "Gelöst",
+        "closed": "Geschlossen"
+      },
+      "rating": "Bewertung",
+      "resolvedByAI": "Von KI gelöst"
+    },
+    "ticketDetail": {
+      "status": {
+        "open": "Offen",
+        "inProgress": "In Bearbeitung",
+        "waitingUser": "Warten auf Benutzer",
+        "resolved": "Gelöst",
+        "closed": "Geschlossen"
+      },
+      "ticketId": "Ticket-ID",
+      "created": "Erstellt",
+      "category": "Kategorie",
+      "priority": "Priorität",
+      "chatHistory": "Chat-Verlauf",
+      "giveFeedback": "Feedback geben"
     }
   },
   "navigation": {

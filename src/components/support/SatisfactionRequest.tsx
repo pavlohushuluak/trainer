@@ -3,14 +3,14 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface SatisfactionRequestProps {
   onFeedback: (isHelpful: boolean) => void;
 }
 
 export const SatisfactionRequest = ({ onFeedback }: SatisfactionRequestProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   
   return (
     <div className="flex justify-center">

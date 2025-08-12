@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface ChatInputProps {
   newMessage: string;
@@ -18,7 +18,7 @@ export const ChatInput = ({
   onSendMessage, 
   isLoading 
 }: ChatInputProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {

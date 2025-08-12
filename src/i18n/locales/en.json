@@ -102,6 +102,9 @@
       }
     },
     "chat": {
+      "title": "Support Chat",
+      "thinking": "Thinking...",
+      "ticketNumber": "Ticket #{{id}}",
       "welcomeMessage": "Hello 👋 I'm your support assistant – ready to help you and your pet in the best possible way.\n\nWhat's on your mind?",
       "ticketCreationError": {
         "title": "Error",
@@ -123,6 +126,56 @@
           "description": "Our support team is now taking over for you."
         }
       }
+    },
+    "chatInput": {
+      "placeholder": "Type your message here...",
+      "helpMessage": "Press Enter to send, Shift+Enter for new line"
+    },
+    "satisfactionRequest": {
+      "question": "Was this helpful?",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "feedback": {
+      "title": "How satisfied were you with our support?",
+      "description": "Your feedback helps us improve our service for you and other pet owners.",
+      "selectRating": "Select rating",
+      "veryUnsatisfied": "Very unsatisfied",
+      "unsatisfied": "Unsatisfied",
+      "ok": "OK",
+      "satisfied": "Satisfied",
+      "verySatisfied": "Very satisfied",
+      "additionalComments": "Additional comments (optional)",
+      "placeholder": "Tell us more about your experience...",
+      "cancel": "Cancel",
+      "sendFeedback": "Send Feedback"
+    },
+    "ticketHistory": {
+      "title": "Support Ticket History",
+      "status": {
+        "open": "Open",
+        "inProgress": "In Progress",
+        "waitingUser": "Waiting for User",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      },
+      "rating": "Rating",
+      "resolvedByAI": "Resolved by AI"
+    },
+    "ticketDetail": {
+      "status": {
+        "open": "Open",
+        "inProgress": "In Progress",
+        "waitingUser": "Waiting for User",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      },
+      "ticketId": "Ticket ID",
+      "created": "Created",
+      "category": "Category",
+      "priority": "Priority",
+      "chatHistory": "Chat History",
+      "giveFeedback": "Give Feedback"
     }
   },
   "navigation": {

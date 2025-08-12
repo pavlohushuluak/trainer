@@ -137,7 +137,7 @@ const App = () => {
                   <Route path="/admin/status-test" element={<AdminStatusTestPage />} />
                   <Route path="/" element={<MainLayout />}>
                     <Route index element={<Index />} />
-                    <Route path="dashboard" element={<Dashboard />} />
+                    {/* <Route path="dashboard" element={<Dashboard />} /> */}
                     <Route path="mein-tiertraining" element={<MyPetTraining />} />
                     <Route path="support" element={<Support />} />
                     <Route path="community" element={<Community />} />
@@ -146,12 +146,12 @@ const App = () => {
                     <Route path="agb" element={<AGB />} />
                     <Route path="datenschutz" element={<Datenschutz />} />
                     <Route path="impressum" element={<Impressum />} />
-                    <Route path="test-email" element={<TestEmail />} />
+                    {/* <Route path="test-email" element={<TestEmail />} />
                     <Route path="test-email-auth" element={<TestEmailAuth />} />
-                    <Route path="chat-diagnostics" element={<ChatDiagnosticsPage />} />
-                    <Route path="chat" element={<ChatPage />} />
+                    <Route path="chat-diagnostics" element={<ChatDiagnosticsPage />} /> */}
+                    {/* <Route path="chat" element={<ChatPage />} /> */}
                     <Route path="settings" element={<SettingsPage />} />
-                    <Route path="image-analysis" element={<ImageAnalysisPage />} />
+                    {/* <Route path="image-analysis" element={<ImageAnalysisPage />} /> */}
                     <Route path="login" element={<LoginPage />} />
                     <Route path="subscription" element={<SubscriptionPage />} />
                     <Route path="*" element={<NotFound />} />
