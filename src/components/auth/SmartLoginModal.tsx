@@ -127,14 +127,14 @@ export const SmartLoginModal = ({
       } else {
         // Send welcome email for returning users
         if (data?.user?.email) {
-          try {
-            await sendWelcomeEmail(
+      try {
+        await sendWelcomeEmail(
               data.user.email,
               data.user.user_metadata?.full_name || data.user.email.split('@')[0],
-              "TierTrainer"
-            );
-          } catch (error) {
-            console.error('Error sending welcome email:', error);
+          "TierTrainer"
+        );
+      } catch (error) {
+        console.error('Error sending welcome email:', error);
           }
         }
         onLoginSuccess();
@@ -198,8 +198,8 @@ export const SmartLoginModal = ({
         setLastName('');
         
         // Close modal and trigger success callback
-        onLoginSuccess();
-        onClose();
+    onLoginSuccess();
+    onClose();
       }
     } catch (err) {
       setError(t('auth.generalError'));
@@ -224,7 +224,7 @@ export const SmartLoginModal = ({
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-xl max-h-[95vh] overflow-y-auto p-0">
           <div className="p-6">
             {/* Auth Error Display */}
@@ -544,9 +544,9 @@ export const SmartLoginModal = ({
                 </div>
               </div>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      </DialogContent>
+    </Dialog>
       
       {/* Legal Modals */}
       <AGBModal isOpen={showTermsModal} onClose={() => setShowTermsModal(false)} />

@@ -78,6 +78,103 @@
       /* Prevent scrollbar from disappearing when dropdowns open */
 }
 
+/* Professional Scrollbar Styling */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.3);
+  border-radius: 4px;
+  margin: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary) / 0.6) 0%,
+    hsl(var(--cta) / 0.6) 100%
+  );
+  border-radius: 4px;
+  border: 1px solid hsl(var(--border) / 0.5);
+  transition: all 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary) / 0.8) 0%,
+    hsl(var(--cta) / 0.8) 100%
+  );
+  transform: scale(1.05);
+  box-shadow: 
+    0 2px 8px hsl(var(--primary) / 0.3),
+    0 4px 16px hsl(var(--cta) / 0.2);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--cta)) 100%
+  );
+  transform: scale(1.1);
+  box-shadow: 
+    0 4px 12px hsl(var(--primary) / 0.4),
+    0 8px 24px hsl(var(--cta) / 0.3);
+}
+
+::-webkit-scrollbar-corner {
+  background: hsl(var(--muted) / 0.3);
+  border-radius: 4px;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary) / 0.6) hsl(var(--muted) / 0.3);
+}
+
+/* Dark mode scrollbar adjustments */
+.dark ::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary) / 0.7) 0%,
+    hsl(var(--cta) / 0.7) 100%
+  );
+  border: 1px solid hsl(var(--border) / 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary) / 0.9) 0%,
+    hsl(var(--cta) / 0.9) 100%
+  );
+}
+
+.dark ::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--cta)) 100%
+  );
+}
+
+.dark ::-webkit-scrollbar-corner {
+  background: hsl(var(--muted) / 0.2);
+}
+
+.dark * {
+  scrollbar-color: hsl(var(--primary) / 0.7) hsl(var(--muted) / 0.2);
+}
+
 /* Ensure scrollbar is always visible */
 html {
 }
@@ -126,7 +223,20 @@ body.scrollbar-preserved * {
       font-size: 1rem;
     }
 
+    /* Mobile scrollbar adjustments */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
 
+    ::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+      border-radius: 3px;
+      margin: 1px;
+    }
 
     /* Improve mobile menu positioning */
     .mobile-menu {
@@ -147,6 +257,44 @@ body.scrollbar-preserved * {
   
   .font-body {
     font-family: 'Open Sans', sans-serif;
+  }
+
+  /* Enhanced ScrollArea styling for Radix UI components */
+  .scroll-area-custom {
+    --scrollbar-size: 8px;
+    --scrollbar-track-color: hsl(var(--muted) / 0.3);
+    --scrollbar-thumb-color: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.6) 0%,
+      hsl(var(--cta) / 0.6) 100%
+    );
+  }
+
+  .dark .scroll-area-custom {
+    --scrollbar-track-color: hsl(var(--muted) / 0.2);
+    --scrollbar-thumb-color: linear-gradient(
+      135deg,
+      hsl(var(--primary) / 0.7) 0%,
+      hsl(var(--cta) / 0.7) 100%
+    );
+  }
+
+  /* Professional scrollbar utilities */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-auto {
+    scrollbar-width: auto;
   }
 
   /* Sticky header utilities - Fixed for mobile */
