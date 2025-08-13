@@ -56,16 +56,6 @@ export const Footer = () => {
                   {t('footer.terms')}
                 </Link>
               </li>
-              <li>
-                <Button
-                  onClick={handleCookieSettingsChange}
-                  variant="ghost"
-                  size="sm"
-                  className="text-muted-foreground hover:text-foreground transition-colors p-0 h-auto font-normal justify-start"
-                >
-                  {t('footer.cookieSettings')}
-                </Button>
-              </li>
             </ul>
           </div>
           
