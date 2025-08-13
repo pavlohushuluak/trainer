@@ -203,30 +203,6 @@ serve(async (req)=>{
         });
       }
     }
-    // Pre-create subscriber record
-    const { error: subscriberError } = await supabaseClient.from('subscribers').upsert({
-      email: userEmail,
-      user_id: userId,
-      stripe_customer_id: customerId,
-      subscribed: false,
-      subscription_status: 'pending_checkout',
-      subscription_tier: null,
-      billing_cycle: priceType,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }, {
-      onConflict: 'email'
-    });
-    if (subscriberError) {
-      logStep("Subscriber pre-creation error", {
-        error: subscriberError
-      });
-    } else {
-      logStep("Subscriber record pre-created", {
-        email: userEmail,
-        customerId
-      });
-    }
     // Get pricing configuration - no trials
     const selectedPrice = convertPricingConfigToStripe(priceType);
     // Create checkout session
@@ -258,15 +234,6 @@ serve(async (req)=>{
       });
       throw new Error("No checkout URL received from Stripe");
     }
-    // Update subscriber record with session ID
-    await supabaseClient.from('subscribers').update({
-      updated_at: new Date().toISOString()
-    }).eq('email', userEmail);
-    logStep("Checkout session response prepared", {
-      sessionId: session.id,
-      url: session.url,
-      urlLength: session.url.length
-    });
     return new Response(JSON.stringify({
       url: session.url,
       sessionId: session.id
