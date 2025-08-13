@@ -182,13 +182,13 @@ export const CreatePostModal = ({ isOpen, onClose }: CreatePostModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('community.createPost.label')}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <Label htmlFor="post_type">{t('community.createPost.postType.label')}</Label>
               <Select 
@@ -285,13 +285,14 @@ export const CreatePostModal = ({ isOpen, onClose }: CreatePostModalProps) => {
             selectedVideo={selectedVideo}
           />
 
-          <div className="flex justify-end space-x-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
+          <div className="flex flex-col sm:flex-row justify-end gap-2 sm:space-x-2 pt-4">
+            <Button type="button" variant="outline" onClick={onClose} className="w-full sm:w-auto">
               {t('community.createPost.buttons.cancel')}
             </Button>
             <Button 
               type="submit" 
               disabled={createPostMutation.isPending || !formData.title.trim() || !formData.content.trim()}
+              className="w-full sm:w-auto"
             >
               {createPostMutation.isPending ? (
                 selectedVideo ? t('community.createPost.buttons.uploadingVideo') : t('community.createPost.buttons.creating')

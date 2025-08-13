@@ -37,7 +37,7 @@ export const CommunityFilters = ({ selectedCategory, onCategoryChange, selectedP
       {/* Category Filters */}
       <div>
         <h3 className="text-sm font-medium text-gray-700 mb-2">{t('community.filters.categories.title')}</h3>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1 sm:gap-2">
           {categories.map((category) => (
             <Button
               key={category.id}
@@ -46,10 +46,11 @@ export const CommunityFilters = ({ selectedCategory, onCategoryChange, selectedP
               onClick={() => {
                 onCategoryChange(category.id);
               }}
-              className="flex items-center gap-2"
+              className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
             >
-              <span>{category.icon}</span>
-              {category.label}
+              <span className="text-sm">{category.icon}</span>
+              <span className="hidden sm:inline">{category.label}</span>
+              <span className="sm:hidden">{category.label.split(' ')[0]}</span>
             </Button>
           ))}
         </div>
@@ -58,7 +59,7 @@ export const CommunityFilters = ({ selectedCategory, onCategoryChange, selectedP
       {/* Post Type Filters */}
       <div>
         <h3 className="text-sm font-medium text-gray-700 mb-2">{t('community.filters.postTypes.title')}</h3>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1 sm:gap-2">
           {postTypes.map((type) => (
             <Button
               key={type.id}
@@ -67,10 +68,11 @@ export const CommunityFilters = ({ selectedCategory, onCategoryChange, selectedP
               onClick={() => {
                 onPostTypeChange(type.id);
               }}
-              className="flex items-center gap-2"
+              className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
             >
-              <span>{type.icon}</span>
-              {type.label}
+              <span className="text-sm">{type.icon}</span>
+              <span className="hidden sm:inline">{type.label}</span>
+              <span className="sm:hidden">{type.label.split(' ')[0]}</span>
             </Button>
           ))}
         </div>
@@ -78,18 +80,20 @@ export const CommunityFilters = ({ selectedCategory, onCategoryChange, selectedP
 
       {/* Active Filters Display */}
       {(selectedCategory !== 'all' || selectedPostType !== 'all') && (
-        <div className="flex items-center gap-2 pt-2 border-t">
-          <span className="text-sm text-gray-600">{t('community.filters.activeFilters.label')}</span>
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t">
+          <span className="text-xs sm:text-sm text-gray-600">{t('community.filters.activeFilters.label')}</span>
           {selectedCategory !== 'all' && (
-            <Badge variant="secondary" className="flex items-center gap-1">
+            <Badge variant="secondary" className="flex items-center gap-1 text-xs">
               {categories.find(c => c.id === selectedCategory)?.icon}
-              {categories.find(c => c.id === selectedCategory)?.label}
+              <span className="hidden sm:inline">{categories.find(c => c.id === selectedCategory)?.label}</span>
+              <span className="sm:hidden">{categories.find(c => c.id === selectedCategory)?.label?.split(' ')[0]}</span>
             </Badge>
           )}
           {selectedPostType !== 'all' && (
-            <Badge variant="secondary" className="flex items-center gap-1">
+            <Badge variant="secondary" className="flex items-center gap-1 text-xs">
               {postTypes.find(t => t.id === selectedPostType)?.icon}
-              {postTypes.find(t => t.id === selectedPostType)?.label}
+              <span className="hidden sm:inline">{postTypes.find(t => t.id === selectedPostType)?.label}</span>
+              <span className="sm:hidden">{postTypes.find(t => t.id === selectedPostType)?.label?.split(' ')[0]}</span>
             </Badge>
           )}
           <Button

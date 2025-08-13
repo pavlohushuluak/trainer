@@ -292,17 +292,17 @@ export const PostCard = ({ post }: PostCardProps) => {
       <Card className="hover:shadow-md transition-shadow">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-3">
-              <Avatar>
+            <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+              <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
                 <AvatarFallback>
-                  <User className="h-4 w-4" />
+                  <User className="h-3 w-3 sm:h-4 sm:w-4" />
                 </AvatarFallback>
               </Avatar>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-medium text-foreground">{authorName}</span>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
+                  <span className="font-medium text-foreground text-sm sm:text-base truncate">{authorName}</span>
                   {post.pet_profiles && (
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-xs sm:text-sm text-muted-foreground truncate">
                       {(() => {
                         // Handle both array and object cases
                         const petProfile = Array.isArray(post.pet_profiles) 
@@ -319,12 +319,14 @@ export const PostCard = ({ post }: PostCardProps) => {
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground">
                   <Clock className="h-3 w-3" />
-                  {formatDistanceToNow(new Date(post.created_at), { 
-                    addSuffix: true, 
-                    locale: currentLanguage === 'de' ? de : enUS 
-                  })}
+                  <span className="truncate">
+                    {formatDistanceToNow(new Date(post.created_at), { 
+                      addSuffix: true, 
+                      locale: currentLanguage === 'de' ? de : enUS 
+                    })}
+                  </span>
                   {post.is_solved && (
                     <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
                       <CheckCircle className="h-3 w-3" />
@@ -334,11 +336,12 @@ export const PostCard = ({ post }: PostCardProps) => {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className={getCategoryColor(post.category)}>
-                {getCategoryLabel(post.category, t)}
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              <Badge variant="outline" className={`text-xs ${getCategoryColor(post.category)}`}>
+                <span className="hidden sm:inline">{getCategoryLabel(post.category, t)}</span>
+                <span className="sm:hidden">{getCategoryLabel(post.category, t).split(' ')[0]}</span>
               </Badge>
-              <span className="text-lg">{getPostTypeIcon(post.post_type)}</span>
+              <span className="text-base sm:text-lg">{getPostTypeIcon(post.post_type)}</span>
               
               {/* Post Actions Menu - only show for post owner (real users only) */}
               {isPostOwner && post.user_id && (
@@ -364,21 +367,21 @@ export const PostCard = ({ post }: PostCardProps) => {
         </CardHeader>
 
         <CardContent>
-          <h3 className="text-lg font-semibold text-foreground mb-2">{post.title}</h3>
-          <p className="text-muted-foreground mb-4 whitespace-pre-wrap">{post.content}</p>
+          <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">{post.title}</h3>
+          <p className="text-sm sm:text-base text-muted-foreground mb-4 whitespace-pre-wrap">{post.content}</p>
 
           {/* Enhanced Video Section with Thumbnail */}
           {post.video_url && (
             <div className="mb-4">
               <div 
-                className="relative bg-black rounded-lg overflow-hidden cursor-pointer max-w-md mx-auto group"
+                className="relative bg-black rounded-lg overflow-hidden cursor-pointer w-full max-w-md mx-auto group"
                 onClick={handleVideoToggle}
               >
                 {/* Video with poster (thumbnail) */}
                 <video
                   src={post.video_url}
                   poster={post.video_thumbnail_url || undefined}
-                  className="w-full h-auto max-h-96 object-cover"
+                  className="w-full h-auto max-h-64 sm:max-h-96 object-cover"
                   controls={false}
                   onPlay={() => setIsVideoPlaying(true)}
                   onPause={() => setIsVideoPlaying(false)}
@@ -389,60 +392,69 @@ export const PostCard = ({ post }: PostCardProps) => {
                 {/* Play Overlay */}
                 {!isVideoPlaying && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all">
-                    <div className="bg-white bg-opacity-90 dark:bg-gray-800 dark:bg-opacity-90 rounded-full p-4 group-hover:scale-110 transition-transform">
-                      <Play className="h-8 w-8 text-gray-800 dark:text-gray-200" />
+                    <div className="bg-white bg-opacity-90 dark:bg-gray-800 dark:bg-opacity-90 rounded-full p-2 sm:p-4 group-hover:scale-110 transition-transform">
+                      <Play className="h-6 w-6 sm:h-8 sm:w-8 text-gray-800 dark:text-gray-200" />
                     </div>
                   </div>
                 )}
 
                 {/* Video Info */}
                 {post.video_duration && (
-                  <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                  <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 bg-black bg-opacity-70 text-white text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded">
                     {Math.floor(post.video_duration / 60)}:{(post.video_duration % 60).toString().padStart(2, '0')}
                   </div>
                 )}
 
                 {/* Thumbnail indicator */}
                 {post.video_thumbnail_url && (
-                  <div className="absolute top-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    {t('community.postCard.video.preview')}
+                  <div className="absolute top-1 sm:top-2 left-1 sm:left-2 bg-black bg-opacity-70 text-white text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded flex items-center gap-1">
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></div>
+                    <span className="hidden sm:inline">{t('community.postCard.video.preview')}</span>
+                    <span className="sm:hidden">Preview</span>
                   </div>
                 )}
               </div>
               
               {post.video_size && (
                 <div className="text-center text-xs text-muted-foreground mt-2">
-                  {t('community.postCard.video.fileSize', { size: (post.video_size / (1024 * 1024)).toFixed(1) })}
-                  {post.video_thumbnail_url && (
-                    <span className="ml-2">{t('community.postCard.video.withThumbnail')}</span>
-                  )}
+                  <span className="hidden sm:inline">
+                    {t('community.postCard.video.fileSize', { size: (post.video_size / (1024 * 1024)).toFixed(1) })}
+                    {post.video_thumbnail_url && (
+                      <span className="ml-2">{t('community.postCard.video.withThumbnail')}</span>
+                    )}
+                  </span>
+                  <span className="sm:hidden">
+                    {(post.video_size / (1024 * 1024)).toFixed(1)}MB
+                    {post.video_thumbnail_url && " + thumb"}
+                  </span>
                 </div>
               )}
             </div>
           )}
 
           <div className="flex items-center justify-between pt-4 border-t border-border">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => likeMutation.mutate()}
                 disabled={!user || likeMutation.isPending}
-                className={`flex items-center gap-2 ${userLike ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'}`}
+                className={`flex items-center gap-1 sm:gap-2 text-xs sm:text-sm ${userLike ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'}`}
               >
-                <Heart className={`h-4 w-4 ${userLike ? 'fill-current' : ''}`} />
-                {post.likes_count || 0}
+                <Heart className={`h-3 w-3 sm:h-4 sm:w-4 ${userLike ? 'fill-current' : ''}`} />
+                <span className="hidden sm:inline">{post.likes_count || 0}</span>
+                <span className="sm:hidden">{post.likes_count || 0}</span>
               </Button>
 
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowComments(!showComments)}
-                className="flex items-center gap-2 text-muted-foreground"
+                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground"
               >
-                <MessageCircle className="h-4 w-4" />
-                {post.comments_count || 0}
+                <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">{post.comments_count || 0}</span>
+                <span className="sm:hidden">{post.comments_count || 0}</span>
               </Button>
             </div>
           </div>
