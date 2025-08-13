@@ -31,14 +31,14 @@ export const useTestUserActions = () => {
             .update({
               subscribed: true,
               subscription_status: 'active',
-              subscription_tier: 'premium', // Verwende kleinschreibung
+              subscription_tier: 'plan5', // Verwende kleinschreibung
               billing_cycle: 'monthly',
               current_period_start: new Date().toISOString(),
               current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
               subscription_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
               trial_used: false,
               is_manually_activated: true,
-              admin_notes: t('adminTestUser.actions.adminNotes.testAccessActivated', { date: new Date().toLocaleDateString() }),
+              admin_notes: `${t('adminTestUser.actions.adminNotes.testAccessActivated')} ${new Date().toLocaleDateString()}`,
               updated_at: new Date().toISOString()
             })
             .eq('email', testEmail);
@@ -56,14 +56,14 @@ export const useTestUserActions = () => {
               email: testEmail,
               subscribed: true,
               subscription_status: 'active',
-              subscription_tier: 'premium', // Verwende kleinschreibung
+              subscription_tier: 'plan5', // Verwende kleinschreibung
               billing_cycle: 'monthly',
               current_period_start: new Date().toISOString(),
               current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
               subscription_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
               trial_used: false,
               is_manually_activated: true,
-              admin_notes: t('adminTestUser.actions.adminNotes.testAccessCreated', { date: new Date().toLocaleDateString() }),
+              admin_notes: `${t('adminTestUser.actions.adminNotes.testAccessCreated')} ${new Date().toLocaleDateString()}`,
               country: 'DE'
             });
 
