@@ -173,7 +173,6 @@ const Index = () => {
       <div id="hero">
         <Hero onStartChat={handleStartChat} />
       </div>
-      aaa
       <div id="benefits">
         <Suspense fallback={<SectionLoader height="h-96" />}>
           <Benefits />
