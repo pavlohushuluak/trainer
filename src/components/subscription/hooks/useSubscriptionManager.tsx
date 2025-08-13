@@ -86,14 +86,17 @@ export const useSubscriptionManager = () => {
       
       if (error) {
         console.error('Error loading invoices:', error);
-      } else if (mounted.current) {
+      } else {
         setInvoices(data || []);
       }
+      console.log('Invoices loaded:', data);
     } catch (error) {
       console.warn('Error loading invoices:', error);
     } finally {
       loadingInvoices.current = false;
     }
+
+    console.log('Invoices loaded:', invoices);
   }, [user?.id]);
 
   // Load data only when user changes

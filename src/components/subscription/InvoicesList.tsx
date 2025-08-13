@@ -69,7 +69,6 @@ export const InvoicesList = ({ invoices }: InvoicesListProps) => {
                 <div className="flex items-center gap-4">
                   <div className="text-right">
                     <div className="font-medium flex items-center gap-1">
-                      <Euro className="h-4 w-4" />
                       {formatPrice(invoice.amount_total, invoice.currency)}
                     </div>
                   </div>
