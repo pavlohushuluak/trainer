@@ -1,7 +1,6 @@
 
 import { useState } from 'react';
-import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { UserWithDetails } from './types';
 import { TestUserManager } from './TestUserManager';
@@ -19,6 +18,8 @@ export const UserManagement = () => {
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeSearchQuery, setActiveSearchQuery] = useState('');
+  const [shouldFetch, setShouldFetch] = useState(true); // Start with true to load all users initially
   const [selectedUser, setSelectedUser] = useState<UserWithDetails | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
@@ -32,7 +33,7 @@ export const UserManagement = () => {
   } = useUserActions();
 
   const { syncStripeUsers } = useUserSync();
-  const { data: users, isLoading, error, refetch } = useUserQuery(searchQuery);
+  const { data: users, isLoading, error, refetch } = useUserQuery(activeSearchQuery, shouldFetch);
 
   console.log('🔍 UserManagement: Render state:', {
     user: !!user,
@@ -64,23 +65,26 @@ export const UserManagement = () => {
     refetch();
   };
 
+  const handleFilter = (query: string) => {
+    console.log('🔍 UserManagement: Filter triggered with query:', query);
+    setActiveSearchQuery(query);
+    setShouldFetch(true);
+  };
+
+  const handleClear = () => {
+    console.log('🔍 UserManagement: Clear filter triggered');
+    setActiveSearchQuery('');
+    setSearchQuery('');
+    setShouldFetch(true); // Keep fetching enabled to show all users
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+  };
+
   const handleCancelSubscription = (userId: string, immediateRefund: boolean) => {
     cancelUserSubscription.mutate({ userId, immediateRefund });
   };
-
-  // Show loading only when auth is loading or user data is loading
-  if (authLoading || isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">
-            {authLoading ? 'Authenticating...' : t('adminUsers.loading')}
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   // Show error if user is not authenticated
   if (!user) {
@@ -103,36 +107,6 @@ export const UserManagement = () => {
     );
   }
 
-  if (error) {
-    console.error('🔍 UserManagement: Error state:', error);
-    return (
-      <div className="flex items-center justify-center h-96">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-red-600">
-              <AlertCircle className="h-5 w-5" />
-              {t('adminUsers.error.title')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-muted-foreground">
-              {error instanceof Error ? error.message : t('adminUsers.error.message')}
-            </p>
-            <div className="flex gap-2">
-              <Button onClick={handleRefresh} variant="outline" className="flex items-center gap-2">
-                <RefreshCw className="h-4 w-4" />
-                {t('adminUsers.error.retry')}
-              </Button>
-              <Button onClick={handleSync} variant="outline">
-                {t('adminUsers.error.syncStripe')}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <UserManagementHeader
@@ -147,13 +121,18 @@ export const UserManagement = () => {
 
       {/* Such- und Filterbereich */}
       <UserSearch 
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        searchQuery={activeSearchQuery}
+        onSearchChange={handleSearchChange}
+        onFilter={handleFilter}
+        onClear={handleClear}
+        isFiltering={isLoading}
       />
 
       {/* Nutzer-Liste */}
       <UserList
         users={users}
+        isLoading={isLoading}
+        error={error}
         onActivate={(userId) => activateUser.mutate(userId)}
         onDeactivate={(userId) => deactivateUser.mutate(userId)}
         onSetTrial={handleSetTrial}
@@ -161,6 +140,8 @@ export const UserManagement = () => {
         onDelete={(userId) => deleteUser.mutate(userId)}
         onCancelSubscription={handleCancelSubscription}
         onShowDetails={handleShowDetails}
+        onRefresh={handleRefresh}
+        onSync={handleSync}
         isActivating={activateUser.isPending}
         isDeactivating={deactivateUser.isPending}
         isSettingTrial={setTrialPeriod.isPending}

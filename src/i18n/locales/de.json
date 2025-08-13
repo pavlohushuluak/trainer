@@ -1065,7 +1065,9 @@
     "search": {
       "title": "Benutzer suchen",
       "placeholder": "Nach E-Mail-Adresse suchen...",
-      "filter": "Filter"
+      "filter": "Filter",
+      "clear": "Löschen",
+      "activeFilter": "Aktiver Filter"
     },
     "userList": {
       "title": "Benutzer",
@@ -5220,7 +5222,7 @@
       "emailSetupTitle": "E-Mail-Setup korrigiert:",
       "emailSetupItems": {
         "domain": "• <strong>Domain korrigiert:</strong> Alle E-Mails verwenden jetzt tiertrainer24.com",
-        "magicLinks": "• <strong>Magic Links:</strong> Leiten korrekt zu tiertrainer24.com/dashboard weiter",
+        "magicLinks": "• <strong>Magic Links:</strong> Leiten korrekt zu tiertrainer24.com/mein-tiertraining weiter",
         "sender": "• <strong>E-Mail-Absender:</strong> TierTrainer &lt;noreply@tiertrainer24.com&gt;",
         "resend": "• <strong>Resend-Setup:</strong> Stellen Sie sicher, dass tiertrainer24.com in Resend verifiziert ist"
       },
@@ -5233,7 +5235,7 @@
       "supabaseTitle": "Supabase-Einstellungen überprüfen:",
       "supabaseItems": {
         "siteUrl": "• <strong>Site URL:</strong> https://tiertrainer24.com in Supabase → Authentication → Settings",
-        "redirectUrls": "• <strong>Redirect URLs:</strong> Fügen Sie https://tiertrainer24.com/dashboard hinzu",
+        "redirectUrls": "• <strong>Redirect URLs:</strong> Fügen Sie https://tiertrainer24.com/mein-tiertraining hinzu",
         "emailTemplates": "• <strong>E-Mail-Vorlagen:</strong> Überprüfen Sie alle Vorlagen auf korrekte Domain"
       }
     },
@@ -5254,18 +5256,18 @@
       },
       "toasts": {
         "testAccessSuccess": "✅ Testzugang erfolgreich",
-        "testAccessCreated": "Testzugang für {email} wurde erstellt. Willkommens-E-Mail wurde gesendet! 📧",
-        "testAccessUpdated": "Testzugang für {email} wurde aktiviert. Willkommens-E-Mail wurde gesendet! 📧",
+        "testAccessCreated": "Testzugang für {{email}} wurde erstellt. Willkommens-E-Mail wurde gesendet! 📧",
+        "testAccessUpdated": "Testzugang für {{email}} wurde aktiviert. Willkommens-E-Mail wurde gesendet! 📧",
         "testAccessError": "❌ Testzugang-Fehler",
         "testAccessErrorDescription": "Testzugang konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
         "magicLinkSent": "✉️ Magic Link gesendet",
-        "magicLinkDescription": "Ein Anmeldelink wurde an {email} gesendet!\n\n⏰ Der Link ist 60 Minuten gültig\n📧 Überprüfen Sie auch den Spam-Ordner  \n🔗 Eine zusätzliche E-Mail mit Anweisungen wurde gesendet",
+        "magicLinkDescription": "Ein Anmeldelink wurde an {{email}} gesendet!\n\n⏰ Der Link ist 60 Minuten gültig\n📧 Überprüfen Sie auch den Spam-Ordner  \n🔗 Eine zusätzliche E-Mail mit Anweisungen wurde gesendet",
         "magicLinkError": "❌ Magic Link-Fehler",
         "magicLinkGenericError": "Magic Link konnte nicht gesendet werden."
       },
       "adminNotes": {
-        "testAccessActivated": "Testzugang aktiviert am {date}",
-        "testAccessCreated": "Testzugang erstellt am {date}"
+        "testAccessActivated": "Testzugang aktiviert am {{date}}",
+        "testAccessCreated": "Testzugang erstellt am {{date}}"
       }
     }
   },

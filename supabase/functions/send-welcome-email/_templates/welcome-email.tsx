@@ -24,7 +24,7 @@ export const WelcomeEmail = ({
   userName,
   planName,
   trialEndDate,
-  dashboardUrl = "https://tiertrainer24.com/dashboard"
+  dashboardUrl = "https://tiertrainer24.com/mein-tiertraining"
 }: WelcomeEmailProps) => (
   <Html>
     <Head />

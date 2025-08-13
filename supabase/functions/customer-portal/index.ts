@@ -54,7 +54,7 @@ serve(async (req) => {
     
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: customerId,
-      return_url: `${origin}/dashboard`,
+      return_url: `${origin}/mein-tiertraining`,
       configuration: await getPortalConfiguration(stripe)
     });
     

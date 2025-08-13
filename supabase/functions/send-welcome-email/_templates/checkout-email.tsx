@@ -28,7 +28,7 @@ export const CheckoutEmail = ({
   amount,
   interval,
   trialEndDate,
-  dashboardUrl = "https://tiertrainer24.com/dashboard"
+  dashboardUrl = "https://tiertrainer24.com/mein-tiertraining"
 }: CheckoutEmailProps) => (
   <Html>
     <Head />

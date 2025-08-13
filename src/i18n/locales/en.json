@@ -1065,7 +1065,9 @@
     "search": {
       "title": "Search Users",
       "placeholder": "Search by email address...",
-      "filter": "Filter"
+      "filter": "Filter",
+      "clear": "Clear",
+      "activeFilter": "Active filter"
     },
     "userList": {
       "title": "Users",
@@ -5212,7 +5214,7 @@
       "emailSetupTitle": "Email setup corrected:",
       "emailSetupItems": {
         "domain": "• <strong>Domain corrected:</strong> All emails now use tiertrainer24.com",
-        "magicLinks": "• <strong>Magic Links:</strong> Correctly redirect to tiertrainer24.com/dashboard",
+        "magicLinks": "• <strong>Magic Links:</strong> Correctly redirect to tiertrainer24.com/mein-tiertraining",
         "sender": "• <strong>Email sender:</strong> TierTrainer &lt;noreply@tiertrainer24.com&gt;",
         "resend": "• <strong>Resend setup:</strong> Make sure tiertrainer24.com is verified in Resend"
       },
@@ -5225,7 +5227,7 @@
       "supabaseTitle": "Check Supabase settings:",
       "supabaseItems": {
         "siteUrl": "• <strong>Site URL:</strong> https://tiertrainer24.com in Supabase → Authentication → Settings",
-        "redirectUrls": "• <strong>Redirect URLs:</strong> Add https://tiertrainer24.com/dashboard",
+        "redirectUrls": "• <strong>Redirect URLs:</strong> Add https://tiertrainer24.com/mein-tiertraining",
         "emailTemplates": "• <strong>Email templates:</strong> Check all templates for correct domain"
       }
     },
@@ -5246,18 +5248,18 @@
       },
       "toasts": {
         "testAccessSuccess": "✅ Test access successful",
-        "testAccessCreated": "Test access for {email} was created. Welcome email was sent! 📧",
-        "testAccessUpdated": "Test access for {email} was activated. Welcome email was sent! 📧",
+        "testAccessCreated": "Test access for {{email}} was created. Welcome email was sent! 📧",
+        "testAccessUpdated": "Test access for {{email}} was activated. Welcome email was sent! 📧",
         "testAccessError": "❌ Test access error",
         "testAccessErrorDescription": "Test access could not be created. Please try again.",
         "magicLinkSent": "✉️ Magic Link sent",
-        "magicLinkDescription": "A login link was sent to {email}!\n\n⏰ The link is valid for 60 minutes\n📧 Also check the spam folder  \n🔗 An additional email with instructions was sent",
+        "magicLinkDescription": "A login link was sent to {{email}}!\n\n⏰ The link is valid for 60 minutes\n📧 Also check the spam folder  \n🔗 An additional email with instructions was sent",
         "magicLinkError": "❌ Magic Link error",
         "magicLinkGenericError": "Magic Link could not be sent."
       },
       "adminNotes": {
-        "testAccessActivated": "Test access activated on {date}",
-        "testAccessCreated": "Test access created on {date}"
+        "testAccessActivated": "Test access activated on {{date}}",
+        "testAccessCreated": "Test access created on {{date}}"
       }
     }
   },

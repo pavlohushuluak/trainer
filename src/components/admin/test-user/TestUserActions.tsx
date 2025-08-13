@@ -38,7 +38,7 @@ export const useTestUserActions = () => {
               subscription_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
               trial_used: false,
               is_manually_activated: true,
-              admin_notes: `${t('adminTestUser.actions.adminNotes.testAccessActivated')} ${new Date().toLocaleDateString()}`,
+              admin_notes: t('adminTestUser.actions.adminNotes.testAccessActivated', { date: new Date().toLocaleDateString() }),
               updated_at: new Date().toISOString()
             })
             .eq('email', testEmail);
@@ -63,7 +63,7 @@ export const useTestUserActions = () => {
               subscription_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
               trial_used: false,
               is_manually_activated: true,
-              admin_notes: `${t('adminTestUser.actions.adminNotes.testAccessCreated')} ${new Date().toLocaleDateString()}`,
+              admin_notes: t('adminTestUser.actions.adminNotes.testAccessCreated', { date: new Date().toLocaleDateString() }),
               country: 'DE'
             });
 

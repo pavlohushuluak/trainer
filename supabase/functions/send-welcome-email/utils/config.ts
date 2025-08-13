@@ -39,7 +39,7 @@ export const getEmailConfig = async (supabaseClient: any): Promise<EmailConfig> 
   return {
     testMode,
     allowedTestEmail: "owydwaldt12@gmail.com",
-    dashboardUrl: "https://tiertrainer24.com/dashboard"
+    dashboardUrl: "https://tiertrainer24.com/mein-tiertraining"
   };
 };
 

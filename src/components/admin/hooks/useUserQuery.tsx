@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { UserWithDetails } from '../types';
 
-export const useUserQuery = (searchQuery: string) => {
+export const useUserQuery = (searchQuery: string, shouldFetch: boolean = false) => {
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
 
@@ -166,7 +166,7 @@ export const useUserQuery = (searchQuery: string) => {
         throw error;
       }
     },
-    enabled: !!user && !authLoading, // Only run when user is authenticated and auth is not loading
+    enabled: !!user && !authLoading && shouldFetch, // Only run when user is authenticated, auth is not loading, and shouldFetch is true
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
     staleTime: 30000, // Cache for 30 seconds
