@@ -39,11 +39,15 @@ export const AmazonPayButton = ({ priceType, className = "" }: AmazonPayButtonPr
         return;
       }
 
+      // Get current language from localStorage or default to 'de'
+      const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+      
       const { data, error } = await supabase.functions.invoke('create-amazon-pay-checkout', {
         body: { 
           priceType,
           successUrl: `${window.location.origin}/mein-tiertraining?success=true&payment=amazon`,
-          cancelUrl: `${window.location.origin}/?canceled=true`
+          cancelUrl: `${window.location.origin}/?canceled=true`,
+          language: currentLanguage
         }
       });
 

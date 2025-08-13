@@ -113,11 +113,15 @@ export const useSubscriptionManager = () => {
     
     setCheckingOut(true);
     try {
+      // Get current language from localStorage or default to 'de'
+      const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+      
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
           priceType,
           successUrl: `${window.location.origin}/mein-tiertraining?success=true`,
           cancelUrl: `${window.location.origin}/?canceled=true`,
+          language: currentLanguage,
           customerInfo: {
             name: user?.user_metadata?.full_name || user?.email?.split('@')[0]
           }

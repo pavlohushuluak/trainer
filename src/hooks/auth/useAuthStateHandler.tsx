@@ -41,11 +41,15 @@ export const useAuthStateHandler = () => {
   const executeCheckoutRedirect = useCallback(async (priceType: string, userEmail: string) => {
 
     try {
+      // Get current language from localStorage or default to 'de'
+      const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+      
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
           priceType: priceType,
           successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
-          cancelUrl: `${window.location.origin}/?canceled=true`
+          cancelUrl: `${window.location.origin}/?canceled=true`,
+          language: currentLanguage
         }
       });
 

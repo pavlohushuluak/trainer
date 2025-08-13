@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { getPricingConfig } from "./utils/pricing.ts";
+import { getLocalizedPricingConfig } from "./utils/pricing.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"
@@ -45,31 +45,41 @@ async function getOrCreateCustomer(stripe, email, userId, customerInfo) {
   });
   return customer.id;
 }
-// Helper function to convert pricing config to Stripe format
-function convertPricingConfigToStripe(pricingConfig) {
-  const config = getPricingConfig(pricingConfig);
+// Helper function to convert pricing config to Stripe format with localization
+function convertPricingConfigToStripe(priceType, language = 'de') {
+  const config = getLocalizedPricingConfig(priceType, language);
   return {
     amount: config.amount,
     currency: "eur",
     interval: config.interval,
     name: config.name,
-    description: `${config.name} - ${config.minimumCommitment}`,
+    description: config.description,
     tierLimit: config.tierLimit
   };
 }
-// Create Stripe checkout session config with enhanced logging
-function createSessionConfig(customerId, priceConfig, priceType, userId, userEmail, successUrl, cancelUrl, origin) {
+// Create Stripe checkout session config with enhanced logging and multi-language support
+function createSessionConfig(customerId, priceConfig, priceType, userId, userEmail, successUrl, cancelUrl, origin, language = 'de') {
   console.log(priceType);
   const defaultOrigin = origin || "https://tiertrainer24.com";
-  const finalSuccessUrl = successUrl || `${defaultOrigin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`;
-  const finalCancelUrl = cancelUrl || `${defaultOrigin}/?canceled=true`;
+  
+  // Add language parameter to URLs
+  const langParam = language === 'en' ? '&lang=en' : '&lang=de';
+  const finalSuccessUrl = successUrl || `${defaultOrigin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}${langParam}`;
+  const finalCancelUrl = cancelUrl || `${defaultOrigin}/?canceled=true${langParam}`;
+  
+  // Map language to Stripe locale
+  const stripeLocale = language === 'en' ? 'en' : 'de';
+  
   logStep("Creating session config", {
     customerId,
     priceType,
     amount: priceConfig.amount,
+    language,
+    stripeLocale,
     successUrl: finalSuccessUrl,
     cancelUrl: finalCancelUrl
   });
+  
   const sessionConfig = {
     customer: customerId,
     payment_method_types: [
@@ -100,14 +110,16 @@ function createSessionConfig(customerId, priceConfig, priceType, userId, userEma
     metadata: {
       user_id: userId,
       user_email: userEmail,
-      price_type: priceType
+      price_type: priceType,
+      language: language
     },
-    locale: 'de',
+    locale: stripeLocale,
     billing_address_collection: 'required',
     phone_number_collection: {
       enabled: false
     }
   };
+  
   // No trial periods - direct payment only
   return sessionConfig;
 }
@@ -171,11 +183,19 @@ serve(async (req)=>{
       throw new Error("No user email available for checkout");
     }
     const requestBody = await req.json();
-    const { priceType = "monthly", successUrl, cancelUrl } = requestBody;
+    const { priceType = "monthly", successUrl, cancelUrl, language = 'de' } = requestBody;
+    
+    // Validate language parameter
+    const validLanguages = ['de', 'en'];
+    const finalLanguage = validLanguages.includes(language) ? language : 'de';
+    
     logStep("Request parsed", {
       priceType,
+      receivedLanguage: language,
+      finalLanguage: finalLanguage,
       successUrl,
-      cancelUrl
+      cancelUrl,
+      requestBody: JSON.stringify(requestBody)
     });
     const stripe = new Stripe(stripeKey, {
       apiVersion: "2023-10-16"
@@ -203,10 +223,20 @@ serve(async (req)=>{
         });
       }
     }
-    // Get pricing configuration - no trials
-    const selectedPrice = convertPricingConfigToStripe(priceType);
-    // Create checkout session
-    const sessionConfig = createSessionConfig(customerId, selectedPrice, priceType, userId, userEmail, successUrl || "", cancelUrl || "", req.headers.get("origin") || "");
+    // Get pricing configuration with localization
+    const selectedPrice = convertPricingConfigToStripe(priceType, finalLanguage);
+    // Create checkout session with language support
+    const sessionConfig = createSessionConfig(
+      customerId, 
+      selectedPrice, 
+      priceType, 
+      userId, 
+      userEmail, 
+      successUrl || "", 
+      cancelUrl || "", 
+      req.headers.get("origin") || "", 
+      finalLanguage
+    );
     // Add tier limit to metadata
     sessionConfig.metadata = {
       ...sessionConfig.metadata,
@@ -214,9 +244,11 @@ serve(async (req)=>{
     };
     logStep("Creating Stripe checkout session", {
       customerId,
+      language: finalLanguage,
       sessionConfig: {
         mode: sessionConfig.mode,
-        expiresAt: sessionConfig.expires_at
+        expiresAt: sessionConfig.expires_at,
+        locale: sessionConfig.locale
       }
     });
     const session = await stripe.checkout.sessions.create(sessionConfig);
@@ -225,7 +257,8 @@ serve(async (req)=>{
       url: session.url,
       mode: session.mode,
       status: session.status,
-      expiresAt: session.expires_at
+      expiresAt: session.expires_at,
+      locale: session.locale
     });
     // Validate session URL
     if (!session.url) {
@@ -236,7 +269,8 @@ serve(async (req)=>{
     }
     return new Response(JSON.stringify({
       url: session.url,
-      sessionId: session.id
+      sessionId: session.id,
+      language: finalLanguage
     }), {
       headers: {
         ...corsHeaders,

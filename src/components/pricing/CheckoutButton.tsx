@@ -76,13 +76,15 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
   };
 
   const executeDirectStripeCheckout = async () => {
-
-    
     try {
+      // Get current language from localStorage or default to 'de'
+      const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+      
       const requestBody = { 
         priceType,
         successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
-        cancelUrl: `${window.location.origin}/?canceled=true`
+        cancelUrl: `${window.location.origin}/?canceled=true`,
+        language: currentLanguage
       };
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {

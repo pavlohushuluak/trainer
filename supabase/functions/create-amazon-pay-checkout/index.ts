@@ -46,9 +46,16 @@ serve(async (req) => {
     logStep("User authenticated", { userId: user.id, email: user.email });
 
     const requestBody = await req.json();
-    const { priceType = "plan1-monthly", successUrl, cancelUrl } = requestBody;
+    const { priceType = "plan1-monthly", successUrl, cancelUrl, language = 'de' } = requestBody;
+    
+    // Validate language parameter
+    const validLanguages = ['de', 'en'];
+    const finalLanguage = validLanguages.includes(language) ? language : 'de';
+    
+    // Map language to Amazon Pay checkout language
+    const amazonPayLanguage = finalLanguage === 'en' ? 'en_US' : 'de_DE';
 
-    logStep("Request parsed", { priceType, successUrl, cancelUrl });
+    logStep("Request parsed", { priceType, language: finalLanguage, successUrl, cancelUrl });
 
     // Amazon Pay integration would go here
     // For now, we'll simulate the Amazon Pay button generation
@@ -56,7 +63,7 @@ serve(async (req) => {
       merchantId: Deno.env.get("AMAZON_PAY_MERCHANT_ID"),
       publicKeyId: Deno.env.get("AMAZON_PAY_PUBLIC_KEY_ID"),
       ledgerCurrency: "EUR",
-      checkoutLanguage: "de_DE",
+      checkoutLanguage: amazonPayLanguage,
       productType: "PayAndShip",
       placement: "Checkout",
       buttonColor: "Gold"
@@ -82,14 +89,21 @@ serve(async (req) => {
       logStep("Subscriber pre-creation error", { error: subscriberError });
     }
 
+    // Add language parameter to URLs
+    const langParam = finalLanguage === 'en' ? '&lang=en' : '&lang=de';
+    const defaultOrigin = req.headers.get("origin") || "https://tiertrainer24.com";
+    const finalSuccessUrl = successUrl || `${defaultOrigin}/mein-tiertraining?success=true&payment=amazon${langParam}`;
+    const finalCancelUrl = cancelUrl || `${defaultOrigin}/?canceled=true${langParam}`;
+
     // Return Amazon Pay configuration
     return new Response(JSON.stringify({
       paymentMethod: "amazon_pay",
       sessionId: amazonPaySessionId,
       buttonConfig: amazonPayButtonConfig,
       priceType,
-      successUrl: successUrl || `${req.headers.get("origin")}/mein-tiertraining?success=true&payment=amazon`,
-      cancelUrl: cancelUrl || `${req.headers.get("origin")}/?canceled=true`
+      language: finalLanguage,
+      successUrl: finalSuccessUrl,
+      cancelUrl: finalCancelUrl
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200
