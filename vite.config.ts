@@ -55,9 +55,9 @@ export default defineConfig(({ mode }) => ({
     sourcemap: mode === 'development'
   },
   // Configure dev server headers for caching during development
-  preview: {
-    headers: {
-      'Cache-Control': 'public, max-age=31536000, immutable', // 1 year cache for static assets
-    }
-  }
+  // preview: {
+  //   headers: {
+  //     'Cache-Control': 'public, max-age=31536000, immutable', // 1 year cache for static assets
+  //   }
+  // }
 }));
