@@ -79,20 +79,20 @@ const Community = () => {
 
         {/* Filters */}
         <div className="px-4 sm:px-0">
-          <CommunityFilters 
-            selectedCategory={selectedCategory}
-            onCategoryChange={handleCategoryChange}
-            selectedPostType={selectedPostType}
-            onPostTypeChange={handlePostTypeChange}
-          />
+        <CommunityFilters 
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
+          selectedPostType={selectedPostType}
+          onPostTypeChange={handlePostTypeChange}
+        />
         </div>
 
         {/* Community Feed */}
         <div className="px-4 sm:px-0">
-          <CommunityFeed 
-            selectedCategory={selectedCategory}
-            selectedPostType={selectedPostType}
-          />
+        <CommunityFeed 
+          selectedCategory={selectedCategory}
+          selectedPostType={selectedPostType}
+        />
         </div>
 
         {/* Create Post Modal */}

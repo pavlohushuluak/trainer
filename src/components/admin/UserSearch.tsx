@@ -69,10 +69,10 @@ export const UserSearch = ({
               disabled={isFiltering}
               className="w-full sm:w-auto"
             >
-              <Filter className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">{t('adminUsers.search.filter')}</span>
-              <span className="sm:hidden">{t('adminUsers.search.filter')}</span>
-            </Button>
+            <Filter className="h-4 w-4 mr-2" />
+            <span className="hidden sm:inline">{t('adminUsers.search.filter')}</span>
+            <span className="sm:hidden">{t('adminUsers.search.filter')}</span>
+          </Button>
             {(searchQuery || inputValue) && (
               <Button 
                 onClick={handleClear}
