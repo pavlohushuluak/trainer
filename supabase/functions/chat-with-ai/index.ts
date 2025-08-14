@@ -260,17 +260,43 @@ serve(async (req) => {
         if (planData) {
           try {
             await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
-            aiResponse = removePlanCreationFromResponse(aiResponse, planData.title);
+            aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage);
           } catch (planError) {
             console.error('❌ Error creating plan from AI response:', planError);
             // Clean up any failed plan creation blocks and provide user-friendly feedback
-            aiResponse = cleanupFailedPlanCreation(aiResponse);
-            aiResponse += "\n\n💭 Beim Erstellen des Trainingsplans gab es ein Problem, aber ich kann dir trotzdem gerne dabei helfen! Lass uns das Schritt für Schritt angehen.";
+            aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
+            
+            // Language-specific error messages
+            const errorMessages = {
+              de: "\n\n💭 Beim Erstellen des Trainingsplans gab es ein Problem, aber ich kann dir trotzdem gerne dabei helfen! Lass uns das Schritt für Schritt angehen.",
+              en: "\n\n💭 There was a problem creating the training plan, but I can still help you! Let's work on this step by step."
+            };
+            aiResponse += errorMessages[userLanguage as keyof typeof errorMessages] || errorMessages.de;
           }
         } else {
           // Check if there were any incomplete plan creation attempts and clean them up
           if (aiResponse.includes('[PLAN_CREATION]')) {
-            aiResponse = cleanupFailedPlanCreation(aiResponse);
+            aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
+          }
+          
+          // Check if AI mentioned creating a plan but didn't use proper format
+          if (aiResponse.toLowerCase().includes('training plan') || 
+              aiResponse.toLowerCase().includes('trainingsplan') ||
+              aiResponse.toLowerCase().includes('plan for') ||
+              aiResponse.toLowerCase().includes('plan für')) {
+            
+            console.log('⚠️ AI mentioned plan creation but didn\'t use proper format');
+            
+            // Add a gentle reminder to use proper format
+            const reminderMessages = {
+              de: "\n\n💡 Tipp: Ich kann dir auch einen strukturierten Trainingsplan erstellen, den du in deinem Dashboard findest. Sag mir einfach, woran du arbeiten möchtest!",
+              en: "\n\n💡 Tip: I can also create a structured training plan for you that you'll find in your dashboard. Just tell me what you'd like to work on!"
+            };
+            
+            // Only add reminder if it's not already there
+            if (!aiResponse.includes('strukturierten Trainingsplan') && !aiResponse.includes('structured training plan')) {
+              aiResponse += reminderMessages[userLanguage as keyof typeof reminderMessages] || reminderMessages.de;
+            }
           }
         }
         

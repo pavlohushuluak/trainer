@@ -122,6 +122,18 @@
           "title": "Forwarded to team",
           "description": "Our support team is now taking over for you."
         }
+      },
+      "planCreation": {
+        "success": {
+          "title": "Training Plan Created!",
+          "description": "I've created a structured training plan for you. You can find it in your dashboard under 'Training Plans' where you can track your progress daily and earn points!",
+          "followUp": "Do you have any questions about the plan or need additional tips?"
+        },
+        "error": {
+          "title": "Plan Creation Issue",
+          "description": "There was a problem creating the training plan, but I can still help you! Let's work on this step by step."
+        },
+        "retry": "Sorry, there was a small problem creating the training plan. Let me try again for you - could you briefly tell me what you'd like to work on?"
       }
     },
     "chatInput": {

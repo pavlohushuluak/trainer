@@ -242,7 +242,7 @@ export const useChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
 
     // Instant optimistic updates
     const userMessageId = addOptimisticMessage(userMessage, 'user');
-    const aiMessageId = addOptimisticMessage(`💭 ${t('support.chat.thinking')}`, 'assistant');
+    const aiMessageId = addOptimisticMessage(`💭 ${t('chat.thinking')}`, 'assistant');
 
     try {
       // Debug: Log the language being sent

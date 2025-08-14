@@ -122,6 +122,18 @@
           "title": "An Team weitergeleitet",
           "description": "Unser Support-Team übernimmt jetzt für dich."
         }
+      },
+      "planCreation": {
+        "success": {
+          "title": "Trainingsplan erstellt!",
+          "description": "Ich habe einen strukturierten Trainingsplan für euch erstellt. Du findest ihn in deinem Dashboard unter 'Trainingspläne', wo du täglich eure Fortschritte abhaken und Punkte sammeln kannst!",
+          "followUp": "Hast du noch Fragen zum Plan oder brauchst du zusätzliche Tipps?"
+        },
+        "error": {
+          "title": "Problem bei der Planerstellung",
+          "description": "Beim Erstellen des Trainingsplans gab es ein Problem, aber ich kann dir trotzdem gerne dabei helfen! Lass uns das Schritt für Schritt angehen."
+        },
+        "retry": "Entschuldige, beim Erstellen des Trainingsplans gab es ein kleines Problem. Lass mich das nochmal für dich versuchen - magst du mir kurz sagen, woran ihr arbeiten möchtet?"
       }
     },
     "chatInput": {
