@@ -321,7 +321,42 @@
     "numberRequired": "At least one number (0-9)",
     "specialRequired": "At least one special character (!@#$%^&*)",
     "passwordPlaceholder": "Enter password",
-    "emailPlaceholder": "your@email.com"
+    "emailPlaceholder": "your@email.com",
+    "emailRequired": "Email address is required",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least {{min}} characters",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordMismatch": "Passwords do not match",
+    "firstNameRequired": "First name is required",
+    "firstNameMinLength": "First name must be at least 2 characters",
+    "lastNameRequired": "Last name is required",
+    "lastNameMinLength": "Last name must be at least 2 characters",
+    "termsRequired": "You must agree to the terms and conditions",
+    "secretStrength": "Secret strength",
+    "strengthTip": {
+      "weak": "💡 Tip: Stronger passwords are more secure",
+      "good": "👍 Good password",
+      "excellent": "🔒 Excellent security"
+    },
+    "passwordTips": {
+      "title": "🔐 Password Security Tips",
+      "length": "Use at least 12 characters for better security",
+      "mix": "Mix uppercase, lowercase, numbers, and symbols",
+      "avoid": "Avoid common words, names, or patterns",
+      "unique": "Use a unique password for each account",
+      "showAdvanced": "Show advanced tips",
+      "hideAdvanced": "Hide advanced tips",
+      "advancedTitle": "🔒 Advanced Security Tips",
+      "passphrase": "Use a memorable passphrase (e.g., 'MyDogLovesBeach2024!')",
+      "substitution": "Replace letters with numbers/symbols (e.g., 'P@ssw0rd')",
+      "random": "Use a password generator for maximum security",
+      "manager": "Consider using a password manager for convenience"
+    },
+    "passwordSuccess": {
+      "title": "🎉 Excellent Password!",
+      "description": "Your password meets all security requirements. Keep it safe and unique!"
+    }
   },
   "dashboard": {
     "notAuthenticated": "Not authenticated",

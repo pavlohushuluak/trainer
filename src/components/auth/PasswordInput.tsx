@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Eye, EyeOff, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslations } from '@/hooks/useTranslations';
 
@@ -47,6 +47,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
 }) => {
   const { t } = useTranslations();
   const [showPassword, setShowPassword] = useState(false);
+  const [showAdvancedTips, setShowAdvancedTips] = useState(false);
   
   const defaultPlaceholder = t('validation.passwordPlaceholder');
 
@@ -112,13 +113,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
     };
   }, [value, minLength]);
 
-  const getRequirementIcon = (met: boolean) => {
-    return met ? (
-      <CheckCircle className="h-3 w-3 text-green-500" />
-    ) : (
-      <XCircle className="h-3 w-3 text-red-400" />
-    );
-  };
+
 
   return (
     <div className={cn("space-y-2", className)}>
@@ -164,63 +159,86 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
       )}
 
       {showStrength && value && (
-                  <div className="space-y-3">
-            {/* Strength Bar */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">{t('validation.passwordStrength')}</span>
-                <span className={cn("font-medium", passwordStrength.color)}>
-                  {passwordStrength.label}
-                </span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div
-                  className={cn(
-                    "h-2 rounded-full transition-all duration-300",
-                    passwordStrength.bgColor
-                  )}
-                  style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
-                />
-              </div>
+        <div className="space-y-2">
+          {/* Secret Strength Indicator */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-muted-foreground/30"></div>
+              <span className="text-xs text-muted-foreground/70">{t('validation.secretStrength')}</span>
             </div>
-
-            {/* Requirements */}
-            <div className="space-y-1">
-              <p className="text-xs text-muted-foreground font-medium">{t('validation.requirements')}</p>
-              <div className="grid grid-cols-1 gap-1 text-xs">
-                <div className="flex items-center gap-2">
-                  {getRequirementIcon(passwordStrength.requirements.minLength)}
-                  <span className={passwordStrength.requirements.minLength ? "text-foreground" : "text-muted-foreground"}>
-                    {t('validation.minCharacters', { min: minLength })}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {getRequirementIcon(passwordStrength.requirements.hasUppercase)}
-                  <span className={passwordStrength.requirements.hasUppercase ? "text-foreground" : "text-muted-foreground"}>
-                    {t('validation.uppercaseRequired')}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {getRequirementIcon(passwordStrength.requirements.hasLowercase)}
-                  <span className={passwordStrength.requirements.hasLowercase ? "text-foreground" : "text-muted-foreground"}>
-                    {t('validation.lowercaseRequired')}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {getRequirementIcon(passwordStrength.requirements.hasNumber)}
-                  <span className={passwordStrength.requirements.hasNumber ? "text-foreground" : "text-muted-foreground"}>
-                    {t('validation.numberRequired')}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {getRequirementIcon(passwordStrength.requirements.hasSpecial)}
-                  <span className={passwordStrength.requirements.hasSpecial ? "text-foreground" : "text-muted-foreground"}>
-                    {t('validation.specialRequired')}
-                  </span>
-                </div>
-              </div>
+            <div className="flex items-center gap-1">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "w-1.5 h-1.5 rounded-full transition-all duration-300",
+                    i < passwordStrength.score 
+                      ? passwordStrength.color.replace('text-', 'bg-').replace('-500', '-400')
+                      : "bg-muted-foreground/20"
+                  )}
+                />
+              ))}
             </div>
           </div>
+          
+          {/* Subtle strength hint */}
+          <div className="text-xs text-muted-foreground/50 italic">
+            {passwordStrength.score <= 2 && t('validation.strengthTip.weak')}
+            {passwordStrength.score === 3 && t('validation.strengthTip.good')}
+            {passwordStrength.score >= 4 && t('validation.strengthTip.excellent')}
+          </div>
+          
+          {/* Success message for strong passwords */}
+          {passwordStrength.score >= 4 && (
+            <div className="mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800">
+              <div className="text-xs text-green-700 dark:text-green-300 font-medium">
+                {t('validation.passwordSuccess.title')}
+              </div>
+              <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                {t('validation.passwordSuccess.description')}
+              </div>
+            </div>
+          )}
+          
+          {/* Professional password tips */}
+          {passwordStrength.score <= 3 && (
+            <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-md border border-blue-200 dark:border-blue-800">
+              <div className="text-xs text-blue-700 dark:text-blue-300 font-medium mb-1">
+                {t('validation.passwordTips.title')}
+              </div>
+              <ul className="text-xs text-blue-600 dark:text-blue-400 space-y-0.5">
+                <li>• {t('validation.passwordTips.length')}</li>
+                <li>• {t('validation.passwordTips.mix')}</li>
+                <li>• {t('validation.passwordTips.avoid')}</li>
+                <li>• {t('validation.passwordTips.unique')}</li>
+              </ul>
+              
+              {/* Advanced tips toggle */}
+              <button
+                type="button"
+                onClick={() => setShowAdvancedTips(!showAdvancedTips)}
+                className="mt-2 text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 underline"
+              >
+                {showAdvancedTips ? t('validation.passwordTips.hideAdvanced') : t('validation.passwordTips.showAdvanced')}
+              </button>
+              
+              {/* Advanced tips */}
+              {showAdvancedTips && (
+                <div className="mt-2 pt-2 border-t border-blue-200 dark:border-blue-700">
+                  <div className="text-xs text-blue-700 dark:text-blue-300 font-medium mb-1">
+                    {t('validation.passwordTips.advancedTitle')}
+                  </div>
+                  <ul className="text-xs text-blue-600 dark:text-blue-400 space-y-0.5">
+                    <li>• {t('validation.passwordTips.passphrase')}</li>
+                    <li>• {t('validation.passwordTips.substitution')}</li>
+                    <li>• {t('validation.passwordTips.random')}</li>
+                    <li>• {t('validation.passwordTips.manager')}</li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

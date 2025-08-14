@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
-import { Loader2, ArrowLeft, Shield, Lock, User, Mail, Sparkles, Home, HelpCircle } from 'lucide-react';
+import { Loader2, ArrowLeft, Shield, Lock, User, Mail, Sparkles, Home, HelpCircle, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { OAuthButton } from '@/components/auth/OAuthButton';
 import { PasswordInput } from '@/components/auth/PasswordInput';
@@ -62,21 +62,72 @@ const LoginPage = () => {
     return Object.values(requirements).every(Boolean);
   }, [password]);
 
-  // Form validation
-  const isSignUpValid = useMemo(() => {
-    return email && 
-           password && 
-           confirmPassword && 
-           password === confirmPassword && 
-           isPasswordStrong &&
-           firstName.trim() && 
-           lastName.trim() &&
-           termsAgreed;
-  }, [email, password, confirmPassword, isPasswordStrong, firstName, lastName, termsAgreed]);
+  // Form validation with detailed error tracking
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+    firstName?: string;
+    lastName?: string;
+    terms?: string;
+  }>({});
 
-  const isSignInValid = useMemo(() => {
-    return email && password && termsAgreed;
-  }, [email, password, termsAgreed]);
+  const validateField = (field: string, value: string, additionalData?: any) => {
+    switch (field) {
+      case 'email':
+        if (!value) return t('validation.emailRequired');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t('validation.emailInvalid');
+        return '';
+      case 'password':
+        if (!value) return t('validation.passwordRequired');
+        if (value.length < 8) return t('validation.passwordMinLength', { min: 8 });
+        return '';
+      case 'confirmPassword':
+        if (!value) return t('validation.confirmPasswordRequired');
+        if (value !== password) return t('validation.passwordMismatch');
+        return '';
+      case 'firstName':
+        if (!value.trim()) return t('validation.firstNameRequired');
+        if (value.trim().length < 2) return t('validation.firstNameMinLength');
+        return '';
+      case 'lastName':
+        if (!value.trim()) return t('validation.lastNameRequired');
+        if (value.trim().length < 2) return t('validation.lastNameMinLength');
+        return '';
+      case 'terms':
+        if (!termsAgreed) return t('validation.termsRequired');
+        return '';
+      default:
+        return '';
+    }
+  };
+
+  const validateAllFields = () => {
+    const errors: any = {};
+    
+    if (activeTab === 'signin') {
+      errors.email = validateField('email', email);
+      errors.password = validateField('password', password);
+      errors.terms = validateField('terms', '');
+    } else {
+      errors.firstName = validateField('firstName', firstName);
+      errors.lastName = validateField('lastName', lastName);
+      errors.email = validateField('email', email);
+      errors.password = validateField('password', password);
+      errors.confirmPassword = validateField('confirmPassword', confirmPassword);
+      errors.terms = validateField('terms', '');
+    }
+    
+    setFieldErrors(errors);
+    return Object.values(errors).every(error => !error);
+  };
+
+  const handleFieldChange = (field: string, value: string) => {
+    // Clear error when user starts typing
+    if (fieldErrors[field as keyof typeof fieldErrors]) {
+      setFieldErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
 
   const language = getCurrentLanguage();
 
@@ -93,7 +144,11 @@ const LoginPage = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isSignInValid) return;
+    
+    // Validate all fields and show errors
+    if (!validateAllFields()) {
+      return;
+    }
 
     setTimeout(async () => {
       await upsertLanguageSupport(email, language);
@@ -119,7 +174,11 @@ const LoginPage = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isSignUpValid) return;
+    
+    // Validate all fields and show errors
+    if (!validateAllFields()) {
+      return;
+    }
 
     console.log(language);
     await upsertLanguageSupport(email, language);
@@ -171,7 +230,13 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-indigo-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-blue-300/10 to-purple-300/10 rounded-full blur-3xl"></div>
+      </div>
 
       {/* Auth Error Display */}
       <AuthErrorDisplay />
@@ -181,15 +246,15 @@ const LoginPage = () => {
         <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg space-y-3 sm:space-y-4 lg:space-y-6">
 
         {/* Main Card */}
-        <Card className="border-0 shadow-2xl bg-card/80 backdrop-blur-sm">
+        <Card className="border-0 shadow-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border border-white/20 dark:border-gray-700/50">
           <CardHeader className="text-center pb-3 sm:pb-4 lg:pb-6 px-4 sm:px-6">
-            <div className="mx-auto w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center mb-3 sm:mb-4">
-              <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
+            <div className="mx-auto w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-full flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+              <Shield className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
             </div>
-            <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">
+            <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 dark:from-white dark:via-blue-100 dark:to-purple-100 bg-clip-text text-transparent">
               {t('auth.welcome')}
             </CardTitle>
-            <CardDescription className="text-muted-foreground mt-2 text-xs sm:text-sm">
+            <CardDescription className="text-gray-600 dark:text-gray-300 mt-2 text-sm sm:text-base">
               {t('auth.secureLogin')}
             </CardDescription>
           </CardHeader>
@@ -235,43 +300,55 @@ const LoginPage = () => {
             {/* Traditional Login */}
             <div className="space-y-2 sm:space-y-3 lg:space-y-4">
               <Tabs value={activeTab} onValueChange={(value) => { setActiveTab(value); clearForm(); }} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg text-xs sm:text-sm">
+                <TabsList className="grid w-full grid-cols-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl text-xs sm:text-sm shadow-inner">
                   <TabsTrigger 
                     value="signin" 
-                    className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground py-2 sm:py-1.5"
+                    className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-lg data-[state=active]:text-gray-900 dark:data-[state=active]:text-white data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-400 py-2 sm:py-1.5 rounded-lg transition-all duration-200"
                   >
                     <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                     <span className="hidden xs:inline">{t('auth.login')}</span>
-                    <span className="xs:hidden">Login</span>
+                    <span className="xs:hidden">{t('auth.login')}</span>
                   </TabsTrigger>
                   <TabsTrigger 
                     value="signup"
-                    className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground py-2 sm:py-1.5"
+                    className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-lg data-[state=active]:text-gray-900 dark:data-[state=active]:text-white data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-400 py-2 sm:py-1.5 rounded-lg transition-all duration-200"
                   >
                     <Lock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                     <span className="hidden xs:inline">{t('auth.register')}</span>
-                    <span className="xs:hidden">Sign Up</span>
+                    <span className="xs:hidden">{t('auth.register')}</span>
                   </TabsTrigger>
                 </TabsList>
                 
                 {/* Sign In Tab */}
                 <TabsContent value="signin" className="space-y-2 sm:space-y-3 lg:space-y-4 mt-3 sm:mt-4 lg:mt-6">
                   <form onSubmit={handleSignIn} className="space-y-2 sm:space-y-3 lg:space-y-4">
-                    <EmailInput
-                      id="signin-email"
-                      label={t('auth.email')}
-                      value={email}
-                      onChange={setEmail}
-                      required
-                    />
+                    <div className="space-y-1">
+                      <EmailInput
+                        id="signin-email"
+                        label={t('auth.email')}
+                        value={email}
+                        onChange={(value) => {
+                          setEmail(value);
+                          handleFieldChange('email', value);
+                        }}
+                        required
+                        error={fieldErrors.email}
+                      />
+                    </div>
                     
-                    <PasswordInput
-                      id="signin-password"
-                      label={t('auth.password')}
-                      value={password}
-                      onChange={setPassword}
-                      required
-                    />
+                    <div className="space-y-1">
+                      <PasswordInput
+                        id="signin-password"
+                        label={t('auth.password')}
+                        value={password}
+                        onChange={(value) => {
+                          setPassword(value);
+                          handleFieldChange('password', value);
+                        }}
+                        required
+                        error={fieldErrors.password}
+                      />
+                    </div>
                     
                     <div className="text-right">
                       <Link 
@@ -283,11 +360,18 @@ const LoginPage = () => {
                     </div>
                     
                     {/* Terms Agreement Checkbox */}
-                    <div className="flex items-start space-x-2 p-3 bg-muted/30 rounded-lg border border-border/50">
+                    <div className={`flex items-start space-x-2 p-3 rounded-lg border transition-colors ${
+                      fieldErrors.terms 
+                        ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800' 
+                        : 'bg-muted/30 border-border/50'
+                    }`}>
                       <Checkbox
                         id="terms-agreement-signin"
                         checked={termsAgreed}
-                        onCheckedChange={(checked) => setTermsAgreed(checked as boolean)}
+                        onCheckedChange={(checked) => {
+                          setTermsAgreed(checked as boolean);
+                          if (checked) handleFieldChange('terms', '');
+                        }}
                         className="mt-0.5"
                       />
                       <label htmlFor="terms-agreement-signin" className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -310,11 +394,17 @@ const LoginPage = () => {
                         .
                       </label>
                     </div>
+                    {fieldErrors.terms && (
+                      <div className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
+                        {fieldErrors.terms}
+                      </div>
+                    )}
                     
                     <Button 
                       type="submit" 
                       className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-xs sm:text-sm lg:text-base py-2 sm:py-2.5" 
-                      disabled={loading || !isSignInValid}
+                      disabled={loading}
                     >
                       {loading ? (
                         <>
@@ -347,9 +437,22 @@ const LoginPage = () => {
                           type="text"
                           placeholder={t('auth.firstNamePlaceholder')}
                           value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                          className="bg-background border-border focus:border-primary focus:ring-primary text-xs sm:text-sm py-2 sm:py-2.5"
+                          onChange={(e) => {
+                            setFirstName(e.target.value);
+                            handleFieldChange('firstName', e.target.value);
+                          }}
+                          className={`bg-background focus:border-primary focus:ring-primary text-xs sm:text-sm py-2 sm:py-2.5 ${
+                            fieldErrors.firstName 
+                              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                              : 'border-border'
+                          }`}
                         />
+                        {fieldErrors.firstName && (
+                          <div className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
+                            <AlertCircle className="h-3 w-3" />
+                            {fieldErrors.firstName}
+                          </div>
+                        )}
                       </div>
                       <div className="space-y-1 sm:space-y-2">
                         <Label htmlFor="lastName" className="text-xs sm:text-sm font-medium">
@@ -360,44 +463,82 @@ const LoginPage = () => {
                           type="text"
                           placeholder={t('auth.lastNamePlaceholder')}
                           value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                          className="bg-background border-border focus:border-primary focus:ring-primary text-xs sm:text-sm py-2 sm:py-2.5"
+                          onChange={(e) => {
+                            setLastName(e.target.value);
+                            handleFieldChange('lastName', e.target.value);
+                          }}
+                          className={`bg-background focus:border-primary focus:ring-primary text-xs sm:text-sm py-2 sm:py-2.5 ${
+                            fieldErrors.lastName 
+                              ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                              : 'border-border'
+                          }`}
                         />
+                        {fieldErrors.lastName && (
+                          <div className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
+                            <AlertCircle className="h-3 w-3" />
+                            {fieldErrors.lastName}
+                          </div>
+                        )}
                       </div>
                     </div>
                     
-                    <EmailInput
-                      id="signup-email"
-                      label={t('auth.email')}
-                      value={email}
-                      onChange={setEmail}
-                      required
-                    />
+                    <div className="space-y-1">
+                      <EmailInput
+                        id="signup-email"
+                        label={t('auth.email')}
+                        value={email}
+                        onChange={(value) => {
+                          setEmail(value);
+                          handleFieldChange('email', value);
+                        }}
+                        required
+                        error={fieldErrors.email}
+                      />
+                    </div>
                     
-                    <PasswordInput
-                      id="signup-password"
-                      label={t('auth.password')}
-                      value={password}
-                      onChange={setPassword}
-                      required
-                      minLength={8}
-                      showStrength={true}
-                    />
+                    <div className="space-y-1">
+                      <PasswordInput
+                        id="signup-password"
+                        label={t('auth.password')}
+                        value={password}
+                        onChange={(value) => {
+                          setPassword(value);
+                          handleFieldChange('password', value);
+                        }}
+                        required
+                        minLength={8}
+                        showStrength={true}
+                        error={fieldErrors.password}
+                      />
+                    </div>
                     
-                    <ConfirmPasswordInput
-                      id="confirm-password"
-                      value={confirmPassword}
-                      password={password}
-                      onChange={setConfirmPassword}
-                      required
-                    />
+                    <div className="space-y-1">
+                      <ConfirmPasswordInput
+                        id="confirm-password"
+                        value={confirmPassword}
+                        password={password}
+                        onChange={(value) => {
+                          setConfirmPassword(value);
+                          handleFieldChange('confirmPassword', value);
+                        }}
+                        required
+                        error={fieldErrors.confirmPassword}
+                      />
+                    </div>
                     
                     {/* Terms Agreement Checkbox */}
-                    <div className="flex items-start space-x-2 p-3 bg-muted/30 rounded-lg border border-border/50">
+                    <div className={`flex items-start space-x-2 p-3 rounded-lg border transition-colors ${
+                      fieldErrors.terms 
+                        ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800' 
+                        : 'bg-muted/30 border-border/50'
+                    }`}>
                       <Checkbox
                         id="terms-agreement-signup"
                         checked={termsAgreed}
-                        onCheckedChange={(checked) => setTermsAgreed(checked as boolean)}
+                        onCheckedChange={(checked) => {
+                          setTermsAgreed(checked as boolean);
+                          if (checked) handleFieldChange('terms', '');
+                        }}
                         className="mt-0.5"
                       />
                       <label htmlFor="terms-agreement-signup" className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -419,11 +560,17 @@ const LoginPage = () => {
                         </button>
                       </label>
                     </div>
+                    {fieldErrors.terms && (
+                      <div className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
+                        {fieldErrors.terms}
+                      </div>
+                    )}
                     
                     <Button 
                       type="submit" 
                       className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 text-xs sm:text-sm lg:text-base py-2 sm:py-2.5" 
-                      disabled={loading || !isSignUpValid}
+                      disabled={loading}
                     >
                       {loading ? (
                         <>

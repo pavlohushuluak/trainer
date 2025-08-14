@@ -14,6 +14,7 @@ interface ConfirmPasswordInputProps {
   onChange: (value: string) => void;
   required?: boolean;
   className?: string;
+  error?: string;
 }
 
 export const ConfirmPasswordInput: React.FC<ConfirmPasswordInputProps> = ({
@@ -23,7 +24,8 @@ export const ConfirmPasswordInput: React.FC<ConfirmPasswordInputProps> = ({
   password,
   onChange,
   required = false,
-  className
+  className,
+  error
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslations();
@@ -69,8 +71,8 @@ export const ConfirmPasswordInput: React.FC<ConfirmPasswordInputProps> = ({
           required={required}
           className={cn(
             "pr-10",
-            value && !validation.isValid && "border-red-500 focus:border-red-500 focus:ring-red-500",
-            value && validation.isValid && "border-green-500 focus:border-green-500 focus:ring-green-500"
+            (error || (value && !validation.isValid)) && "border-red-500 focus:border-red-500 focus:ring-red-500",
+            value && validation.isValid && !error && "border-green-500 focus:border-green-500 focus:ring-green-500"
           )}
         />
         <Button
@@ -88,7 +90,14 @@ export const ConfirmPasswordInput: React.FC<ConfirmPasswordInputProps> = ({
         </Button>
       </div>
 
-      {value && (
+      {error && (
+        <div className="flex items-center gap-2 text-sm text-red-500 dark:text-red-400">
+          <AlertCircle className="h-4 w-4" />
+          <span>{error}</span>
+        </div>
+      )}
+      
+      {value && !error && (
         <div className={cn(
           "flex items-center gap-2 text-sm",
           validation.isValid ? "text-green-600 dark:text-green-400" : "text-red-500 dark:text-red-400"

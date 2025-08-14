@@ -321,7 +321,42 @@
     "numberRequired": "Mindestens eine Zahl (0-9)",
     "specialRequired": "Mindestens ein Sonderzeichen (!@#$%^&*)",
     "passwordPlaceholder": "Passwort eingeben",
-    "emailPlaceholder": "ihre@email.com"
+    "emailPlaceholder": "ihre@email.com",
+    "emailRequired": "E-Mail-Adresse ist erforderlich",
+    "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "passwordRequired": "Passwort ist erforderlich",
+    "passwordMinLength": "Passwort muss mindestens {{min}} Zeichen lang sein",
+    "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort",
+    "passwordMismatch": "Passwörter stimmen nicht überein",
+    "firstNameRequired": "Vorname ist erforderlich",
+    "firstNameMinLength": "Vorname muss mindestens 2 Zeichen lang sein",
+    "lastNameRequired": "Nachname ist erforderlich",
+    "lastNameMinLength": "Nachname muss mindestens 2 Zeichen lang sein",
+    "termsRequired": "Sie müssen den AGB und Datenschutz zustimmen",
+    "secretStrength": "Geheime Stärke",
+    "strengthTip": {
+      "weak": "💡 Tipp: Stärkere Passwörter sind sicherer",
+      "good": "👍 Gutes Passwort",
+      "excellent": "🔒 Ausgezeichnete Sicherheit"
+    },
+    "passwordTips": {
+      "title": "🔐 Passwort-Sicherheitstipps",
+      "length": "Verwenden Sie mindestens 12 Zeichen für bessere Sicherheit",
+      "mix": "Mischen Sie Groß-, Kleinbuchstaben, Zahlen und Symbole",
+      "avoid": "Vermeiden Sie häufige Wörter, Namen oder Muster",
+      "unique": "Verwenden Sie für jedes Konto ein einzigartiges Passwort",
+      "showAdvanced": "Erweiterte Tipps anzeigen",
+      "hideAdvanced": "Erweiterte Tipps ausblenden",
+      "advancedTitle": "🔒 Erweiterte Sicherheitstipps",
+      "passphrase": "Verwenden Sie eine einprägsame Passphrase (z.B. 'MeinHundLiebtStrand2024!')",
+      "substitution": "Ersetzen Sie Buchstaben durch Zahlen/Symbole (z.B. 'P@ssw0rd')",
+      "random": "Verwenden Sie einen Passwort-Generator für maximale Sicherheit",
+      "manager": "Erwägen Sie einen Passwort-Manager für Komfort"
+    },
+    "passwordSuccess": {
+      "title": "🎉 Ausgezeichnetes Passwort!",
+      "description": "Ihr Passwort erfüllt alle Sicherheitsanforderungen. Bewahren Sie es sicher und einzigartig auf!"
+    }
   },
   "dashboard": {
     "notAuthenticated": "Nicht authentifiziert",
