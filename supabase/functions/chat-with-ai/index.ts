@@ -192,7 +192,6 @@ serve(async (req) => {
     const chatHistory = summarizeChatHistory(rawChatHistory);
 
     let aiResponse;
-    let planCreated = false;
 
     // ENHANCED OPENAI INTEGRATION WITH COMPREHENSIVE ERROR HANDLING
     if (!openAIApiKey) {
@@ -257,14 +256,11 @@ serve(async (req) => {
         aiResponse = await processStreamingResponse(streamingResponse);
 
         // Enhanced plan creation handling with robust error recovery
-        let planCreated = false;
         const planData = processPlanCreationFromResponse(aiResponse);
         if (planData) {
           try {
             await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
             aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage);
-            planCreated = true;
-            console.log('✅ Training plan created successfully:', planData.title);
           } catch (planError) {
             console.error('❌ Error creating plan from AI response:', planError);
             // Clean up any failed plan creation blocks and provide user-friendly feedback
@@ -325,10 +321,7 @@ serve(async (req) => {
     saveChatMessages(supabaseClient, sessionId, userData.user.id, message, aiResponse, { total_tokens: 0 })
       .catch(error => console.error('DB save failed but continuing:', error));
     
-    return new Response(JSON.stringify({ 
-      response: aiResponse,
-      planCreated: planCreated 
-    }), {
+    return new Response(JSON.stringify({ response: aiResponse }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {

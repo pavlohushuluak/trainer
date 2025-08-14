@@ -1,7 +1,5 @@
 import { AdminStatusTest } from '@/components/debug/AdminStatusTest';
 import { LanguagePersistenceTest } from '@/components/debug/LanguagePersistenceTest';
-import { ChatFunctionTest } from '@/components/debug/ChatFunctionTest';
-import { SimpleChatTest } from '@/components/debug/SimpleChatTest';
 import { MainLayout } from '@/components/layout/MainLayout';
 
 const AdminStatusTestPage = () => {
@@ -19,10 +17,8 @@ const AdminStatusTestPage = () => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <AdminStatusTest />
+          <AdminStatusTest />
             <LanguagePersistenceTest />
-            <ChatFunctionTest />
-            <SimpleChatTest />
           </div>
         </div>
       </div>

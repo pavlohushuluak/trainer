@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTranslations } from "@/hooks/useTranslations";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useInstantMessageSender = (
   addOptimisticMessage: (content: string, role: 'user' | 'assistant') => string,
@@ -16,7 +17,7 @@ export const useInstantMessageSender = (
   const [isSending, setIsSending] = useState(false);
   const { t } = useTranslation();
   const { startMetric, endMetric } = usePerformanceMonitor('InstantMessageSender');
-
+  
   const sendMessageInstantly = useCallback(async (
     userMessage: string,
     sessionId: string,
@@ -37,7 +38,7 @@ export const useInstantMessageSender = (
     try {
       // Direct API call without excessive logging
       const { data, error } = await supabase.functions.invoke('chat-with-ai', {
-        body: {
+        body: { 
           message: userMessage,
           sessionId: sessionId,
           petId: selectedPet === "none" ? null : selectedPet,

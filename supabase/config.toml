@@ -51,6 +51,3 @@ verify_jwt = false
 
 [functions.auth-email-handler]
 verify_jwt = false
-
-[functions.chat-with-ai]
-verify_jwt = true

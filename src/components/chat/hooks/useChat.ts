@@ -5,7 +5,6 @@ import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import { useTranslations } from "@/hooks/useTranslations";
 import { useTranslation } from "react-i18next";
 import { assignTrainerForSession } from "../utils/trainerTeam";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface PetProfile {
   id: string;
@@ -33,7 +32,6 @@ export const useChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
   const { startMetric, endMetric } = usePerformanceMonitor('Chat');
   const { currentLanguage } = useTranslations();
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   
   // Consolidated state
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -280,19 +278,6 @@ export const useChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
         content: data.response,
         created_at: new Date().toISOString()
       });
-
-      // If a training plan was created, invalidate the training plans cache
-      if (data.planCreated) {
-        console.log('🔄 Training plan created, invalidating cache...');
-        queryClient.invalidateQueries({ 
-          queryKey: ['training-plans-with-steps'],
-          exact: false 
-        });
-        queryClient.invalidateQueries({ 
-          queryKey: ['training-plans'],
-          exact: false 
-        });
-      }
 
       endMetric(metricKey, 'send-message');
     } catch (error: any) {
