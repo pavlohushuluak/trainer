@@ -704,6 +704,20 @@
       "recommendation": "Training Recommendation",
       "close": "Close"
     },
+    "petSelection": {
+      "title": "Select Pet for Analysis",
+      "imagePreview": "Image Preview",
+      "selectPetForImage": "Select which pet this image is for",
+      "choosePet": "Choose Pet",
+      "years": "years",
+      "cancel": "Cancel",
+      "analyze": "Analyze Image",
+      "createPetProfile": "Create Pet Profile",
+      "noPets": {
+        "title": "No Pet Profiles Found",
+        "description": "You need to create a pet profile first to analyze images."
+      }
+    },
     "limitReachedState": {
       "title": "Limit reached",
       "description": "You have used all free image analyses.",

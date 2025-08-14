@@ -17,14 +17,16 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [trainingPlan, setTrainingPlan] = useState<any>(null);
   const [showPlan, setShowPlan] = useState(false);
+  const [analysisPet, setAnalysisPet] = useState<Pet | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
   const { currentLanguage, t } = useTranslations();
   const { saveAnalysis } = useImageAnalysisHistory();
   const queryClient = useQueryClient();
 
-  const handleUploadComplete = async (result: any) => {
+  const handleUploadComplete = async (result: any, pet?: Pet) => {
     setAnalysisResult(result);
+    setAnalysisPet(pet || selectedPet || null);
     setShowPlan(false);
     setTrainingPlan(null);
   };
@@ -32,7 +34,7 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const handleCreatePlan = async () => {
     if (!analysisResult) return;
 
-    const petName = selectedPet?.name || (currentLanguage === 'en' ? 'your pet' : 'dein Tier');
+    const petName = analysisPet?.name || selectedPet?.name || (currentLanguage === 'en' ? 'your pet' : 'dein Tier');
     
     // Language-specific training plan content
     const planContent = {
@@ -117,7 +119,9 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const handleSavePlan = async () => {
     if (!trainingPlan || !user) return;
 
-    if (!selectedPet) {
+    const petToUse = analysisPet || selectedPet;
+    
+    if (!petToUse) {
       toast({
         title: t('training.imageAnalysis.logic.petProfileRequired.title'),
         description: t('training.imageAnalysis.logic.petProfileRequired.description'),
@@ -131,7 +135,7 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
         .from('training_plans')
         .insert({
           user_id: user.id,
-          pet_id: selectedPet.id,
+          pet_id: petToUse.id,
           title: trainingPlan.title,
           description: trainingPlan.description,
           status: 'planned'
@@ -181,9 +185,11 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const handleSaveAnalysis = async () => {
     if (!analysisResult || !user) return;
 
+    const petToUse = analysisPet || selectedPet;
+
     try {
       // Save analysis to history
-      await saveAnalysis(selectedPet?.id || null, undefined, analysisResult);
+      await saveAnalysis(petToUse?.id || null, undefined, analysisResult);
       
       toast({
         title: t('training.imageAnalysis.logic.analysisSaved.title'),
@@ -203,12 +209,14 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
     setAnalysisResult(null);
     setTrainingPlan(null);
     setShowPlan(false);
+    setAnalysisPet(null);
   };
 
   return {
     analysisResult,
     trainingPlan,
     showPlan,
+    analysisPet,
     handleUploadComplete,
     handleCreatePlan,
     handleSavePlan,

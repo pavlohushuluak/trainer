@@ -31,6 +31,7 @@ export const ImageAnalysisSection = ({ selectedPet, onPlanCreated }: ImageAnalys
     analysisResult,
     trainingPlan,
     showPlan,
+    analysisPet,
     handleUploadComplete,
     handleCreatePlan,
     handleSavePlan,
@@ -78,13 +79,11 @@ export const ImageAnalysisSection = ({ selectedPet, onPlanCreated }: ImageAnalys
       {!analysisResult ? (
         <AnimalImageUpload 
           onUploadComplete={handleUploadComplete}
-          petName={selectedPet?.name || localT.yourPet}
-          petSpecies={selectedPet?.species || localT.animal}
-          disabled={!selectedPet}
+          disabled={false}
         />
       ) : (
         <AnalysisDisplaySection
-          selectedPet={selectedPet}
+          selectedPet={analysisPet || selectedPet}
           analysisResult={analysisResult}
           trainingPlan={trainingPlan}
           showPlan={showPlan}

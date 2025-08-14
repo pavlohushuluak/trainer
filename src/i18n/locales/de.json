@@ -704,6 +704,20 @@
       "recommendation": "Trainingsempfehlung",
       "close": "Schließen"
     },
+    "petSelection": {
+      "title": "Haustier für Analyse auswählen",
+      "imagePreview": "Bildvorschau",
+      "selectPetForImage": "Wähle aus, für welches Haustier dieses Bild ist",
+      "choosePet": "Haustier wählen",
+      "years": "Jahre",
+      "cancel": "Abbrechen",
+      "analyze": "Bild analysieren",
+      "createPetProfile": "Haustierprofil erstellen",
+      "noPets": {
+        "title": "Keine Haustierprofile gefunden",
+        "description": "Du musst zuerst ein Haustierprofil erstellen, um Bilder zu analysieren."
+      }
+    },
     "limitReachedState": {
       "title": "Limit erreicht",
       "description": "Sie haben alle kostenlosen Bildanalysen verwendet.",

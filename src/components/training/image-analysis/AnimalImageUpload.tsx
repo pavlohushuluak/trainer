@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Camera, AlertCircle } from 'lucide-react';
 import { useImageAnalysisLimit } from '@/hooks/useImageAnalysisLimit';
@@ -10,16 +11,22 @@ import { LimitReachedState } from './LimitReachedState';
 import { ErrorDisplay } from './ErrorDisplay';
 import { LoadingStateManager } from '../LoadingStateManager';
 import { useTranslations } from '@/hooks/useTranslations';
+import { PetSelectionModal } from './PetSelectionModal';
+import { usePetProfiles } from '@/hooks/usePetProfiles';
 
 interface AnimalImageUploadProps {
-  onUploadComplete: (result: any) => void;
-  petName: string;
-  petSpecies: string;
+  onUploadComplete: (result: any, pet?: any) => void;
   disabled?: boolean;
 }
 
-export const AnimalImageUpload = ({ onUploadComplete, petName, petSpecies, disabled }: AnimalImageUploadProps) => {
+export const AnimalImageUpload = ({ onUploadComplete, disabled }: AnimalImageUploadProps) => {
   const { t } = useTranslations();
+  const [isPetSelectionOpen, setIsPetSelectionOpen] = useState(false);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [pendingImagePreview, setPendingImagePreview] = useState<string | null>(null);
+  
+  const { pets = [] } = usePetProfiles();
+  
   const {
     analysesUsed,
     canAnalyze,
@@ -39,14 +46,39 @@ export const AnimalImageUpload = ({ onUploadComplete, petName, petSpecies, disab
     handleFileSelect,
     handleUpload,
     triggerFileInput,
-    resetUpload
+    resetUpload,
+    performAnalysis
   } = useImageUpload({
     onUploadComplete,
-    petName,
-    petSpecies,
+    onPetSelectionRequired: (file: File, imagePreview: string) => {
+      setPendingFile(file);
+      setPendingImagePreview(imagePreview);
+      setIsPetSelectionOpen(true);
+    },
     canAnalyze,
     incrementUsage
   });
+
+  const handlePetSelected = async (pet: any) => {
+    if (pendingFile) {
+      try {
+        const result = await performAnalysis(pendingFile, pet.name, pet.species);
+        // Pass the selected pet to the parent component
+        onUploadComplete(result, pet);
+      } finally {
+        // Always reset the modal state, even if analysis fails
+        setPendingFile(null);
+        setPendingImagePreview(null);
+        setIsPetSelectionOpen(false);
+      }
+    }
+  };
+
+  const handlePetSelectionClose = () => {
+    setPendingFile(null);
+    setPendingImagePreview(null);
+    setIsPetSelectionOpen(false);
+  };
 
 
 
@@ -153,6 +185,15 @@ export const AnimalImageUpload = ({ onUploadComplete, petName, petSpecies, disab
           </CardContent>
         </Card>
       </LoadingStateManager>
+
+      {/* Pet Selection Modal */}
+      <PetSelectionModal
+        isOpen={isPetSelectionOpen}
+        onClose={handlePetSelectionClose}
+        onPetSelected={handlePetSelected}
+        pets={pets}
+        imagePreview={pendingImagePreview || undefined}
+      />
     </div>
   );
 };
