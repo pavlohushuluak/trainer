@@ -4,12 +4,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, Bot, User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface UserChatHistoryProps {
   userId: string;
 }
 
 export const UserChatHistory = ({ userId }: UserChatHistoryProps) => {
+  const { t, i18n } = useTranslation();
   const { data: chatSessions, isLoading } = useQuery({
     queryKey: ['user-chat-sessions', userId],
     queryFn: async () => {
@@ -53,7 +55,7 @@ export const UserChatHistory = ({ userId }: UserChatHistoryProps) => {
   });
 
   if (isLoading) {
-    return <div className="text-center py-4">Lade Chat-Verlauf...</div>;
+    return <div className="text-center py-4">{t('adminDetails.chatHistory.loading')}</div>;
   }
 
   return (
@@ -62,36 +64,39 @@ export const UserChatHistory = ({ userId }: UserChatHistoryProps) => {
       <div>
         <h4 className="font-medium mb-2 flex items-center gap-2">
           <MessageCircle className="h-4 w-4" />
-          Chat-Sessions ({chatSessions?.length || 0})
+          {t('adminDetails.chatHistory.sessionsTitle', { count: chatSessions?.length || 0 })}
         </h4>
         <div className="space-y-2">
           {chatSessions?.map((session) => (
             <div key={session.id} className="p-3 border rounded-lg">
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="font-medium">{session.title || 'Unbenannte Session'}</p>
+                  <p className="font-medium">{session.title || t('adminDetails.chatHistory.unnamedSession')}</p>
                   {session.pet_profiles && (
                     <p className="text-sm text-muted-foreground">
-                      Mit {session.pet_profiles.name} ({session.pet_profiles.species})
+                      {t('adminDetails.chatHistory.withPet', { 
+                        name: session.pet_profiles.name, 
+                        species: session.pet_profiles.species 
+                      })}
                     </p>
                   )}
                 </div>
                 <div className="text-right text-sm text-muted-foreground">
-                  <p>Erstellt: {new Date(session.created_at).toLocaleDateString('de-DE')}</p>
-                  <p>Zuletzt: {new Date(session.updated_at).toLocaleDateString('de-DE')}</p>
+                  <p>{t('adminDetails.chatHistory.created')}: {new Date(session.created_at).toLocaleDateString(i18n.language === 'de' ? 'de-DE' : 'en-US')}</p>
+                  <p>{t('adminDetails.chatHistory.lastUpdated')}: {new Date(session.updated_at).toLocaleDateString(i18n.language === 'de' ? 'de-DE' : 'en-US')}</p>
                 </div>
               </div>
             </div>
           ))}
           {!chatSessions?.length && (
-            <p className="text-muted-foreground text-center py-4">Keine Chat-Sessions gefunden</p>
+            <p className="text-muted-foreground text-center py-4">{t('adminDetails.chatHistory.noSessions')}</p>
           )}
         </div>
       </div>
 
       {/* Recent Messages */}
       <div>
-        <h4 className="font-medium mb-2">Letzte Nachrichten</h4>
+        <h4 className="font-medium mb-2">{t('adminDetails.chatHistory.recentMessages')}</h4>
         <ScrollArea className="h-64 border rounded-lg p-3">
           <div className="space-y-3">
             {recentMessages?.map((message) => (
@@ -106,10 +111,10 @@ export const UserChatHistory = ({ userId }: UserChatHistoryProps) => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <Badge variant={message.role === 'user' ? 'default' : 'secondary'}>
-                      {message.role === 'user' ? 'Nutzer' : 'AI'}
+                      {message.role === 'user' ? t('adminDetails.chatHistory.user') : t('adminDetails.chatHistory.ai')}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
-                      {new Date(message.created_at).toLocaleString('de-DE')}
+                      {new Date(message.created_at).toLocaleString(i18n.language === 'de' ? 'de-DE' : 'en-US')}
                     </span>
                   </div>
                   <p className="text-sm break-words">
@@ -119,14 +124,14 @@ export const UserChatHistory = ({ userId }: UserChatHistoryProps) => {
                   </p>
                   {(message as any).chat_sessions?.pet_profiles && (
                     <p className="text-xs text-muted-foreground mt-1">
-                      Session: {(message as any).chat_sessions.pet_profiles.name}
+                      {t('adminDetails.chatHistory.session')}: {(message as any).chat_sessions.pet_profiles.name}
                     </p>
                   )}
                 </div>
               </div>
             ))}
             {!recentMessages?.length && (
-              <p className="text-muted-foreground text-center py-4">Keine Nachrichten gefunden</p>
+              <p className="text-muted-foreground text-center py-4">{t('adminDetails.chatHistory.noMessages')}</p>
             )}
           </div>
         </ScrollArea>

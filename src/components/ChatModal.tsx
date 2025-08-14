@@ -78,20 +78,6 @@ export const ChatModal = ({ isOpen, onClose }: ChatModalProps) => {
           selectedPetSpecies={getSelectedPetSpecies()}
         />
 
-        {/* Debug button for language testing */}
-        <div className="p-2 border-b">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => {
-              console.log('🌍 Debug - Current language:', currentLanguage);
-              console.log('🌍 Debug - localStorage:', localStorage.getItem('i18nextLng'));
-            }}
-          >
-            Debug Language: {currentLanguage}
-          </Button>
-        </div>
-
         {/* Tierprofil-Warnung nur wenn keine Tiere vorhanden */}
         {!hasPets && <PetProfileRequiredCard />}
 

@@ -44,8 +44,8 @@ export const ChatMessage = ({ message, trainerName }: ChatMessageProps) => {
     <div className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
       {message.role === 'assistant' && (
         <div className="flex-shrink-0">
-          <Avatar className="h-6 w-6">
-            <AvatarImage src="/placeholder.svg" alt={defaultTrainerName} />
+          <Avatar className="h-6 w-6 bg-white p-1">
+            <AvatarImage src="/favicon.ico" alt={defaultTrainerName} />
             <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
               {defaultTrainerName.split(' ').map(n => n[0]).join('')}
             </AvatarFallback>

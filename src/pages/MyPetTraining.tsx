@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { usePetProfiles } from '@/hooks/usePetProfiles';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
@@ -72,6 +73,9 @@ const MyPetTraining = () => {
     fetchPets
   } = usePetProfiles();
 
+  // Use subscription status for checkout success handling
+  const { refetch: refetchSubscription } = useSubscriptionStatus();
+
   // Check if we should open the pet modal from URL parameter
   const shouldOpenPetModal = new URLSearchParams(location.search).get('openPetModal') === 'true';
 
@@ -95,6 +99,38 @@ const MyPetTraining = () => {
       return () => clearTimeout(refreshTimer);
     }
   }, []);
+
+  // Handle checkout success and refresh subscription data
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const isCheckoutSuccess = searchParams.get('success') === 'true';
+    const sessionId = searchParams.get('session_id');
+    const paymentType = searchParams.get('payment');
+    const isGuest = searchParams.get('guest') === 'true';
+
+    if (isCheckoutSuccess && user) {
+      console.log('🎉 Checkout success detected:', { sessionId, paymentType, isGuest });
+      
+      // Refresh subscription data after a short delay to ensure backend has processed the payment
+      const refreshTimer = setTimeout(async () => {
+        try {
+          console.log('🔄 Refreshing subscription data after checkout success...');
+          await refetchSubscription();
+          console.log('✅ Subscription data refreshed successfully');
+          
+          // Also refresh pet profiles in case there were any changes
+          if (fetchPets) {
+            await fetchPets();
+            console.log('✅ Pet profiles refreshed successfully');
+          }
+        } catch (error) {
+          console.error('❌ Error refreshing data after checkout:', error);
+        }
+      }, 2000); // Wait 2 seconds for backend processing
+
+      return () => clearTimeout(refreshTimer);
+    }
+  }, [location.search, user, refetchSubscription, fetchPets]);
 
   // Show loading only when absolutely necessary
   if (loading) {

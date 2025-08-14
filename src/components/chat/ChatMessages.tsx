@@ -29,8 +29,8 @@ export const ChatMessages = memo(({ messages, loading, selectedPetName, trainerN
 
   const EmptyState = () => (
     <div className="text-center text-muted-foreground py-8">
-      <Avatar className="h-16 w-16 mx-auto mb-4">
-        <AvatarImage src="/placeholder.svg" alt={trainerName} />
+      <Avatar className="h-16 w-16 mx-auto mb-4 bg-white p-2 px-3">
+        <AvatarImage src="/favicon.ico" alt={trainerName} />
         <AvatarFallback className="bg-blue-100 text-blue-600 text-lg font-semibold">
           {trainerName.split(' ').map(n => n[0]).join('')}
         </AvatarFallback>
@@ -47,8 +47,8 @@ export const ChatMessages = memo(({ messages, loading, selectedPetName, trainerN
 
   const LoadingIndicator = () => (
     <div className="flex gap-3 justify-start">
-      <Avatar className="h-6 w-6">
-        <AvatarImage src="/placeholder.svg" alt={trainerName} />
+      <Avatar className="h-6 w-6 bg-white p-1">
+        <AvatarImage src="/favicon.ico" alt={trainerName} />
         <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
           {trainerName.split(' ').map(n => n[0]).join('')}
         </AvatarFallback>

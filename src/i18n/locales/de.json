@@ -976,7 +976,7 @@
       "registeredProfiles": "Registrierte Profile",
       "payingCustomers": "Zahlende Kunden",
       "inTrial": "In Testphase",
-              "lastDays": "Letzte {{days}} Tage",
+      "lastDays": "Letzte {{days}} Tage",
       "trialToPaying": "Test → Zahlend",
       "vsPreviousPeriod": "vs. Vorheriger Zeitraum"
     },
@@ -1180,7 +1180,12 @@
       "trial": "Test",
       "canceled": "Gekündigt",
       "unknown": "Unbekannt",
-      "inactive": "Inaktiv"
+      "inactive": "Inaktiv",
+      "plan1": "1 Tier",
+      "plan2": "2 Tiere",
+      "plan3": "3-4 Tiere",
+      "plan4": "5-8 Tiere",
+      "plan5": "Unbegrenzt"
     },
     "chatDetail": {
       "title": "Chat-Details",
@@ -1189,6 +1194,7 @@
       "email": "E-Mail",
       "subscriptionStatus": "Abonnement-Status",
       "pet": "Haustier",
+      "petInfo": "{{name}} ({{species}})",
       "sessionDetails": "Sitzungsdetails",
       "created": "Erstellt",
       "lastActive": "Zuletzt aktiv",
@@ -1767,6 +1773,7 @@
       "reset": "Zurücksetzen",
       "testProgress": "Test-Fortschritt",
       "testsRunning": "{{count}} Test{{plural}} läuft gerade...",
+      "runningTests": "Tests werden ausgeführt...",
       "summary": {
         "total": "Gesamt",
         "passed": "Bestanden",
@@ -1931,7 +1938,7 @@
     "logout": "Logout"
   },
   "adminDetails": {
-    "title": "Benutzerdetails: {email}",
+    "title": "Benutzerdetails: {{email}}",
     "tabs": {
       "overview": "Übersicht",
       "chats": "Chats",
@@ -1973,19 +1980,54 @@
     "toasts": {
       "noteAdded": "Notiz hinzugefügt",
       "noteSaved": "Die Notiz wurde erfolgreich gespeichert."
+    },
+    "chatHistory": {
+      "loading": "Chat-Verlauf wird geladen...",
+      "sessionsTitle": "Chat-Sessions ({{count}})",
+      "unnamedSession": "Unbenannte Session",
+      "withPet": "Mit {{name}} ({{species}})",
+      "created": "Erstellt",
+      "lastUpdated": "Zuletzt aktualisiert",
+      "noSessions": "Keine Chat-Sessions gefunden",
+      "recentMessages": "Letzte Nachrichten",
+      "user": "Nutzer",
+      "ai": "KI",
+      "session": "Session",
+      "noMessages": "Keine Nachrichten gefunden"
+    },
+    "supportHistory": {
+      "loading": "Support-Verlauf wird geladen...",
+      "title": "Support-Tickets ({{count}})",
+      "category": "Kategorie",
+      "created": "Erstellt",
+      "resolved": "Gelöst",
+      "aiResolved": "KI-gelöst",
+      "noTickets": "Keine Support-Tickets gefunden",
+      "status": {
+        "open": "Offen",
+        "inProgress": "In Bearbeitung",
+        "waitingUser": "Wartet auf Benutzer",
+        "resolved": "Gelöst"
+      },
+      "priority": {
+        "low": "Niedrig",
+        "normal": "Normal",
+        "high": "Hoch",
+        "urgent": "Dringend"
+      }
     }
   },
   "adminCancelSubscription": {
     "cancelButton": "Abbrechen",
     "title": "Abonnement kündigen",
-    "description": "Möchten Sie das Abonnement für {email} kündigen?",
+    "description": "Möchten Sie das Abonnement für {{email}} kündigen?",
     "moneyBackGuarantee": {
       "title": "Geld-zurück-Garantie verfügbar",
       "description": "Der Benutzer befindet sich innerhalb der 14-Tage-Periode und hat einen berechtigten Plan (\"1 Tier\"). Eine automatische Rückerstattung ist möglich."
     },
     "noGuarantee": {
       "note": "Hinweis:",
-      "description": "Dieser Plan (\"{plan}\") hat keine 14-tägige Geld-zurück-Garantie. Nur der \"1 Tier\"-Plan ist berechtigt."
+      "description": "Dieser Plan (\"{{plan}}\") hat keine 14-tägige Geld-zurück-Garantie. Nur der \"1 Tier\"-Plan ist berechtigt."
     },
     "actions": {
       "cancelWithRefund": "Mit Rückerstattung kündigen",
@@ -3882,6 +3924,27 @@
       "and": "und",
       "privacy": "Datenschutzerklärung"
     }
+  },
+  "networkDiagnostic": {
+    "title": "Netzwerk-Diagnose",
+    "runDiagnostic": "Vollständige Diagnose ausführen",
+    "running": "Diagnose läuft...",
+    "ok": "OK",
+    "failed": "FEHLGESCHLAGEN",
+    "networkInformation": "Netzwerk-Informationen",
+    "onlineStatus": "Online-Status",
+    "online": "Online",
+    "offline": "Offline",
+    "connectionType": "Verbindungstyp",
+    "downlink": "Downlink",
+    "rtt": "RTT",
+    "supabaseConnectivity": "Supabase-Verbindung",
+    "basicConnection": "Grundverbindung",
+    "authentication": "Authentifizierung",
+    "databaseRead": "Datenbank-Lesen",
+    "databaseWrite": "Datenbank-Schreiben",
+    "edgeFunctions": "Edge-Funktionen",
+    "recommendations": "Empfehlungen"
   },
   "communityPage": {
     "title": "TierTrainer Community",

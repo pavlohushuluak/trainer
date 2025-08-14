@@ -28,7 +28,7 @@ interface ChatDetailModalProps {
 }
 
 export const ChatDetailModal = ({ chat, open, onOpenChange }: ChatDetailModalProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data: messages } = useQuery({
     queryKey: ['chat-messages', chat?.id],
     queryFn: async () => {
@@ -47,7 +47,7 @@ export const ChatDetailModal = ({ chat, open, onOpenChange }: ChatDetailModalPro
   });
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('de-DE');
+    return new Date(dateString).toLocaleString(i18n.language === 'de' ? 'de-DE' : 'en-US');
   };
 
   const getSubscriptionBadge = (chat: ChatDetailModalProps['chat']) => {
@@ -55,9 +55,23 @@ export const ChatDetailModal = ({ chat, open, onOpenChange }: ChatDetailModalPro
       return <Badge variant="secondary">{t('adminChats.subscriptionBadges.free')}</Badge>;
     }
     
+    const getTierName = (tier: string | null) => {
+      if (!tier) return t('adminChats.subscriptionBadges.premium');
+      
+      const tierNames: Record<string, string> = {
+        'plan1': t('adminChats.subscriptionBadges.plan1'),
+        'plan2': t('adminChats.subscriptionBadges.plan2'),
+        'plan3': t('adminChats.subscriptionBadges.plan3'),
+        'plan4': t('adminChats.subscriptionBadges.plan4'),
+        'plan5': t('adminChats.subscriptionBadges.plan5')
+      };
+      
+      return tierNames[tier] || tier;
+    };
+    
     switch (chat.subscription_status) {
       case 'active':
-        return <Badge variant="default">{chat.subscription_tier || t('adminChats.subscriptionBadges.premium')}</Badge>;
+        return <Badge variant="default">{getTierName(chat.subscription_tier)}</Badge>;
       case 'trialing':
         return <Badge variant="outline">{t('adminChats.subscriptionBadges.trial')}</Badge>;
       default:
@@ -89,7 +103,10 @@ export const ChatDetailModal = ({ chat, open, onOpenChange }: ChatDetailModalPro
                   {getSubscriptionBadge(chat)}
                 </div>
                 {chat.pet_profiles && (
-                  <p className="break-words">{t('adminChats.chatDetail.pet')}: {chat.pet_profiles.name} ({chat.pet_profiles.species})</p>
+                  <p className="break-words">{t('adminChats.chatDetail.pet')}: {t('adminChats.chatDetail.petInfo', { 
+                    name: chat.pet_profiles.name, 
+                    species: chat.pet_profiles.species 
+                  })}</p>
                 )}
               </div>
             </div>

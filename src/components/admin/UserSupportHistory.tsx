@@ -4,12 +4,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { HelpCircle, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface UserSupportHistoryProps {
   userId: string;
 }
 
 export const UserSupportHistory = ({ userId }: UserSupportHistoryProps) => {
+  const { t, i18n } = useTranslation();
   const { data: supportTickets, isLoading } = useQuery({
     queryKey: ['user-support-tickets', userId],
     queryFn: async () => {
@@ -41,7 +43,15 @@ export const UserSupportHistory = ({ userId }: UserSupportHistoryProps) => {
       'waiting_user': 'outline',
       'resolved': 'secondary'
     };
-    return <Badge variant={variants[status] || 'secondary'}>{status}</Badge>;
+    
+    const statusLabels: Record<string, string> = {
+      'open': t('adminDetails.supportHistory.status.open'),
+      'in_progress': t('adminDetails.supportHistory.status.inProgress'),
+      'waiting_user': t('adminDetails.supportHistory.status.waitingUser'),
+      'resolved': t('adminDetails.supportHistory.status.resolved')
+    };
+    
+    return <Badge variant={variants[status] || 'secondary'}>{statusLabels[status] || status}</Badge>;
   };
 
   const getPriorityBadge = (priority: string) => {
@@ -51,18 +61,26 @@ export const UserSupportHistory = ({ userId }: UserSupportHistoryProps) => {
       'high': 'default',
       'urgent': 'destructive'
     };
-    return <Badge variant={variants[priority] || 'outline'}>{priority}</Badge>;
+    
+    const priorityLabels: Record<string, string> = {
+      'low': t('adminDetails.supportHistory.priority.low'),
+      'normal': t('adminDetails.supportHistory.priority.normal'),
+      'high': t('adminDetails.supportHistory.priority.high'),
+      'urgent': t('adminDetails.supportHistory.priority.urgent')
+    };
+    
+    return <Badge variant={variants[priority] || 'outline'}>{priorityLabels[priority] || priority}</Badge>;
   };
 
   if (isLoading) {
-    return <div className="text-center py-4">Lade Support-Verlauf...</div>;
+    return <div className="text-center py-4">{t('adminDetails.supportHistory.loading')}</div>;
   }
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <HelpCircle className="h-4 w-4" />
-        <h4 className="font-medium">Support-Tickets ({supportTickets?.length || 0})</h4>
+        <h4 className="font-medium">{t('adminDetails.supportHistory.title', { count: supportTickets?.length || 0 })}</h4>
       </div>
 
       <ScrollArea className="h-80">
@@ -81,16 +99,16 @@ export const UserSupportHistory = ({ userId }: UserSupportHistoryProps) => {
               </div>
 
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span>Kategorie: {ticket.category}</span>
-                <span>Erstellt: {new Date(ticket.created_at).toLocaleDateString('de-DE')}</span>
+                <span>{t('adminDetails.supportHistory.category')}: {ticket.category}</span>
+                <span>{t('adminDetails.supportHistory.created')}: {new Date(ticket.created_at).toLocaleDateString(i18n.language === 'de' ? 'de-DE' : 'en-US')}</span>
                 {ticket.resolved_at && (
-                  <span>Gelöst: {new Date(ticket.resolved_at).toLocaleDateString('de-DE')}</span>
+                  <span>{t('adminDetails.supportHistory.resolved')}: {new Date(ticket.resolved_at).toLocaleDateString(i18n.language === 'de' ? 'de-DE' : 'en-US')}</span>
                 )}
               </div>
 
               <div className="flex items-center gap-4 mt-2">
                 {ticket.is_resolved_by_ai && (
-                  <Badge variant="outline" className="text-xs">🤖 AI-gelöst</Badge>
+                  <Badge variant="outline" className="text-xs">🤖 {t('adminDetails.supportHistory.aiResolved')}</Badge>
                 )}
                 {ticket.satisfaction_rating && (
                   <div className="flex items-center gap-1">
@@ -102,7 +120,7 @@ export const UserSupportHistory = ({ userId }: UserSupportHistoryProps) => {
             </div>
           ))}
           {!supportTickets?.length && (
-            <p className="text-muted-foreground text-center py-8">Keine Support-Tickets gefunden</p>
+            <p className="text-muted-foreground text-center py-8">{t('adminDetails.supportHistory.noTickets')}</p>
           )}
         </div>
       </ScrollArea>

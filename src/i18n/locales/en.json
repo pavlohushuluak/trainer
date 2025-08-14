@@ -976,7 +976,7 @@
       "registeredProfiles": "Registered Profiles",
       "payingCustomers": "Paying Customers",
       "inTrial": "In Trial",
-              "lastDays": "Last {{days}} days",
+      "lastDays": "Last {{days}} days",
       "trialToPaying": "Trial → Paying",
       "vsPreviousPeriod": "vs. Previous Period"
     },
@@ -1180,7 +1180,12 @@
       "trial": "Trial",
       "canceled": "Canceled",
       "unknown": "Unknown",
-      "inactive": "Inactive"
+      "inactive": "Inactive",
+      "plan1": "1 Tier",
+      "plan2": "2 Tiere",
+      "plan3": "3-4 Tiere",
+      "plan4": "5-8 Tiere",
+      "plan5": "Unbegrenzt"
     },
     "chatDetail": {
       "title": "Chat Details",
@@ -1189,6 +1194,7 @@
       "email": "Email",
       "subscriptionStatus": "Subscription Status",
       "pet": "Pet",
+      "petInfo": "{{name}} ({{species}})",
       "sessionDetails": "Session Details",
       "created": "Created",
       "lastActive": "Last Active",
@@ -1500,6 +1506,14 @@
           "synchronizationFailed": "❌ Synchronization failed",
           "synchronizationFailedDescription": "Error: {{error}}"
         }
+      },
+      "comprehensiveTest": {
+        "title": "Comprehensive Email Test",
+        "description": "Test all email functions and templates",
+        "success": "✅ All tests successful",
+        "error": "❌ Test failed",
+        "successDescription": "All tests successful. Emails sent to {{recipient}}.",
+        "errorDescription": "Error: {{errorMessage}}"
       }
     }
   },
@@ -1756,6 +1770,7 @@
       "title": "Comprehensive System Monitor",
       "runAllTests": "Run All Tests ({{count}})",
       "runCriticalTests": "Run Critical Tests ({{count}})",
+      "runningTests": "Running Tests...",
       "reset": "Reset",
       "testProgress": "Test Progress",
       "testsRunning": "{{count}} test{{plural}} currently running...",
@@ -1923,7 +1938,7 @@
     "logout": "Logout"
   },
   "adminDetails": {
-    "title": "User Details: {email}",
+    "title": "User Details: {{email}}",
     "tabs": {
       "overview": "Overview",
       "chats": "Chats",
@@ -1965,19 +1980,54 @@
     "toasts": {
       "noteAdded": "Note added",
       "noteSaved": "The note was successfully saved."
+    },
+    "chatHistory": {
+      "loading": "Loading chat history...",
+      "sessionsTitle": "Chat Sessions ({{count}})",
+      "unnamedSession": "Unnamed Session",
+      "withPet": "With {{name}} ({{species}})",
+      "created": "Created",
+      "lastUpdated": "Last Updated",
+      "noSessions": "No chat sessions found",
+      "recentMessages": "Recent Messages",
+      "user": "User",
+      "ai": "AI",
+      "session": "Session",
+      "noMessages": "No messages found"
+    },
+    "supportHistory": {
+      "loading": "Loading support history...",
+      "title": "Support Tickets ({{count}})",
+      "category": "Category",
+      "created": "Created",
+      "resolved": "Resolved",
+      "aiResolved": "AI Resolved",
+      "noTickets": "No support tickets found",
+      "status": {
+        "open": "Open",
+        "inProgress": "In Progress",
+        "waitingUser": "Waiting for User",
+        "resolved": "Resolved"
+      },
+      "priority": {
+        "low": "Low",
+        "normal": "Normal",
+        "high": "High",
+        "urgent": "Urgent"
+      }
     }
   },
   "adminCancelSubscription": {
     "cancelButton": "Cancel",
     "title": "Cancel Subscription",
-    "description": "Do you want to cancel the subscription for {email}?",
+    "description": "Do you want to cancel the subscription for {{email}}?",
     "moneyBackGuarantee": {
       "title": "Money-back guarantee available",
       "description": "The user is within the 14-day period and has an eligible plan (\"1 Tier\"). An automatic refund is possible."
     },
     "noGuarantee": {
       "note": "Note:",
-      "description": "This plan (\"{plan}\") does not have a 14-day money-back guarantee. Only the \"1 Tier\" plan is eligible."
+      "description": "This plan (\"{{plan}}\") does not have a 14-day money-back guarantee. Only the \"1 Tier\" plan is eligible."
     },
     "actions": {
       "cancelWithRefund": "Cancel with refund",
@@ -3874,6 +3924,27 @@
       "and": "and",
       "privacy": "Privacy Policy"
     }
+  },
+  "networkDiagnostic": {
+    "title": "Network Diagnostics",
+    "runDiagnostic": "Run Full Diagnostic",
+    "running": "Running Diagnostics...",
+    "ok": "OK",
+    "failed": "FAILED",
+    "networkInformation": "Network Information",
+    "onlineStatus": "Online Status",
+    "online": "Online",
+    "offline": "Offline",
+    "connectionType": "Connection Type",
+    "downlink": "Downlink",
+    "rtt": "RTT",
+    "supabaseConnectivity": "Supabase Connectivity",
+    "basicConnection": "Basic Connection",
+    "authentication": "Authentication",
+    "databaseRead": "Database Read",
+    "databaseWrite": "Database Write",
+    "edgeFunctions": "Edge Functions",
+    "recommendations": "Recommendations"
   },
   "communityPage": {
     "title": "TierTrainer Community",
