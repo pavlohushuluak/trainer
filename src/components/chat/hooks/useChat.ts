@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import { useTranslations } from "@/hooks/useTranslations";
+import { useTranslation } from "react-i18next";
 import { assignTrainerForSession } from "../utils/trainerTeam";
 
 interface PetProfile {
@@ -30,6 +31,7 @@ export const useChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
   const { user } = useAuth();
   const { startMetric, endMetric } = usePerformanceMonitor('Chat');
   const { currentLanguage } = useTranslations();
+  const { t } = useTranslation();
   
   // Consolidated state
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -240,7 +242,7 @@ export const useChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
 
     // Instant optimistic updates
     const userMessageId = addOptimisticMessage(userMessage, 'user');
-    const aiMessageId = addOptimisticMessage('💭 Denke nach...', 'assistant');
+    const aiMessageId = addOptimisticMessage(`💭 ${t('support.chat.thinking')}`, 'assistant');
 
     try {
       // Debug: Log the language being sent

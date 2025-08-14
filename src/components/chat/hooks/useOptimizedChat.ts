@@ -5,6 +5,7 @@ import { useFreeChatLimit } from "@/hooks/useFreeChatLimit";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 import { useTranslations } from "@/hooks/useTranslations";
 import { assignTrainerForSession } from "../utils/trainerTeam";
+import { useTranslation } from "react-i18next";
 
 interface Message {
   id: string;
@@ -34,7 +35,7 @@ export const useOptimizedChat = (
   const { user } = useAuth();
   const { hasActiveSubscription } = useSubscriptionStatus();
   const { currentLanguage } = useTranslations();
-  
+  const { t } = useTranslation();
   // Debug: Log the current language whenever it changes
   console.log('🌍 useOptimizedChat - Current language:', currentLanguage);
   
@@ -207,7 +208,7 @@ export const useOptimizedChat = (
 
     // Add optimistic messages
     const userMessageId = addOptimisticMessage(userMessage, "user");
-    const aiMessageId = addOptimisticMessage("💭 Denke nach...", "assistant");
+    const aiMessageId = addOptimisticMessage(`💭 ${t('support.chat.thinking')}`, 'assistant');
 
     try {
       // Debug: Log the language being sent

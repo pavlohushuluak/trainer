@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 import { useTranslations } from "@/hooks/useTranslations";
 import { assignTrainerForSession } from "../utils/trainerTeam";
+import { useTranslation } from "react-i18next";
 
 const FREE_CHAT_LIMIT = 10; // Gratis-Chat Limit für kostenlose Nutzer
 
@@ -32,7 +33,7 @@ export const useInstantChat = (isOpen: boolean, preloadedPets: PetProfile[] = []
   const { user } = useAuth();
   const { hasActiveSubscription, subscriptionMode } = useSubscriptionStatus();
   const { currentLanguage } = useTranslations();
-  
+  const { t } = useTranslation();
   // INSTANT STATE - Available immediately
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [trainerName, setTrainerName] = useState<string>("");
@@ -243,7 +244,7 @@ export const useInstantChat = (isOpen: boolean, preloadedPets: PetProfile[] = []
 
     // Instant optimistic updates
     const userMessageId = addOptimisticMessage(userMessage, 'user');
-    const aiMessageId = addOptimisticMessage('💭 Denke nach...', 'assistant');
+    const aiMessageId = addOptimisticMessage(`💭 ${t('support.chat.thinking')}`, 'assistant');
 
     try {
       

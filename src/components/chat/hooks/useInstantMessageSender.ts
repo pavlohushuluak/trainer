@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslations } from "@/hooks/useTranslations";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
+import { useTranslation } from "react-i18next";
 
 export const useInstantMessageSender = (
   addOptimisticMessage: (content: string, role: 'user' | 'assistant') => string,
@@ -13,6 +14,7 @@ export const useInstantMessageSender = (
   const { user } = useAuth();
   const { currentLanguage } = useTranslations();
   const [isSending, setIsSending] = useState(false);
+  const { t } = useTranslation();
   const { startMetric, endMetric } = usePerformanceMonitor('InstantMessageSender');
 
   const sendMessageInstantly = useCallback(async (
@@ -30,7 +32,7 @@ export const useInstantMessageSender = (
 
     // Instant optimistic messages - no delay
     const userMessageId = addOptimisticMessage(userMessage, 'user');
-    const aiMessageId = addOptimisticMessage('💭 Denke nach...', 'assistant');
+    const aiMessageId = addOptimisticMessage(`💭 ${t('support.chat.thinking')}`, 'assistant');
 
     try {
       // Direct API call without excessive logging
