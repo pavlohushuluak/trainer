@@ -976,7 +976,7 @@
       "registeredProfiles": "Registered Profiles",
       "payingCustomers": "Paying Customers",
       "inTrial": "In Trial",
-      "lastDays": "Last {days} days",
+              "lastDays": "Last {{days}} days",
       "trialToPaying": "Trial → Paying",
       "vsPreviousPeriod": "vs. Previous Period"
     },
@@ -1012,6 +1012,7 @@
       "contentQuestions": "Content Questions",
       "cancellations": "Cancellations",
       "totalTickets": "Total Tickets",
+      "totalRequests": "Total Requests",
       "resolvedTickets": "Resolved Tickets",
       "pendingTickets": "Pending Tickets",
       "resolutionRate": "Resolution Rate",

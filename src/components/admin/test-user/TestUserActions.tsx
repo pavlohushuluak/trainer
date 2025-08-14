@@ -31,7 +31,7 @@ export const useTestUserActions = () => {
             .update({
               subscribed: true,
               subscription_status: 'active',
-              subscription_tier: 'plan5', // Verwende kleinschreibung
+              subscription_tier: 'plan1', // Verwende kleinschreibung
               billing_cycle: 'monthly',
               current_period_start: new Date().toISOString(),
               current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
@@ -39,7 +39,8 @@ export const useTestUserActions = () => {
               trial_used: false,
               is_manually_activated: true,
               admin_notes: t('adminTestUser.actions.adminNotes.testAccessActivated', { date: new Date().toLocaleDateString() }),
-              updated_at: new Date().toISOString()
+              updated_at: new Date().toISOString(),
+              tier_limit: 1
             })
             .eq('email', testEmail);
 
@@ -56,7 +57,7 @@ export const useTestUserActions = () => {
               email: testEmail,
               subscribed: true,
               subscription_status: 'active',
-              subscription_tier: 'plan5', // Verwende kleinschreibung
+              subscription_tier: 'plan1', // Verwende kleinschreibung
               billing_cycle: 'monthly',
               current_period_start: new Date().toISOString(),
               current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
@@ -64,7 +65,8 @@ export const useTestUserActions = () => {
               trial_used: false,
               is_manually_activated: true,
               admin_notes: t('adminTestUser.actions.adminNotes.testAccessCreated', { date: new Date().toLocaleDateString() }),
-              country: 'DE'
+              country: 'DE',
+              tier_limit: 1
             });
 
           if (insertError) {
@@ -160,6 +162,71 @@ export const useTestUserActions = () => {
           
           throw new Error(error.message);
         }
+
+        // Set up subscriber record with plan1 subscription (similar to createTestUser)
+        try {
+          // Check if subscriber already exists
+          const { data: existingSubscriber, error: checkError } = await supabase
+            .from('subscribers')
+            .select('*')
+            .eq('email', testEmail)
+            .maybeSingle();
+
+          if (checkError && checkError.code !== 'PGRST116') {
+            throw new Error(t('adminTestUser.actions.errors.checkExistingUser', { error: checkError.message }));
+          }
+
+          if (existingSubscriber) {
+            // Update existing subscriber with plan1
+            const { error: updateError } = await supabase
+              .from('subscribers')
+              .update({
+                subscribed: true,
+                subscription_status: 'active',
+                subscription_tier: 'plan1', // Use plan1 instead of plan5
+                billing_cycle: 'monthly',
+                current_period_start: new Date().toISOString(),
+                current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                subscription_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                trial_used: false,
+                is_manually_activated: true,
+                admin_notes: t('adminTestUser.actions.adminNotes.testAccessActivated', { date: new Date().toLocaleDateString() }),
+                updated_at: new Date().toISOString(),
+                tier_limit: 1
+              })
+              .eq('email', testEmail);
+
+            if (updateError) {
+              throw new Error(t('adminTestUser.actions.errors.updateError', { error: updateError.message }));
+            }
+          } else {
+            // Create new subscriber with plan1
+            const { error: insertError } = await supabase
+              .from('subscribers')
+              .insert({
+                email: testEmail,
+                subscribed: true,
+                subscription_status: 'active',
+                subscription_tier: 'plan1', // Use plan1 instead of plan5
+                billing_cycle: 'monthly',
+                current_period_start: new Date().toISOString(),
+                current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                subscription_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                trial_used: false,
+                is_manually_activated: true,
+                tier_limit: 1,
+                admin_notes: t('adminTestUser.actions.adminNotes.testAccessCreated', { date: new Date().toLocaleDateString() }),
+                country: 'DE'
+              });
+
+            if (insertError) {
+              throw new Error(t('adminTestUser.actions.errors.createError', { error: insertError.message }));
+            }
+          }
+        } catch (subscriberError) {
+          // Log the error but don't fail the magic link operation
+          console.error('Error setting up subscriber record:', subscriberError);
+        }
         
         // Send custom magic link email via our Edge Function
         try {
@@ -189,6 +256,7 @@ export const useTestUserActions = () => {
       }
     },
     onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
       toast({
         title: t('adminTestUser.actions.toasts.magicLinkSent'),
         description: t('adminTestUser.actions.toasts.magicLinkDescription', { email: result.email }),

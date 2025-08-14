@@ -13,7 +13,7 @@ interface SupportMetricsProps {
 }
 
 export const SupportMetrics = ({ timeRange }: SupportMetricsProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { resolvedTheme } = useThemeContext();
   const { data: supportData, isLoading } = useQuery({
     queryKey: ['support-metrics', timeRange],
@@ -51,7 +51,7 @@ export const SupportMetrics = ({ timeRange }: SupportMetricsProps) => {
         
         if (!weeklySupport[weekKey]) {
           weeklySupport[weekKey] = {
-            week: weekStart.toLocaleDateString('de-DE', { month: 'short', day: 'numeric' }),
+            week: weekStart.toLocaleDateString(i18n.language === 'de' ? 'de-DE' : 'en-US', { month: 'short', day: 'numeric' }),
             totalTickets: 0,
             resolvedTickets: 0,
             responseTime: 0
@@ -130,7 +130,7 @@ export const SupportMetrics = ({ timeRange }: SupportMetricsProps) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{supportData?.totals.totalTickets || 0}</div>
-            <p className="text-xs text-muted-foreground">Gesamte Anfragen</p>
+            <p className="text-xs text-muted-foreground">{t('adminAnalytics.support.totalRequests')}</p>
           </CardContent>
         </Card>
 

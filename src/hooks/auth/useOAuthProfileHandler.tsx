@@ -12,7 +12,7 @@ export const useOAuthProfileHandler = () => {
 
     const metadata = user.user_metadata;
     const provider = user.app_metadata.provider;
-    
+
     // Only process for OAuth providers (google, github, etc.)
     if (!['google', 'github'].includes(provider)) {
       return;
@@ -20,7 +20,7 @@ export const useOAuthProfileHandler = () => {
 
     // Check if we have name information to process
     const hasNameData = metadata.full_name || metadata.given_name || metadata.family_name || metadata.name;
-    
+
     if (!hasNameData) {
       return;
     }
@@ -42,7 +42,7 @@ export const useOAuthProfileHandler = () => {
         }
 
         const profileUpdates: any = {};
-        
+
         // Extract name information from different OAuth providers
         if (metadata.given_name) {
           profileUpdates.first_name = metadata.given_name;
@@ -50,7 +50,7 @@ export const useOAuthProfileHandler = () => {
         if (metadata.family_name) {
           profileUpdates.last_name = metadata.family_name;
         }
-        
+
         // Fallback for providers that only provide full_name or name
         if (!profileUpdates.first_name && (metadata.full_name || metadata.name)) {
           const fullName = metadata.full_name || metadata.name;
@@ -62,7 +62,7 @@ export const useOAuthProfileHandler = () => {
             }
           }
         }
-        
+
         // Only proceed if we have name data to update
         if (Object.keys(profileUpdates).length === 0) {
           return;
@@ -71,19 +71,19 @@ export const useOAuthProfileHandler = () => {
         if (existingProfile) {
           // Update existing profile only if fields are empty or different
           const fieldsToUpdate: any = {};
-          
+
           if ((!existingProfile.first_name || existingProfile.first_name.trim() === '') && profileUpdates.first_name) {
             fieldsToUpdate.first_name = profileUpdates.first_name;
           }
           if ((!existingProfile.last_name || existingProfile.last_name.trim() === '') && profileUpdates.last_name) {
             fieldsToUpdate.last_name = profileUpdates.last_name;
           }
-          
+
           // Also update email if it's missing or different
           if (user.email && (!existingProfile.email || existingProfile.email !== user.email)) {
             fieldsToUpdate.email = user.email;
           }
-          
+
           if (Object.keys(fieldsToUpdate).length > 0) {
             const { error: updateError } = await supabase
               .from('profiles')
@@ -92,7 +92,7 @@ export const useOAuthProfileHandler = () => {
                 updated_at: new Date().toISOString()
               })
               .eq('id', user.id);
-            
+
             if (updateError) {
               console.warn('Error updating OAuth profile:', updateError);
             }
@@ -109,36 +109,35 @@ export const useOAuthProfileHandler = () => {
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString()
             });
-          
+
           if (insertError) {
             console.warn('Error creating OAuth profile:', insertError);
           } else {
             // Set localStorage to indicate user has signed up (new OAuth user)
             localStorage.setItem('alreadySignedUp', 'true');
           }
-        }
 
-        // Also ensure subscriber record exists for OAuth users
-        try {
-          const { error: subscriberError } = await supabase
-            .from('subscribers')
-            .upsert({
-              email: user.email || '',
-              user_id: user.id,
-              stripe_customer_id: null,
-              subscribed: false,
-              subscription_status: 'inactive',
-              subscription_tier: null,
-              tier_limit: null,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            }, { onConflict: 'email' });
-          
-          if (subscriberError) {
-            console.warn('Error upserting subscriber for OAuth user:', subscriberError);
+          try {
+            const { error: subscriberError } = await supabase
+              .from('subscribers')
+              .upsert({
+                email: user.email || '',
+                user_id: user.id,
+                stripe_customer_id: null,
+                subscribed: false,
+                subscription_status: 'inactive',
+                subscription_tier: null,
+                tier_limit: null,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              }, { onConflict: 'email' });
+
+            if (subscriberError) {
+              console.warn('Error upserting subscriber for OAuth user:', subscriberError);
+            }
+          } catch (subscriberError) {
+            console.warn('Error handling subscriber record for OAuth user:', subscriberError);
           }
-        } catch (subscriberError) {
-          console.warn('Error handling subscriber record for OAuth user:', subscriberError);
         }
 
       } catch (error) {
