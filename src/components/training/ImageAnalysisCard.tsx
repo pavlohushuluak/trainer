@@ -6,6 +6,7 @@ import { ImageAnalysisSection } from './image-analysis/ImageAnalysisSection';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Pet {
   id: string;
@@ -21,6 +22,7 @@ export const ImageAnalysisCard = ({ primaryPet }: ImageAnalysisCardProps) => {
   const { subscriptionMode } = useSubscriptionStatus();
   const [isExpanded, setIsExpanded] = useLocalStorage('image-analysis-expanded', true);
   const { t } = useTranslations();
+  const queryClient = useQueryClient();
 
   return (
     <div className="mb-8">
@@ -55,7 +57,8 @@ export const ImageAnalysisCard = ({ primaryPet }: ImageAnalysisCardProps) => {
               <ImageAnalysisSection 
                 selectedPet={primaryPet} 
                 onPlanCreated={() => {
-                  // Optional: Hier könnte eine Aktualisierung erfolgen
+                  // Invalidate training plans query to refresh the list
+                  queryClient.invalidateQueries({ queryKey: ['training-plans-with-steps'] });
                 }}
               />
             </CardContent>

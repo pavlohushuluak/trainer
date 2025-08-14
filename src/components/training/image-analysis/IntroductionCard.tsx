@@ -9,19 +9,19 @@ export const IntroductionCard = () => {
   return (
     <Card className="border-2 border-gradient-to-r from-primary/20 to-accent/20 bg-gradient-to-br from-primary/5 via-secondary to-accent/5">
       <CardHeader>
-        <CardTitle className="text-xl flex items-center gap-3">
-          <Sparkles className="h-6 w-6 text-primary" />
+        <CardTitle className="text-lg sm:text-xl flex items-center gap-2 sm:gap-3">
+          <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
           {t('training.introductionCard.title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <div className="space-y-3">
             <h3 className="font-semibold text-foreground flex items-center gap-2">
               <Camera className="h-4 w-4 text-primary" />
               {t('training.introductionCard.whatToDo.title')}
             </h3>
-            <ul className="text-sm text-muted-foreground space-y-2">
+            <ul className="text-xs sm:text-sm text-muted-foreground space-y-1.5 sm:space-y-2">
               <li className="flex items-start gap-2">
                 <span className="text-primary font-bold">1.</span>
                 <span>{t('training.introductionCard.whatToDo.step1')}</span>
@@ -42,7 +42,7 @@ export const IntroductionCard = () => {
               <Heart className="h-4 w-4 text-red-500" />
               {t('training.introductionCard.whatYouGet.title')}
             </h3>
-            <ul className="text-sm text-muted-foreground space-y-2">
+            <ul className="text-xs sm:text-sm text-muted-foreground space-y-1.5 sm:space-y-2">
               <li className="flex items-start gap-2">
                 <span className="text-green-600">✓</span>
                 <span><strong>{t('training.introductionCard.whatYouGet.moodAnalysis')}</strong></span>

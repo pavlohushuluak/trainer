@@ -662,6 +662,48 @@
         "focus": "• Foto zeigt das ganze Haustier oder Gesicht/Körper"
       }
     },
+    "history": {
+      "button": "Verlauf",
+      "title": "Analyse-Verlauf",
+      "loading": "Analyse-Verlauf wird geladen...",
+      "empty": {
+        "title": "Noch keine Analysen",
+        "description": "Ihr Bildanalyse-Verlauf wird hier angezeigt, sobald Sie Ihr erstes Foto analysiert haben."
+      },
+      "error": {
+        "loading": "Fehler beim Laden des Analyse-Verlaufs"
+      },
+      "saved": {
+        "title": "Analyse gespeichert",
+        "description": "Ihre Analyse wurde im Verlauf gespeichert."
+      },
+      "saveError": {
+        "title": "Speichern fehlgeschlagen",
+        "description": "Analyse konnte nicht im Verlauf gespeichert werden."
+      },
+      "deleted": {
+        "title": "Analyse gelöscht",
+        "description": "Analyse wurde aus dem Verlauf entfernt."
+      },
+      "deleteError": {
+        "title": "Löschen fehlgeschlagen",
+        "description": "Analyse konnte nicht aus dem Verlauf gelöscht werden."
+      },
+      "unknownPet": "Unbekanntes Haustier",
+      "unknownMood": "Unbekannte Stimmung",
+      "noDescription": "Keine Beschreibung verfügbar"
+    },
+    "detail": {
+      "title": "Analyse-Details",
+      "petInfo": "Haustier-Informationen",
+      "analyzedOn": "Analysiert am",
+      "moodAssessment": "Stimmungsbewertung",
+      "analysisSummary": "Analyse-Zusammenfassung",
+      "summaryText": "Zusammenfassung",
+      "confidence": "Konfidenz-Level",
+      "recommendation": "Trainingsempfehlung",
+      "close": "Schließen"
+    },
     "limitReachedState": {
       "title": "Limit erreicht",
       "description": "Sie haben alle kostenlosen Bildanalysen verwendet.",

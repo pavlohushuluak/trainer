@@ -172,26 +172,19 @@ export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis }: Im
             </div>
           </div>
           
-          {result.followup_suggestion && (
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
-              <div className="text-yellow-800 dark:text-yellow-300 font-medium mb-3 text-sm sm:text-base">
-                {formatAnalysisText(cleanText(result.followup_suggestion))}
-              </div>
-              <div className="flex flex-col sm:flex-row gap-2">
-                {onCreatePlan && (
-                  <Button onClick={onCreatePlan} className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white text-sm sm:text-base min-h-[44px]">
-                    <Target className="h-4 w-4 mr-2 flex-shrink-0" />
-                    {t.createTrainingPlan}
-                  </Button>
-                )}
-                {onSaveAnalysis && (
-                  <Button variant="outline" onClick={onSaveAnalysis} className="text-sm sm:text-base min-h-[44px]">
-                    💾 {t.saveAnalysis}
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
+          <div className="flex flex-col sm:flex-row gap-2">
+            {onCreatePlan && (
+              <Button onClick={onCreatePlan} className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white text-sm sm:text-base min-h-[44px]">
+                <Target className="h-4 w-4 mr-2 flex-shrink-0" />
+                {t.createTrainingPlan}
+              </Button>
+            )}
+            {onSaveAnalysis && (
+              <Button variant="outline" onClick={onSaveAnalysis} className="text-sm sm:text-base min-h-[44px]">
+                💾 {t.saveAnalysis}
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
 

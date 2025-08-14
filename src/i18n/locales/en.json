@@ -662,6 +662,48 @@
         "focus": "• Photo shows the whole pet or face/body"
       }
     },
+    "history": {
+      "button": "History",
+      "title": "Analysis History",
+      "loading": "Loading analysis history...",
+      "empty": {
+        "title": "No analyses yet",
+        "description": "Your image analysis history will appear here once you analyze your first photo."
+      },
+      "error": {
+        "loading": "Failed to load analysis history"
+      },
+      "saved": {
+        "title": "Analysis Saved",
+        "description": "Your analysis has been saved to history."
+      },
+      "saveError": {
+        "title": "Save Failed",
+        "description": "Failed to save analysis to history."
+      },
+      "deleted": {
+        "title": "Analysis Deleted",
+        "description": "Analysis has been removed from history."
+      },
+      "deleteError": {
+        "title": "Delete Failed",
+        "description": "Failed to delete analysis from history."
+      },
+      "unknownPet": "Unknown Pet",
+      "unknownMood": "Unknown Mood",
+      "noDescription": "No description available"
+    },
+    "detail": {
+      "title": "Analysis Details",
+      "petInfo": "Pet Information",
+      "analyzedOn": "Analyzed on",
+      "moodAssessment": "Mood Assessment",
+      "analysisSummary": "Analysis Summary",
+      "summaryText": "Summary",
+      "confidence": "Confidence Level",
+      "recommendation": "Training Recommendation",
+      "close": "Close"
+    },
     "limitReachedState": {
       "title": "Limit reached",
       "description": "You have used all free image analyses.",

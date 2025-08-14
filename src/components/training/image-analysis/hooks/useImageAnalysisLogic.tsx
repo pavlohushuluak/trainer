@@ -4,6 +4,8 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useImageAnalysisHistory } from '@/hooks/useImageAnalysisHistory';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Pet {
   id: string;
@@ -18,8 +20,10 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const { toast } = useToast();
   const { user } = useAuth();
   const { currentLanguage, t } = useTranslations();
+  const { saveAnalysis } = useImageAnalysisHistory();
+  const queryClient = useQueryClient();
 
-  const handleUploadComplete = (result: any) => {
+  const handleUploadComplete = async (result: any) => {
     setAnalysisResult(result);
     setShowPlan(false);
     setTrainingPlan(null);
@@ -156,7 +160,14 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
         description: t('training.imageAnalysis.logic.planSaved.description'),
       });
 
+      // Invalidate training plans query to refresh the list
+      queryClient.invalidateQueries({ queryKey: ['training-plans-with-steps'] });
+      
       if (onPlanCreated) onPlanCreated();
+      
+      // Reset the analysis view after saving plan
+      setShowPlan(false);
+      setTrainingPlan(null);
     } catch (error) {
       console.error('Error saving plan:', error);
       toast({
@@ -171,6 +182,9 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
     if (!analysisResult || !user) return;
 
     try {
+      // Save analysis to history
+      await saveAnalysis(selectedPet?.id || null, undefined, analysisResult);
+      
       toast({
         title: t('training.imageAnalysis.logic.analysisSaved.title'),
         description: t('training.imageAnalysis.logic.analysisSaved.description'),
