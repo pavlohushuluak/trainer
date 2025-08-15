@@ -2916,7 +2916,16 @@
     },
     "trainingPlans": {
       "title": "Trainingspläne",
-      "description": "Erstellen und verwalten Sie individuelle Trainingspläne für Ihre Haustiere"
+      "description": "Erstellen und verwalten Sie individuelle Trainingspläne für Ihre Haustiere",
+      "gridView": "Rasteransicht",
+      "listView": "Listenansicht",
+      "clickToView": "Klicken zum Anzeigen",
+      "planDescription": "Planbeschreibung",
+      "progressOverview": "Fortschrittsübersicht",
+      "trainingSteps": "Trainingsschritte",
+      "completed": "Abgeschlossen",
+      "points": "Punkte",
+      "completedOn": "Abgeschlossen am"
     },
     "imageAnalysis": {
       "title": "KI-Bildanalyse",

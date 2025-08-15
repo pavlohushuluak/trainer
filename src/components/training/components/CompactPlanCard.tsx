@@ -219,7 +219,7 @@ export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactP
   const petInfo = getPetDisplayInfo(plan);
 
   return (
-    <Card className={`relative group h-full border-l-4 ${petInfo.colorClasses.leftBorder} bg-background shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02]`}>
+    <Card className={`relative group h-full border-l-4 ${petInfo.colorClasses.leftBorder} bg-background shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer`}>
       <CardHeader className="pb-3">
         {/* Pet Badge */}
         <Badge 
@@ -233,7 +233,7 @@ export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactP
         </Badge>
 
         {/* Title */}
-        <h3 className="font-semibold text-lg leading-tight line-clamp-2 text-foreground">
+        <h3 className="font-semibold text-lg leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors">
           {plan.title}
         </h3>
 
@@ -264,15 +264,25 @@ export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactP
             )}
           </div>
 
-          {/* Delete Button */}
-          <Button
-            variant="destructive"
-            size="sm"
-            className="opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7 p-0"
-            onClick={() => onDeletePlan(plan.id)}
-          >
-            <Trash2 className="h-3 w-3" />
-          </Button>
+          {/* Click indicator */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+              {t('training.trainingPlans.clickToView')}
+            </span>
+            
+            {/* Delete Button */}
+            <Button
+              variant="destructive"
+              size="sm"
+              className="opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7 p-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeletePlan(plan.id);
+              }}
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

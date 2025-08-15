@@ -3398,6 +3398,19 @@
     "checkoutButton": {
       "loginForPremium": "Login for Premium",
       "loginDescription": "Please log in to access premium training features"
+    },
+    "trainingPlans": {
+      "title": "Training Plans",
+      "description": "Create and manage your personalized training plans",
+      "gridView": "Grid View",
+      "listView": "List View",
+      "clickToView": "Click to view",
+      "planDescription": "Plan Description",
+      "progressOverview": "Progress Overview",
+      "trainingSteps": "Training Steps",
+      "completed": "Completed",
+      "points": "points",
+      "completedOn": "Completed on"
     }
   },
   "subscriptionManager": {

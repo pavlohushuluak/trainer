@@ -15,6 +15,11 @@ import { useState, useMemo, useEffect } from "react";
 import { SubscriptionGuard } from "../auth/SubscriptionGuard";
 import { Pet } from './types';
 import { useTranslation } from 'react-i18next';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { CompactPlanCard } from "./components/CompactPlanCard";
+import { TrainingProgressCard } from "./TrainingProgressCard";
 
 interface PlansSectionProps {
   pets?: Pet[];
@@ -26,10 +31,11 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [planToDelete, setPlanToDelete] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>(() => {
-    const saved = localStorage.getItem('training-plans-view');
-    return (saved as ViewMode) || 'list';
-  });
+  const [selectedPlanForModal, setSelectedPlanForModal] = useState<any>(null);
+  const [isPlanDetailModalOpen, setIsPlanDetailModalOpen] = useState(false);
+  
+  // Force grid view only
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   // Debug pets data when component mounts or pets change
   useEffect(() => {
@@ -47,6 +53,17 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
   const { data: plansWithSteps, isLoading: plansLoading, error: plansError, refetch } = usePlansWithSteps(selectedPetFilter);
   const { handleTemplateSelect, handleDeletePlan } = usePlanActions(refetch);
 
+  // Keep modal data in sync with parent data
+  useEffect(() => {
+    if (selectedPlanForModal && plansWithSteps) {
+      const updatedPlan = plansWithSteps.find((p: any) => p.id === selectedPlanForModal.id);
+      if (updatedPlan) {
+        console.log('🔄 Updating modal data with fresh plan data');
+        setSelectedPlanForModal(updatedPlan);
+      }
+    }
+  }, [plansWithSteps, selectedPlanForModal?.id]);
+
   // Query state debug info
 
   const handleConfirmDelete = async () => {
@@ -57,8 +74,20 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
   };
 
   const handleViewChange = (newView: ViewMode) => {
-    setViewMode(newView);
-    localStorage.setItem('training-plans-view', newView);
+    // Force grid view only
+    setViewMode('grid');
+  };
+
+  const handlePlanCardClick = (plan: any) => {
+    setSelectedPlanForModal(plan);
+    setIsPlanDetailModalOpen(true);
+  };
+
+  // Handle step completion in modal - just refetch the data
+  const handleModalStepComplete = async () => {
+    console.log('🔄 Modal step completed, refetching data...');
+    await refetch();
+    console.log('✅ Modal data refetched');
   };
 
   const selectedPet = useMemo(() => {
@@ -90,24 +119,17 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
         </div>
       </SubscriptionGuard>
 
-      {/* Pet Filter & View Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {/* Pet Filter - Only show pet filter, no view switcher */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         <PetFilter 
           pets={pets}
           selectedPetFilter={selectedPetFilter}
           onPetFilterChange={setSelectedPetFilter}
           plansCount={plansWithSteps?.length || 0}
         />
-        
-        {(plansWithSteps || []).length > 0 && (
-          <ViewSwitcher
-            view={viewMode}
-            onViewChange={handleViewChange}
-          />
-        )}
       </div>
 
-      {/* Training Plans List */}
+      {/* Training Plans Grid */}
       <LoadingStateManager
         isLoading={plansLoading}
         loadingMessage={t('training.plans.loadingMessage')}
@@ -121,15 +143,68 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
             fallbackMessage={t('training.subscriptionGuard.savedPlans')}
             showUpgradeButton={true}
           >
-            <PlansList 
-              plans={plansWithSteps || []}
-              onStepComplete={refetch}
-              onDeletePlan={setPlanToDelete}
-              viewMode={viewMode}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {plansWithSteps?.map((plan) => (
+                <div 
+                  key={plan.id} 
+                  className="cursor-pointer"
+                  onClick={() => handlePlanCardClick(plan)}
+                >
+                  <CompactPlanCard
+                    plan={plan}
+                    onStepComplete={refetch}
+                    onDeletePlan={setPlanToDelete}
+                  />
+                </div>
+              ))}
+            </div>
           </SubscriptionGuard>
         )}
       </LoadingStateManager>
+
+      {/* Plan Detail Modal */}
+      <Dialog open={isPlanDetailModalOpen} onOpenChange={setIsPlanDetailModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-6 border-b">
+            <div className="flex-1">
+              <DialogTitle className="text-2xl font-bold text-foreground">
+                {selectedPlanForModal?.title}
+              </DialogTitle>
+              {selectedPlanForModal?.pet_name && (
+                <p className="text-sm text-muted-foreground mt-1">
+                  Training plan for {selectedPlanForModal.pet_name}
+                </p>
+              )}
+            </div>
+          </DialogHeader>
+          
+          {selectedPlanForModal && (
+            <div className="pt-4">
+              {/* Plan Description */}
+              {selectedPlanForModal.description && (
+                <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">
+                  <h3 className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">
+                    {t('training.trainingPlans.planDescription')}
+                  </h3>
+                  <p className="text-sm text-blue-600 dark:text-blue-200">
+                    {selectedPlanForModal.description}
+                  </p>
+                </div>
+              )}
+              
+              {/* Training Progress Card with full functionality */}
+              <TrainingProgressCard
+                planId={selectedPlanForModal.id}
+                planTitle={selectedPlanForModal.title}
+                steps={selectedPlanForModal.steps}
+                onStepComplete={handleModalStepComplete}
+                petName={selectedPlanForModal.pet_name}
+                petSpecies={selectedPlanForModal.pet_species}
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Modals */}
       <CreatePlanModal
