@@ -99,6 +99,22 @@ export async function saveChatMessages(
 
     if (!userError && !aiError) {
       console.log('✅ Chat messages saved successfully');
+      
+      // Update session timestamp to reflect latest activity
+      try {
+        const { error: updateError } = await supabaseClient
+          .from('chat_sessions')
+          .update({ updated_at: new Date().toISOString() })
+          .eq('id', sessionId);
+          
+        if (updateError) {
+          console.warn('⚠️ Could not update session timestamp:', updateError);
+        } else {
+          console.log('✅ Session timestamp updated');
+        }
+      } catch (timestampError) {
+        console.warn('⚠️ Error updating session timestamp:', timestampError);
+      }
     }
   } catch (error) {
     console.error('❌ Critical error in saveChatMessages:', error);

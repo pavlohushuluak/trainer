@@ -9,7 +9,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
 import { LoadingStateManager } from '@/components/training/LoadingStateManager';
-import { ChatModal } from '@/components/ChatModal';
+import { useNavigate } from 'react-router-dom';
 import { SupportButton } from '@/components/support/SupportButton';
 import { AlertCircle } from 'lucide-react';
 
@@ -60,8 +60,8 @@ const SubscriptionManagementSection = lazy(() => import('@/components/training/S
 const MyPetTraining = () => {
   const { user, loading } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslations();
-  const [isChatOpen, setIsChatOpen] = useState(false);
 
   // Use Redux for pet profiles data
   const {
@@ -181,7 +181,7 @@ const MyPetTraining = () => {
               <div className="mb-8">
                 <LazyComponentErrorBoundary>
                   <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg" />}>
-                    <HeroStorySection onChatOpen={() => setIsChatOpen(true)} />
+                    <HeroStorySection onChatOpen={() => navigate('/chat')} />
                   </Suspense>
                 </LazyComponentErrorBoundary>
               </div>
@@ -233,12 +233,7 @@ const MyPetTraining = () => {
                 </LazyComponentErrorBoundary>
               </LoadingStateManager>
 
-              {isChatOpen && (
-                <ChatModal 
-                  isOpen={isChatOpen} 
-                  onClose={() => setIsChatOpen(false)}
-                />
-              )}
+
             </div>
           </div>
           

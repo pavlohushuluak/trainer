@@ -16,7 +16,7 @@ const Benefits = lazy(() => import("@/components/Benefits").then(module => ({ de
 const Pricing = lazy(() => import("@/components/Pricing").then(module => ({ default: module.Pricing })));
 const Testimonials = lazy(() => import("@/components/Testimonials").then(module => ({ default: module.Testimonials })));
 const FAQ = lazy(() => import("@/components/FAQ").then(module => ({ default: module.FAQ })));
-const ChatModal = lazy(() => import("@/components/ChatModal").then(module => ({ default: module.ChatModal })));
+
 
 // Loading fallback component
 const SectionLoader = ({ height = "h-32" }: { height?: string }) => (
@@ -26,7 +26,7 @@ const SectionLoader = ({ height = "h-32" }: { height?: string }) => (
 );
 
 const Index = () => {
-  const [showChatModal, setShowChatModal] = useState(false);
+
   const { trackEvent } = useAnalytics();
   const { user, session } = useAuth();
   const { signOut } = useAuthOperations();
@@ -109,7 +109,7 @@ const Index = () => {
 
   const handleStartChat = () => {
     requireAuth(() => {
-      setShowChatModal(true);
+      navigate('/chat');
       trackEvent('chat_started');
     });
   };
@@ -194,15 +194,7 @@ const Index = () => {
         </div>
       </Suspense>
       
-      {/* Optimized Chat Modal with prefetched pets */}
-      {user && (
-        <Suspense fallback={null}>
-          <ChatModal 
-            isOpen={showChatModal} 
-            onClose={() => setShowChatModal(false)}
-          />
-        </Suspense>
-      )}
+
 
       {/* Smart Login Modal - erscheint automatisch bei geschützten Aktionen */}
       <SmartLoginModal

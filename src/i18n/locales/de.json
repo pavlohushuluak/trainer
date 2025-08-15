@@ -136,6 +136,170 @@
         "retry": "Entschuldige, beim Erstellen des Trainingsplans gab es ein kleines Problem. Lass mich das nochmal für dich versuchen - magst du mir kurz sagen, woran ihr arbeiten möchtet?"
       }
     },
+    "page": {
+      "title": "Chat mit Trainer",
+      "back": "Zurück",
+      "settings": "Einstellungen",
+      "authRequired": {
+        "title": "Anmeldung erforderlich",
+        "description": "Bitte melde dich an, um den Chat mit deinem Tiertrainer zu nutzen.",
+        "login": "Anmelden"
+      },
+      "history": {
+        "title": "Chat-Verlauf",
+        "search": "Gespräche durchsuchen...",
+        "empty": "Noch kein Chat-Verlauf",
+        "startChat": "Chat starten"
+      },
+      "noSession": {
+        "title": "Kein aktiver Chat",
+        "description": "Wähle einen Chat aus dem Verlauf oder starte eine neue Konversation.",
+        "startChat": "Neuen Chat starten"
+      },
+      "welcome": {
+        "title": "Willkommen im Chat!",
+        "description": "Starte eine Konversation mit deinem Tiertrainer. Stelle Fragen, hole dir Rat oder fordere Trainingspläne an."
+      },
+      "input": {
+        "placeholder": "Tippe deine Nachricht hier..."
+      },
+      "success": {
+        "newSession": {
+          "title": "Neuer Chat erstellt",
+          "description": "Deine neue Chat-Sitzung wurde erfolgreich erstellt."
+        },
+        "deleteSession": {
+          "title": "Chat gelöscht",
+          "description": "Die Chat-Sitzung wurde erfolgreich gelöscht."
+        }
+      },
+      "error": {
+        "loadingSessions": {
+          "title": "Fehler beim Laden der Chats",
+          "description": "Dein Chat-Verlauf konnte nicht geladen werden. Bitte versuche es erneut."
+        },
+        "loadingMessages": {
+          "title": "Fehler beim Laden der Nachrichten",
+          "description": "Die Chat-Nachrichten konnten nicht geladen werden. Bitte versuche es erneut."
+        },
+        "creatingSession": {
+          "title": "Fehler beim Erstellen des Chats",
+          "description": "Eine neue Chat-Sitzung konnte nicht erstellt werden. Bitte versuche es erneut."
+        },
+        "sendingMessage": {
+          "title": "Fehler beim Senden der Nachricht",
+          "description": "Deine Nachricht konnte nicht gesendet werden. Bitte versuche es erneut."
+        },
+        "deleteSession": {
+          "title": "Fehler beim Löschen des Chats",
+          "description": "Die Chat-Sitzung konnte nicht gelöscht werden. Bitte versuche es erneut."
+        },
+        "noResponse": "Keine Antwort vom Trainer erhalten. Bitte versuche es erneut."
+      },
+      "confirm": {
+        "deleteSession": {
+          "title": "Chat-Sitzung löschen",
+          "description": "Bist du sicher, dass du diese Chat-Sitzung löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden und alle Nachrichten gehen dauerhaft verloren."
+        }
+      }
+    },
+    "loading": {
+      "sessions": "Chat-Verlauf wird geladen...",
+      "messages": "Nachrichten werden geladen...",
+      "sending": "Nachricht wird gesendet..."
+    },
+    "petSelector": {
+      "placeholder": "Tier auswählen...",
+      "noPetSelected": "Kein Tier ausgewählt"
+    },
+    "session": {
+      "titlePrefix": "Chat mit",
+      "newSession": "Neue Chat-Sitzung"
+    },
+    "empty": {
+      "sessions": "Noch kein Chat-Verlauf",
+      "messages": "Keine Nachrichten in diesem Chat",
+      "search": "Keine Gespräche gefunden"
+    },
+    "time": {
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "thisWeek": "Diese Woche",
+      "older": "Älter"
+    },
+    "pet": {
+      "species": {
+        "dog": "Hund",
+        "cat": "Katze",
+        "bird": "Vogel",
+        "fish": "Fisch",
+        "rabbit": "Kaninchen",
+        "hamster": "Hamster",
+        "other": "Andere"
+      }
+    },
+    "header": {
+      "trainingWith": "Training mit",
+      "generalAdvice": "Allgemeine Tiertraining-Beratung",
+      "trainer": "Dein Trainer:",
+      "specializedAdvice": "Spezialisierte Beratung für",
+      "selectPetAdvice": "Wähle ein Tier für personalisierte Trainingsberatung"
+    },
+    "messages": {
+      "message": {
+        "planCreated": "✅ Trainingsplan erfolgreich erstellt!",
+        "defaultTrainerName": "Trainer",
+        "defaultUserName": "Du"
+      }
+    },
+    "diagnostics": {
+      "title": "🔍 Chat-System Diagnose vs. Supabase",
+      "runButton": "Vollständige Chat-Diagnose starten",
+      "running": "Teste Chat-System...",
+      "timestamp": "Diagnose durchgeführt am:",
+      "summary": "Zusammenfassung:",
+      "passed": "Bestanden:",
+      "failed": "Fehlgeschlagen:",
+      "warnings": "Warnungen:",
+      "recommendations": "Empfohlene Maßnahmen:",
+      "authFail": "• Bitte melde dich an, um alle Chat-Funktionen zu testen",
+      "edgeFunctionFail": "• Edge Function Problem - OpenAI API Key überprüfen",
+      "networkFail": "• Netzwerkverbindung zu Supabase überprüfen",
+      "tests": {
+        "userAuth": "Benutzer-Authentifizierung",
+        "supabaseConnection": "Supabase-Verbindung",
+        "chatSessionCreation": "Chat-Sitzung erstellen",
+        "chatEdgeFunction": "Chat Edge Function",
+        "petProfilesAccess": "Tierprofile-Zugriff",
+        "chatMessagesTable": "Chat-Nachrichten-Tabelle",
+        "networkConnectivity": "Netzwerkverbindung"
+      },
+      "status": {
+        "pass": "BESTANDEN",
+        "fail": "FEHLGESCHLAGEN",
+        "warning": "WARNUNG"
+      },
+      "details": {
+        "userAuthenticated": "Benutzer-ID:",
+        "noUserAuthenticated": "Kein Benutzer angemeldet",
+        "connectionSuccessful": "Verbindung erfolgreich",
+        "sessionCreated": "Sitzung erstellt:",
+        "functionAccessible": "Funktion zugänglich und antwortet",
+        "functionError": "Funktionsfehler:",
+        "networkError": "Netzwerkfehler:",
+        "foundPetProfiles": "Gefunden",
+        "petProfiles": "Tierprofile",
+        "chatMessagesAccessible": "Chat-Nachrichten-Tabelle zugänglich",
+        "directNetworkWorking": "Direkte Netzwerkverbindung funktioniert"
+      }
+    },
+    "hooks": {
+      "general": "Allgemein",
+      "unnamedPet": "Unbenanntes Tier",
+      "defaultTrainer": "TierTrainer",
+      "errorMessage": "Entschuldigung, es gab ein Problem:",
+      "pleaseRetry": "Bitte versuchen Sie es erneut."
+    },
     "chatInput": {
       "placeholder": "Schreiben Sie hier Ihre Nachricht...",
       "helpMessage": "Drücken Sie Enter zum Senden, Shift+Enter für neue Zeile"
@@ -868,6 +1032,157 @@
     }
   },
   "chat": {
+    "thinking": "Denkt...",
+    "petSelection": {
+      "title": "Tier für Chat auswählen",
+      "description": "Wähle aus, über welches Tier du chatten möchtest, oder starte eine allgemeine Konversation.",
+      "generalChat": "Allgemeiner Chat",
+      "generalChatDescription": "Allgemeine Tiertraining-Beratung ohne spezifischen Tierkontext"
+    },
+    "settings": {
+      "title": "Chat-Einstellungen",
+      "description": "Passe deine Chat-Erfahrung und KI-Präferenzen an.",
+      "chatPreferences": {
+        "title": "Chat-Präferenzen",
+        "autoScroll": {
+          "title": "Auto-Scroll zu neuen Nachrichten",
+          "description": "Automatisch zur neuesten Nachricht scrollen, wenn neue Nachrichten ankommen"
+        },
+        "typingIndicator": {
+          "title": "Tipp-Indikator anzeigen",
+          "description": "Anzeigen, wenn die KI eine Antwort tippt"
+        },
+        "messageSound": {
+          "title": "Nachrichten-Benachrichtigungston",
+          "description": "Einen Ton abspielen, wenn neue Nachrichten ankommen"
+        }
+      },
+      "aiPreferences": {
+        "title": "KI-Präferenzen",
+        "detailedResponses": {
+          "title": "Detaillierte Antworten",
+          "description": "KI liefert umfassendere und detailliertere Antworten"
+        },
+        "autoPlanCreation": {
+          "title": "Trainingspläne automatisch erstellen",
+          "description": "Automatisch Trainingspläne erstellen, wenn angemessen"
+        },
+        "contextMemory": {
+          "title": "Erweiterter Kontext-Speicher",
+          "description": "KI erinnert sich an mehr Kontext aus vorherigen Gesprächen"
+        }
+      },
+      "privacy": {
+        "title": "Datenschutz & Daten",
+        "chatHistory": {
+          "title": "Chat-Verlauf speichern",
+          "description": "Deine Chat-Konversationen für zukünftige Referenz speichern"
+        },
+        "analytics": {
+          "title": "Nutzungsanalysen",
+          "description": "Hilf dabei, den Service zu verbessern, indem du anonyme Nutzungsdaten teilst"
+        }
+      },
+      "sessionManagement": {
+        "title": "Sitzungsverwaltung",
+        "autoSave": {
+          "title": "Sitzungen automatisch speichern",
+          "description": "Chat-Sitzungen automatisch speichern, während du tippst"
+        },
+        "sessionLimit": {
+          "title": "Sitzungslimit-Erinnerung",
+          "description": "Erinnerungen anzeigen, wenn Sitzungslimits erreicht werden"
+        }
+      }
+    },
+    "session": {
+      "titlePrefix": "Chat mit",
+      "newSession": "Neue Chat-Sitzung"
+    },
+    "empty": {
+      "sessions": "Noch kein Chat-Verlauf",
+      "messages": "Keine Nachrichten in diesem Chat",
+      "search": "Keine Gespräche gefunden"
+    },
+    "time": {
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "thisWeek": "Diese Woche",
+      "older": "Älter"
+    },
+    "pet": {
+      "species": {
+        "dog": "Hund",
+        "cat": "Katze",
+        "bird": "Vogel",
+        "fish": "Fisch",
+        "rabbit": "Kaninchen",
+        "hamster": "Hamster",
+        "other": "Andere"
+      }
+    },
+    "diagnostics": {
+      "title": "🔍 Chat-System Diagnose vs. Supabase",
+      "runButton": "Vollständige Chat-Diagnose starten",
+      "running": "Teste Chat-System...",
+      "timestamp": "Diagnose durchgeführt am:",
+      "summary": "Zusammenfassung:",
+      "passed": "Bestanden:",
+      "failed": "Fehlgeschlagen:",
+      "warnings": "Warnungen:",
+      "recommendations": "Empfohlene Maßnahmen:",
+      "authFail": "• Bitte melde dich an, um alle Chat-Funktionen zu testen",
+      "edgeFunctionFail": "• Edge Function Problem - OpenAI API Key überprüfen",
+      "networkFail": "• Netzwerkverbindung zu Supabase überprüfen",
+      "tests": {
+        "userAuth": "Benutzer-Authentifizierung",
+        "supabaseConnection": "Supabase-Verbindung",
+        "chatSessionCreation": "Chat-Sitzung erstellen",
+        "chatEdgeFunction": "Chat Edge Function",
+        "petProfilesAccess": "Tierprofile-Zugriff",
+        "chatMessagesTable": "Chat-Nachrichten-Tabelle",
+        "networkConnectivity": "Netzwerkverbindung"
+      },
+      "status": {
+        "pass": "BESTANDEN",
+        "fail": "FEHLGESCHLAGEN",
+        "warning": "WARNUNG"
+      },
+      "details": {
+        "userAuthenticated": "Benutzer-ID:",
+        "noUserAuthenticated": "Kein Benutzer angemeldet",
+        "connectionSuccessful": "Verbindung erfolgreich",
+        "sessionCreated": "Sitzung erstellt:",
+        "functionAccessible": "Funktion zugänglich und antwortet",
+        "functionError": "Funktionsfehler:",
+        "networkError": "Netzwerkfehler:",
+        "foundPetProfiles": "Gefunden",
+        "petProfiles": "Tierprofile",
+        "chatMessagesAccessible": "Chat-Nachrichten-Tabelle zugänglich",
+        "directNetworkWorking": "Direkte Netzwerkverbindung funktioniert"
+      }
+    },
+    "hooks": {
+      "general": "Allgemein",
+      "unnamedPet": "Unbenanntes Tier",
+      "defaultTrainer": "TierTrainer",
+      "errorMessage": "Entschuldigung, es gab ein Problem:",
+      "pleaseRetry": "Bitte versuchen Sie es erneut."
+    },
+    "chatInput": {
+      "placeholder": "Schreiben Sie hier Ihre Nachricht...",
+      "helpMessage": "Drücken Sie Enter zum Senden, Shift+Enter für neue Zeile"
+    },
+    "satisfactionRequest": {
+      "question": "War das hilfreich?",
+      "yes": "Ja",
+      "no": "Nein"
+    },
+    "loading": {
+      "sessions": "Chat-Verlauf wird geladen...",
+      "messages": "Nachrichten werden geladen...",
+      "sending": "Nachricht wird gesendet..."
+    },
     "title": "Chat mit Trainer",
     "sendMessage": "Nachricht senden",
     "typeMessage": "Nachricht eingeben...",
@@ -880,6 +1195,74 @@
     "freeLimitReached": "Kostenloses Limit erreicht",
     "upgradeToPremium": "Zu Premium upgraden",
     "page": {
+      "back": "Zurück",
+      "settings": "Einstellungen",
+      "authRequired": {
+        "title": "Anmeldung erforderlich",
+        "description": "Bitte melde dich an, um den Chat mit deinem Tiertrainer zu nutzen.",
+        "login": "Anmelden"
+      },
+      "history": {
+        "title": "Chat-Verlauf",
+        "search": "Gespräche durchsuchen...",
+        "empty": "Noch kein Chat-Verlauf",
+        "startChat": "Chat starten"
+      },
+      "noSession": {
+        "title": "Kein aktiver Chat",
+        "description": "Wähle einen Chat aus dem Verlauf oder starte eine neue Konversation.",
+        "startChat": "Neuen Chat starten"
+      },
+      "welcome": {
+        "title": "Willkommen im Chat!",
+        "description": "Starte eine Konversation mit deinem Tiertrainer. Stelle Fragen, hole dir Rat oder fordere Trainingspläne an."
+      },
+      "input": {
+        "placeholder": "Tippe deine Nachricht hier..."
+      },
+      "success": {
+        "newSession": {
+          "title": "Neuer Chat erstellt",
+          "description": "Deine neue Chat-Sitzung wurde erfolgreich erstellt."
+        },
+        "deleteSession": {
+          "title": "Chat gelöscht",
+          "description": "Die Chat-Sitzung wurde erfolgreich gelöscht."
+        }
+      },
+      "error": {
+        "loadingSessions": {
+          "title": "Fehler beim Laden der Chats",
+          "description": "Dein Chat-Verlauf konnte nicht geladen werden. Bitte versuche es erneut."
+        },
+        "loadingMessages": {
+          "title": "Fehler beim Laden der Nachrichten",
+          "description": "Die Chat-Nachrichten konnten nicht geladen werden. Bitte versuche es erneut."
+        },
+        "creatingSession": {
+          "title": "Fehler beim Erstellen des Chats",
+          "description": "Eine neue Chat-Sitzung konnte nicht erstellt werden. Bitte versuche es erneut."
+        },
+        "sendingMessage": {
+          "title": "Fehler beim Senden der Nachricht",
+          "description": "Deine Nachricht konnte nicht gesendet werden. Bitte versuche es erneut."
+        },
+        "deleteSession": {
+          "title": "Fehler beim Löschen des Chats",
+          "description": "Die Chat-Sitzung konnte nicht gelöscht werden. Bitte versuche es erneut."
+        },
+        "noResponse": "Keine Antwort vom Trainer erhalten. Bitte versuche es erneut.",
+        "noPets": {
+          "title": "Keine Haustierprofile",
+          "description": "Erstelle zuerst ein Haustierprofil, um mit dem Trainer zu chatten."
+        }
+      },
+      "confirm": {
+        "deleteSession": {
+          "title": "Chat-Sitzung löschen",
+          "description": "Bist du sicher, dass du diese Chat-Sitzung löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden und alle Nachrichten gehen dauerhaft verloren."
+        }
+      },
       "title": "Trainer-Chat",
       "subtitle": "Chatten Sie mit unserem KI-Hundetrainer und erhalten Sie personalisiert Trainingsempfehlungen.",
       "loginRequired": {
@@ -896,6 +1279,20 @@
           "Bereitstellung von Trainingstipps",
           "Beantwortung von Hundetraining-Fragen"
         ]
+      },
+      "continueChat": {
+        "button": "Chat fortsetzen",
+        "loading": "Chat-Verlauf wird geladen...",
+        "description": "Lade den vorherigen Chat und setzte dort fort",
+        "message": "Bitte fahre mit unserem vorherigen Chat fort.",
+        "success": {
+          "title": "Chat fortgesetzt",
+          "description": "Deine Konversation wurde erfolgreich geladen und fortgesetzt."
+        },
+        "error": {
+          "title": "Fehler beim Fortsetzen des Chats",
+          "description": "Der Chat-Verlauf konnte nicht geladen werden. Bitte versuche es erneut."
+        }
       }
     },
     "modal": {
@@ -948,6 +1345,8 @@
       }
     },
     "petSelector": {
+      "placeholder": "Tier auswählen...",
+      "noPetSelected": "Kein Tier ausgewählt",
       "singlePet": {
         "trainingWith": "Training mit",
         "adviceNote": "💡 Alle Ratschläge speziell angepasst für"

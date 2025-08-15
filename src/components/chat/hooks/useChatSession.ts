@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslations } from "@/hooks/useTranslations";
 
 const trainerTeam = [
   { firstName: "Marc", lastName: "W.", specialty: "Hunde, Grundgehorsam" },
@@ -17,12 +18,13 @@ const trainerTeam = [
 export const useChatSession = (isOpen: boolean) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslations();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sessionTrainerName, setSessionTrainerName] = useState<string>("");
   const [isCreating, setIsCreating] = useState(false);
 
   const getTrainerName = () => {
-    return sessionTrainerName || "TierTrainer";
+    return sessionTrainerName || t('chat.hooks.defaultTrainer');
   };
 
   const createImmediateSession = () => {

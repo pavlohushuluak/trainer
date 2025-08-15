@@ -31,7 +31,7 @@ import Impressum from "./pages/Impressum";
 import TestEmail from "./pages/TestEmail";
 import TestEmailAuth from "./pages/TestEmailAuth";
 import ChatDiagnosticsPage from "./pages/ChatDiagnosticsPage";
-import ChatPage from "./pages/ChatPage";
+import { ChatPage } from "./pages/ChatPage";
 import SettingsPage from "./pages/SettingsPage";
 import ImageAnalysisPage from "./pages/ImageAnalysisPage";
 import LoginPage from "./pages/LoginPage";
@@ -135,6 +135,7 @@ const App = () => {
                   <Route path="/admin/login" element={<AdminLogin />} />
                   <Route path="/admin/*" element={<AdminDashboard />} />
                   <Route path="/admin/status-test" element={<AdminStatusTestPage />} />
+                  <Route path="chat" element={<ChatPage />} />
                   <Route path="/" element={<MainLayout />}>
                     <Route index element={<Index />} />
                     {/* <Route path="dashboard" element={<Dashboard />} /> */}
@@ -149,7 +150,6 @@ const App = () => {
                     {/* <Route path="test-email" element={<TestEmail />} />
                     <Route path="test-email-auth" element={<TestEmailAuth />} />
                     <Route path="chat-diagnostics" element={<ChatDiagnosticsPage />} /> */}
-                    {/* <Route path="chat" element={<ChatPage />} /> */}
                     <Route path="settings" element={<SettingsPage />} />
                     {/* <Route path="image-analysis" element={<ImageAnalysisPage />} /> */}
                     <Route path="login" element={<LoginPage />} />

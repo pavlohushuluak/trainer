@@ -465,7 +465,7 @@ export const useInstantChat = (isOpen: boolean, preloadedPets: PetProfile[] = []
     // Computed values
     getSelectedPetName,
     getSelectedPetSpecies,
-    getTrainerName: () => trainerName || "TierTrainer",
+    getTrainerName: () => trainerName || t('chat.hooks.defaultTrainer'),
     canSendMessage,
     hasPets,
     

@@ -105,11 +105,11 @@ export const TopNavigationBar = ({
         //   label: t('navigation.imageAnalysis'),
         //   action: () => navigate('/image-analysis')
         // },
-        // {
-        //   icon: MessageCircle,
-        //   label: t('navigation.trainerChat'),
-        //   action: () => navigate('/chat')
-        // },
+        {
+          icon: MessageCircle,
+          label: t('navigation.trainerChat'),
+          action: () => navigate('/chat')
+        },
         {
           icon: Settings,
           label: t('navigation.settings'),

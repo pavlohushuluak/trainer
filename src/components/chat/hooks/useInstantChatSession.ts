@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslations } from "@/hooks/useTranslations";
 import { assignTrainerForSession } from "../utils/trainerTeam";
 
 interface InstantSessionResult {
@@ -12,6 +13,7 @@ interface InstantSessionResult {
 
 export const useInstantChatSession = (isOpen: boolean) => {
   const { user } = useAuth();
+  const { t } = useTranslations();
   const [session, setSession] = useState<InstantSessionResult | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const backgroundSyncRef = useRef<Promise<void> | null>(null);
@@ -113,7 +115,7 @@ export const useInstantChatSession = (isOpen: boolean) => {
 
   return {
     sessionId: session?.sessionId || null,
-    trainerName: session?.trainerName || "TierTrainer",
+          trainerName: session?.trainerName || t('chat.hooks.defaultTrainer'),
     isReady: !!session?.isReady,
     isTemp: session?.isTemp || false,
     isCreating: false

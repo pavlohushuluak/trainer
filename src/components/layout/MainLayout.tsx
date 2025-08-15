@@ -34,6 +34,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
   // Check if we're on the Index page (root path)
   const isIndexPage = location.pathname === '/';
+  // Check if we're on the Chat page
+  const isChatPage = location.pathname === '/chat';
 
   // Direct admin check without React Query to avoid hanging issues
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>(undefined);
@@ -336,15 +338,15 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       <AuthErrorDisplay />
       
       {/* Main Content */}
-      <div className="flex-1 mt-16">
+      <div className={`flex-1 mt-16 ${isChatPage ? 'h-[calc(100vh-4rem)]' : ''}`}>
         {children || <Outlet />}
       </div>
       
       {/* Footer */}
-      {showFooter && <Footer />}
+      {showFooter && !isChatPage && <Footer />}
       
-      {/* Support Button - Hide on Index page */}
-      {showSupportButton && !isIndexPage && <SupportButton />}
+      {/* Support Button - Hide on Index page and Chat page */}
+      {showSupportButton && !isIndexPage && !isChatPage && <SupportButton />}
     </div>
   );
 }; 

@@ -262,7 +262,7 @@ export const useOptimizedChat = (
 
       updateMessage(aiMessageId, {
         id: `error-${Date.now()}`,
-        content: `Entschuldigung, es gab ein Problem: ${error.message}\n\nBitte versuchen Sie es erneut.`,
+        content: `${t('chat.hooks.errorMessage')} ${error.message}\n\n${t('chat.hooks.pleaseRetry')}`,
         created_at: new Date().toISOString(),
       });
     } finally {
@@ -297,12 +297,12 @@ export const useOptimizedChat = (
 
   // Helper functions
   const getSelectedPetName = useCallback(() => {
-    if (selectedPet === "none") return "Allgemein";
+    if (selectedPet === "none") return t('chat.hooks.general');
     const pet = pets.find((p) => p.id === selectedPet);
 
 
-    return pet?.name || "Unbenanntes Tier";
-  }, [selectedPet, pets]);
+    return pet?.name || t('chat.hooks.unnamedPet');
+  }, [selectedPet, pets, t]);
 
   const getSelectedPetSpecies = useCallback(() => {
     if (selectedPet === "none") return "";
@@ -311,8 +311,8 @@ export const useOptimizedChat = (
   }, [selectedPet, pets]);
 
   const getTrainerName = useCallback(() => {
-    return trainerName || "TierTrainer";
-  }, [trainerName]);
+    return trainerName || t('chat.hooks.defaultTrainer');
+  }, [trainerName, t]);
 
   // Check if user can send message
   const canSendMessage = useMemo(() => {

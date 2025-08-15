@@ -9,7 +9,7 @@ import { useTranslations } from '@/hooks/useTranslations';
 
 export const ChatDiagnostics = () => {
   const { user } = useAuth();
-  const { currentLanguage } = useTranslations();
+  const { currentLanguage, t } = useTranslations();
   const [diagnostics, setDiagnostics] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -24,24 +24,24 @@ export const ChatDiagnostics = () => {
 
     // Test 1: User Authentication
     results.tests.push({
-      name: 'User Authentication',
-      status: user ? 'PASS' : 'FAIL',
-      details: user ? `User ID: ${user.id}` : 'No user authenticated'
+      name: t('chat.diagnostics.tests.userAuth'),
+      status: user ? t('chat.diagnostics.status.pass') : t('chat.diagnostics.status.fail'),
+      details: user ? `${t('chat.diagnostics.details.userAuthenticated')} ${user.id}` : t('chat.diagnostics.details.noUserAuthenticated')
     });
 
     // Test 2: Supabase Connection
     try {
       const { data, error } = await supabase.from('profiles').select('count', { count: 'exact', head: true });
       results.tests.push({
-        name: 'Supabase Connection',
-        status: error ? 'FAIL' : 'PASS',
-        details: error ? error.message : 'Connection successful'
+        name: t('chat.diagnostics.tests.supabaseConnection'),
+        status: error ? t('chat.diagnostics.status.fail') : t('chat.diagnostics.status.pass'),
+        details: error ? error.message : t('chat.diagnostics.details.connectionSuccessful')
       });
     } catch (error) {
       results.tests.push({
-        name: 'Supabase Connection',
-        status: 'FAIL',
-        details: `Error: ${error}`
+        name: t('chat.diagnostics.tests.supabaseConnection'),
+        status: t('chat.diagnostics.status.fail'),
+        details: `${t('chat.diagnostics.details.networkError')} ${error}`
       });
     }
 
@@ -59,15 +59,15 @@ export const ChatDiagnostics = () => {
 
         if (error) {
           results.tests.push({
-            name: 'Chat Session Creation',
-            status: 'FAIL',
+            name: t('chat.diagnostics.tests.chatSessionCreation'),
+            status: t('chat.diagnostics.status.fail'),
             details: error.message
           });
         } else {
           results.tests.push({
-            name: 'Chat Session Creation',
-            status: 'PASS',
-            details: `Session created: ${data.id}`
+            name: t('chat.diagnostics.tests.chatSessionCreation'),
+            status: t('chat.diagnostics.status.pass'),
+            details: `${t('chat.diagnostics.details.sessionCreated')} ${data.id}`
           });
 
           // Clean up test session
@@ -75,9 +75,9 @@ export const ChatDiagnostics = () => {
         }
       } catch (error) {
         results.tests.push({
-          name: 'Chat Session Creation',
-          status: 'FAIL',
-          details: `Error: ${error}`
+          name: t('chat.diagnostics.tests.chatSessionCreation'),
+          status: t('chat.diagnostics.status.fail'),
+          details: `${t('chat.diagnostics.details.networkError')} ${error}`
         });
       }
     }
@@ -95,15 +95,15 @@ export const ChatDiagnostics = () => {
       });
 
       results.tests.push({
-        name: 'Chat Edge Function',
-        status: error ? 'FAIL' : 'PASS',
-        details: error ? `Function error: ${error.message}` : 'Function accessible and responding'
+        name: t('chat.diagnostics.tests.chatEdgeFunction'),
+        status: error ? t('chat.diagnostics.status.fail') : t('chat.diagnostics.status.pass'),
+        details: error ? `${t('chat.diagnostics.details.functionError')} ${error.message}` : t('chat.diagnostics.details.functionAccessible')
       });
     } catch (error) {
       results.tests.push({
-        name: 'Chat Edge Function',
-        status: 'FAIL',
-        details: `Network error: ${error}`
+        name: t('chat.diagnostics.tests.chatEdgeFunction'),
+        status: t('chat.diagnostics.status.fail'),
+        details: `${t('chat.diagnostics.details.networkError')} ${error}`
       });
     }
 
@@ -117,15 +117,15 @@ export const ChatDiagnostics = () => {
           .limit(1);
 
         results.tests.push({
-          name: 'Pet Profiles Access',
-          status: error ? 'FAIL' : 'PASS',
-          details: error ? error.message : `Found ${data?.length || 0} pet profiles`
+          name: t('chat.diagnostics.tests.petProfilesAccess'),
+          status: error ? t('chat.diagnostics.status.fail') : t('chat.diagnostics.status.pass'),
+          details: error ? error.message : `${t('chat.diagnostics.details.foundPetProfiles')} ${data?.length || 0} ${t('chat.diagnostics.details.petProfiles')}`
         });
       } catch (error) {
         results.tests.push({
-          name: 'Pet Profiles Access',
-          status: 'FAIL',
-          details: `Error: ${error}`
+          name: t('chat.diagnostics.tests.petProfilesAccess'),
+          status: t('chat.diagnostics.status.fail'),
+          details: `${t('chat.diagnostics.details.networkError')} ${error}`
         });
       }
     }
@@ -140,15 +140,15 @@ export const ChatDiagnostics = () => {
           .limit(1);
 
         results.tests.push({
-          name: 'Chat Messages Table',
-          status: error ? 'FAIL' : 'PASS',
-          details: error ? error.message : 'Chat messages table accessible'
+          name: t('chat.diagnostics.tests.chatMessagesTable'),
+          status: error ? t('chat.diagnostics.status.fail') : t('chat.diagnostics.status.pass'),
+          details: error ? error.message : t('chat.diagnostics.details.chatMessagesAccessible')
         });
       } catch (error) {
         results.tests.push({
-          name: 'Chat Messages Table',
-          status: 'FAIL',
-          details: `Error: ${error}`
+          name: t('chat.diagnostics.tests.chatMessagesTable'),
+          status: t('chat.diagnostics.status.fail'),
+          details: `${t('chat.diagnostics.details.networkError')} ${error}`
         });
       }
     }
@@ -163,15 +163,15 @@ export const ChatDiagnostics = () => {
       });
 
       results.tests.push({
-        name: 'Network Connectivity',
-        status: response.ok ? 'PASS' : 'FAIL',
-        details: response.ok ? 'Direct network connection working' : `HTTP ${response.status}: ${response.statusText}`
+        name: t('chat.diagnostics.tests.networkConnectivity'),
+        status: response.ok ? t('chat.diagnostics.status.pass') : t('chat.diagnostics.status.fail'),
+        details: response.ok ? t('chat.diagnostics.details.directNetworkWorking') : `HTTP ${response.status}: ${response.statusText}`
       });
     } catch (error) {
       results.tests.push({
-        name: 'Network Connectivity',
-        status: 'FAIL',
-        details: `Network error: ${error}`
+        name: t('chat.diagnostics.tests.networkConnectivity'),
+        status: t('chat.diagnostics.status.fail'),
+        details: `${t('chat.diagnostics.details.networkError')} ${error}`
       });
     }
 
@@ -181,16 +181,16 @@ export const ChatDiagnostics = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'PASS': return '✅';
-      case 'FAIL': return '❌';
+      case t('chat.diagnostics.status.pass'): return '✅';
+      case t('chat.diagnostics.status.fail'): return '❌';
       default: return '⚠️';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PASS': return 'text-green-600';
-      case 'FAIL': return 'text-red-600';
+      case t('chat.diagnostics.status.pass'): return 'text-green-600';
+      case t('chat.diagnostics.status.fail'): return 'text-red-600';
       default: return 'text-yellow-600';
     }
   };
@@ -199,7 +199,7 @@ export const ChatDiagnostics = () => {
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          🔍 Chat-System Diagnose vs. Supabase
+          {t('chat.diagnostics.title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -208,14 +208,14 @@ export const ChatDiagnostics = () => {
           disabled={loading}
           className="w-full"
         >
-          {loading ? 'Teste Chat-System...' : 'Vollständige Chat-Diagnose starten'}
+          {loading ? t('chat.diagnostics.running') : t('chat.diagnostics.runButton')}
         </Button>
 
         {diagnostics && (
           <div className="space-y-4">
             <Alert>
               <AlertDescription>
-                Diagnose durchgeführt am: {new Date(diagnostics.timestamp).toLocaleString('de-DE')}
+                {t('chat.diagnostics.timestamp')} {new Date(diagnostics.timestamp).toLocaleString(currentLanguage === 'en' ? 'en-US' : 'de-DE')}
               </AlertDescription>
             </Alert>
 
@@ -239,25 +239,25 @@ export const ChatDiagnostics = () => {
             </div>
 
             <div className="mt-6 p-4 bg-muted rounded-lg">
-              <h4 className="font-medium mb-2">Zusammenfassung:</h4>
+              <h4 className="font-medium mb-2">{t('chat.diagnostics.summary')}</h4>
               <div className="text-sm space-y-1">
-                <div>✅ Bestanden: {diagnostics.tests.filter((t: any) => t.status === 'PASS').length}</div>
-                <div>❌ Fehlgeschlagen: {diagnostics.tests.filter((t: any) => t.status === 'FAIL').length}</div>
-                <div>⚠️ Warnungen: {diagnostics.tests.filter((t: any) => t.status === 'WARNING').length}</div>
+                <div>✅ {t('chat.diagnostics.passed')} {diagnostics.tests.filter((t: any) => t.status === t('chat.diagnostics.status.pass')).length}</div>
+                <div>❌ {t('chat.diagnostics.failed')} {diagnostics.tests.filter((t: any) => t.status === t('chat.diagnostics.status.fail')).length}</div>
+                <div>⚠️ {t('chat.diagnostics.warnings')} {diagnostics.tests.filter((t: any) => t.status === t('chat.diagnostics.status.warning')).length}</div>
               </div>
               
-              {diagnostics.tests.filter((t: any) => t.status === 'FAIL').length > 0 && (
+              {diagnostics.tests.filter((t: any) => t.status === t('chat.diagnostics.status.fail')).length > 0 && (
                 <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded">
-                  <h5 className="font-medium text-red-800 mb-2">Empfohlene Maßnahmen:</h5>
+                  <h5 className="font-medium text-red-800 mb-2">{t('chat.diagnostics.recommendations')}</h5>
                   <ul className="text-sm text-red-700 space-y-1">
-                    {diagnostics.tests.some((t: any) => t.name === 'User Authentication' && t.status === 'FAIL') && (
-                      <li>• Bitte melde dich an, um alle Chat-Funktionen zu testen</li>
+                    {diagnostics.tests.some((t: any) => t.name === t('chat.diagnostics.tests.userAuth') && t.status === t('chat.diagnostics.status.fail')) && (
+                      <li>{t('chat.diagnostics.authFail')}</li>
                     )}
-                    {diagnostics.tests.some((t: any) => t.name === 'Chat Edge Function' && t.status === 'FAIL') && (
-                      <li>• Edge Function Problem - OpenAI API Key überprüfen</li>
+                    {diagnostics.tests.some((t: any) => t.name === t('chat.diagnostics.tests.chatEdgeFunction') && t.status === t('chat.diagnostics.status.fail')) && (
+                      <li>{t('chat.diagnostics.edgeFunctionFail')}</li>
                     )}
-                    {diagnostics.tests.some((t: any) => t.name === 'Network Connectivity' && t.status === 'FAIL') && (
-                      <li>• Netzwerkverbindung zu Supabase überprüfen</li>
+                    {diagnostics.tests.some((t: any) => t.name === t('chat.diagnostics.tests.networkConnectivity') && t.status === t('chat.diagnostics.status.fail')) && (
+                      <li>{t('chat.diagnostics.networkFail')}</li>
                     )}
                   </ul>
                 </div>

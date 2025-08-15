@@ -136,6 +136,170 @@
         "retry": "Sorry, there was a small problem creating the training plan. Let me try again for you - could you briefly tell me what you'd like to work on?"
       }
     },
+    "page": {
+      "title": "Chat with Trainer",
+      "back": "Back",
+      "settings": "Settings",
+      "authRequired": {
+        "title": "Login Required",
+        "description": "Please log in to access the chat with your pet trainer.",
+        "login": "Login"
+      },
+      "history": {
+        "title": "Chat History",
+        "search": "Search conversations...",
+        "empty": "No chat history yet",
+        "startChat": "Start Chat"
+      },
+      "noSession": {
+        "title": "No Active Chat",
+        "description": "Select a chat from the history or start a new conversation.",
+        "startChat": "Start New Chat"
+      },
+      "welcome": {
+        "title": "Welcome to Chat!",
+        "description": "Start a conversation with your pet trainer. Ask questions, get advice, or request training plans."
+      },
+      "input": {
+        "placeholder": "Type your message here..."
+      },
+      "success": {
+        "newSession": {
+          "title": "New Chat Created",
+          "description": "Your new chat session has been created successfully."
+        },
+        "deleteSession": {
+          "title": "Chat Deleted",
+          "description": "The chat session has been deleted successfully."
+        }
+      },
+      "error": {
+        "loadingSessions": {
+          "title": "Error Loading Chats",
+          "description": "Failed to load your chat history. Please try again."
+        },
+        "loadingMessages": {
+          "title": "Error Loading Messages",
+          "description": "Failed to load chat messages. Please try again."
+        },
+        "creatingSession": {
+          "title": "Error Creating Chat",
+          "description": "Failed to create a new chat session. Please try again."
+        },
+        "sendingMessage": {
+          "title": "Error Sending Message",
+          "description": "Failed to send your message. Please try again."
+        },
+        "deleteSession": {
+          "title": "Error Deleting Chat",
+          "description": "Failed to delete the chat session. Please try again."
+        },
+        "noResponse": "No response received from the trainer. Please try again."
+      },
+      "confirm": {
+        "deleteSession": {
+          "title": "Delete Chat Session",
+          "description": "Are you sure you want to delete this chat session? This action cannot be undone and all messages will be permanently lost."
+        }
+      }
+    },
+    "loading": {
+      "sessions": "Loading chat history...",
+      "messages": "Loading messages...",
+      "sending": "Sending message..."
+    },
+    "petSelector": {
+      "placeholder": "Select pet...",
+      "noPetSelected": "No pet selected"
+    },
+    "session": {
+      "titlePrefix": "Chat with",
+      "newSession": "New Chat Session"
+    },
+    "empty": {
+      "sessions": "No chat history yet",
+      "messages": "No messages in this chat",
+      "search": "No conversations found"
+    },
+    "time": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "This week",
+      "older": "Older"
+    },
+    "pet": {
+      "species": {
+        "dog": "Dog",
+        "cat": "Cat",
+        "bird": "Bird",
+        "fish": "Fish",
+        "rabbit": "Rabbit",
+        "hamster": "Hamster",
+        "other": "Other"
+      }
+    },
+    "header": {
+      "trainingWith": "Training with",
+      "generalAdvice": "General Pet Training Advice",
+      "trainer": "Your trainer:",
+      "specializedAdvice": "Specialized advice for",
+      "selectPetAdvice": "Select a pet for personalized training advice"
+    },
+    "messages": {
+      "message": {
+        "planCreated": "✅ Training plan successfully created!",
+        "defaultTrainerName": "Trainer",
+        "defaultUserName": "You"
+      }
+    },
+    "diagnostics": {
+      "title": "🔍 Chat System Diagnostics vs. Supabase",
+      "runButton": "Run Complete Chat Diagnostics",
+      "running": "Testing Chat System...",
+      "timestamp": "Diagnostics performed at:",
+      "summary": "Summary:",
+      "passed": "Passed:",
+      "failed": "Failed:",
+      "warnings": "Warnings:",
+      "recommendations": "Recommended Actions:",
+      "authFail": "• Please log in to test all chat functions",
+      "edgeFunctionFail": "• Edge Function Problem - Check OpenAI API Key",
+      "networkFail": "• Check network connection to Supabase",
+      "tests": {
+        "userAuth": "User Authentication",
+        "supabaseConnection": "Supabase Connection",
+        "chatSessionCreation": "Chat Session Creation",
+        "chatEdgeFunction": "Chat Edge Function",
+        "petProfilesAccess": "Pet Profiles Access",
+        "chatMessagesTable": "Chat Messages Table",
+        "networkConnectivity": "Network Connectivity"
+      },
+      "status": {
+        "pass": "PASS",
+        "fail": "FAIL",
+        "warning": "WARNING"
+      },
+      "details": {
+        "userAuthenticated": "User ID:",
+        "noUserAuthenticated": "No user authenticated",
+        "connectionSuccessful": "Connection successful",
+        "sessionCreated": "Session created:",
+        "functionAccessible": "Function accessible and responding",
+        "functionError": "Function error:",
+        "networkError": "Network error:",
+        "foundPetProfiles": "Found",
+        "petProfiles": "pet profiles",
+        "chatMessagesAccessible": "Chat messages table accessible",
+        "directNetworkWorking": "Direct network connection working"
+      }
+    },
+    "hooks": {
+      "general": "General",
+      "unnamedPet": "Unnamed Pet",
+      "defaultTrainer": "Pet Trainer",
+      "errorMessage": "Sorry, there was a problem:",
+      "pleaseRetry": "Please try again."
+    },
     "chatInput": {
       "placeholder": "Type your message here...",
       "helpMessage": "Press Enter to send, Shift+Enter for new line"
@@ -868,6 +1032,157 @@
     }
   },
   "chat": {
+    "thinking": "Thinking...",
+    "petSelection": {
+      "title": "Select Pet for Chat",
+      "description": "Choose which pet you'd like to chat about, or start a general conversation.",
+      "generalChat": "General Chat",
+      "generalChatDescription": "General pet training advice without specific pet context"
+    },
+    "settings": {
+      "title": "Chat Settings",
+      "description": "Customize your chat experience and AI preferences.",
+      "chatPreferences": {
+        "title": "Chat Preferences",
+        "autoScroll": {
+          "title": "Auto-scroll to new messages",
+          "description": "Automatically scroll to the latest message when new messages arrive"
+        },
+        "typingIndicator": {
+          "title": "Show typing indicator",
+          "description": "Display when the AI is typing a response"
+        },
+        "messageSound": {
+          "title": "Message notification sound",
+          "description": "Play a sound when new messages arrive"
+        }
+      },
+      "aiPreferences": {
+        "title": "AI Preferences",
+        "detailedResponses": {
+          "title": "Detailed responses",
+          "description": "AI provides more comprehensive and detailed answers"
+        },
+        "autoPlanCreation": {
+          "title": "Auto-create training plans",
+          "description": "Automatically create training plans when appropriate"
+        },
+        "contextMemory": {
+          "title": "Enhanced context memory",
+          "description": "AI remembers more context from previous conversations"
+        }
+      },
+      "privacy": {
+        "title": "Privacy & Data",
+        "chatHistory": {
+          "title": "Save chat history",
+          "description": "Store your chat conversations for future reference"
+        },
+        "analytics": {
+          "title": "Usage analytics",
+          "description": "Help improve the service by sharing anonymous usage data"
+        }
+      },
+      "sessionManagement": {
+        "title": "Session Management",
+        "autoSave": {
+          "title": "Auto-save sessions",
+          "description": "Automatically save chat sessions as you type"
+        },
+        "sessionLimit": {
+          "title": "Session limit reminder",
+          "description": "Show reminders when approaching session limits"
+        }
+      }
+    },
+    "session": {
+      "titlePrefix": "Chat with",
+      "newSession": "New Chat Session"
+    },
+    "empty": {
+      "sessions": "No chat history yet",
+      "messages": "No messages in this chat",
+      "search": "No conversations found"
+    },
+    "time": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "This week",
+      "older": "Older"
+    },
+    "pet": {
+      "species": {
+        "dog": "Dog",
+        "cat": "Cat",
+        "bird": "Bird",
+        "fish": "Fish",
+        "rabbit": "Rabbit",
+        "hamster": "Hamster",
+        "other": "Other"
+      }
+    },
+    "diagnostics": {
+      "title": "🔍 Chat System Diagnostics vs. Supabase",
+      "runButton": "Run Complete Chat Diagnostics",
+      "running": "Testing Chat System...",
+      "timestamp": "Diagnostics performed at:",
+      "summary": "Summary:",
+      "passed": "Passed:",
+      "failed": "Failed:",
+      "warnings": "Warnings:",
+      "recommendations": "Recommended Actions:",
+      "authFail": "• Please log in to test all chat functions",
+      "edgeFunctionFail": "• Edge Function Problem - Check OpenAI API Key",
+      "networkFail": "• Check network connection to Supabase",
+      "tests": {
+        "userAuth": "User Authentication",
+        "supabaseConnection": "Supabase Connection",
+        "chatSessionCreation": "Chat Session Creation",
+        "chatEdgeFunction": "Chat Edge Function",
+        "petProfilesAccess": "Pet Profiles Access",
+        "chatMessagesTable": "Chat Messages Table",
+        "networkConnectivity": "Network Connectivity"
+      },
+      "status": {
+        "pass": "PASS",
+        "fail": "FAIL",
+        "warning": "WARNING"
+      },
+      "details": {
+        "userAuthenticated": "User ID:",
+        "noUserAuthenticated": "No user authenticated",
+        "connectionSuccessful": "Connection successful",
+        "sessionCreated": "Session created:",
+        "functionAccessible": "Function accessible and responding",
+        "functionError": "Function error:",
+        "networkError": "Network error:",
+        "foundPetProfiles": "Found",
+        "petProfiles": "pet profiles",
+        "chatMessagesAccessible": "Chat messages table accessible",
+        "directNetworkWorking": "Direct network connection working"
+      }
+    },
+    "hooks": {
+      "general": "General",
+      "unnamedPet": "Unnamed Pet",
+      "defaultTrainer": "Pet Trainer",
+      "errorMessage": "Sorry, there was a problem:",
+      "pleaseRetry": "Please try again."
+    },
+    "chatInput": {
+      "placeholder": "Type your message here...",
+      "helpMessage": "Press Enter to send, Shift+Enter for new line"
+    },
+    "satisfactionRequest": {
+      "question": "Was this helpful?",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "loading": {
+      "sessions": "Loading chat history...",
+      "messages": "Loading messages...",
+      "sending": "Sending message..."
+    },
     "title": "Chat with Trainer",
     "sendMessage": "Send Message",
     "typeMessage": "Type message...",
@@ -880,6 +1195,74 @@
     "freeLimitReached": "Free limit reached",
     "upgradeToPremium": "Upgrade to Premium",
     "page": {
+      "back": "Back",
+      "settings": "Settings",
+      "authRequired": {
+        "title": "Login Required",
+        "description": "Please log in to access the chat with your pet trainer.",
+        "login": "Login"
+      },
+      "history": {
+        "title": "Chat History",
+        "search": "Search conversations...",
+        "empty": "No chat history yet",
+        "startChat": "Start Chat"
+      },
+      "noSession": {
+        "title": "No Active Chat",
+        "description": "Select a chat from the history or start a new conversation.",
+        "startChat": "Start New Chat"
+      },
+      "welcome": {
+        "title": "Welcome to Chat!",
+        "description": "Start a conversation with your pet trainer. Ask questions, get advice, or request training plans."
+      },
+      "input": {
+        "placeholder": "Type your message here..."
+      },
+      "success": {
+        "newSession": {
+          "title": "New Chat Created",
+          "description": "Your new chat session has been created successfully."
+        },
+        "deleteSession": {
+          "title": "Chat Deleted",
+          "description": "The chat session has been deleted successfully."
+        }
+      },
+      "error": {
+        "loadingSessions": {
+          "title": "Error Loading Chats",
+          "description": "Failed to load your chat history. Please try again."
+        },
+        "loadingMessages": {
+          "title": "Error Loading Messages",
+          "description": "Failed to load chat messages. Please try again."
+        },
+        "creatingSession": {
+          "title": "Error Creating Chat",
+          "description": "Failed to create a new chat session. Please try again."
+        },
+        "sendingMessage": {
+          "title": "Error Sending Message",
+          "description": "Failed to send your message. Please try again."
+        },
+        "deleteSession": {
+          "title": "Error Deleting Chat",
+          "description": "Failed to delete the chat session. Please try again."
+        },
+        "noResponse": "No response received from the trainer. Please try again.",
+        "noPets": {
+          "title": "No Pet Profiles",
+          "description": "Please create a pet profile first to start chatting with the trainer."
+        }
+      },
+      "confirm": {
+        "deleteSession": {
+          "title": "Delete Chat Session",
+          "description": "Are you sure you want to delete this chat session? This action cannot be undone and all messages will be permanently lost."
+        }
+      },
       "title": "Trainer Chat",
       "subtitle": "Chat with our AI dog trainer and receive personalized training recommendations.",
       "loginRequired": {
@@ -896,6 +1279,20 @@
           "Provide training tips",
           "Answer dog training questions"
         ]
+      },
+      "continueChat": {
+        "button": "Continue Chat",
+        "loading": "Loading chat history...",
+        "description": "Load previous conversation and continue where you left off",
+        "message": "Please continue our previous conversation.",
+        "success": {
+          "title": "Chat Continued",
+          "description": "Your conversation has been loaded and continued successfully."
+        },
+        "error": {
+          "title": "Error Continuing Chat",
+          "description": "Failed to load chat history. Please try again."
+        }
       }
     },
     "modal": {
@@ -948,6 +1345,8 @@
       }
     },
     "petSelector": {
+      "placeholder": "Select pet...",
+      "noPetSelected": "No pet selected",
       "singlePet": {
         "trainingWith": "Training with",
         "adviceNote": "💡 All advice specifically adapted for"
