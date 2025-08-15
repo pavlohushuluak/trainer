@@ -326,29 +326,31 @@ serve(async (req) => {
               aiResponse += errorMessages[userLanguage as keyof typeof errorMessages] || errorMessages.de;
           }
         } else {
-            console.log('⚠️ No valid plan data found in AI response');
-            console.log('🔍 AI Response analysis:', {
-              containsPlanCreation: aiResponse.includes('[PLAN_CREATION]'),
-              containsPlanEnd: aiResponse.includes('[/PLAN_CREATION]'),
-              containsTrainingPlan: aiResponse.toLowerCase().includes('training plan'),
-              containsTrainingsplan: aiResponse.toLowerCase().includes('trainingsplan'),
-              containsStep: aiResponse.toLowerCase().includes('step'),
-              containsSchritt: aiResponse.toLowerCase().includes('schritt'),
-              containsPlan: aiResponse.toLowerCase().includes('plan'),
-              containsPlanErstellen: aiResponse.toLowerCase().includes('plan erstellen'),
-              containsCreatePlan: aiResponse.toLowerCase().includes('create plan')
-            });
-            
+          console.log('⚠️ No valid plan data found in AI response');
+          console.log('🔍 AI Response analysis:', {
+            containsPlanCreation: aiResponse.includes('[PLAN_CREATION]'),
+            containsPlanEnd: aiResponse.includes('[/PLAN_CREATION]'),
+            containsTrainingPlan: aiResponse.toLowerCase().includes('training plan'),
+            containsTrainingsplan: aiResponse.toLowerCase().includes('trainingsplan'),
+            containsStep: aiResponse.toLowerCase().includes('step'),
+            containsSchritt: aiResponse.toLowerCase().includes('schritt'),
+            containsPlan: aiResponse.toLowerCase().includes('plan'),
+            containsPlanErstellen: aiResponse.toLowerCase().includes('plan erstellen'),
+            containsCreatePlan: aiResponse.toLowerCase().includes('create plan'),
+            aiResponseLength: aiResponse.length,
+            aiResponsePreview: aiResponse.substring(0, 1000)
+          });
+          
           // Check if there were any incomplete plan creation attempts and clean them up
           if (aiResponse.includes('[PLAN_CREATION]')) {
-              console.log('🧹 Cleaning up incomplete plan creation blocks');
-              aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
+            console.log('🧹 Cleaning up incomplete plan creation blocks');
+            aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
           }
             
             // Check if AI mentioned creating a plan but didn't use proper format or had mixed languages
             const planMentions = {
-              de: ['trainingsplan', 'plan für', 'plan erstellen', 'trainingsplan erstellen'],
-              en: ['training plan', 'plan for', 'create plan', 'create training plan']
+              de: ['trainingsplan', 'plan für', 'plan erstellen', 'trainingsplan erstellen', 'schritt für schritt', 'anleitung'],
+              en: ['training plan', 'plan for', 'create plan', 'create training plan', 'step by step', 'instructions']
             };
             
             const mentions = planMentions[userLanguage as keyof typeof planMentions] || planMentions.de;
@@ -358,6 +360,7 @@ serve(async (req) => {
             
             if (hasPlanMention) {
               console.log('⚠️ AI mentioned plan creation but didn\'t use proper format or had mixed languages');
+              console.log('🔍 Plan mentions found:', mentions.filter(mention => aiResponse.toLowerCase().includes(mention)));
               
               // Add a specific message about language consistency
               const languageConsistencyMessages = {
@@ -378,6 +381,30 @@ serve(async (req) => {
               
               if (!hasExistingReminder) {
                 aiResponse += languageConsistencyMessages[userLanguage as keyof typeof languageConsistencyMessages] || languageConsistencyMessages.de;
+              }
+            } else {
+              console.log('ℹ️ No plan creation mentions found in AI response');
+              
+              // Add a helpful message if the user might want a plan
+              const planKeywords = {
+                de: ['trainieren', 'beibringen', 'lernen', 'üben', 'kommando', 'verhalten', 'problem', 'hilfe', 'anleitung'],
+                en: ['train', 'teach', 'learn', 'practice', 'command', 'behavior', 'problem', 'help', 'instruction']
+              };
+              
+              const keywords = planKeywords[userLanguage as keyof typeof planKeywords] || planKeywords.de;
+              const hasTrainingKeywords = keywords.some(keyword => 
+                aiResponse.toLowerCase().includes(keyword)
+              );
+              
+              if (hasTrainingKeywords) {
+                console.log('💡 User might want a training plan - adding helpful suggestion');
+                
+                const planSuggestions = {
+                  de: "\n\n💡 Tipp: Wenn du möchtest, kann ich dir einen strukturierten Trainingsplan erstellen. Sag mir einfach, was du mit deinem Tier trainieren möchtest!",
+                  en: "\n\n💡 Tip: If you'd like, I can create a structured training plan for you. Just tell me what you'd like to train with your pet!"
+                };
+                
+                aiResponse += planSuggestions[userLanguage as keyof typeof planSuggestions] || planSuggestions.de;
               }
             }
           }

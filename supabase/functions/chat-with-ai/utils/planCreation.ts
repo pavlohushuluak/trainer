@@ -154,27 +154,42 @@ export function processPlanCreationFromResponse(aiResponse: string, userLanguage
         }
       }
       
-      // Language validation based on user preference instead of word detection
+      // Language validation based on user preference - temporarily much less strict for debugging
       const allContent = `${planData.title} ${planData.description || ''} ${planData.steps.map(s => `${s.title} ${s.description}`).join(' ')}`.toLowerCase();
       
       // Define expected language patterns based on user preference
       const expectedLanguagePatterns = {
         de: {
-          expectedWords: ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst'],
-          forbiddenWords: ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required']
+          expectedWords: ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst', 'einführung', 'erhöhung', 'üben', 'verstärken', 'praxis', 'wiederholen', 'allmählich', 'reduzieren', 'verwenden', 'korrekt', 'reaktionen', 'besser', 'werden'],
+          forbiddenWords: ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required', 'introduction', 'increase', 'practice', 'reinforce', 'repeat', 'gradually', 'reduce', 'use', 'correct', 'reactions', 'better', 'become', 'begin', 'present', 'say', 'multiple', 'times', 'establish', 'association', 'second', 'show', 'both', 'paying', 'attention', 'three', 'process', 'various', 'quantities', 'respond', 'looking', 'rewarding', 'when', 'gets']
         },
         en: {
-          expectedWords: ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required'],
-          forbiddenWords: ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst']
+          expectedWords: ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required', 'introduction', 'increase', 'practice', 'reinforce', 'repeat', 'gradually', 'reduce', 'use', 'correct', 'reactions', 'better', 'become', 'begin', 'present', 'say', 'multiple', 'times', 'establish', 'association', 'second', 'show', 'both', 'paying', 'attention', 'three', 'process', 'various', 'quantities', 'respond', 'looking', 'rewarding', 'when', 'gets'],
+          forbiddenWords: ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst', 'einführung', 'erhöhung', 'üben', 'verstärken', 'praxis', 'wiederholen', 'allmählich', 'reduzieren', 'verwenden', 'korrekt', 'reaktionen', 'besser', 'werden', 'sie', 'ihn', 'ansieht', 'belohnung', 'korrekte', 'reaktionen', 'reduzieren', 'leckerlis', 'wenn', 'er', 'besser', 'wird']
         }
       };
       
       const languagePatterns = expectedLanguagePatterns[userLanguage as keyof typeof expectedLanguagePatterns] || expectedLanguagePatterns.de;
       
-      // Check for forbidden words (words from the wrong language)
+      // Check for forbidden words (words from the wrong language) - temporarily more lenient
       const forbiddenWordsFound = languagePatterns.forbiddenWords.filter(word => allContent.includes(word));
       
-      if (forbiddenWordsFound.length > 0) {
+      // Also check for mixed language patterns - temporarily much more lenient
+      const germanWordsFound = expectedLanguagePatterns.de.expectedWords.filter(word => allContent.includes(word));
+      const englishWordsFound = expectedLanguagePatterns.en.expectedWords.filter(word => allContent.includes(word));
+      
+      // Temporarily much more lenient - only reject if there are MANY words from both languages
+      if (germanWordsFound.length >= 5 && englishWordsFound.length >= 5) {
+        console.warn('⚠️ Mixed language plan detected - rejecting plan');
+        console.warn('German words found:', germanWordsFound);
+        console.warn('English words found:', englishWordsFound);
+        console.warn('Expected language:', userLanguage);
+        console.warn('Plan content:', allContent.substring(0, 200));
+        return null;
+      }
+      
+      // Temporarily more lenient - only reject if there are MANY forbidden words
+      if (forbiddenWordsFound.length >= 3) {
         console.warn('⚠️ Forbidden words detected in plan content - rejecting plan');
         console.warn('Forbidden words found:', forbiddenWordsFound);
         console.warn('Expected language:', userLanguage);
