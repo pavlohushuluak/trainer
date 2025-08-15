@@ -110,88 +110,175 @@ Always answer in English and with maximum 200 words. Offer concrete, actionable 
 
     logStep("Calling OpenAI API", { messageCount: messages.length });
 
-    const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${openaiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-4",
-        messages: messages,
-        max_tokens: 300,
-        temperature: 0.7,
-      }),
-    });
+    // Add timeout to prevent hanging requests
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-    if (!openaiResponse.ok) {
-      const errorData = await openaiResponse.text();
-      logStep("OpenAI API error", { status: openaiResponse.status, error: errorData });
-      throw new Error(`OpenAI API error: ${openaiResponse.status}`);
-    }
+    let openaiResponse;
+    try {
+      // Try GPT-5-mini first, fallback to GPT-4o if it fails
+      const models = ["gpt-5-mini"];
+      let lastError: string | null = null;
+      
+      for (const model of models) {
+        try {
+          logStep(`Trying model: ${model}`);
+          
+          openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${openaiKey}`,
+              "Content-Type": "application/json",
+            },
+            signal: controller.signal,
+            body: JSON.stringify({
+              model: model,
+              messages: messages,
+              max_completion_tokens: 2400,
+            }),
+          });
 
-    const aiResponse = await openaiResponse.json();
-    const aiMessage = aiResponse.choices[0]?.message?.content;
+          clearTimeout(timeoutId);
 
-    if (!aiMessage) {
-      throw new Error("No response from OpenAI");
-    }
+          if (openaiResponse.ok) {
+            logStep(`Successfully used model: ${model}`);
+            
+            // Parse the response
+            const aiResponse = await openaiResponse.json();
+            logStep("OpenAI response received", { 
+              hasChoices: !!aiResponse.choices,
+              choicesLength: aiResponse.choices?.length,
+              hasMessage: !!aiResponse.choices?.[0]?.message,
+              hasContent: !!aiResponse.choices?.[0]?.message?.content,
+              responseStructure: Object.keys(aiResponse),
+              fullResponse: JSON.stringify(aiResponse).substring(0, 1000),
+              modelUsed: aiResponse.model
+            });
+            
+            const aiMessage = aiResponse.choices[0]?.message?.content;
 
-    logStep("AI response received", { responseLength: aiMessage.length });
+            if (!aiMessage || aiMessage.trim() === '') {
+              logStep("No AI message content found", { 
+                aiResponse: JSON.stringify(aiResponse).substring(0, 500),
+                choices: aiResponse.choices,
+                firstChoice: aiResponse.choices?.[0],
+                responseKeys: Object.keys(aiResponse),
+                hasUsage: !!aiResponse.usage,
+                usage: aiResponse.usage,
+                finishReason: aiResponse.choices?.[0]?.finish_reason,
+                modelUsed: aiResponse.model
+              });
+              
+              // If GPT-5-mini returned empty content and we have more models to try, continue
+              if (aiResponse.model?.includes('gpt-5-mini') && model !== models[models.length - 1]) {
+                logStep("GPT-5-mini returned empty content, trying next model");
+                continue; // Try next model
+              }
+              
+              // Check if it was a length limit issue
+              if (aiResponse.choices?.[0]?.finish_reason === 'length') {
+                throw new Error("OpenAI response was cut off due to token limit - please try a shorter message");
+              }
+              
+              // If we have a successful response but no content, provide a fallback
+              const fallbackMessages = {
+                de: "Entschuldigung, ich konnte keine Antwort generieren. Bitte versuche es noch einmal oder formuliere deine Frage anders.",
+                en: "Sorry, I couldn't generate a response. Please try again or rephrase your question."
+              };
+              
+              const fallbackMessage = fallbackMessages[language as keyof typeof fallbackMessages] || fallbackMessages.de;
+              throw new Error(`No response from OpenAI - empty content. Fallback: ${fallbackMessage}`);
+            }
+            
+            // Success! We have a valid response
+            logStep("AI response received", { responseLength: aiMessage.length });
+            
+            // Store the successful response for later use
+            const successfulResponse = { aiResponse, aiMessage };
+            
+            // Benutzer-Nachricht in DB speichern
+            const { error: userMessageError } = await supabaseClient
+              .from('support_messages')
+              .insert({
+                ticket_id: ticketId,
+                sender_type: 'user',
+                sender_id: userId,
+                message: message,
+                message_type: 'text'
+              });
 
-    // Benutzer-Nachricht in DB speichern
-    const { error: userMessageError } = await supabaseClient
-      .from('support_messages')
-      .insert({
-        ticket_id: ticketId,
-        sender_type: 'user',
-        sender_id: userId,
-        message: message,
-        message_type: 'text'
-      });
+            if (userMessageError) {
+              logStep("Error saving user message", userMessageError);
+            }
 
-    if (userMessageError) {
-      logStep("Error saving user message", userMessageError);
-    }
+            // AI-Antwort in DB speichern
+            const { error: aiMessageError } = await supabaseClient
+              .from('support_messages')
+              .insert({
+                ticket_id: ticketId,
+                sender_type: 'ai',
+                sender_id: null,
+                message: successfulResponse.aiMessage,
+                message_type: 'text',
+                metadata: { 
+                  model: "gpt-5-mini", // We'll update this to track which model was actually used
+                  tokens_used: successfulResponse.aiResponse.usage?.total_tokens,
+                  model_used: successfulResponse.aiResponse.model || "gpt-5-mini" // Track the actual model used
+                }
+              });
 
-    // AI-Antwort in DB speichern
-    const { error: aiMessageError } = await supabaseClient
-      .from('support_messages')
-      .insert({
-        ticket_id: ticketId,
-        sender_type: 'ai',
-        sender_id: null,
-        message: aiMessage,
-        message_type: 'text',
-        metadata: { 
-          model: "gpt-4",
-          tokens_used: aiResponse.usage?.total_tokens 
+            if (aiMessageError) {
+              logStep("Error saving AI message", aiMessageError);
+            }
+
+            // Ticket als "zuletzt von AI beantwortet" markieren
+            await supabaseClient
+              .from('support_tickets')
+              .update({ 
+                last_response_at: new Date().toISOString(),
+                status: 'waiting_user'
+              })
+              .eq('id', ticketId);
+
+            logStep("Support chat completed successfully");
+
+            return new Response(JSON.stringify({ 
+              success: true,
+              message: successfulResponse.aiMessage,
+              showSatisfactionRequest: true
+            }), {
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+              status: 200,
+            });
+          } else {
+            const errorData = await openaiResponse.text();
+            lastError = `Model ${model} failed: ${openaiResponse.status} - ${errorData}`;
+            logStep(`Model ${model} failed`, { status: openaiResponse.status, error: errorData });
+            
+            if (model === models[models.length - 1]) {
+              // This was the last model, throw the error
+              throw new Error(lastError);
+            }
+            // Continue to next model
+          }
+        } catch (modelError) {
+          lastError = modelError instanceof Error ? modelError.message : String(modelError);
+          logStep(`Model ${model} error`, { error: lastError });
+          
+          if (model === models[models.length - 1]) {
+            // This was the last model, throw the error
+            throw new Error(lastError);
+          }
+          // Continue to next model
         }
-      });
-
-    if (aiMessageError) {
-      logStep("Error saving AI message", aiMessageError);
+      }
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        throw new Error("OpenAI request timeout - please try again");
+      }
+      throw error;
     }
-
-    // Ticket als "zuletzt von AI beantwortet" markieren
-    await supabaseClient
-      .from('support_tickets')
-      .update({ 
-        last_response_at: new Date().toISOString(),
-        status: 'waiting_user'
-      })
-      .eq('id', ticketId);
-
-    logStep("Support chat completed successfully");
-
-    return new Response(JSON.stringify({ 
-      success: true,
-      message: aiMessage,
-      showSatisfactionRequest: true
-    }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);

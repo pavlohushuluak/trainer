@@ -127,7 +127,7 @@ export async function createFallbackPlan(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-5-mini',
         messages: [
           {
             role: 'system',
@@ -138,8 +138,7 @@ export async function createFallbackPlan(
             content: userMessage
           }
         ],
-        max_tokens: 500,
-        temperature: 0.7,
+        max_completion_tokens: 1500,
       }),
     });
     

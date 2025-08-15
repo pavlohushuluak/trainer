@@ -20,10 +20,9 @@ export async function callOpenAI(messages: any[], openAIApiKey: string) {
       },
       signal: abortController.signal,
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-5-mini',
         messages: messages,
-        temperature: 0.5,
-        max_tokens: 2000, // Increased for complete responses
+        max_completion_tokens: 3000, // Increased for complete responses
         top_p: 0.9,
         frequency_penalty: 0.1,
         presence_penalty: 0.1,

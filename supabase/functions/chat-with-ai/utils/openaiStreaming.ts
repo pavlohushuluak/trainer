@@ -15,10 +15,9 @@ export async function callOpenAIStreaming(messages: any[], openAIApiKey: string)
   
   // ENHANCED REQUEST BODY
   const requestBody = {
-    model: 'gpt-4o-mini',
+    model: 'gpt-5-mini',
     messages: messages,
-    temperature: 0.5,
-    max_tokens: 450, // Dramatisch erhöht für vollständige Antworten
+    max_completion_tokens: 1000, // Dramatisch erhöht für vollständige Antworten
     top_p: 0.9,
     frequency_penalty: 0.1,
     presence_penalty: 0.1,

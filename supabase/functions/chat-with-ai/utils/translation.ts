@@ -31,7 +31,7 @@ export async function translateToEnglish(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-5-mini',
         messages: [
           {
             role: 'system',
@@ -42,8 +42,7 @@ export async function translateToEnglish(
             content: germanText
           }
         ],
-        max_tokens: context === 'title' ? 50 : 200,
-        temperature: 0.3, // Lower temperature for more consistent translations
+        max_completion_tokens: context === 'title' ? 150 : 600,
       }),
     });
 
