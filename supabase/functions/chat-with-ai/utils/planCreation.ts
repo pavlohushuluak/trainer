@@ -84,8 +84,9 @@ export async function createTrainingPlan(
   return planResult;
 }
 
-export function processPlanCreationFromResponse(aiResponse: string) {
+export function processPlanCreationFromResponse(aiResponse: string, userLanguage: string = 'de') {
   console.log('🔍 Searching for plan creation in AI response...');
+  console.log('🌍 User language preference:', userLanguage);
   
   const planMatch = aiResponse.match(/\[PLAN_CREATION\](.*?)\[\/PLAN_CREATION\]/s);
   if (planMatch) {
@@ -134,6 +135,61 @@ export function processPlanCreationFromResponse(aiResponse: string) {
         }
       }
       
+      // Ensure title and description are not empty - temporarily less strict
+      if (!planData.title.trim() || planData.title.trim().length < 2) {
+        console.warn('⚠️ Plan title is too short or empty');
+        return null;
+      }
+      
+      // Validate step titles and descriptions - temporarily less strict
+      for (let i = 0; i < planData.steps.length; i++) {
+        const step = planData.steps[i];
+        if (!step.title.trim() || step.title.trim().length < 2) {
+          console.warn(`⚠️ Step ${i + 1} title is too short or empty`);
+          return null;
+        }
+        if (!step.description.trim() || step.description.trim().length < 5) {
+          console.warn(`⚠️ Step ${i + 1} description is too short or empty`);
+          return null;
+        }
+      }
+      
+      // Language validation based on user preference instead of word detection
+      const allContent = `${planData.title} ${planData.description || ''} ${planData.steps.map(s => `${s.title} ${s.description}`).join(' ')}`.toLowerCase();
+      
+      // Define expected language patterns based on user preference
+      const expectedLanguagePatterns = {
+        de: {
+          expectedWords: ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst'],
+          forbiddenWords: ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required']
+        },
+        en: {
+          expectedWords: ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required'],
+          forbiddenWords: ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst']
+        }
+      };
+      
+      const languagePatterns = expectedLanguagePatterns[userLanguage as keyof typeof expectedLanguagePatterns] || expectedLanguagePatterns.de;
+      
+      // Check for forbidden words (words from the wrong language)
+      const forbiddenWordsFound = languagePatterns.forbiddenWords.filter(word => allContent.includes(word));
+      
+      if (forbiddenWordsFound.length > 0) {
+        console.warn('⚠️ Forbidden words detected in plan content - rejecting plan');
+        console.warn('Forbidden words found:', forbiddenWordsFound);
+        console.warn('Expected language:', userLanguage);
+        console.warn('Plan content:', allContent.substring(0, 200));
+        return null;
+      }
+      
+      // Log language validation for debugging
+      console.log('🔍 Language validation results:', {
+        expectedLanguage: userLanguage,
+        forbiddenWordsFound: forbiddenWordsFound.length,
+        planTitle: planData.title,
+        planContent: allContent.substring(0, 100)
+      });
+      
       console.log('✅ Plan validation successful, returning plan data');
       return planData;
     } catch (error) {
@@ -144,7 +200,7 @@ export function processPlanCreationFromResponse(aiResponse: string) {
   } else {
     console.log('❌ No plan creation block found in response');
     // Check if there might be a malformed plan creation attempt
-    if (aiResponse.includes('PLAN_CREATION') || aiResponse.includes('training plan')) {
+    if (aiResponse.includes('PLAN_CREATION') || aiResponse.includes('training plan') || aiResponse.includes('Trainingsplan')) {
       console.log('⚠️ Response mentions plan creation but no proper tags found');
     }
   }

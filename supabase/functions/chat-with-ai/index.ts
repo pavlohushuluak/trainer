@@ -247,57 +247,144 @@ serve(async (req) => {
           { role: 'user', content: message }
         ];
 
-        // ENHANCED OpenAI Call with detailed logging
+        // ENHANCED OpenAI Call with detailed logging and timeout handling
         const streamingStartTime = Date.now();
         
-        const streamingResponse = await callOpenAIStreaming(messages, openAIApiKey);
+        // Add timeout for OpenAI call
+        const openAITimeout = 30000; // 30 seconds timeout
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('OpenAI request timeout')), openAITimeout);
+        });
+        
+        try {
+          const streamingResponse = await Promise.race([
+            callOpenAIStreaming(messages, openAIApiKey),
+            timeoutPromise
+          ]);
         
         const responseStartTime = Date.now();
         aiResponse = await processStreamingResponse(streamingResponse);
 
-        // Enhanced plan creation handling with robust error recovery
-        const planData = processPlanCreationFromResponse(aiResponse);
+          console.log('✅ OpenAI response received successfully');
+        } catch (openaiError) {
+          console.error('❌ OpenAI call failed:', openaiError);
+          
+          // Handle timeout specifically
+          if (openaiError.message === 'OpenAI request timeout') {
+            aiResponse = userLanguage === 'en' 
+              ? "I apologize, but I'm taking too long to respond. Please try asking your question again, or try a simpler request."
+              : "Entschuldigung, aber ich brauche zu lange für eine Antwort. Bitte versuche deine Frage noch einmal zu stellen oder eine einfachere Anfrage.";
+          } else {
+            // Use fallback response for other errors
+            aiResponse = getFallbackResponse(message, trainerName, petContext, userLanguage);
+          }
+          
+          // Don't continue with plan creation if OpenAI failed
+          return new Response(JSON.stringify({ response: aiResponse }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            status: 200
+          });
+        }
+
+        // Enhanced plan creation handling with robust error recovery and timeout
+        const planCreationTimeout = 10000; // 10 seconds timeout for plan creation
+        const planTimeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Plan creation timeout')), planCreationTimeout);
+        });
+        
+        try {
+          const planData = await Promise.race([
+            Promise.resolve(processPlanCreationFromResponse(aiResponse, userLanguage)),
+            planTimeoutPromise
+          ]);
+          
+          console.log('🔍 Plan creation check result:', {
+            hasPlanData: !!planData,
+            planTitle: planData?.title,
+            stepsCount: planData?.steps?.length,
+            aiResponseLength: aiResponse.length,
+            hasPlanTags: aiResponse.includes('[PLAN_CREATION]'),
+            aiResponsePreview: aiResponse.substring(0, 500)
+          });
+          
         if (planData) {
+            console.log('✅ Plan data found, attempting to create training plan...');
           try {
             await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
-            aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage);
+              console.log('✅ Training plan created successfully');
+              aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage);
           } catch (planError) {
             console.error('❌ Error creating plan from AI response:', planError);
             // Clean up any failed plan creation blocks and provide user-friendly feedback
-            aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
-            
-            // Language-specific error messages
-            const errorMessages = {
-              de: "\n\n💭 Beim Erstellen des Trainingsplans gab es ein Problem, aber ich kann dir trotzdem gerne dabei helfen! Lass uns das Schritt für Schritt angehen.",
-              en: "\n\n💭 There was a problem creating the training plan, but I can still help you! Let's work on this step by step."
-            };
-            aiResponse += errorMessages[userLanguage as keyof typeof errorMessages] || errorMessages.de;
+              aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
+              
+              // Language-specific error messages
+              const errorMessages = {
+                de: "\n\n💭 Beim Erstellen des Trainingsplans gab es ein Problem, aber ich kann dir trotzdem gerne dabei helfen! Lass uns das Schritt für Schritt angehen.",
+                en: "\n\n💭 There was a problem creating the training plan, but I can still help you! Let's work on this step by step."
+              };
+              aiResponse += errorMessages[userLanguage as keyof typeof errorMessages] || errorMessages.de;
           }
         } else {
+            console.log('⚠️ No valid plan data found in AI response');
+            console.log('🔍 AI Response analysis:', {
+              containsPlanCreation: aiResponse.includes('[PLAN_CREATION]'),
+              containsPlanEnd: aiResponse.includes('[/PLAN_CREATION]'),
+              containsTrainingPlan: aiResponse.toLowerCase().includes('training plan'),
+              containsTrainingsplan: aiResponse.toLowerCase().includes('trainingsplan'),
+              containsStep: aiResponse.toLowerCase().includes('step'),
+              containsSchritt: aiResponse.toLowerCase().includes('schritt'),
+              containsPlan: aiResponse.toLowerCase().includes('plan'),
+              containsPlanErstellen: aiResponse.toLowerCase().includes('plan erstellen'),
+              containsCreatePlan: aiResponse.toLowerCase().includes('create plan')
+            });
+            
           // Check if there were any incomplete plan creation attempts and clean them up
           if (aiResponse.includes('[PLAN_CREATION]')) {
-            aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
+              console.log('🧹 Cleaning up incomplete plan creation blocks');
+              aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
           }
-          
-          // Check if AI mentioned creating a plan but didn't use proper format
-          if (aiResponse.toLowerCase().includes('training plan') || 
-              aiResponse.toLowerCase().includes('trainingsplan') ||
-              aiResponse.toLowerCase().includes('plan for') ||
-              aiResponse.toLowerCase().includes('plan für')) {
             
-            console.log('⚠️ AI mentioned plan creation but didn\'t use proper format');
-            
-            // Add a gentle reminder to use proper format
-            const reminderMessages = {
-              de: "\n\n💡 Tipp: Ich kann dir auch einen strukturierten Trainingsplan erstellen, den du in deinem Dashboard findest. Sag mir einfach, woran du arbeiten möchtest!",
-              en: "\n\n💡 Tip: I can also create a structured training plan for you that you'll find in your dashboard. Just tell me what you'd like to work on!"
+            // Check if AI mentioned creating a plan but didn't use proper format or had mixed languages
+            const planMentions = {
+              de: ['trainingsplan', 'plan für', 'plan erstellen', 'trainingsplan erstellen'],
+              en: ['training plan', 'plan for', 'create plan', 'create training plan']
             };
             
-            // Only add reminder if it's not already there
-            if (!aiResponse.includes('strukturierten Trainingsplan') && !aiResponse.includes('structured training plan')) {
-              aiResponse += reminderMessages[userLanguage as keyof typeof reminderMessages] || reminderMessages.de;
+            const mentions = planMentions[userLanguage as keyof typeof planMentions] || planMentions.de;
+            const hasPlanMention = mentions.some(mention => 
+              aiResponse.toLowerCase().includes(mention)
+            );
+            
+            if (hasPlanMention) {
+              console.log('⚠️ AI mentioned plan creation but didn\'t use proper format or had mixed languages');
+              
+              // Add a specific message about language consistency
+              const languageConsistencyMessages = {
+                de: "\n\n💡 Hinweis: Ich kann dir einen strukturierten Trainingsplan erstellen, aber er muss vollständig auf Deutsch sein. Sag mir einfach, woran du arbeiten möchtest!",
+                en: "\n\n💡 Note: I can create a structured training plan for you, but it must be entirely in English. Just tell me what you'd like to work on!"
+              };
+              
+              // Only add reminder if it's not already there
+              const existingReminders = {
+                de: ['strukturierten Trainingsplan', 'Dashboard findest', 'vollständig auf Deutsch'],
+                en: ['structured training plan', 'dashboard', 'entirely in English']
+              };
+              
+              const existing = existingReminders[userLanguage as keyof typeof existingReminders] || existingReminders.de;
+              const hasExistingReminder = existing.some(reminder => 
+                aiResponse.includes(reminder)
+              );
+              
+              if (!hasExistingReminder) {
+                aiResponse += languageConsistencyMessages[userLanguage as keyof typeof languageConsistencyMessages] || languageConsistencyMessages.de;
+              }
             }
           }
+        } catch (planTimeoutError) {
+          console.error('❌ Plan creation timeout:', planTimeoutError);
+          // Continue with the AI response even if plan creation times out
+          aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
         }
         
       } catch (openaiError) {
@@ -317,9 +404,18 @@ serve(async (req) => {
       }
     }
 
-    // Save chat messages (don't await - continue even if DB fails)
-    saveChatMessages(supabaseClient, sessionId, userData.user.id, message, aiResponse, { total_tokens: 0 })
-      .catch(error => console.error('DB save failed but continuing:', error));
+    // Save chat messages with timeout (don't await - continue even if DB fails)
+    const saveTimeout = 5000; // 5 seconds timeout for database save
+    const saveTimeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Database save timeout')), saveTimeout);
+    });
+    
+    Promise.race([
+      saveChatMessages(supabaseClient, sessionId, userData.user.id, message, aiResponse, { total_tokens: 0 }),
+      saveTimeoutPromise
+    ]).catch(error => {
+      console.error('DB save failed or timed out but continuing:', error);
+    });
     
     return new Response(JSON.stringify({ response: aiResponse }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

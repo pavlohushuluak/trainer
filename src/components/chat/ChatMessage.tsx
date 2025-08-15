@@ -17,9 +17,14 @@ interface ChatMessageProps {
 }
 
 const formatMessage = (content: string, t: any) => {
-  // Highlight plan creation confirmation
-  let formattedContent = content.replace(/✅\s\*\*Trainingsplan erfolgreich erstellt!\*\*/g, 
-    `<span class="text-green-600 font-semibold">${t('chat.messages.message.planCreated')}</span>`);
+  // Highlight plan creation confirmation for both German and English
+  let formattedContent = content
+    // German plan creation message
+    .replace(/✅\s\*\*Trainingsplan erfolgreich erstellt!\*\*/g, 
+      `<span class="text-green-600 font-semibold">${t('chat.messages.message.planCreated')}</span>`)
+    // English plan creation message
+    .replace(/✅\s\*\*Training Plan Successfully Created!\*\*/g, 
+      `<span class="text-green-600 font-semibold">${t('chat.messages.message.planCreated')}</span>`);
 
   // Format bold text
   formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');

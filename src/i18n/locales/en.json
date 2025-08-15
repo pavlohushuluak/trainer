@@ -190,6 +190,7 @@
           "title": "Error Sending Message",
           "description": "Failed to send your message. Please try again."
         },
+        "timeout": "I'm taking too long to respond. Please try asking your question again or try a simpler request.",
         "deleteSession": {
           "title": "Error Deleting Chat",
           "description": "Failed to delete the chat session. Please try again."

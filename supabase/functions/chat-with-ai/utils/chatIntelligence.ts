@@ -201,3 +201,80 @@ export function analyzeConversationContext(chatHistory: any[], petData: any): {
 
   return { hasDiscussedToday, suggestedFollowUps, needsAttention };
 }
+
+export async function processStreamingResponse(streamingResponse: Response): Promise<string> {
+  console.log('🔄 Processing streaming response...');
+  
+  const processingTimeout = 15000; // 15 seconds timeout for processing
+  const timeoutPromise = new Promise<string>((_, reject) => {
+    setTimeout(() => reject(new Error('Response processing timeout')), processingTimeout);
+  });
+  
+  try {
+    const result = await Promise.race([
+      processStreamingResponseInternal(streamingResponse),
+      timeoutPromise
+    ]);
+    
+    console.log('✅ Streaming response processed successfully');
+    return result;
+  } catch (error) {
+    console.error('❌ Error processing streaming response:', error);
+    
+    if (error.message === 'Response processing timeout') {
+      return "I apologize, but I'm having trouble processing my response. Please try asking your question again.";
+    }
+    
+    throw error;
+  }
+}
+
+async function processStreamingResponseInternal(streamingResponse: Response): Promise<string> {
+  if (!streamingResponse.body) {
+    throw new Error('No response body');
+  }
+
+  const reader = streamingResponse.body.getReader();
+  const decoder = new TextDecoder();
+  let fullResponse = '';
+  let buffer = '';
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      
+      if (done) {
+        break;
+      }
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+          
+          if (data === '[DONE]') {
+            console.log('✅ Streaming completed');
+            return fullResponse.trim();
+          }
+
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.choices && parsed.choices[0] && parsed.choices[0].delta && parsed.choices[0].delta.content) {
+              fullResponse += parsed.choices[0].delta.content;
+            }
+          } catch (parseError) {
+            // Ignore parse errors for incomplete JSON
+            console.log('⚠️ Parse error for line:', data);
+          }
+        }
+      }
+    }
+
+    return fullResponse.trim();
+  } finally {
+    reader.releaseLock();
+  }
+}

@@ -190,6 +190,7 @@
           "title": "Fehler beim Senden der Nachricht",
           "description": "Deine Nachricht konnte nicht gesendet werden. Bitte versuche es erneut."
         },
+        "timeout": "Ich brauche zu lange für eine Antwort. Bitte versuche deine Frage noch einmal zu stellen oder eine einfachere Anfrage.",
         "deleteSession": {
           "title": "Fehler beim Löschen des Chats",
           "description": "Die Chat-Sitzung konnte nicht gelöscht werden. Bitte versuche es erneut."
