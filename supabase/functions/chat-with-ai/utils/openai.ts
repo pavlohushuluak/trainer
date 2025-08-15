@@ -23,10 +23,6 @@ export async function callOpenAI(messages: any[], openAIApiKey: string) {
         model: 'gpt-5-mini',
         messages: messages,
         max_completion_tokens: 3000, // Increased for complete responses
-        top_p: 0.9,
-        frequency_penalty: 0.1,
-        presence_penalty: 0.1,
-        stream: true // Enable streaming for real-time responses
       }),
     });
 

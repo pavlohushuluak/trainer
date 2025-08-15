@@ -257,23 +257,32 @@ serve(async (req) => {
         });
         
         try {
+          console.log('🚀 Attempting OpenAI call with GPT-5-mini...');
           const streamingResponse = await Promise.race([
-            callOpenAIStreaming(messages, openAIApiKey),
+            callOpenAIStreaming(messages, openAIApiKey, false), // Try GPT-5-mini first
             timeoutPromise
           ]);
         
         const responseStartTime = Date.now();
-        aiResponse = await processStreamingResponse(streamingResponse);
+        aiResponse = streamingResponse;
 
           console.log('✅ OpenAI response received successfully');
         } catch (openaiError) {
           console.error('❌ OpenAI call failed:', openaiError);
           
-          // Handle timeout specifically
-          if (openaiError.message === 'OpenAI request timeout') {
-            aiResponse = userLanguage === 'en' 
-              ? "I apologize, but I'm taking too long to respond. Please try asking your question again, or try a simpler request."
-              : "Entschuldigung, aber ich brauche zu lange für eine Antwort. Bitte versuche deine Frage noch einmal zu stellen oder eine einfachere Anfrage.";
+          // Handle timeout specifically - try fallback model
+          if (openaiError.message.includes('timeout')) {
+            console.log('🔄 Timeout detected, trying GPT-4o as fallback...');
+            try {
+              const fallbackResponse = await callOpenAIStreaming(messages, openAIApiKey, true); // Use GPT-4o
+              aiResponse = fallbackResponse;
+              console.log('✅ Fallback model (GPT-4o) succeeded');
+            } catch (fallbackError) {
+              console.error('❌ Fallback model also failed:', fallbackError);
+              aiResponse = userLanguage === 'en' 
+                ? "I apologize, but I'm taking too long to respond. Please try asking your question again, or try a simpler request."
+                : "Entschuldigung, aber ich brauche zu lange für eine Antwort. Bitte versuche deine Frage noch einmal zu stellen oder eine einfachere Anfrage.";
+            }
           } else {
             // Use fallback response for other errors
             aiResponse = getFallbackResponse(message, trainerName, petContext, userLanguage);

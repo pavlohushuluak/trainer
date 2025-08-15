@@ -459,7 +459,7 @@ Keine Erwähnung von Trainer-Namen oder Marken.
 
 Gib konkrete, praktische Empfehlungen, die für Tier und Besitzer verständlich und umsetzbar sind.
 
-FINAL REMINDER: Remember, the user prefers ENGLISH. When creating any training plan, ensure EVERY SINGLE WORD in the plan (title, description, step titles, step descriptions) is in ENGLISH.`;
+FINAL REMINDER: Denke daran, der Nutzer bevorzugt DEUTSCH. Bei der Erstellung eines Trainingsplans stelle sicher, dass JEDES EINZELNE WORT im Plan (Titel, Beschreibung, Schritttitel, Schrittbeschreibungen) auf DEUTSCH ist.`;
     }
   };
 

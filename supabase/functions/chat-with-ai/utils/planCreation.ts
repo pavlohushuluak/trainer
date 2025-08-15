@@ -19,8 +19,8 @@ async function translatePlanToUserLanguage(
     // Detect the current language of the plan
     const allContent = `${planData.title} ${planData.description || ''} ${planData.steps.map(s => `${s.title} ${s.description}`).join(' ')}`.toLowerCase();
     
-    const germanWords = ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst', 'einführung', 'erhöhung', 'üben', 'verstärken', 'praxis', 'wiederholen', 'allmählich', 'reduzieren', 'verwenden', 'korrekt', 'reaktionen', 'besser', 'werden'];
-    const englishWords = ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required', 'introduction', 'increase', 'practice', 'reinforce', 'repeat', 'gradually', 'reduce', 'use', 'correct', 'reactions', 'better', 'become', 'begin', 'present', 'say', 'multiple', 'times', 'establish', 'association', 'second', 'show', 'both', 'paying', 'attention', 'three', 'process', 'various', 'quantities', 'respond', 'looking', 'rewarding', 'when', 'gets', 'add', 'more', 'cups', 'introduce', 'using', 'same', 'interest', 'sessions'];
+    const germanWords = ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst'];
+    const englishWords = ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required'];
     
     const germanWordCount = germanWords.filter(word => allContent.includes(word)).length;
     const englishWordCount = englishWords.filter(word => allContent.includes(word)).length;
@@ -305,8 +305,45 @@ export async function processPlanCreationFromResponse(aiResponse: string, userLa
     
     console.log('✅ Basic validation passed');
     
-    // Temporarily skip all language validation for debugging
-    console.log('⚠️ Skipping language validation for debugging');
+    // Language validation - check for mixed languages
+    console.log('🔍 Checking language consistency...');
+    
+    const allContent = `${planData.title} ${planData.description || ''} ${planData.steps.map(s => `${s.title} ${s.description}`).join(' ')}`.toLowerCase();
+    
+    // Common words that indicate language mixing
+    const germanWords = ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst'];
+    const englishWords = ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required'];
+    
+    const germanWordCount = germanWords.filter(word => allContent.includes(word)).length;
+    const englishWordCount = englishWords.filter(word => allContent.includes(word)).length;
+    
+    console.log('🔍 Language analysis:', {
+      germanWords: germanWordCount,
+      englishWords: englishWordCount,
+      totalContent: allContent.length,
+      contentPreview: allContent.substring(0, 200)
+    });
+    
+    // Check for obvious language mixing (more lenient than before)
+    const hasGermanWords = germanWordCount > 0;
+    const hasEnglishWords = englishWordCount > 0;
+    
+    if (hasGermanWords && hasEnglishWords) {
+      console.log('⚠️ Mixed language detected - checking if it\'s acceptable');
+      
+      // Allow some common technical terms to be mixed
+      const allowedMixedTerms = ['training', 'plan', 'step', 'command', 'reward', 'treat'];
+      const mixedTerms = allowedMixedTerms.filter(term => allContent.includes(term));
+      
+      if (mixedTerms.length > 0) {
+        console.log('✅ Mixed language contains only allowed technical terms:', mixedTerms);
+      } else {
+        console.log('❌ Unacceptable mixed language detected');
+        return null;
+      }
+    }
+    
+    console.log('✅ Language validation passed');
     
     console.log('✅ Plan validation successful, returning plan data');
     

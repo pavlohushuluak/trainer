@@ -828,7 +828,7 @@ export const ChatPage = () => {
                               }}
                             >
                               <Trash2 className="h-3 w-3" />
-                            </Button>
+            </Button>
                           </div>
                         </div>
                       ))}
@@ -838,7 +838,7 @@ export const ChatPage = () => {
               </CardContent>
             </Card>
           </div>
-
+          
           {/* Main Chat Area */}
           <div className="lg:col-span-3">
             <Card className="h-[calc(100vh-6rem)] sm:h-[calc(100vh-7rem)] bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 flex flex-col">
