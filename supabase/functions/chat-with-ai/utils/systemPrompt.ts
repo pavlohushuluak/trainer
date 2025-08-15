@@ -295,6 +295,12 @@ CRITICAL WARNING: NEVER create mixed-language plans. This means:
 - Do NOT mix languages within the same step
 - ALL content in the plan must be in the SAME language (English)
 
+SPECIFIC EXAMPLE OF WHAT NOT TO DO:
+❌ WRONG: "Step 2: Add More Cups" (English title) + "Allmählich eine zweite Tasse einführen..." (German description)
+✅ CORRECT: "Step 2: Add More Cups" (English title) + "Gradually introduce a second cup..." (English description)
+
+EVERY STEP TITLE AND DESCRIPTION MUST BE IN THE SAME LANGUAGE!
+
 EXAMPLES OF CORRECT ENGLISH STEPS:
 - "Step 1: Introduction to the Command"
 - "Step 2: Practice with Treats"
@@ -416,6 +422,12 @@ KRITISCHE WARNUNG: Erstelle NIEMALS gemischte Sprachpläne. Das bedeutet:
 - Erstelle KEINEN Plan mit englischen Titeln und deutschen Beschreibungen
 - Mische KEINE Sprachen innerhalb desselben Schritts
 - ALLER Inhalt im Plan muss in der GLEICHEN Sprache sein (Deutsch)
+
+SPEZIFISCHES BEISPIEL WAS NICHT ZU TUN IST:
+❌ FALSCH: "Schritt 2: Mehr Tassen hinzufügen" (Deutscher Titel) + "Gradually introduce a second cup..." (Englische Beschreibung)
+✅ RICHTIG: "Schritt 2: Mehr Tassen hinzufügen" (Deutscher Titel) + "Allmählich eine zweite Tasse einführen..." (Deutsche Beschreibung)
+
+JEDER SCHRITTTITEL UND JEDE BESCHREIBUNG MUSS IN DER GLEICHEN SPRACHE SEIN!
 
 BEISPIELE FÜR KORREKTE DEUTSCHE SCHRITTE:
 - "Schritt 1: Einführung des Kommandos"

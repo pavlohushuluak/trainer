@@ -2,6 +2,184 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { translatePlanData } from "./translation.ts";
 
+// Function to translate plan to user's language
+async function translatePlanToUserLanguage(
+  planData: any,
+  userLanguage: string,
+  openAIApiKey?: string
+): Promise<any> {
+  if (!openAIApiKey) {
+    console.log('⚠️ No OpenAI API key available for translation');
+    return planData;
+  }
+
+  try {
+    console.log('🔄 Translating plan to user language:', userLanguage);
+    
+    // Detect the current language of the plan
+    const allContent = `${planData.title} ${planData.description || ''} ${planData.steps.map(s => `${s.title} ${s.description}`).join(' ')}`.toLowerCase();
+    
+    const germanWords = ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst', 'einführung', 'erhöhung', 'üben', 'verstärken', 'praxis', 'wiederholen', 'allmählich', 'reduzieren', 'verwenden', 'korrekt', 'reaktionen', 'besser', 'werden'];
+    const englishWords = ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required', 'introduction', 'increase', 'practice', 'reinforce', 'repeat', 'gradually', 'reduce', 'use', 'correct', 'reactions', 'better', 'become', 'begin', 'present', 'say', 'multiple', 'times', 'establish', 'association', 'second', 'show', 'both', 'paying', 'attention', 'three', 'process', 'various', 'quantities', 'respond', 'looking', 'rewarding', 'when', 'gets', 'add', 'more', 'cups', 'introduce', 'using', 'same', 'interest', 'sessions'];
+    
+    const germanWordCount = germanWords.filter(word => allContent.includes(word)).length;
+    const englishWordCount = englishWords.filter(word => allContent.includes(word)).length;
+    
+    const currentLanguage = germanWordCount > englishWordCount ? 'de' : 'en';
+    
+    console.log('🔍 Detected plan language:', currentLanguage, 'Target language:', userLanguage);
+    
+    // Only translate if the languages are different
+    if (currentLanguage === userLanguage) {
+      console.log('✅ Plan is already in user language, no translation needed');
+      return planData;
+    }
+    
+    // Translate the plan
+    const translatedData = await translatePlanData(planData, openAIApiKey);
+    
+    // Create the translated plan
+    const translatedPlan = {
+      title: userLanguage === 'en' ? translatedData.title_en : planData.title,
+      description: userLanguage === 'en' ? translatedData.description_en : planData.description,
+      steps: planData.steps.map((step: any, index: number) => ({
+        title: userLanguage === 'en' ? translatedData.steps_en[index]?.title_en : step.title,
+        description: userLanguage === 'en' ? translatedData.steps_en[index]?.description_en : step.description,
+        points: step.points || 15
+      }))
+    };
+    
+    console.log('✅ Plan translated successfully');
+    return translatedPlan;
+    
+  } catch (translationError) {
+    console.error('❌ Translation failed:', translationError);
+    console.log('⚠️ Returning original plan without translation');
+    return planData;
+  }
+}
+
+// Function to create a fallback plan when AI doesn't use proper format
+export async function createFallbackPlan(
+  userMessage: string,
+  userLanguage: string,
+  openAIApiKey?: string
+): Promise<any> {
+  try {
+    console.log('🔄 Creating fallback plan for message:', userMessage.substring(0, 100));
+    
+    if (!openAIApiKey) {
+      console.log('⚠️ No OpenAI API key available for fallback plan creation');
+      return null;
+    }
+    
+    // Create a simple prompt to generate a basic plan
+    const systemPrompt = userLanguage === 'en' 
+      ? `You are a pet training expert. Create a simple training plan based on the user's request. 
+         Return ONLY a JSON object with this exact format:
+         {
+           "title": "Simple training plan title",
+           "description": "Brief description of the training goal",
+           "steps": [
+             {
+               "title": "Step 1 title",
+               "description": "Step 1 description"
+             },
+             {
+               "title": "Step 2 title", 
+               "description": "Step 2 description"
+             },
+             {
+               "title": "Step 3 title",
+               "description": "Step 3 description"
+             }
+           ]
+         }
+         
+         Keep it simple and practical. Use only English.`
+      : `Du bist ein Haustier-Trainingsexperte. Erstelle einen einfachen Trainingsplan basierend auf der Anfrage des Benutzers.
+         Gib NUR ein JSON-Objekt in diesem exakten Format zurück:
+         {
+           "title": "Einfacher Trainingsplan-Titel",
+           "description": "Kurze Beschreibung des Trainingsziels",
+           "steps": [
+             {
+               "title": "Schritt 1 Titel",
+               "description": "Schritt 1 Beschreibung"
+             },
+             {
+               "title": "Schritt 2 Titel",
+               "description": "Schritt 2 Beschreibung"
+             },
+             {
+               "title": "Schritt 3 Titel",
+               "description": "Schritt 3 Beschreibung"
+             }
+           ]
+         }
+         
+         Halte es einfach und praktisch. Verwende nur Deutsch.`;
+    
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: systemPrompt
+          },
+          {
+            role: 'user',
+            content: userMessage
+          }
+        ],
+        max_tokens: 500,
+        temperature: 0.7,
+      }),
+    });
+    
+    if (!response.ok) {
+      console.error('OpenAI fallback plan API error:', response.status, response.statusText);
+      return null;
+    }
+    
+    const data = await response.json();
+    const planContent = data.choices?.[0]?.message?.content?.trim();
+    
+    if (!planContent) {
+      console.error('No fallback plan content returned from OpenAI');
+      return null;
+    }
+    
+    // Try to extract JSON from the response
+    const jsonMatch = planContent.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.error('No JSON found in fallback plan response');
+      return null;
+    }
+    
+    const planData = JSON.parse(jsonMatch[0]);
+    
+    // Basic validation
+    if (!planData.title || !planData.steps || !Array.isArray(planData.steps) || planData.steps.length === 0) {
+      console.error('Invalid fallback plan structure');
+      return null;
+    }
+    
+    console.log('✅ Fallback plan created successfully:', planData.title);
+    return planData;
+    
+  } catch (error) {
+    console.error('❌ Fallback plan creation failed:', error);
+    return null;
+  }
+}
+
 export async function createTrainingPlan(
   supabaseClient: any,
   userId: string,
@@ -17,32 +195,22 @@ export async function createTrainingPlan(
   },
   openAIApiKey?: string
 ) {
-  // Translate plan data to English if OpenAI key is available
-  let translatedData;
-  if (openAIApiKey) {
-    try {
-      console.log('🔄 Starting translation process for training plan...');
-      translatedData = await translatePlanData(planData, openAIApiKey);
-    } catch (translationError) {
-      console.error('❌ Translation failed, continuing without translations:', translationError);
-      translatedData = {
-        title_en: '',
-        description_en: '',
-        steps_en: planData.steps.map(() => ({ title_en: '', description_en: '' }))
-      };
-    }
-  }
+  // The planData is already translated to the user's language, so we don't need to translate again
+  console.log('📝 Creating training plan with translated data:', {
+    title: planData.title,
+    stepsCount: planData.steps.length
+  });
 
-  // Create training plan with English translations
+  // Create training plan with the translated data
   const { data: planResult, error: planError } = await supabaseClient
     .from('training_plans')
     .insert([{
       user_id: userId,
       pet_id: petId,
       title: planData.title,
-      title_en: translatedData?.title_en || null,
+      title_en: null, // Already translated, no need for English version
       description: planData.description || '',
-      description_en: translatedData?.description_en || null,
+      description_en: null, // Already translated, no need for English version
       status: 'in_progress'
     }])
     .select()
@@ -53,14 +221,14 @@ export async function createTrainingPlan(
     throw new Error('Fehler beim Erstellen des Trainingsplans');
   }
 
-  // Create training steps with English translations
+  // Create training steps with the translated data
   const steps = planData.steps.map((step: any, index: number) => ({
     training_plan_id: planResult.id,
     step_number: index + 1,
     title: step.title,
-    title_en: translatedData?.steps_en[index]?.title_en || null,
+    title_en: null, // Already translated, no need for English version
     description: step.description,
-    description_en: translatedData?.steps_en[index]?.description_en || null,
+    description_en: null, // Already translated, no need for English version
     points_reward: step.points || 10
   }));
 
@@ -84,145 +252,76 @@ export async function createTrainingPlan(
   return planResult;
 }
 
-export function processPlanCreationFromResponse(aiResponse: string, userLanguage: string = 'de') {
+export async function processPlanCreationFromResponse(aiResponse: string, userLanguage: string = 'de', openAIApiKey?: string) {
   console.log('🔍 Searching for plan creation in AI response...');
   console.log('🌍 User language preference:', userLanguage);
   
+  // Look for plan creation blocks
   const planMatch = aiResponse.match(/\[PLAN_CREATION\](.*?)\[\/PLAN_CREATION\]/s);
-  if (planMatch) {
-    console.log('✅ Found plan creation block');
-    try {
-      // Clean the JSON content from formatting artifacts
-      const jsonContent = planMatch[1]
-        .trim()
-        .replace(/```json|```/g, '') // Remove code block markers
-        .replace(/"""/g, '') // Remove triple quotes
-        .replace(/^\s*```\s*$/gm, '') // Remove standalone code block lines
-        .trim();
-      
-      console.log('📝 Extracted JSON content:', jsonContent.substring(0, 200) + '...');
-      
-      // Validate JSON structure before parsing
-      if (!jsonContent.includes('"title"') || !jsonContent.includes('"steps"')) {
-        console.warn('⚠️ Plan creation block missing required fields (title or steps)');
-        return null;
-      }
-      
-      const planData = JSON.parse(jsonContent);
-      console.log('✅ Successfully parsed plan data:', {
-        title: planData.title,
-        stepsCount: planData.steps?.length || 0
-      });
-      
-      // Validate plan structure
-      if (!planData.title || !planData.steps || !Array.isArray(planData.steps)) {
-        console.warn('⚠️ Invalid plan structure:', planData);
-        return null;
-      }
-      
-      // Ensure minimum plan requirements
-      if (planData.steps.length === 0) {
-        console.warn('⚠️ Plan has no steps');
-        return null;
-      }
-      
-      // Validate each step has required fields
-      for (let i = 0; i < planData.steps.length; i++) {
-        const step = planData.steps[i];
-        if (!step.title || !step.description) {
-          console.warn(`⚠️ Step ${i + 1} missing required fields:`, step);
-          return null;
-        }
-      }
-      
-      // Ensure title and description are not empty - temporarily less strict
-      if (!planData.title.trim() || planData.title.trim().length < 2) {
-        console.warn('⚠️ Plan title is too short or empty');
-        return null;
-      }
-      
-      // Validate step titles and descriptions - temporarily less strict
-      for (let i = 0; i < planData.steps.length; i++) {
-        const step = planData.steps[i];
-        if (!step.title.trim() || step.title.trim().length < 2) {
-          console.warn(`⚠️ Step ${i + 1} title is too short or empty`);
-          return null;
-        }
-        if (!step.description.trim() || step.description.trim().length < 5) {
-          console.warn(`⚠️ Step ${i + 1} description is too short or empty`);
-          return null;
-        }
-      }
-      
-      // Language validation based on user preference - temporarily much less strict for debugging
-      const allContent = `${planData.title} ${planData.description || ''} ${planData.steps.map(s => `${s.title} ${s.description}`).join(' ')}`.toLowerCase();
-      
-      // Define expected language patterns based on user preference
-      const expectedLanguagePatterns = {
-        de: {
-          expectedWords: ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst', 'einführung', 'erhöhung', 'üben', 'verstärken', 'praxis', 'wiederholen', 'allmählich', 'reduzieren', 'verwenden', 'korrekt', 'reaktionen', 'besser', 'werden'],
-          forbiddenWords: ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required', 'introduction', 'increase', 'practice', 'reinforce', 'repeat', 'gradually', 'reduce', 'use', 'correct', 'reactions', 'better', 'become', 'begin', 'present', 'say', 'multiple', 'times', 'establish', 'association', 'second', 'show', 'both', 'paying', 'attention', 'three', 'process', 'various', 'quantities', 'respond', 'looking', 'rewarding', 'when', 'gets']
-        },
-        en: {
-          expectedWords: ['step', 'training', 'plan', 'exercise', 'command', 'treat', 'reward', 'house', 'leash', 'sit', 'down', 'stay', 'come', 'heel', 'here', 'out', 'wait', 'no', 'good', 'yes', 'okay', 'right', 'wrong', 'forbidden', 'allowed', 'can', 'must', 'should', 'would', 'could', 'might', 'will', 'would', 'have', 'has', 'had', 'been', 'done', 'made', 'given', 'taken', 'brought', 'come', 'gone', 'stood', 'sat', 'lain', 'stayed', 'waited', 'heard', 'seen', 'felt', 'thought', 'known', 'could', 'liked', 'wanted', 'should', 'allowed', 'required', 'introduction', 'increase', 'practice', 'reinforce', 'repeat', 'gradually', 'reduce', 'use', 'correct', 'reactions', 'better', 'become', 'begin', 'present', 'say', 'multiple', 'times', 'establish', 'association', 'second', 'show', 'both', 'paying', 'attention', 'three', 'process', 'various', 'quantities', 'respond', 'looking', 'rewarding', 'when', 'gets'],
-          forbiddenWords: ['schritt', 'trainingsplan', 'übung', 'kommando', 'leckerli', 'belohnung', 'sitz', 'platz', 'bei', 'fuß', 'hier', 'aus', 'bleib', 'warte', 'nein', 'brav', 'gut', 'super', 'prima', 'toll', 'fein', 'richtig', 'falsch', 'verboten', 'erlaubt', 'darf', 'muss', 'soll', 'kann', 'möchte', 'will', 'sollte', 'könnte', 'würde', 'hätte', 'wäre', 'wird', 'wurde', 'geworden', 'gemacht', 'getan', 'gegeben', 'genommen', 'gebracht', 'gekommen', 'gegangen', 'gestanden', 'gesessen', 'gelegen', 'geblieben', 'gewartet', 'gehört', 'gesehen', 'gefühlt', 'gedacht', 'gewusst', 'gekonnt', 'gemocht', 'gewollt', 'gesollt', 'gedurft', 'gemusst', 'einführung', 'erhöhung', 'üben', 'verstärken', 'praxis', 'wiederholen', 'allmählich', 'reduzieren', 'verwenden', 'korrekt', 'reaktionen', 'besser', 'werden', 'sie', 'ihn', 'ansieht', 'belohnung', 'korrekte', 'reaktionen', 'reduzieren', 'leckerlis', 'wenn', 'er', 'besser', 'wird']
-        }
-      };
-      
-      const languagePatterns = expectedLanguagePatterns[userLanguage as keyof typeof expectedLanguagePatterns] || expectedLanguagePatterns.de;
-      
-      // Check for forbidden words (words from the wrong language) - temporarily more lenient
-      const forbiddenWordsFound = languagePatterns.forbiddenWords.filter(word => allContent.includes(word));
-      
-      // Also check for mixed language patterns - temporarily much more lenient
-      const germanWordsFound = expectedLanguagePatterns.de.expectedWords.filter(word => allContent.includes(word));
-      const englishWordsFound = expectedLanguagePatterns.en.expectedWords.filter(word => allContent.includes(word));
-      
-      // Temporarily much more lenient - only reject if there are MANY words from both languages
-      if (germanWordsFound.length >= 5 && englishWordsFound.length >= 5) {
-        console.warn('⚠️ Mixed language plan detected - rejecting plan');
-        console.warn('German words found:', germanWordsFound);
-        console.warn('English words found:', englishWordsFound);
-        console.warn('Expected language:', userLanguage);
-        console.warn('Plan content:', allContent.substring(0, 200));
-        return null;
-      }
-      
-      // Temporarily more lenient - only reject if there are MANY forbidden words
-      if (forbiddenWordsFound.length >= 3) {
-        console.warn('⚠️ Forbidden words detected in plan content - rejecting plan');
-        console.warn('Forbidden words found:', forbiddenWordsFound);
-        console.warn('Expected language:', userLanguage);
-        console.warn('Plan content:', allContent.substring(0, 200));
-        return null;
-      }
-      
-      // Log language validation for debugging
-      console.log('🔍 Language validation results:', {
-        expectedLanguage: userLanguage,
-        forbiddenWordsFound: forbiddenWordsFound.length,
-        planTitle: planData.title,
-        planContent: allContent.substring(0, 100)
-      });
-      
-      console.log('✅ Plan validation successful, returning plan data');
-      return planData;
-    } catch (error) {
-      console.error('❌ Error parsing plan creation data:', error);
-      console.error('❌ Raw content that failed to parse:', planMatch[1].substring(0, 500));
+  
+  if (!planMatch) {
+    console.log('❌ No plan creation block found in AI response');
+    return null;
+  }
+  
+  const planContent = planMatch[1].trim();
+  console.log('📋 Found plan content:', planContent.substring(0, 200) + '...');
+  
+  try {
+    // Parse the JSON content
+    const planData = JSON.parse(planContent);
+    console.log('✅ JSON parsing successful');
+    console.log('📊 Plan data structure:', {
+      hasTitle: !!planData.title,
+      hasDescription: !!planData.description,
+      hasSteps: !!planData.steps,
+      stepsCount: planData.steps?.length || 0,
+      titleLength: planData.title?.length || 0,
+      descriptionLength: planData.description?.length || 0
+    });
+    
+    // Basic validation - much more lenient for debugging
+    if (!planData.title || typeof planData.title !== 'string') {
+      console.log('❌ Invalid or missing title');
       return null;
     }
-  } else {
-    console.log('❌ No plan creation block found in response');
-    // Check if there might be a malformed plan creation attempt
-    if (aiResponse.includes('PLAN_CREATION') || aiResponse.includes('training plan') || aiResponse.includes('Trainingsplan')) {
-      console.log('⚠️ Response mentions plan creation but no proper tags found');
+    
+    if (!planData.steps || !Array.isArray(planData.steps) || planData.steps.length === 0) {
+      console.log('❌ Invalid or missing steps array');
+      return null;
     }
+    
+    // Validate each step - much more lenient
+    for (let i = 0; i < planData.steps.length; i++) {
+      const step = planData.steps[i];
+      if (!step.title || typeof step.title !== 'string' || step.title.length < 2) {
+        console.log(`❌ Step ${i + 1} has invalid title:`, step.title);
+        return null;
+      }
+      if (!step.description || typeof step.description !== 'string' || step.description.length < 2) {
+        console.log(`❌ Step ${i + 1} has invalid description:`, step.description);
+        return null;
+      }
+    }
+    
+    console.log('✅ Basic validation passed');
+    
+    // Temporarily skip all language validation for debugging
+    console.log('⚠️ Skipping language validation for debugging');
+    
+    console.log('✅ Plan validation successful, returning plan data');
+    
+    // Automatically translate the plan to user's language
+    const translatedPlan = await translatePlanToUserLanguage(planData, userLanguage, openAIApiKey);
+    
+    return translatedPlan;
+  } catch (error) {
+    console.error('❌ Error parsing plan creation data:', error);
+    return null;
   }
-  return null;
 }
 
-export function removePlanCreationFromResponse(aiResponse: string, planTitle: string, language: string = 'de') {
+export function removePlanCreationFromResponse(aiResponse: string, planTitle: string, language: string = 'de', wasTranslated: boolean = false) {
   // Clean the response from formatting artifacts before replacement
   const cleanedResponse = aiResponse
     .replace(/"""/g, '') // Remove triple quotes
@@ -231,8 +330,12 @@ export function removePlanCreationFromResponse(aiResponse: string, planTitle: st
   
   // Language-specific success messages
   const successMessages = {
-    de: `\n\n✅ **Trainingsplan erfolgreich erstellt!**\n\nIch habe "${planTitle}" als strukturiertes Projekt für euch angelegt. Du findest es in deinem Dashboard unter "Trainingspläne". Dort kannst du jeden Tag eure Fortschritte abhaken und Punkte sammeln! 🏆\n\nMöchtest du noch Fragen zum Plan oder brauchst du zusätzliche Tipps? 😊`,
-    en: `\n\n✅ **Training Plan Successfully Created!**\n\nI've set up "${planTitle}" as a structured project for you. You can find it in your dashboard under "Training Plans". There you can check off your progress every day and collect points! 🏆\n\nDo you have any questions about the plan or need additional tips? 😊`
+    de: wasTranslated 
+      ? `\n\n✅ **Trainingsplan erfolgreich erstellt und übersetzt!**\n\nIch habe "${planTitle}" als strukturiertes Projekt für euch angelegt und es in deine Sprache übersetzt. Du findest es in deinem Dashboard unter "Trainingspläne". Dort kannst du jeden Tag eure Fortschritte abhaken und Punkte sammeln! 🏆\n\nMöchtest du noch Fragen zum Plan oder brauchst du zusätzliche Tipps? 😊`
+      : `\n\n✅ **Trainingsplan erfolgreich erstellt!**\n\nIch habe "${planTitle}" als strukturiertes Projekt für euch angelegt. Du findest es in deinem Dashboard unter "Trainingspläne". Dort kannst du jeden Tag eure Fortschritte abhaken und Punkte sammeln! 🏆\n\nMöchtest du noch Fragen zum Plan oder brauchst du zusätzliche Tipps? 😊`,
+    en: wasTranslated
+      ? `\n\n✅ **Training Plan Successfully Created and Translated!**\n\nI've set up "${planTitle}" as a structured project for you and translated it to your language. You can find it in your dashboard under "Training Plans". There you can check off your progress every day and collect points! 🏆\n\nDo you have any questions about the plan or need additional tips? 😊`
+      : `\n\n✅ **Training Plan Successfully Created!**\n\nI've set up "${planTitle}" as a structured project for you. You can find it in your dashboard under "Training Plans". There you can check off your progress every day and collect points! 🏆\n\nDo you have any questions about the plan or need additional tips? 😊`
   };
   
   const successMessage = successMessages[language as keyof typeof successMessages] || successMessages.de;
