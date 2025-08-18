@@ -1,46 +1,38 @@
 export async function callOpenAIStreaming(messages, openAIApiKey, useFallbackModel = false) {
   const startTime = Date.now();
-  // ENHANCED API KEY VALIDATION
-  if (!openAIApiKey) {
-    throw new Error('OpenAI API Key not configured in Supabase secrets');
+  
+  // Quick API key validation
+  if (!openAIApiKey?.startsWith('sk-')) {
+    throw new Error('Invalid OpenAI API Key');
   }
-  if (!openAIApiKey.startsWith('sk-')) {
-    throw new Error('OpenAI API Key format invalid - must start with sk-');
-  }
-  // REQUEST ANALYSIS
-  const model = 'gpt-5-mini';
-  console.log('📊 Request analysis:', {
-    model: model,
-    messageCount: messages.length,
-    totalTokens: messages.reduce((sum, msg)=>sum + (msg.content?.length || 0), 0),
-    maxCompletionTokens: 2500
-  });
-  // ENHANCED REQUEST BODY
+  
+  // Use faster model by default
+  const model = useFallbackModel ? 'gpt-4o' : 'gpt-4o-mini';
+  
   const requestBody = {
     model: model,
     messages: messages,
-    max_completion_tokens: 2500
+    max_tokens: 1500, // Reduced for faster responses
+    temperature: 0.7, // Slightly more focused
+    stream: false // Disable streaming for faster response
   };
-  // ENHANCED TIMEOUT WITH RETRY
+  
+  // Reduced timeout for faster failure detection
   const abortController = new AbortController();
-  const timeoutId = setTimeout(()=>{
-    console.log('⚠️ OpenAI request timeout triggered after 45 seconds');
+  const timeoutId = setTimeout(() => {
     abortController.abort();
-  }, 45000); // Increased timeout to 45 seconds for better reliability
+  }, 25000); // Reduced to 25 seconds
   try {
-    console.log('🚀 Starting OpenAI API call...');
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-        'User-Agent': 'TierTrainer24-EdgeFunction/1.0'
+        'Content-Type': 'application/json'
       },
       signal: abortController.signal,
       body: JSON.stringify(requestBody)
     });
     clearTimeout(timeoutId);
-    console.log('✅ OpenAI API call completed successfully');
     if (!response.ok) {
       let errorDetails;
       try {
@@ -61,8 +53,6 @@ export async function callOpenAIStreaming(messages, openAIApiKey, useFallbackMod
     }
     // Process the response to get the actual content
     const aiMessage = await processStreamingResponse(response);
-    const processingTime = Date.now() - startTime;
-    console.log(`OpenAI response received in ${processingTime}ms`);
     return aiMessage;
   } catch (error) {
     clearTimeout(timeoutId);

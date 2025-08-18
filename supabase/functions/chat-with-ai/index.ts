@@ -184,11 +184,13 @@ serve(async (req) => {
       await createTrainingPlan(supabaseClient, userData.user.id, petId, createPlan, openAIApiKey);
     }
 
-    // Get pet context
-    const { petContext, petData } = await getPetContext(supabaseClient, petId, userData.user.id);
-
-    // Get chat history und optimieren
-    const rawChatHistory = await getChatHistory(supabaseClient, sessionId);
+    // Parallel data fetching for better performance
+    const [petContextResult, rawChatHistory] = await Promise.all([
+      getPetContext(supabaseClient, petId, userData.user.id),
+      getChatHistory(supabaseClient, sessionId)
+    ]);
+    
+    const { petContext, petData } = petContextResult;
     const chatHistory = summarizeChatHistory(rawChatHistory);
 
     let aiResponse;
@@ -198,45 +200,17 @@ serve(async (req) => {
       aiResponse = getFallbackResponse(message, trainerName, petContext, userLanguage);
     } else {
       try {
-        // Check if this is a new pet (first conversation EVER with this pet)
-        const { data: petChatHistory, error: petHistoryError } = await supabaseClient
+        // Simplified context gathering
+        const { data: petChatHistory } = await supabaseClient
           .from('chat_sessions')
           .select('id')
           .eq('pet_id', petId)
           .eq('user_id', userData.user.id);
         
-        const totalPetSessions = petChatHistory?.length || 0;
-        const isNewPet = totalPetSessions === 0;
+        const isNewPet = (petChatHistory?.length || 0) === 0;
 
-        // Enhanced context analysis
-        const conversationAnalysis = analyzeConversationContext(rawChatHistory, petData);
-
-        // Generate contextual tips and suggestions
-        const contextualTips = generateContextualTips(petData, message);
-        const proactiveQuestions = generateProactiveQuestions(petData, isNewPet);
-        const progressReminders = generateProgressReminders(petData);
-        const exerciseSuggestions = generateSmartExerciseSuggestions(petData);
-
-        // Generate enhanced system prompt with intelligence context
-        let enhancedSystemPrompt = generateSystemPrompt(trainerName, petContext, isNewPet, petData, userLanguage);
-        
-        // Add conversation context if available
-        if (conversationAnalysis.hasDiscussedToday.length > 0) {
-          enhancedSystemPrompt += `\n\nVORHERIGE GESPRÄCHSTHEMEN HEUTE: ${conversationAnalysis.hasDiscussedToday.join(', ')}\n`;
-        }
-        
-        if (conversationAnalysis.needsAttention.length > 0) {
-          enhancedSystemPrompt += `\nWICHTIGE HINWEISE: ${conversationAnalysis.needsAttention.join(', ')}\n`;
-        }
-
-        // Add proactive elements if new conversation or appropriate
-        if (isNewPet && proactiveQuestions.length > 0) {
-          enhancedSystemPrompt += `\nPROAKTIVE FRAGEN FÜR NEUES GESPRÄCH: Du könntest fragen: "${proactiveQuestions[0]}"\n`;
-        }
-
-        if (contextualTips) {
-          enhancedSystemPrompt += `\nKONTEXTUELLE TIPPS: ${contextualTips}\n`;
-        }
+        // Generate simplified system prompt
+        const enhancedSystemPrompt = generateSystemPrompt(trainerName, petContext, isNewPet, petData, userLanguage);
 
         const messages = [
           {
@@ -295,182 +269,17 @@ serve(async (req) => {
           });
         }
 
-        // Enhanced plan creation handling with robust error recovery and timeout
-        const planCreationTimeout = 10000; // 10 seconds timeout for plan creation
-        const planTimeoutPromise = new Promise((_, reject) => {
-          setTimeout(() => reject(new Error('Plan creation timeout')), planCreationTimeout);
-        });
-        
-        try {
-          console.log('🔄 Starting plan creation process...');
-          console.log('📝 AI Response length:', aiResponse.length);
-          console.log('🌍 User language:', userLanguage);
-          console.log('🔑 OpenAI API key available:', !!openAIApiKey);
-          
-          const planData = await Promise.race([
-            processPlanCreationFromResponse(aiResponse, userLanguage, openAIApiKey),
-            planTimeoutPromise
-          ]);
-          
-          console.log('🔍 Plan creation check result:', {
-            hasPlanData: !!planData,
-            planTitle: planData?.title,
-            stepsCount: planData?.steps?.length,
-            aiResponseLength: aiResponse.length,
-            hasPlanTags: aiResponse.includes('[PLAN_CREATION]'),
-            aiResponsePreview: aiResponse.substring(0, 500)
-          });
-          
-        if (planData) {
-            console.log('✅ Plan data found, attempting to create training plan...');
-            try {
+        // Simplified plan creation - only process if AI response contains plan tags
+        if (aiResponse.includes('[PLAN_CREATION]')) {
+          try {
+            const planData = await processPlanCreationFromResponse(aiResponse, userLanguage, openAIApiKey);
+            if (planData) {
               await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
-              console.log('✅ Training plan created successfully');
-              
-              // Check if the plan was translated by comparing the original AI response with the final plan
-              const originalPlanMatch = aiResponse.match(/\[PLAN_CREATION\](.*?)\[\/PLAN_CREATION\]/s);
-              const wasTranslated = originalPlanMatch && planData.title !== JSON.parse(originalPlanMatch[1]).title;
-              
-              aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage, wasTranslated);
-            } catch (planError) {
-              console.error('❌ Error creating plan from AI response:', planError);
-              // Clean up any failed plan creation blocks and provide user-friendly feedback
-              aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
-              
-              // Language-specific error messages
-              const errorMessages = {
-                de: "\n\n💭 Beim Erstellen des Trainingsplans gab es ein Problem, aber ich kann dir trotzdem gerne dabei helfen! Lass uns das Schritt für Schritt angehen.",
-                en: "\n\n💭 There was a problem creating the training plan, but I can still help you! Let's work on this step by step."
-              };
-              aiResponse += errorMessages[userLanguage as keyof typeof errorMessages] || errorMessages.de;
+              aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage, false);
             }
-          } else {
-            console.log('⚠️ No valid plan data found in AI response');
-            console.log('🔍 AI Response analysis:', {
-              containsPlanCreation: aiResponse.includes('[PLAN_CREATION]'),
-              containsPlanEnd: aiResponse.includes('[/PLAN_CREATION]'),
-              containsTrainingPlan: aiResponse.toLowerCase().includes('training plan'),
-              containsTrainingsplan: aiResponse.toLowerCase().includes('trainingsplan'),
-              containsStep: aiResponse.toLowerCase().includes('step'),
-              containsSchritt: aiResponse.toLowerCase().includes('schritt'),
-              containsPlan: aiResponse.toLowerCase().includes('plan'),
-              containsPlanErstellen: aiResponse.toLowerCase().includes('plan erstellen'),
-              containsCreatePlan: aiResponse.toLowerCase().includes('create plan'),
-              aiResponseLength: aiResponse.length,
-              aiResponsePreview: aiResponse.substring(0, 1000)
-            });
-            
-            // Check if there were any incomplete plan creation attempts and clean them up
-            if (aiResponse.includes('[PLAN_CREATION]')) {
-              console.log('🧹 Cleaning up incomplete plan creation blocks');
-              aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
-            }
-            
-            // Check if AI mentioned creating a plan but didn't use proper format or had mixed languages
-            const planMentions = {
-              de: ['trainingsplan', 'plan für', 'plan erstellen', 'trainingsplan erstellen', 'schritt für schritt', 'anleitung'],
-              en: ['training plan', 'plan for', 'create plan', 'create training plan', 'step by step', 'instructions']
-            };
-            
-            const mentions = planMentions[userLanguage as keyof typeof planMentions] || planMentions.de;
-            const hasPlanMention = mentions.some(mention => 
-              aiResponse.toLowerCase().includes(mention)
-            );
-            
-            if (hasPlanMention) {
-              console.log('⚠️ AI mentioned plan creation but didn\'t use proper format or had mixed languages');
-              console.log('🔍 Plan mentions found:', mentions.filter(mention => aiResponse.toLowerCase().includes(mention)));
-              
-              // Try to create a simple fallback plan based on the user's request
-              try {
-                console.log('🔄 Attempting to create fallback plan...');
-                const fallbackPlan = await createFallbackPlan(message, userLanguage, openAIApiKey);
-                if (fallbackPlan) {
-                  console.log('✅ Fallback plan created successfully');
-                  await createTrainingPlan(supabaseClient, userData.user.id, petId, fallbackPlan, openAIApiKey);
-                  
-                  const successMessages = {
-                    de: `\n\n✅ **Trainingsplan erfolgreich erstellt!**\n\nIch habe "${fallbackPlan.title}" als strukturiertes Projekt für euch angelegt. Du findest es in deinem Dashboard unter "Trainingspläne". Dort kannst du jeden Tag eure Fortschritte abhaken und Punkte sammeln! 🏆\n\nMöchtest du noch Fragen zum Plan oder brauchst du zusätzliche Tipps? 😊`,
-                    en: `\n\n✅ **Training Plan Successfully Created!**\n\nI've set up "${fallbackPlan.title}" as a structured project for you. You can find it in your dashboard under "Training Plans". There you can check off your progress every day and collect points! 🏆\n\nDo you have any questions about the plan or need additional tips? 😊`
-                  };
-                  
-                  aiResponse += successMessages[userLanguage as keyof typeof successMessages] || successMessages.de;
-                } else {
-                  console.log('❌ Fallback plan creation failed');
-                  // Add a specific message about language consistency
-                  const languageConsistencyMessages = {
-                    de: "\n\n💡 Hinweis: Ich kann dir einen strukturierten Trainingsplan erstellen, aber er muss vollständig auf Deutsch sein. Sag mir einfach, woran du arbeiten möchtest!",
-                    en: "\n\n💡 Note: I can create a structured training plan for you, but it must be entirely in English. Just tell me what you'd like to work on!"
-                  };
-                  
-                  // Only add reminder if it's not already there
-                  const existingReminders = {
-                    de: ['strukturierten Trainingsplan', 'Dashboard findest', 'vollständig auf Deutsch'],
-                    en: ['structured training plan', 'dashboard', 'entirely in English']
-                  };
-                  
-                  const existing = existingReminders[userLanguage as keyof typeof existingReminders] || existingReminders.de;
-                  const hasExistingReminder = existing.some(reminder => 
-                    aiResponse.includes(reminder)
-                  );
-                  
-                  if (!hasExistingReminder) {
-                    aiResponse += languageConsistencyMessages[userLanguage as keyof typeof languageConsistencyMessages] || languageConsistencyMessages.de;
-                  }
-                }
-              } catch (fallbackError) {
-                console.error('❌ Fallback plan creation failed:', fallbackError);
-                // Add a specific message about language consistency
-                const languageConsistencyMessages = {
-                  de: "\n\n💡 Hinweis: Ich kann dir einen strukturierten Trainingsplan erstellen, aber er muss vollständig auf Deutsch sein. Sag mir einfach, woran du arbeiten möchtest!",
-                  en: "\n\n💡 Note: I can create a structured training plan for you, but it must be entirely in English. Just tell me what you'd like to work on!"
-                };
-                
-                // Only add reminder if it's not already there
-                const existingReminders = {
-                  de: ['strukturierten Trainingsplan', 'Dashboard findest', 'vollständig auf Deutsch'],
-                  en: ['structured training plan', 'dashboard', 'entirely in English']
-                };
-                
-                const existing = existingReminders[userLanguage as keyof typeof existingReminders] || existingReminders.de;
-                const hasExistingReminder = existing.some(reminder => 
-                  aiResponse.includes(reminder)
-                );
-                
-                if (!hasExistingReminder) {
-                  aiResponse += languageConsistencyMessages[userLanguage as keyof typeof languageConsistencyMessages] || languageConsistencyMessages.de;
-                }
-              }
-            } else {
-              console.log('ℹ️ No plan creation mentions found in AI response');
-              
-              // Add a helpful message if the user might want a plan
-              const planKeywords = {
-                de: ['trainieren', 'beibringen', 'lernen', 'üben', 'kommando', 'verhalten', 'problem', 'hilfe', 'anleitung'],
-                en: ['train', 'teach', 'learn', 'practice', 'command', 'behavior', 'problem', 'help', 'instruction']
-              };
-              
-              const keywords = planKeywords[userLanguage as keyof typeof planKeywords] || planKeywords.de;
-              const hasTrainingKeywords = keywords.some(keyword => 
-                aiResponse.toLowerCase().includes(keyword)
-              );
-              
-              if (hasTrainingKeywords) {
-                console.log('💡 User might want a training plan - adding helpful suggestion');
-                
-                const planSuggestions = {
-                  de: "\n\n💡 Tipp: Wenn du möchtest, kann ich dir einen strukturierten Trainingsplan erstellen. Sag mir einfach, was du mit deinem Tier trainieren möchtest!",
-                  en: "\n\n💡 Tip: If you'd like, I can create a structured training plan for you. Just tell me what you'd like to train with your pet!"
-                };
-                
-                aiResponse += planSuggestions[userLanguage as keyof typeof planSuggestions] || planSuggestions.de;
-              }
-            }
+          } catch (planError) {
+            aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
           }
-        } catch (planTimeoutError) {
-          console.error('❌ Plan creation timeout:', planTimeoutError);
-          // Continue with the AI response even if plan creation times out
-          aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
         }
         
       } catch (openaiError) {
@@ -490,17 +299,9 @@ serve(async (req) => {
       }
     }
 
-    // Save chat messages with timeout (don't await - continue even if DB fails)
-    const saveTimeout = 5000; // 5 seconds timeout for database save
-    const saveTimeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Database save timeout')), saveTimeout);
-    });
-    
-    Promise.race([
-      saveChatMessages(supabaseClient, sessionId, userData.user.id, message, aiResponse, { total_tokens: 0 }),
-      saveTimeoutPromise
-    ]).catch(error => {
-      console.error('DB save failed or timed out but continuing:', error);
+    // Save chat messages asynchronously (don't block response)
+    saveChatMessages(supabaseClient, sessionId, userData.user.id, message, aiResponse, { total_tokens: 0 }).catch(error => {
+      console.error('DB save failed but continuing:', error);
     });
     
     return new Response(JSON.stringify({ response: aiResponse }), {
