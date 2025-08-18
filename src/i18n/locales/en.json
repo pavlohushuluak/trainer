@@ -3312,6 +3312,49 @@
           "description": "Subscription could not be reactivated"
         }
       },
+      "congratulations": {
+        "welcomeTo": "Welcome to",
+        "planUpgraded": "Your plan has been successfully upgraded!",
+        "accessToFeatures": "You now have access to all {{planName}} features",
+        "paymentSuccessful": "Payment Successful",
+        "paymentMethod": "Payment Method",
+        "amazonPay": "Amazon Pay",
+        "stripe": "Stripe",
+        "checkoutType": "Checkout Type",
+        "guestCheckout": "Guest Checkout",
+        "yourPlan": "Your {{planName}} Plan",
+        "upTo": "Up to",
+        "petProfiles": "Pet Profiles",
+        "expertTraining": "Expert Training",
+        "guidance": "Guidance",
+        "image": "Image",
+        "analysis": "Analysis",
+        "priority": "Priority",
+        "support": "Support",
+        "featuresUnlocked": "{{planName}} Features Unlocked",
+        "moreFeatures": "+{{count}} more features included",
+        "startTraining": "Start Training Now",
+        "exploreFeatures": "Explore Features",
+        "welcomeMessage": "Welcome to {{planName}}! Your pet training journey just got better! 🎉"
+      },
+      "features": {
+        "unlimitedChat": "Unlimited chat with experts",
+        "individualPlans": "Individual training plans",
+        "imageAnalysis": "Image analysis for behavior recognition",
+        "progressTracking": "Progress tracking",
+        "onePetProfile": "1 pet profile management",
+        "twoPetProfiles": "Up to 2 pets management",
+        "individualPlansPerPet": "Individual plans per pet",
+        "fourPetProfiles": "Up to 4 pets management",
+        "groupTraining": "Group training features",
+        "advancedAnalytics": "Advanced analytics",
+        "eightPetProfiles": "Up to 8 pets management",
+        "professionalTools": "Professional training tools",
+        "detailedReports": "Detailed reports",
+        "unlimitedPetProfiles": "Unlimited number of pets",
+        "enterpriseFeatures": "Enterprise features",
+        "prioritySupport": "Priority support"
+      },
       "imageAnalysis": {
         "uploadSuccess": {
           "title": "Image uploaded",
@@ -6088,6 +6131,35 @@
     "deleteError": {
       "title": "Error",
       "description": "Failed to delete language preference. Please try again."
+    }
+  },
+  "upgrade": {
+    "subscription": {
+      "congratulations": {
+        "welcomeTo": "Welcome to",
+        "planUpgraded": "Your plan has been successfully upgraded!",
+        "accessToFeatures": "You now have access to all {{planName}} features",
+        "paymentSuccessful": "Payment Successful",
+        "paymentMethod": "Payment Method",
+        "amazonPay": "Amazon Pay",
+        "stripe": "Stripe",
+        "checkoutType": "Checkout Type",
+        "guestCheckout": "Guest Checkout",
+        "yourPlan": "Your {{planName}} Plan",
+        "upTo": "Up to",
+        "petProfiles": "Pet Profiles",
+        "expertTraining": "Expert Training",
+        "guidance": "Guidance",
+        "image": "Image",
+        "analysis": "Analysis",
+        "priority": "Priority",
+        "support": "Support",
+        "featuresUnlocked": "{{planName}} Features Unlocked",
+        "moreFeatures": "+{{count}} more features included",
+        "startTraining": "Start Training Now",
+        "exploreFeatures": "Explore Features",
+        "welcomeMessage": "Welcome to {{planName}}! Your pet training journey just got better! 🎉"
+      }
     }
   }
 }

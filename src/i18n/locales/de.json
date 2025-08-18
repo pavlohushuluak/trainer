@@ -3329,6 +3329,49 @@
           "description": "Abonnement konnte nicht reaktiviert werden"
         }
       },
+      "congratulations": {
+        "welcomeTo": "Willkommen bei",
+        "planUpgraded": "Ihr Plan wurde erfolgreich aktualisiert!",
+        "accessToFeatures": "Sie haben jetzt Zugang zu allen {{planName}} Funktionen",
+        "paymentSuccessful": "Zahlung erfolgreich",
+        "paymentMethod": "Zahlungsmethode",
+        "amazonPay": "Amazon Pay",
+        "stripe": "Stripe",
+        "checkoutType": "Checkout-Typ",
+        "guestCheckout": "Gast-Checkout",
+        "yourPlan": "Ihr {{planName}} Plan",
+        "upTo": "Bis zu",
+        "petProfiles": "Haustierprofile",
+        "expertTraining": "Experten-Training",
+        "guidance": "Anleitung",
+        "image": "Bild",
+        "analysis": "Analyse",
+        "priority": "Priorität",
+        "support": "Support",
+        "featuresUnlocked": "{{planName}} Funktionen freigeschaltet",
+        "moreFeatures": "+{{count}} weitere Funktionen inbegriffen",
+        "startTraining": "Jetzt trainieren",
+        "exploreFeatures": "Funktionen erkunden",
+        "welcomeMessage": "Willkommen bei {{planName}}! Ihre Haustiertraining-Reise wird noch besser! 🎉"
+      },
+      "features": {
+        "unlimitedChat": "Unbegrenzter Chat mit Experten",
+        "individualPlans": "Individuelle Trainingspläne",
+        "imageAnalysis": "Bildanalyse für Verhaltenserkennung",
+        "progressTracking": "Fortschrittsverfolgung",
+        "onePetProfile": "1 Haustierprofil verwalten",
+        "twoPetProfiles": "Bis zu 2 Haustiere verwalten",
+        "individualPlansPerPet": "Individuelle Pläne pro Haustier",
+        "fourPetProfiles": "Bis zu 4 Haustiere verwalten",
+        "groupTraining": "Gruppentraining-Features",
+        "advancedAnalytics": "Erweiterte Analysen",
+        "eightPetProfiles": "Bis zu 8 Haustiere verwalten",
+        "professionalTools": "Professionelle Trainingswerkzeuge",
+        "detailedReports": "Detaillierte Berichte",
+        "unlimitedPetProfiles": "Unbegrenzte Anzahl Haustiere",
+        "enterpriseFeatures": "Enterprise-Features",
+        "prioritySupport": "Prioritäts-Support"
+      },
       "imageAnalysis": {
         "uploadSuccess": {
           "title": "Bild hochgeladen",
@@ -6088,6 +6131,35 @@
     "deleteError": {
       "title": "Fehler",
       "description": "Spracheinstellung konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
+    }
+  },
+  "upgrade": {
+    "subscription": {
+      "congratulations": {
+        "welcomeTo": "Willkommen bei",
+        "planUpgraded": "Ihr Plan wurde erfolgreich aktualisiert!",
+        "accessToFeatures": "Sie haben jetzt Zugang zu allen {{planName}} Funktionen",
+        "paymentSuccessful": "Zahlung erfolgreich",
+        "paymentMethod": "Zahlungsmethode",
+        "amazonPay": "Amazon Pay",
+        "stripe": "Stripe",
+        "checkoutType": "Checkout-Typ",
+        "guestCheckout": "Gast-Checkout",
+        "yourPlan": "Ihr {{planName}} Plan",
+        "upTo": "Bis zu",
+        "petProfiles": "Haustierprofile",
+        "expertTraining": "Experten-Training",
+        "guidance": "Anleitung",
+        "image": "Bild",
+        "analysis": "Analyse",
+        "priority": "Priorität",
+        "support": "Support",
+        "featuresUnlocked": "{{planName}} Funktionen freigeschaltet",
+        "moreFeatures": "+{{count}} weitere Funktionen inbegriffen",
+        "startTraining": "Jetzt trainieren",
+        "exploreFeatures": "Funktionen erkunden",
+        "welcomeMessage": "Willkommen bei {{planName}}! Ihre Haustiertraining-Reise wird noch besser! 🎉"
+      }
     }
   }
 }
