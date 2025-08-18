@@ -62,12 +62,43 @@ export const useTrainingSessions = (stepId?: string, date?: string) => {
     enabled: !!stepId,
   });
 
+  // Update step's session count and mastery status
+  const updateStepProgress = async (stepId: string, totalSessions: number) => {
+    try {
+      let masteryStatus = 'in_training';
+      if (totalSessions >= 10) {
+        masteryStatus = 'fully_mastered';
+      } else if (totalSessions >= 5) {
+        masteryStatus = 'partially_mastered';
+      }
+
+      const { error } = await supabase
+        .from('training_steps')
+        .update({
+          total_sessions_completed: totalSessions,
+          mastery_status: masteryStatus
+        })
+        .eq('id', stepId);
+
+      if (error) {
+        console.error('Error updating step progress:', error);
+        throw error;
+      }
+
+      return { totalSessions, masteryStatus };
+    } catch (error) {
+      console.error('Error updating step progress:', error);
+      throw error;
+    }
+  };
+
   // Create a new session
   const createSessionMutation = useMutation({
     mutationFn: async (sessionData: CreateSessionData) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
+      // Create the session
       const { data, error } = await supabase
         .from('training_sessions')
         .insert({
@@ -79,16 +110,50 @@ export const useTrainingSessions = (stepId?: string, date?: string) => {
         .single();
 
       if (error) throw error;
-      return data;
+
+      // Get updated session count
+      const { data: updatedSessions, error: countError } = await supabase
+        .from('training_sessions')
+        .select('*')
+        .eq('training_step_id', sessionData.training_step_id);
+
+      if (countError) throw countError;
+
+      const totalSessions = updatedSessions.length;
+
+      // Update step progress
+      await updateStepProgress(sessionData.training_step_id, totalSessions);
+
+      return { session: data, totalSessions };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Invalidate all related queries to ensure UI updates
       queryClient.invalidateQueries({ queryKey: ['training-sessions'] });
+      queryClient.invalidateQueries({ queryKey: ['training-sessions-all'] });
       queryClient.invalidateQueries({ queryKey: ['daily-progress'] });
       queryClient.invalidateQueries({ queryKey: ['training-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['training-plans-with-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['training-plans'] });
+      queryClient.invalidateQueries({ queryKey: ['user-rewards'] });
+      
+      // Show success message
       toast({
         title: t('training.toasts.trainingSessions.sessionCompleted.title'),
         description: t('training.toasts.trainingSessions.sessionCompleted.description'),
       });
+
+      // Show mastery achievement message if reached
+      if (data.totalSessions >= 10) {
+        toast({
+          title: "🎉 Mastery Achieved!",
+          description: "You've completed 10 sessions! This module is now fully mastered.",
+        });
+      } else if (data.totalSessions >= 5) {
+        toast({
+          title: "🌟 Great Progress!",
+          description: "You've completed 5 sessions! You're partially mastering this module.",
+        });
+      }
     },
     onError: (error) => {
       console.error('Error creating session:', error);
@@ -103,17 +168,48 @@ export const useTrainingSessions = (stepId?: string, date?: string) => {
   // Delete a session
   const deleteSessionMutation = useMutation({
     mutationFn: async (sessionId: string) => {
+      // Get the step ID before deleting
+      const { data: session, error: fetchError } = await supabase
+        .from('training_sessions')
+        .select('training_step_id')
+        .eq('id', sessionId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Delete the session
       const { error } = await supabase
         .from('training_sessions')
         .delete()
         .eq('id', sessionId);
 
       if (error) throw error;
+
+      // Get updated session count
+      const { data: updatedSessions, error: countError } = await supabase
+        .from('training_sessions')
+        .select('*')
+        .eq('training_step_id', session.training_step_id);
+
+      if (countError) throw countError;
+
+      const totalSessions = updatedSessions.length;
+
+      // Update step progress
+      await updateStepProgress(session.training_step_id, totalSessions);
+
+      return { totalSessions };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Invalidate all related queries to ensure UI updates
       queryClient.invalidateQueries({ queryKey: ['training-sessions'] });
+      queryClient.invalidateQueries({ queryKey: ['training-sessions-all'] });
       queryClient.invalidateQueries({ queryKey: ['daily-progress'] });
       queryClient.invalidateQueries({ queryKey: ['training-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['training-plans-with-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['training-plans'] });
+      queryClient.invalidateQueries({ queryKey: ['user-rewards'] });
+      
       toast({
         title: t('training.toasts.trainingSessions.sessionDeleted.title'),
         description: t('training.toasts.trainingSessions.sessionDeleted.description'),
@@ -129,13 +225,50 @@ export const useTrainingSessions = (stepId?: string, date?: string) => {
     },
   });
 
+  // Complete step mutation
+  const completeStepMutation = useMutation({
+    mutationFn: async (stepId: string) => {
+      const { error } = await supabase
+        .from('training_steps')
+        .update({
+          is_completed: true,
+          completed_at: new Date().toISOString()
+        })
+        .eq('id', stepId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      // Invalidate all related queries
+      queryClient.invalidateQueries({ queryKey: ['training-plans-with-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['training-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['daily-progress'] });
+      queryClient.invalidateQueries({ queryKey: ['user-rewards'] });
+      
+      toast({
+        title: "✅ Step Completed!",
+        description: "Great job! This training step has been marked as completed.",
+      });
+    },
+    onError: (error) => {
+      console.error('Error completing step:', error);
+      toast({
+        title: "Error",
+        description: "Failed to complete the step. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   return {
     todaySessions: todaySessions || [],
     allSessions: allSessions || [],
     isLoading,
     createSession: createSessionMutation.mutate,
     deleteSession: deleteSessionMutation.mutate,
+    completeStep: completeStepMutation.mutate,
     isCreating: createSessionMutation.isPending,
     isDeleting: deleteSessionMutation.isPending,
+    isCompleting: completeStepMutation.isPending,
   };
 };

@@ -3,30 +3,11 @@ import { TrainingProgressCard } from "../TrainingProgressCard";
 import { CompactPlanCard } from "./CompactPlanCard";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { TrainingStep, TrainingPlan } from "../types";
 
 export type ViewMode = 'list' | 'grid';
 
-interface TrainingStep {
-  id: string;
-  step_number: number;
-  title: string;
-  title_en?: string | null;
-  description: string;
-  description_en?: string | null;
-  is_completed: boolean;
-  points_reward: number;
-  completed_at: string | null;
-}
-
-interface TrainingPlanWithSteps {
-  id: string;
-  title: string;
-  description: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  user_id: string;
-  pet_id: string | null;
+interface TrainingPlanWithSteps extends TrainingPlan {
   pet_name?: string;
   pet_species?: string;
   steps: TrainingStep[];

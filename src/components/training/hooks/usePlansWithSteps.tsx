@@ -2,31 +2,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { TrainingStep, TrainingPlan } from '../types';
 
-interface TrainingStep {
-  id: string;
-  step_number: number;
-  title: string;
-  title_en?: string | null;
-  description: string;
-  description_en?: string | null;
-  is_completed: boolean;
-  points_reward: number;
-  completed_at: string | null;
-  total_sessions_completed?: number;
-  mastery_status?: string;
-  target_sessions_daily?: number;
-}
-
-interface TrainingPlanWithSteps {
-  id: string;
-  title: string;
-  description: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  user_id: string;
-  pet_id: string | null;
+interface TrainingPlanWithSteps extends TrainingPlan {
   pet_name?: string;
   pet_species?: string;
   steps: TrainingStep[];
@@ -98,6 +76,7 @@ export const usePlansWithSteps = (selectedPetFilter: string) => {
           
           return {
             ...plan,
+            status: plan.status as 'planned' | 'in_progress' | 'completed',
             pet_name: plan.pet_profiles?.name,
             pet_species: plan.pet_profiles?.species,
             steps: (plan.training_steps || []).sort((a, b) => a.step_number - b.step_number)

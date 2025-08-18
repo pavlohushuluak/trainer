@@ -164,8 +164,8 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
 
       {/* Plan Detail Modal */}
       <Dialog open={isPlanDetailModalOpen} onOpenChange={setIsPlanDetailModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-6 border-b">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto" style={{padding: '0px'}}>
+          <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-6 border-b sticky top-0 bg-background z-10" style={{padding: '1.5rem'}}>
             <div className="flex-1">
               <DialogTitle className="text-2xl font-bold text-foreground">
                 {selectedPlanForModal?.title}
@@ -176,10 +176,18 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
                 </p>
               )}
             </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsPlanDetailModalOpen(false)}
+              className="h-8 w-8 p-0 hover:bg-muted"
+            >
+              <X className="h-4 w-4" />
+            </Button>
           </DialogHeader>
           
           {selectedPlanForModal && (
-            <div className="pt-4">
+            <div className="px-6 pb-6">
               {/* Plan Description */}
               {selectedPlanForModal.description && (
                 <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">

@@ -850,3 +850,257 @@ body.scrollbar-preserved * {
     rgba(255, 255, 255, 0.05) 100%
   );
 }
+
+/* Training plan specific animations */
+@keyframes mastery-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  }
+}
+
+.animate-mastery-glow {
+  animation: mastery-glow 2s ease-in-out infinite;
+}
+
+@keyframes progress-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-progress-pulse {
+  animation: progress-pulse 2s ease-in-out infinite;
+}
+
+@keyframes session-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.animate-session-bounce {
+  animation: session-bounce 0.6s ease-in-out;
+}
+
+/* Pet-specific gradient backgrounds */
+.pet-gradient-dog {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%);
+}
+
+.pet-gradient-cat {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(196, 181, 253, 0.05) 100%);
+}
+
+.pet-gradient-horse {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(134, 239, 172, 0.05) 100%);
+}
+
+.pet-gradient-bird {
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(253, 224, 71, 0.05) 100%);
+}
+
+/* Mastery status indicators */
+.mastery-indicator {
+  @apply relative;
+}
+
+.mastery-indicator::before {
+  content: '';
+  @apply absolute inset-0 rounded-full;
+  background: conic-gradient(from 0deg, transparent 0deg, currentColor var(--progress), transparent var(--progress));
+  animation: mastery-spin 2s linear infinite;
+}
+
+@keyframes mastery-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Session tracker enhancements */
+.session-card {
+  @apply relative overflow-hidden;
+  background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.1) 100%);
+}
+
+.session-card::before {
+  content: '';
+  @apply absolute inset-0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.session-card:hover::before {
+  transform: translateX(100%);
+}
+
+/* Progress bar enhancements */
+.progress-enhanced {
+  @apply relative overflow-hidden;
+  background: linear-gradient(90deg, hsl(var(--muted)) 0%, hsl(var(--muted) / 0.5) 100%);
+}
+
+.progress-enhanced::after {
+  content: '';
+  @apply absolute inset-0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  animation: progress-shimmer 2s infinite;
+}
+
+@keyframes progress-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Badge enhancements */
+.badge-enhanced {
+  @apply relative overflow-hidden;
+  background: linear-gradient(135deg, currentColor 0%, currentColor 100%);
+}
+
+.badge-enhanced::before {
+  content: '';
+  @apply absolute inset-0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.badge-enhanced:hover::before {
+  transform: translateX(100%);
+}
+
+/* Training step animations */
+@keyframes step-complete {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-step-complete {
+  animation: step-complete 0.5s ease-in-out;
+}
+
+/* Mastery level animations */
+@keyframes mastery-level-up {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+.animate-mastery-level-up {
+  animation: mastery-level-up 0.8s ease-in-out;
+}
+
+/* Session completion celebration */
+@keyframes session-celebration {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+.animate-session-celebration {
+  animation: session-celebration 0.6s ease-out;
+}
+
+/* Hover effects for interactive elements */
+.hover-lift {
+  @apply transition-all duration-200;
+}
+
+.hover-lift:hover {
+  @apply transform -translate-y-1 shadow-lg;
+}
+
+.hover-glow {
+  @apply transition-all duration-200;
+}
+
+.hover-glow:hover {
+  @apply shadow-lg;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Dark mode specific enhancements */
+.dark .pet-gradient-dog {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 197, 253, 0.1) 100%);
+}
+
+.dark .pet-gradient-cat {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.2) 0%, rgba(196, 181, 253, 0.1) 100%);
+}
+
+.dark .pet-gradient-horse {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(134, 239, 172, 0.1) 100%);
+}
+
+.dark .pet-gradient-bird {
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.2) 0%, rgba(253, 224, 71, 0.1) 100%);
+}
+
+/* Responsive enhancements */
+@media (max-width: 768px) {
+  .card-enhanced {
+    @apply mx-2;
+  }
+  
+  .header-enhanced {
+    @apply px-4 py-3;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .animate-accordion-down,
+  .animate-accordion-up,
+  .animate-card-hover-lift,
+  .animate-card-hover-lift-dark,
+  .animate-chevron-rotate,
+  .animate-gradient-shimmer,
+  .animate-mastery-glow,
+  .animate-progress-pulse,
+  .animate-session-bounce,
+  .animate-step-complete,
+  .animate-mastery-level-up,
+  .animate-session-celebration {
+    animation: none;
+  }
+}
