@@ -61,7 +61,7 @@ export const useSupportTickets = () => {
           
           return data || [];
         },
-        30000 // Cache for 30 seconds
+        10000 // Cache for 10 seconds for more responsive updates
       );
       
       setTickets(result);
@@ -146,7 +146,14 @@ export const useSupportTickets = () => {
         description: t('support.feedbackSubmitted.description')
       });
 
-      fetchTickets();
+      // Clear specific cache keys and fetch tickets immediately
+      requestCache.clear(`support_tickets_${user.id}`);
+      await fetchTickets();
+      
+      // Additional refresh after a short delay to ensure UI is updated
+      setTimeout(async () => {
+        await fetchTickets();
+      }, 500);
     } catch (error) {
       console.error('Error submitting feedback:', error);
       toast({

@@ -328,7 +328,9 @@
     "satisfactionRequest": {
       "question": "War das hilfreich?",
       "yes": "Ja",
-      "no": "Nein"
+      "no": "Nein",
+      "submitting": "Feedback wird gesendet...",
+      "processing": "Wird verarbeitet..."
     },
     "feedback": {
       "title": "Wie zufrieden waren Sie mit unserem Support?",
@@ -1197,7 +1199,9 @@
     "satisfactionRequest": {
       "question": "War das hilfreich?",
       "yes": "Ja",
-      "no": "Nein"
+      "no": "Nein",
+      "submitting": "Feedback wird gesendet...",
+      "processing": "Wird verarbeitet..."
     },
     "loading": {
       "sessions": "Chat-Verlauf wird geladen...",

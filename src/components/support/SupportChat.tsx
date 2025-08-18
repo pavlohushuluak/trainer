@@ -29,6 +29,7 @@ export const SupportChat = ({ isOpen, onClose, onTicketChange }: SupportChatProp
     setNewMessage,
     isLoading,
     isResolvingTicket,
+    isSubmittingFeedback,
     ticketId,
     showSatisfactionRequest,
     messagesEndRef,
@@ -171,7 +172,7 @@ export const SupportChat = ({ isOpen, onClose, onTicketChange }: SupportChatProp
               {memoizedMessages}
               
               {showSatisfactionRequest && (
-                <SatisfactionRequest onFeedback={handleFeedback} />
+                <SatisfactionRequest onFeedback={handleFeedback} disabled={isSubmittingFeedback} />
               )}
               
               {isLoading && (

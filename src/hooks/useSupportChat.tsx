@@ -27,6 +27,7 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
   const [ticketId, setTicketId] = useState<string | null>(null);
   const [showSatisfactionRequest, setShowSatisfactionRequest] = useState(false);
   const [lastAiMessageId, setLastAiMessageId] = useState<string | null>(null);
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
@@ -216,72 +217,95 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
     if (!ticketId || !user) return;
 
     setShowSatisfactionRequest(false);
+    setIsSubmittingFeedback(true);
 
-    if (isHelpful) {
-      await supabase
-        .from('support_tickets')
-        .update({ 
-          status: 'resolved',
-          is_resolved_by_ai: true,
-          resolved_at: new Date().toISOString(),
-          satisfaction_rating: 5
-        })
-        .eq('id', ticketId);
+    try {
+      if (isHelpful) {
+        await supabase
+          .from('support_tickets')
+          .update({ 
+            status: 'resolved',
+            is_resolved_by_ai: true,
+            resolved_at: new Date().toISOString(),
+            satisfaction_rating: 5
+          })
+          .eq('id', ticketId);
 
-      await supabase
-        .from('support_feedback')
-        .insert({
-          ticket_id: ticketId,
-          user_id: user.id,
-          rating: 5,
-          resolved_by: 'ai'
+        await supabase
+          .from('support_feedback')
+          .insert({
+            ticket_id: ticketId,
+            user_id: user.id,
+            rating: 5,
+            resolved_by: 'ai'
+          });
+
+        const thankYouMessage: Message = {
+          id: (Date.now() + 2).toString(),
+          sender_type: 'ai',
+          sender_id: null,
+          message: t('support.chat.satisfaction.thankYouMessage'),
+          message_type: 'system',
+          created_at: new Date().toISOString()
+        };
+
+        setMessages(prev => [...prev, thankYouMessage]);
+        
+        toast({
+          title: t('support.chat.satisfaction.thankYouToast.title'),
+          description: t('support.chat.satisfaction.thankYouToast.description')
         });
 
-      const thankYouMessage: Message = {
-        id: (Date.now() + 2).toString(),
-        sender_type: 'ai',
-        sender_id: null,
-        message: t('support.chat.satisfaction.thankYouMessage'),
-        message_type: 'system',
-        created_at: new Date().toISOString()
-      };
+        // Notify parent component about ticket change
+        if (onTicketChange) {
+          onTicketChange();
+        }
 
-      setMessages(prev => [...prev, thankYouMessage]);
-      
+        return true; // Signal to close chat
+      } else {
+        await supabase
+          .from('support_tickets')
+          .update({ 
+            status: 'in_progress',
+            satisfaction_rating: 2
+          })
+          .eq('id', ticketId);
+
+        const escalationMessage: Message = {
+          id: (Date.now() + 3).toString(),
+          sender_type: 'ai',
+          sender_id: null,
+          message: t('support.chat.satisfaction.escalationMessage'),
+          message_type: 'system',
+          created_at: new Date().toISOString()
+        };
+
+        setMessages(prev => [...prev, escalationMessage]);
+        
+        toast({
+          title: t('support.chat.satisfaction.escalationToast.title'),
+          description: t('support.chat.satisfaction.escalationToast.description')
+        });
+
+        // Notify parent component about ticket change
+        if (onTicketChange) {
+          onTicketChange();
+        }
+
+        return false;
+      }
+    } catch (error) {
+      console.error('Error handling satisfaction feedback:', error);
       toast({
-        title: t('support.chat.satisfaction.thankYouToast.title'),
-        description: t('support.chat.satisfaction.thankYouToast.description')
+        variant: "destructive",
+        title: t('support.feedbackError.title'),
+        description: t('support.feedbackError.description')
       });
-
-      return true; // Signal to close chat
-    } else {
-      await supabase
-        .from('support_tickets')
-        .update({ 
-          status: 'in_progress',
-          satisfaction_rating: 2
-        })
-        .eq('id', ticketId);
-
-      const escalationMessage: Message = {
-        id: (Date.now() + 3).toString(),
-        sender_type: 'ai',
-        sender_id: null,
-        message: t('support.chat.satisfaction.escalationMessage'),
-        message_type: 'system',
-        created_at: new Date().toISOString()
-      };
-
-      setMessages(prev => [...prev, escalationMessage]);
-      
-      toast({
-        title: t('support.chat.satisfaction.escalationToast.title'),
-        description: t('support.chat.satisfaction.escalationToast.description')
-      });
-
       return false;
+    } finally {
+      setIsSubmittingFeedback(false);
     }
-  }, [ticketId, user, toast, t]);
+  }, [ticketId, user, toast, t, onTicketChange]);
 
   const createNewTicket = useCallback(async () => {
     if (!user) return;
@@ -319,6 +343,11 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
               created_at: new Date().toISOString()
             };
             setMessages(prev => [...prev, resolutionMessage]);
+            
+            // Immediately notify parent component about ticket resolution
+            if (onTicketChange) {
+              onTicketChange();
+            }
           }
         } catch (error) {
           console.error('Error resolving previous ticket:', error);
@@ -353,6 +382,11 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
       // Refresh tickets list if callback is provided
       if (onTicketChange) {
         onTicketChange();
+        
+        // Additional refresh after a short delay to ensure UI is updated
+        setTimeout(() => {
+          onTicketChange();
+        }, 500);
       }
     } finally {
       setIsLoading(false);
@@ -365,6 +399,7 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
     setNewMessage,
     isLoading,
     isResolvingTicket,
+    isSubmittingFeedback,
     ticketId,
     showSatisfactionRequest,
     messagesEndRef,

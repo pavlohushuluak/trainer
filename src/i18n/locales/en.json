@@ -4051,7 +4051,9 @@
         "satisfactionRequest": {
           "question": "Did this answer help you?",
           "yes": "Yes, thanks!",
-          "no": "Need more help"
+          "no": "Need more help",
+          "submitting": "Submitting your feedback...",
+          "processing": "Processing..."
         },
         "errorHandler": {
           "temporaryProblem": "Temporary Problem",
@@ -4806,7 +4808,9 @@
       "satisfactionRequest": {
         "question": "Did this answer help you?",
         "yes": "Yes, thanks!",
-        "no": "Need more help"
+        "no": "Need more help",
+        "submitting": "Submitting your feedback...",
+        "processing": "Processing..."
       },
       "errorHandler": {
         "temporaryProblem": "Temporary Problem",

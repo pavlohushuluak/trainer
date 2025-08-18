@@ -20,10 +20,10 @@ export const TicketHistory = () => {
   useEffect(() => {
     fetchTickets();
     
-    // Set up timer to refresh data every 10 seconds
+    // Set up timer to refresh data every 5 seconds for more responsive updates
     const interval = setInterval(() => {
       fetchTickets();
-    }, 10000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [fetchTickets]);
@@ -39,8 +39,16 @@ export const TicketHistory = () => {
       await submitFeedback(selectedTicket.id, rating, feedback);
       setShowFeedback(false);
       setSelectedTicket(null);
+      
+      // Immediately refresh tickets to show updated status
+      await fetchTickets();
+      
+      // Additional refresh after a short delay to ensure UI is updated
+      setTimeout(async () => {
+        await fetchTickets();
+      }, 300);
     }
-  }, [selectedTicket, submitFeedback]);
+  }, [selectedTicket, submitFeedback, fetchTickets]);
 
   const handleCloseDialog = useCallback(() => {
     setSelectedTicket(null);
