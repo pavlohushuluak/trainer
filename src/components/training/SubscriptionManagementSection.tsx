@@ -68,17 +68,19 @@ export const SubscriptionManagementSection = () => {
 
   return (
     <div className="mt-6 sm:mt-8 subscription-management-section">
-      <Card className="shadow-sm border-gray-100 dark:border-gray-800">
+      <Card className="card-enhanced shadow-lg border-border/50 bg-gradient-to-br from-white via-yellow-50/30 to-orange-50/30 dark:from-gray-900 dark:via-yellow-900/20 dark:to-orange-900/20 overflow-hidden">
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>
             <CardHeader 
-              className={`cursor-pointer hover:bg-muted/50 transition-colors rounded-t-lg px-4 sm:px-6 py-4 sm:py-6 ${isOpen? null : 'rounded-b-lg'}`}
+              className={`header-enhanced bg-gradient-to-r from-yellow-100/80 dark:from-yellow-900/40 via-orange-100/80 dark:via-orange-900/40 to-yellow-100/80 dark:to-yellow-900/40 rounded-t-lg ${isOpen ? null : 'rounded-b-lg'} cursor-pointer transition-all duration-300 ease-out group px-6 py-5`}
               aria-label={isOpen ? t('training.subscriptionManagement.collapseDetails') : t('training.subscriptionManagement.expandDetails')}
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <Crown className="h-5 w-5 text-yellow-500 flex-shrink-0" />
-                  <CardTitle className="text-lg sm:text-xl">{t('training.subscriptionManagement.title')}</CardTitle>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 shadow-lg">
+                    <Crown className="h-5 w-5 text-white" />
+                  </div>
+                  <CardTitle className="text-xl font-semibold text-yellow-900 dark:text-yellow-100">{t('training.subscriptionManagement.title')}</CardTitle>
                 </div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                   {hasActiveSubscription && subscriptionTierName && (
@@ -99,13 +101,13 @@ export const SubscriptionManagementSection = () => {
                     </div>
                   )}
                   {isOpen ? (
-                    <ChevronUp className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <ChevronUp className="h-5 w-5 text-yellow-600 dark:text-yellow-300 transition-all duration-300 ease-out group-hover:scale-110 flex-shrink-0" />
                   ) : (
-                    <ChevronDown className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <ChevronDown className="h-5 w-5 text-yellow-600 dark:text-yellow-300 transition-all duration-300 ease-out group-hover:scale-110 flex-shrink-0" />
                   )}
                 </div>
               </div>
-              <CardDescription className="text-sm">
+              <CardDescription className="text-yellow-700 dark:text-yellow-300 text-base mt-2 font-medium">
                 {hasActiveSubscription 
                   ? (() => {
                       const planName = subscriptionTierName;
@@ -142,9 +144,11 @@ export const SubscriptionManagementSection = () => {
               </CardDescription>
             </CardHeader>
           </CollapsibleTrigger>
-          <CollapsibleContent>
-            <CardContent className="px-4 sm:px-6 py-4 sm:py-6">
-              <SubscriptionManager />
+          <CollapsibleContent className="animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
+            <CardContent className="p-8 bg-gradient-to-br from-white/50 to-yellow-50/30 dark:from-gray-900/50 dark:to-yellow-900/10">
+              <div className="animate-fade-in-up">
+                <SubscriptionManager />
+              </div>
             </CardContent>
           </CollapsibleContent>
         </Collapsible>

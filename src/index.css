@@ -708,3 +708,145 @@ body.scrollbar-preserved * {
     transform: scale(1.05);
   }
 }
+
+/* Professional Accordion Animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-collapsible-content-height);
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes card-hover-lift {
+  from {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  }
+  to {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 10px 25px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+}
+
+@keyframes card-hover-lift-dark {
+  from {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+  }
+  to {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 10px 25px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  }
+}
+
+@keyframes chevron-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes gradient-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Professional Accordion Animation Classes */
+.animate-accordion-down {
+  animation: accordion-down 300ms cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+.animate-accordion-up {
+  animation: accordion-up 300ms cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+.animate-card-hover-lift {
+  animation: card-hover-lift 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-card-hover-lift-dark {
+  animation: card-hover-lift-dark 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-chevron-rotate {
+  animation: chevron-rotate 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-gradient-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: gradient-shimmer 2s infinite;
+}
+
+/* Enhanced Card Styles */
+.card-enhanced {
+  @apply transition-all duration-300 ease-out;
+  backdrop-filter: blur(10px);
+}
+
+.card-enhanced:hover {
+  @apply animate-card-hover-lift;
+}
+
+.dark .card-enhanced:hover {
+  @apply animate-card-hover-lift-dark;
+}
+
+/* Professional Header Styles */
+.header-enhanced {
+  @apply relative overflow-hidden transition-all duration-300 ease-out;
+}
+
+.header-enhanced::before {
+  content: '';
+  @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+}
+
+.header-enhanced:hover::before {
+  @apply opacity-100;
+}
+
+.dark .header-enhanced::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+}
