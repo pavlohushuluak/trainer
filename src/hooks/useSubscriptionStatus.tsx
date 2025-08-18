@@ -86,11 +86,11 @@ export const useSubscriptionStatus = () => {
     if (!subscription?.subscription_tier) return 'Free';
     
     switch (subscription.subscription_tier) {
-      case 'plan1': return '1 Tier';
-      case 'plan2': return '2 Tiere';
-      case 'plan3': return '3-4 Tiere';
-      case 'plan4': return '5-8 Tiere';
-      case 'plan5': return 'Unbegrenzt';
+      case 'plan1': return 'Plan 1';
+      case 'plan2': return 'Plan 2';
+      case 'plan3': return 'Plan 3';
+      case 'plan4': return 'Plan 4';
+      case 'plan5': return 'Plan 5';
       default: return subscription.subscription_tier;
     }
   };
