@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MessageCircle, History, HelpCircle, Heart, Home, ArrowLeft, Shield } from 'lucide-react';
@@ -14,6 +14,7 @@ import { SupportChat } from '@/components/support/SupportChat';
 import { useTranslations } from '@/hooks/useTranslations';
 import { usePetProfiles } from '@/hooks/usePetProfiles';
 import { useSupportTickets } from '@/hooks/useSupportTickets';
+import { requestCache } from '@/utils/requestCache';
 
 const Support = () => {
   const navigate = useNavigate();
@@ -23,6 +24,13 @@ const Support = () => {
   const { t } = useTranslations();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { fetchTickets } = useSupportTickets();
+  
+  // Wrapper function that clears cache before fetching tickets
+  const refreshTickets = useCallback(async () => {
+    // Clear the cache to ensure fresh data
+    requestCache.clear();
+    await fetchTickets();
+  }, [fetchTickets]);
 
   const {
     pets,
@@ -165,7 +173,7 @@ const Support = () => {
       <SupportChat
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
-        onTicketChange={fetchTickets}
+        onTicketChange={refreshTickets}
       />
     </div>
   );

@@ -347,6 +347,11 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
             // Immediately notify parent component about ticket resolution
             if (onTicketChange) {
               onTicketChange();
+              
+              // Additional refresh after a short delay to ensure UI is updated
+              setTimeout(() => {
+                onTicketChange();
+              }, 300);
             }
           }
         } catch (error) {

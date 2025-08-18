@@ -16,16 +16,9 @@ export const TicketHistory = () => {
   const [ticketMessages, setTicketMessages] = useState<any[]>([]);
   const [showFeedback, setShowFeedback] = useState(false);
   
-  // Fetch tickets on mount and set up refresh interval
+  // Fetch tickets on mount only
   useEffect(() => {
     fetchTickets();
-    
-    // Set up timer to refresh data every 5 seconds for more responsive updates
-    const interval = setInterval(() => {
-      fetchTickets();
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, [fetchTickets]);
 
   const loadTicketDetails = useCallback(async (ticket: any) => {
