@@ -69,8 +69,8 @@ export const useSupportTickets = () => {
       console.error('Error fetching tickets:', error);
       toast({
         variant: "destructive",
-        title: t('training.toasts.support.loadingError.title'),
-        description: t('training.toasts.support.loadingError.description')
+        title: t('support.loadingError.title'),
+        description: t('support.loadingError.description')
       });
     } finally {
       setLoading(false);
@@ -131,7 +131,7 @@ export const useSupportTickets = () => {
 
       if (error) throw error;
 
-      // Ticket als resolved markieren
+      // Mark ticket as resolved
       await supabase
         .from('support_tickets')
         .update({ 
@@ -142,8 +142,8 @@ export const useSupportTickets = () => {
         .eq('id', ticketId);
 
       toast({
-        title: t('training.toasts.support.feedbackSubmitted.title'),
-        description: t('training.toasts.support.feedbackSubmitted.description')
+        title: t('support.feedbackSubmitted.title'),
+        description: t('support.feedbackSubmitted.description')
       });
 
       fetchTickets();
@@ -151,8 +151,8 @@ export const useSupportTickets = () => {
       console.error('Error submitting feedback:', error);
       toast({
         variant: "destructive",
-        title: t('training.toasts.support.feedbackError.title'),
-        description: t('training.toasts.support.feedbackError.description')
+        title: t('support.feedbackError.title'),
+        description: t('support.feedbackError.description')
       });
     }
   }, [user, toast, fetchTickets, t]);

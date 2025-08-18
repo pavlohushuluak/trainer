@@ -16,13 +16,14 @@ interface Message {
   metadata?: any;
 }
 
-export const useSupportChat = (isOpen: boolean) => {
+export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const { t, currentLanguage } = useTranslations();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isResolvingTicket, setIsResolvingTicket] = useState(false);
   const [ticketId, setTicketId] = useState<string | null>(null);
   const [showSatisfactionRequest, setShowSatisfactionRequest] = useState(false);
   const [lastAiMessageId, setLastAiMessageId] = useState<string | null>(null);
@@ -282,15 +283,93 @@ export const useSupportChat = (isOpen: boolean) => {
     }
   }, [ticketId, user, toast, t]);
 
+  const createNewTicket = useCallback(async () => {
+    if (!user) return;
+
+    setIsLoading(true);
+
+    try {
+      // If there's an existing ticket, resolve it first
+      if (ticketId) {
+        setIsResolvingTicket(true);
+        try {
+          const { error } = await supabase
+            .from('support_tickets')
+            .update({ 
+              status: 'resolved',
+              resolved_at: new Date().toISOString()
+            })
+            .eq('id', ticketId);
+
+          if (error) {
+            console.error('Error resolving previous ticket:', error);
+            toast({
+              variant: "destructive",
+              title: t('support.chat.ticketResolutionError.title'),
+              description: t('support.chat.ticketResolutionError.description')
+            });
+          } else {
+            // Show resolution message
+            const resolutionMessage: Message = {
+              id: 'ticket-resolved',
+              sender_type: 'ai',
+              sender_id: null,
+              message: t('support.chat.previousTicketResolved', { ticketId: ticketId.slice(-8) }),
+              message_type: 'system',
+              created_at: new Date().toISOString()
+            };
+            setMessages(prev => [...prev, resolutionMessage]);
+          }
+        } catch (error) {
+          console.error('Error resolving previous ticket:', error);
+        } finally {
+          setIsResolvingTicket(false);
+        }
+      }
+
+      // Clear current state
+      setMessages([]);
+      setTicketId(null);
+      setShowSatisfactionRequest(false);
+      setNewMessage('');
+
+      // Show welcome message for new ticket
+      const welcomeMessage: Message = {
+        id: 'welcome',
+        sender_type: 'ai',
+        sender_id: null,
+        message: t('support.chat.welcomeMessage'),
+        message_type: 'text',
+        created_at: new Date().toISOString()
+      };
+
+      setMessages([welcomeMessage]);
+
+      toast({
+        title: t('support.chat.newTicketCreated.title'),
+        description: t('support.chat.newTicketCreated.description')
+      });
+
+      // Refresh tickets list if callback is provided
+      if (onTicketChange) {
+        onTicketChange();
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, ticketId, t, toast, onTicketChange]);
+
   return {
     messages,
     newMessage,
     setNewMessage,
     isLoading,
+    isResolvingTicket,
     ticketId,
     showSatisfactionRequest,
     messagesEndRef,
     sendMessage,
-    handleSatisfactionFeedback
+    handleSatisfactionFeedback,
+    createNewTicket
   };
 };

@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { SupportChat } from '@/components/support/SupportChat';
 import { useTranslations } from '@/hooks/useTranslations';
 import { usePetProfiles } from '@/hooks/usePetProfiles';
+import { useSupportTickets } from '@/hooks/useSupportTickets';
 
 const Support = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const Support = () => {
   const { isScrolled } = useStickyHeader();
   const { t } = useTranslations();
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const { fetchTickets } = useSupportTickets();
 
   const {
     pets,
@@ -163,6 +165,7 @@ const Support = () => {
       <SupportChat
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
+        onTicketChange={fetchTickets}
       />
     </div>
   );

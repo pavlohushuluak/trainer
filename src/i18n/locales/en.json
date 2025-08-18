@@ -99,8 +99,28 @@
       }
     },
     "chat": {
-      "title": "Support Chat",
-      "thinking": "Thinking...",
+      "title": "TierTrainer Support 🐾",
+      "thinking": "I'm thinking...",
+      "newTicket": "New Ticket",
+      "resolvingTicket": "Resolving...",
+      "resolvingPreviousTicket": "Resolving previous ticket...",
+      "activeTicket": "Active ticket",
+      "readyToStart": "Ready to start",
+      "newTicketCreated": {
+        "title": "New Ticket Created",
+        "description": "You can now start a new support conversation."
+      },
+      "previousTicketResolved": "Previous ticket #{ticketId} has been resolved and saved. Starting a new conversation...",
+      "ticketResolutionError": {
+        "title": "Error Resolving Ticket",
+        "description": "There was an issue resolving your previous ticket, but a new conversation has been started."
+      },
+      "newTicketDialog": {
+        "title": "Create New Ticket?",
+        "description": "This will start a new support conversation. Your current conversation will be saved but you'll start fresh with a new ticket.",
+        "cancel": "Cancel",
+        "confirm": "Create New Ticket"
+      },
       "ticketNumber": "Ticket #{{id}}",
       "welcomeMessage": "Hello 👋 I'm your support assistant – ready to help you and your pet in the best possible way.\n\nWhat's on your mind?",
       "ticketCreationError": {
@@ -2914,10 +2934,6 @@
         "description": "Use the chat with our AI trainer for instant help and personalized advice!"
       }
     },
-    "trainingPlans": {
-      "title": "Training Plans",
-      "description": "Create and manage individual training plans for your pets"
-    },
     "imageAnalysis": {
       "title": "AI Image Analysis",
       "description": "Upload a photo of your pet and receive detailed behavior analysis with training recommendations",
@@ -4697,7 +4713,27 @@
       "chat": {
         "title": "TierTrainer Support 🐾",
         "ticketNumber": "Ticket #{id}",
-        "thinking": "I'm thinking..."
+        "thinking": "I'm thinking...",
+        "newTicket": "New Ticket",
+        "resolvingTicket": "Resolving...",
+        "resolvingPreviousTicket": "Resolving previous ticket...",
+        "activeTicket": "Active ticket",
+        "readyToStart": "Ready to start",
+        "newTicketCreated": {
+          "title": "New Ticket Created",
+          "description": "You can now start a new support conversation."
+        },
+        "previousTicketResolved": "Previous ticket #{ticketId} has been resolved and saved. Starting a new conversation...",
+        "ticketResolutionError": {
+          "title": "Error Resolving Ticket",
+          "description": "There was an issue resolving your previous ticket, but a new conversation has been started."
+        },
+        "newTicketDialog": {
+          "title": "Create New Ticket?",
+          "description": "This will start a new support conversation. Your current conversation will be saved but you'll start fresh with a new ticket.",
+          "cancel": "Cancel",
+          "confirm": "Create New Ticket"
+        }
       },
       "ticketDetail": {
         "ticketId": "Ticket ID",
@@ -4727,6 +4763,41 @@
         "placeholder": "Share your thoughts with us...",
         "cancel": "Cancel",
         "sendFeedback": "Send Feedback"
+      },
+      "toasts": {
+        "support": {
+          "loadingError": {
+            "title": "Error Loading Tickets",
+            "description": "Could not load your support tickets. Please try again."
+          },
+          "feedbackSubmitted": {
+            "title": "Feedback Submitted",
+            "description": "Thank you for your feedback! It helps us improve our support."
+          },
+          "feedbackError": {
+            "title": "Error Submitting Feedback",
+            "description": "Could not submit your feedback. Please try again."
+          }
+        }
+      },
+      "loadingError": {
+        "title": "Error Loading Tickets",
+        "description": "Could not load your support tickets. Please try again."
+      },
+      "feedbackSubmitted": {
+        "title": "Feedback Submitted",
+        "description": "Thank you for your feedback! It helps us improve our support."
+      },
+      "feedbackError": {
+        "title": "Error Submitting Feedback",
+        "description": "Could not submit your feedback. Please try again."
+      },
+      "categories": {
+        "technical": "Technical",
+        "subscription": "Subscription",
+        "feature": "Feature",
+        "training": "Training",
+        "general": "General"
       },
       "chatInput": {
         "placeholder": "Write us your question... 🐾",
@@ -4990,11 +5061,11 @@
         "placeholder": "What have you achieved?",
         "generateButton": "💡 Generate title suggestion"
       },
-              "content": {
-          "label": "Tell us about your success *",
-          "placeholder": "Describe what you achieved, how you did it, and what might help others...",
-          "charCount": "{{count}}/2000 characters"
-        },
+      "content": {
+        "label": "Tell us about your success *",
+        "placeholder": "Describe what you achieved, how you did it, and what might help others...",
+        "charCount": "{{count}}/2000 characters"
+      },
       "buttons": {
         "shareLater": "Share later",
         "shareSuccess": "🎉 Share success",

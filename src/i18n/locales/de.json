@@ -99,8 +99,28 @@
       }
     },
     "chat": {
-      "title": "Support-Chat",
-      "thinking": "Denke nach...",
+      "title": "TierTrainer Support 🐾",
+      "thinking": "Ich denke nach...",
+      "newTicket": "Neues Ticket",
+      "resolvingTicket": "Löse auf...",
+      "resolvingPreviousTicket": "Löse vorheriges Ticket auf...",
+      "activeTicket": "Aktives Ticket",
+      "readyToStart": "Bereit zum Starten",
+      "newTicketCreated": {
+        "title": "Neues Ticket erstellt",
+        "description": "Du kannst jetzt eine neue Support-Konversation beginnen."
+      },
+      "previousTicketResolved": "Vorheriges Ticket #{ticketId} wurde gelöst und gespeichert. Starte eine neue Konversation...",
+      "ticketResolutionError": {
+        "title": "Fehler beim Lösen des Tickets",
+        "description": "Es gab ein Problem beim Lösen deines vorherigen Tickets, aber eine neue Konversation wurde gestartet."
+      },
+      "newTicketDialog": {
+        "title": "Neues Ticket erstellen?",
+        "description": "Dies startet eine neue Support-Konversation. Deine aktuelle Konversation wird gespeichert, aber du beginnst mit einem neuen Ticket.",
+        "cancel": "Abbrechen",
+        "confirm": "Neues Ticket erstellen"
+      },
       "ticketNumber": "Ticket #{{id}}",
       "welcomeMessage": "Hallo 👋 Ich bin dein Support-Assistent – bereit, dir und deinem Tier bestmöglich zu helfen.\n\nWas liegt dir auf dem Herzen?",
       "ticketCreationError": {
@@ -4717,7 +4737,27 @@
       "chat": {
         "title": "TierTrainer Support 🐾",
         "ticketNumber": "Ticket #{id}",
-        "thinking": "Ich denke nach..."
+        "thinking": "Ich denke nach...",
+        "newTicket": "Neues Ticket",
+        "resolvingTicket": "Löse auf...",
+        "resolvingPreviousTicket": "Löse vorheriges Ticket auf...",
+        "activeTicket": "Aktives Ticket",
+        "readyToStart": "Bereit zum Starten",
+        "newTicketCreated": {
+          "title": "Neues Ticket erstellt",
+          "description": "Du kannst jetzt eine neue Support-Konversation beginnen."
+        },
+        "previousTicketResolved": "Vorheriges Ticket #{ticketId} wurde gelöst und gespeichert. Starte eine neue Konversation...",
+        "ticketResolutionError": {
+          "title": "Fehler beim Lösen des Tickets",
+          "description": "Es gab ein Problem beim Lösen deines vorherigen Tickets, aber eine neue Konversation wurde gestartet."
+        },
+        "newTicketDialog": {
+          "title": "Neues Ticket erstellen?",
+          "description": "Dies startet eine neue Support-Konversation. Deine aktuelle Konversation wird gespeichert, aber du beginnst mit einem neuen Ticket.",
+          "cancel": "Abbrechen",
+          "confirm": "Neues Ticket erstellen"
+        }
       },
       "ticketDetail": {
         "ticketId": "Ticket-ID",
@@ -4747,6 +4787,41 @@
         "placeholder": "Teilen Sie Ihre Gedanken mit uns...",
         "cancel": "Abbrechen",
         "sendFeedback": "Feedback senden"
+      },
+      "toasts": {
+        "support": {
+          "loadingError": {
+            "title": "Fehler beim Laden der Tickets",
+            "description": "Ihre Support-Tickets konnten nicht geladen werden. Bitte versuchen Sie es erneut."
+          },
+          "feedbackSubmitted": {
+            "title": "Feedback übermittelt",
+            "description": "Vielen Dank für Ihr Feedback! Es hilft uns, unseren Support zu verbessern."
+          },
+          "feedbackError": {
+            "title": "Fehler beim Übermitteln des Feedbacks",
+            "description": "Ihr Feedback konnte nicht übermittelt werden. Bitte versuchen Sie es erneut."
+          }
+        }
+      },
+      "loadingError": {
+        "title": "Fehler beim Laden der Tickets",
+        "description": "Ihre Support-Tickets konnten nicht geladen werden. Bitte versuchen Sie es erneut."
+      },
+      "feedbackSubmitted": {
+        "title": "Feedback übermittelt",
+        "description": "Vielen Dank für Ihr Feedback! Es hilft uns, unseren Support zu verbessern."
+      },
+      "feedbackError": {
+        "title": "Fehler beim Übermitteln des Feedbacks",
+        "description": "Ihr Feedback konnte nicht übermittelt werden. Bitte versuchen Sie es erneut."
+      },
+      "categories": {
+        "technical": "Technisch",
+        "subscription": "Abonnement",
+        "feature": "Funktion",
+        "training": "Training",
+        "general": "Allgemein"
       },
       "chatInput": {
         "placeholder": "Schreiben Sie uns Ihre Frage... 🐾",
@@ -4986,11 +5061,11 @@
         "placeholder": "Was haben Sie erreicht?",
         "generateButton": "💡 Titelvorschlag generieren"
       },
-              "content": {
-          "label": "Erzählen Sie uns von Ihrem Erfolg *",
-          "placeholder": "Beschreiben Sie, was Sie erreicht haben, wie Sie es gemacht haben und was anderen helfen könnte...",
-          "charCount": "{{count}}/2000 Zeichen"
-        },
+      "content": {
+        "label": "Erzählen Sie uns von Ihrem Erfolg *",
+        "placeholder": "Beschreiben Sie, was Sie erreicht haben, wie Sie es gemacht haben und was anderen helfen könnte...",
+        "charCount": "{{count}}/2000 Zeichen"
+      },
       "buttons": {
         "shareLater": "Später teilen",
         "shareSuccess": "🎉 Erfolg teilen",

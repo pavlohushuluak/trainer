@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { MessageCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { SupportChat } from './SupportChat';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export const SupportButton = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   const { user } = useAuth();
   const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -28,6 +28,10 @@ export const SupportButton = () => {
       <SupportChat
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
+        onTicketChange={() => {
+          // Optional: Could implement ticket refresh here if needed
+          // For now, this is a standalone component without ticket history
+        }}
       />
     </>
   );

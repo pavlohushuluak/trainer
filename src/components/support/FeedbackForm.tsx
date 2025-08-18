@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Star } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 interface FeedbackFormProps {
   isOpen: boolean;
@@ -13,7 +13,7 @@ interface FeedbackFormProps {
 }
 
 export const FeedbackForm = ({ isOpen, onClose, onSubmit }: FeedbackFormProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
   const [hoveredStar, setHoveredStar] = useState(0);

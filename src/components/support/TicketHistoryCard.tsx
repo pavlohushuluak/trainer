@@ -32,13 +32,13 @@ const getStatusBadge = (status: string, t: any) => {
 
 const getCategoryColor = (category: string) => {
   const colors: Record<string, string> = {
-    technisch: "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300",
-    abo: "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300",
-    funktion: "bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300",
+    technical: "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300",
+    subscription: "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300",
+    feature: "bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300",
     training: "bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300",
-    allgemein: "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300"
+    general: "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300"
   };
-  return colors[category] || colors.allgemein;
+  return colors[category] || colors.general;
 };
 
 export const TicketHistoryCard = React.memo(({ ticket, onTicketClick }: TicketHistoryCardProps) => {
@@ -49,11 +49,11 @@ export const TicketHistoryCard = React.memo(({ ticket, onTicketClick }: TicketHi
   }, [onTicketClick, ticket]);
 
   const statusBadge = useMemo(() => getStatusBadge(ticket.status, t), [ticket.status, t]);
-  const categoryBadge = useMemo(() => (
-    <Badge className={getCategoryColor(ticket.category)}>
-      {ticket.category}
-    </Badge>
-  ), [ticket.category]);
+  // const categoryBadge = useMemo(() => (
+  //   <Badge className={getCategoryColor(ticket.category)}>
+  //     {ticket.category}
+  //   </Badge>
+  // ), [ticket.category, t]);
 
   const satisfactionStars = useMemo(() => {
     if (!ticket.satisfaction_rating) return null;
@@ -86,12 +86,12 @@ export const TicketHistoryCard = React.memo(({ ticket, onTicketClick }: TicketHi
           <div className="flex-1">
             <h3 className="font-medium">{ticket.subject}</h3>
             <p className="text-sm text-muted-foreground">
-              #{ticket.id.slice(-8)} • {new Date(ticket.created_at).toLocaleDateString('de-DE')}
+              #{ticket.id.slice(-8)} • {new Date(ticket.created_at).toLocaleDateString()}
             </p>
           </div>
           <div className="flex flex-col gap-2 items-end">
             {statusBadge}
-            {categoryBadge}
+            {/* {categoryBadge} */}
           </div>
         </div>
         
