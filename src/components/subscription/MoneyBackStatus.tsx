@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { differenceInDays, format } from "date-fns";
 import { de, enUS } from "date-fns/locale";
-import { useTranslation } from "react-i18next";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface MoneyBackStatusProps {
   subscriptionStart?: string;
@@ -14,7 +14,7 @@ interface MoneyBackStatusProps {
 }
 
 export const MoneyBackStatus = ({ subscriptionStart, isTrialing }: MoneyBackStatusProps) => {
-  const { t, i18n } = useTranslation();
+  const { t, currentLanguage } = useTranslations();
   
   // Don't show for trial subscriptions
   if (!subscriptionStart || isTrialing) return null;
@@ -32,7 +32,7 @@ export const MoneyBackStatus = ({ subscriptionStart, isTrialing }: MoneyBackStat
   const [isOpen, setIsOpen] = useState(true);
   
   // Get locale for date formatting
-  const locale = i18n.language === 'de' ? de : enUS;
+  const locale = currentLanguage === 'de' ? de : enUS;
 
   return (
     <Card className="border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-900/20 my-4 sm:my-6">
@@ -57,12 +57,15 @@ export const MoneyBackStatus = ({ subscriptionStart, isTrialing }: MoneyBackStat
             <div className="flex items-start gap-3">
               <Calendar className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
               <div className="min-w-0">
-                <p className="text-sm text-green-800 dark:text-green-200 font-medium leading-relaxed">
-                  {t('subscription.moneyBackGuarantee.youHaveRemaining', { 
-                    days: daysRemaining,
-                    dayText: daysRemaining === 1 ? t('subscription.moneyBackGuarantee.day') : t('subscription.moneyBackGuarantee.days')
-                  })}
-                </p>
+                <p 
+                  className="text-sm text-green-800 dark:text-green-200 font-medium leading-relaxed"
+                  dangerouslySetInnerHTML={{
+                    __html: t('subscription.moneyBackGuarantee.youHaveRemaining', { 
+                      days: daysRemaining,
+                      dayText: daysRemaining === 1 ? t('subscription.moneyBackGuarantee.day') : t('subscription.moneyBackGuarantee.days')
+                    })
+                  }}
+                />
                 <p className="text-xs text-green-600 dark:text-green-400 mt-1">
                   {t('subscription.moneyBackGuarantee.guaranteeEnd')}: {format(endDate, "dd. MMMM yyyy", { locale })}
                 </p>

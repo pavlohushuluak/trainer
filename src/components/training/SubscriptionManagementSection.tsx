@@ -5,10 +5,10 @@ import { Crown, ChevronDown, ChevronUp, Clock, Users, Loader2, AlertCircle } fro
 import { useState, useEffect } from 'react';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import SubscriptionManager from '@/components/SubscriptionManager';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export const SubscriptionManagementSection = () => {
-  const { t, i18n } = useTranslation();
+  const { t, currentLanguage } = useTranslations();
   const { 
     hasActiveSubscription, 
     subscription, 
@@ -50,7 +50,7 @@ export const SubscriptionManagementSection = () => {
   if (isLoading) {
     return (
       <div className="mt-6 sm:mt-8 subscription-management-section">
-        <Card className="shadow-sm border-gray-100">
+        <Card className="shadow-sm border-gray-100 dark:border-gray-800">
           <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
             <div className="flex items-center gap-2">
               <Crown className="h-5 w-5 text-yellow-500 flex-shrink-0" />
@@ -68,7 +68,7 @@ export const SubscriptionManagementSection = () => {
 
   return (
     <div className="mt-6 sm:mt-8 subscription-management-section">
-      <Card className="shadow-sm border-gray-100">
+      <Card className="shadow-sm border-gray-100 dark:border-gray-800">
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>
             <CardHeader 

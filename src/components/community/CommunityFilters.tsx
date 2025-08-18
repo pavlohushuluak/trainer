@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useTranslation } from "react-i18next";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface CommunityFiltersProps {
   selectedCategory: string;
@@ -12,7 +12,7 @@ interface CommunityFiltersProps {
 }
 
 export const CommunityFilters = ({ selectedCategory, onCategoryChange, selectedPostType, onPostTypeChange }: CommunityFiltersProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   
   const categories = [
     { id: 'all', label: t('community.filters.categories.all'), icon: '🐾' },
@@ -36,7 +36,7 @@ export const CommunityFilters = ({ selectedCategory, onCategoryChange, selectedP
     <div className="mb-6 space-y-4">
       {/* Category Filters */}
       <div>
-        <h3 className="text-sm font-medium text-gray-700 mb-2">{t('community.filters.categories.title')}</h3>
+        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('community.filters.categories.title')}</h3>
         <div className="flex flex-wrap gap-1 sm:gap-2">
           {categories.map((category) => (
             <Button
@@ -58,7 +58,7 @@ export const CommunityFilters = ({ selectedCategory, onCategoryChange, selectedP
 
       {/* Post Type Filters */}
       <div>
-        <h3 className="text-sm font-medium text-gray-700 mb-2">{t('community.filters.postTypes.title')}</h3>
+        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('community.filters.postTypes.title')}</h3>
         <div className="flex flex-wrap gap-1 sm:gap-2">
           {postTypes.map((type) => (
             <Button
@@ -80,8 +80,8 @@ export const CommunityFilters = ({ selectedCategory, onCategoryChange, selectedP
 
       {/* Active Filters Display */}
       {(selectedCategory !== 'all' || selectedPostType !== 'all') && (
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t">
-          <span className="text-xs sm:text-sm text-gray-600">{t('community.filters.activeFilters.label')}</span>
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+          <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('community.filters.activeFilters.label')}</span>
           {selectedCategory !== 'all' && (
             <Badge variant="secondary" className="flex items-center gap-1 text-xs">
               {categories.find(c => c.id === selectedCategory)?.icon}

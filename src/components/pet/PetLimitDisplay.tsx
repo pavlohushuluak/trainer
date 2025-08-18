@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Crown } from "lucide-react";
 import { SubscriptionModeDisplay } from "../subscription/SubscriptionModeDisplay";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
-import { useTranslation } from "react-i18next";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface PetLimitDisplayProps {
   currentPetCount: number;
@@ -12,13 +12,13 @@ interface PetLimitDisplayProps {
 }
 
 export const PetLimitDisplay = ({ currentPetCount, maxPetsAllowed, subscriptionTier }: PetLimitDisplayProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   const { subscriptionMode, subscription } = useSubscriptionStatus();
   const isUnlimited = maxPetsAllowed >= 999;
   
   return (
     <div className="flex items-center gap-3 text-sm">
-      <div className="flex items-center gap-2 text-gray-600">
+      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
         <Crown className="h-4 w-4" />
         <span>
           {currentPetCount} {t('common.of')} {isUnlimited ? '♾️' : maxPetsAllowed} {t('pets.pets')}

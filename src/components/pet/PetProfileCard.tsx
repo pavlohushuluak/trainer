@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Edit, Trash2 } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface PetProfile {
   id: string;
@@ -24,7 +24,7 @@ interface PetProfileCardProps {
 }
 
 const PetProfileCard = ({ pet, onEdit, onDelete }: PetProfileCardProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   
   const formatBirthDate = (birthDate?: string | null) => {
     if (!birthDate) return null;
@@ -79,9 +79,11 @@ const PetProfileCard = ({ pet, onEdit, onDelete }: PetProfileCardProps) => {
                 <AlertDialogHeader>
                   <AlertDialogTitle>{t('pets.delete.title')}</AlertDialogTitle>
                   <AlertDialogDescription className="space-y-2">
-                    <p>
-                      {t('pets.delete.confirmationStrong', { name: pet.name })}
-                    </p>
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: t('pets.delete.confirmationStrong', { name: pet.name })
+                      }}
+                    />
                     <div className="bg-destructive/10 p-3 rounded-md border border-destructive/20">
                       <p className="text-sm font-medium text-destructive">
                         {t('pets.delete.irreversible')}
@@ -90,9 +92,12 @@ const PetProfileCard = ({ pet, onEdit, onDelete }: PetProfileCardProps) => {
                         {t('pets.delete.dataLoss')}
                       </p>
                     </div>
-                    <p className="text-sm">
-                      {t('pets.delete.confirmName', { name: pet.name })}
-                    </p>
+                    <p 
+                      className="text-sm"
+                      dangerouslySetInnerHTML={{
+                        __html: t('pets.delete.confirmName', { name: pet.name })
+                      }}
+                    />
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

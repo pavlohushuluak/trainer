@@ -6,7 +6,7 @@ import { PetLimitDisplay } from "./PetLimitDisplay";
 import PetProfileForm from "./PetProfileForm";
 import { SubscriptionRequiredWarning } from "../subscription/SubscriptionRequiredWarning";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
-import { useTranslation } from "react-i18next";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface PetProfile {
   id: string;
@@ -60,7 +60,7 @@ export const PetProfileHeader = ({
   editingPet,
   onPetSaved
 }: PetProfileHeaderProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   const { hasActiveSubscription, subscriptionTierName } = useSubscriptionStatus();
   
   // Check if user has a valid plan (plan1-plan5) OR is a free user who can create their first pet
@@ -91,7 +91,7 @@ export const PetProfileHeader = ({
           subscriptionTier={subscriptionTier}
         />
         {pets.length > 0 && (
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             {t('training.petProfilesSection.description')}
           </p>
         )}

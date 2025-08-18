@@ -7,10 +7,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { Clock, Gift, RefreshCw } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useTranslations } from "@/hooks/useTranslations";
 
 export const MyTrialStatus = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslations();
   const [loading, setLoading] = useState(false);
   const [trialStatus, setTrialStatus] = useState<any>(null);
   const { user } = useAuth();
@@ -82,9 +82,12 @@ export const MyTrialStatus = () => {
                   <Clock className="h-4 w-4 text-green-600" />
                   <span className="font-medium text-green-800">{t('subscription.trialStatus.activeTrial')}</span>
                 </div>
-                <p className="text-sm text-green-700">
-                  {t('subscription.trialStatus.daysRemaining', { days: trialStatus.trialDaysRemaining })}
-                </p>
+                <p 
+                  className="text-sm text-green-700"
+                  dangerouslySetInnerHTML={{
+                    __html: t('subscription.trialStatus.daysRemaining', { days: trialStatus.trialDaysRemaining })
+                  }}
+                />
                 {trialStatus.specialTrialEnd && (
                   <p className="text-xs text-green-600 mt-1">
                     {t('subscription.trialStatus.trialEnd')}: {new Date(trialStatus.specialTrialEnd).toLocaleDateString('de-DE')}

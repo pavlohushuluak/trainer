@@ -4203,7 +4203,7 @@
         "content": {
           "label": "Content *",
           "placeholder": "Describe your concern, share your experiences, or ask your question...",
-          "charCount": "{count}/2000 characters"
+          "charCount": "{{count}}/2000 characters"
         },
         "buttons": {
           "cancel": "Cancel",
@@ -4260,7 +4260,7 @@
         }
       },
       "comments": {
-        "title": "Comments ({count})",
+        "title": "Comments ({{count}})",
         "loading": "Loading comments...",
         "unknownUser": "Unknown User",
         "solution": "Solution",
@@ -4292,7 +4292,7 @@
         "content": {
           "label": "Tell us about your success *",
           "placeholder": "Describe what you achieved, how you did it, and what might help others...",
-          "charCount": "{count}/2000 characters"
+          "charCount": "{{count}}/2000 characters"
         },
         "buttons": {
           "shareLater": "Share later",
@@ -4904,7 +4904,7 @@
       "content": {
         "label": "Content *",
         "placeholder": "Describe your concern, share your experiences, or ask your question...",
-        "charCount": "{count}/2000 characters"
+        "charCount": "{{count}}/2000 characters"
       },
       "buttons": {
         "cancel": "Cancel",
@@ -4961,7 +4961,7 @@
       }
     },
     "comments": {
-      "title": "Comments ({count})",
+      "title": "Comments ({{count}})",
       "loading": "Loading comments...",
       "unknownUser": "Unknown User",
       "solution": "Solution",
@@ -4990,11 +4990,11 @@
         "placeholder": "What have you achieved?",
         "generateButton": "💡 Generate title suggestion"
       },
-      "content": {
-        "label": "Tell us about your success *",
-        "placeholder": "Describe what you achieved, how you did it, and what might help others...",
-        "charCount": "{count}/2000 characters"
-      },
+              "content": {
+          "label": "Tell us about your success *",
+          "placeholder": "Describe what you achieved, how you did it, and what might help others...",
+          "charCount": "{{count}}/2000 characters"
+        },
       "buttons": {
         "shareLater": "Share later",
         "shareSuccess": "🎉 Share success",

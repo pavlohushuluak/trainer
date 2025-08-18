@@ -4199,7 +4199,7 @@
         "content": {
           "label": "Inhalt *",
           "placeholder": "Beschreiben Sie Ihr Anliegen, teilen Sie Ihre Erfahrungen oder stellen Sie Ihre Frage...",
-          "charCount": "{count}/2000 Zeichen"
+          "charCount": "{{count}}/2000 Zeichen"
         },
         "buttons": {
           "cancel": "Abbrechen",
@@ -4256,7 +4256,7 @@
         }
       },
       "comments": {
-        "title": "Kommentare ({count})",
+        "title": "Kommentare ({{count}})",
         "loading": "Kommentare werden geladen...",
         "unknownUser": "Unbekannter Benutzer",
         "solution": "Lösung",
@@ -4288,7 +4288,7 @@
         "content": {
           "label": "Erzählen Sie uns von Ihrem Erfolg *",
           "placeholder": "Beschreiben Sie, was Sie erreicht haben, wie Sie es gemacht haben und was anderen helfen könnte...",
-          "charCount": "{count}/2000 Zeichen"
+          "charCount": "{{count}}/2000 Zeichen"
         },
         "buttons": {
           "shareLater": "Später teilen",
@@ -4900,7 +4900,7 @@
       "content": {
         "label": "Inhalt *",
         "placeholder": "Beschreiben Sie Ihr Anliegen, teilen Sie Ihre Erfahrungen oder stellen Sie Ihre Frage...",
-        "charCount": "{count}/2000 Zeichen"
+        "charCount": "{{count}}/2000 Zeichen"
       },
       "buttons": {
         "cancel": "Abbrechen",
@@ -4986,11 +4986,11 @@
         "placeholder": "Was haben Sie erreicht?",
         "generateButton": "💡 Titelvorschlag generieren"
       },
-      "content": {
-        "label": "Erzählen Sie uns von Ihrem Erfolg *",
-        "placeholder": "Beschreiben Sie, was Sie erreicht haben, wie Sie es gemacht haben und was anderen helfen könnte...",
-        "charCount": "{count}/2000 Zeichen"
-      },
+              "content": {
+          "label": "Erzählen Sie uns von Ihrem Erfolg *",
+          "placeholder": "Beschreiben Sie, was Sie erreicht haben, wie Sie es gemacht haben und was anderen helfen könnte...",
+          "charCount": "{{count}}/2000 Zeichen"
+        },
       "buttons": {
         "shareLater": "Später teilen",
         "shareSuccess": "🎉 Erfolg teilen",

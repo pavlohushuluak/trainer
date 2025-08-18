@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useTranslation } from "react-i18next";
+import { useTranslations } from "@/hooks/useTranslations";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { de } from "date-fns/locale";
+import { de, enUS } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
 
 interface CommentSectionProps {
@@ -20,7 +20,7 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { t } = useTranslation();
+  const { t, currentLanguage } = useTranslations();
   const [newComment, setNewComment] = useState("");
 
   const { data: comments, isLoading } = useQuery({
@@ -93,13 +93,15 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
   };
 
   if (isLoading) {
-    return <div className="mt-4 text-center text-gray-500">{t('community.comments.loading')}</div>;
+    return <div className="mt-4 text-center text-gray-500 dark:text-gray-400">{t('community.comments.loading')}</div>;
   }
 
+  const commentCount = comments?.length ?? 0;
+  
   return (
-    <div className="mt-6 pt-4 border-t">
-      <h4 className="font-medium text-gray-900 mb-4">
-        {t('community.comments.title', { count: comments?.length || 0 })}
+    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-4">
+        {t('community.comments.title', { count: commentCount })}
       </h4>
 
       {/* Comments List */}
@@ -118,19 +120,22 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
               </Avatar>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-medium text-sm text-gray-900">{authorName}</span>
-                  <span className="text-xs text-gray-500 flex items-center gap-1">
+                  <span className="font-medium text-sm text-gray-900 dark:text-gray-100">{authorName}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: de })}
+                    {formatDistanceToNow(new Date(comment.created_at), { 
+                      addSuffix: true, 
+                      locale: currentLanguage === 'de' ? de : enUS 
+                    })}
                   </span>
                   {comment.is_solution && (
-                    <Badge variant="outline" className="bg-green-100 text-green-800 text-xs">
+                    <Badge variant="outline" className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs">
                       <CheckCircle className="h-3 w-3 mr-1" />
                       {t('community.comments.solution')}
                     </Badge>
                   )}
                 </div>
-                <p className="text-sm text-gray-700 whitespace-pre-wrap">{comment.content}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{comment.content}</p>
               </div>
             </div>
           );
