@@ -1345,7 +1345,8 @@
         "title": "Kostenloser Chat beendet! 🎯",
         "description": "Sie haben alle kostenlosen Fragen verwendet. Ihr Chat-Verlauf bleibt gespeichert.",
         "historyNote": "Sie können Ihre vorherigen Gespräche noch anzeigen",
-        "button": "Jetzt Premium werden für unbegrenzte Chats"
+        "button": "Jetzt Premium werden für unbegrenzte Chats",
+        "inputPlaceholder": "🔒 Kostenloses Limit erreicht - Upgrade für unbegrenzte Chats"
       },
       "active": {
         "title": "Kostenloser Chat: Fragen verwendet",

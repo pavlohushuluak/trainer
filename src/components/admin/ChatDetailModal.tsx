@@ -93,7 +93,7 @@ export const ChatDetailModal = ({ chat, open, onOpenChange }: ChatDetailModalPro
         
         <div className="space-y-4">
           {/* Chat Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 rounded-lg">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
             <div>
               <h4 className="font-medium mb-2 text-sm sm:text-base">{t('adminChats.chatDetail.userInfo')}</h4>
               <div className="space-y-1 text-xs sm:text-sm">
@@ -154,7 +154,7 @@ export const ChatDetailModal = ({ chat, open, onOpenChange }: ChatDetailModalPro
                           </Badge>
                         )}
                       </div>
-                      <div className="text-xs sm:text-sm bg-white p-2 sm:p-3 rounded border">
+                      <div className="text-xs sm:text-sm bg-white dark:bg-gray-800 p-2 sm:p-3 rounded border">
                         <p className="whitespace-pre-wrap break-words">
                           {message.content}
                         </p>

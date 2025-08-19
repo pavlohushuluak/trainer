@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 // Constants for free user limits
-export const FREE_CHAT_LIMIT = 10;
+export const FREE_CHAT_LIMIT = 3;
 
 interface FreeChatUsage {
   questionsUsed: number;

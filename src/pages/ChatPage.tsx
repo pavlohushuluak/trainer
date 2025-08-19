@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslations } from '@/hooks/useTranslations';
 import { useTranslation } from 'react-i18next';
+import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
+import { useFreeChatLimit } from '@/hooks/useFreeChatLimit';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -89,6 +91,8 @@ export const ChatPage = () => {
   const { toast } = useToast();
   const { pets } = usePetProfiles();
   const { i18n } = useI18n();
+  const { hasActiveSubscription } = useSubscriptionStatus();
+  const { usage, incrementUsage } = useFreeChatLimit();
 
   // State management
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -217,6 +221,16 @@ export const ChatPage = () => {
 
   const continueChat = async () => {
     if (!selectedSession) return;
+    
+    // Check if free user has reached limit
+    if (!hasActiveSubscription && usage.hasReachedLimit) {
+      toast({
+        title: t('chat.validation.freeTrialEnded.title'),
+        description: t('chat.validation.freeTrialEnded.description'),
+        variant: 'destructive'
+      });
+      return;
+    }
 
     setIsContinuingChat(true);
     try {
@@ -302,6 +316,11 @@ export const ChatPage = () => {
           description: t('chat.page.continueChat.success.description'),
         });
 
+        // Increment usage for free users only
+        if (!hasActiveSubscription) {
+          incrementUsage();
+        }
+
         // Update session timestamp
         await supabase
           .from('chat_sessions')
@@ -367,6 +386,11 @@ export const ChatPage = () => {
           title: t('chat.page.continueChat.success.title'),
           description: t('chat.page.continueChat.success.description'),
         });
+
+        // Increment usage for free users only
+        if (!hasActiveSubscription) {
+          incrementUsage();
+        }
 
         // Update session timestamp
         await supabase
@@ -439,6 +463,16 @@ export const ChatPage = () => {
 
   const sendMessage = async () => {
     if (!message.trim() || !selectedSession || isSending) return;
+    
+    // Check if free user has reached limit
+    if (!hasActiveSubscription && usage.hasReachedLimit) {
+      toast({
+        title: t('chat.validation.freeTrialEnded.title'),
+        description: t('chat.validation.freeTrialEnded.description'),
+        variant: 'destructive'
+      });
+      return;
+    }
 
     // Set chat as started when first message is sent
     setHasStartedChat(true);
@@ -508,6 +542,11 @@ export const ChatPage = () => {
         .update({ updated_at: new Date().toISOString() })
         .eq('id', selectedSession.id);
 
+      // Increment usage for free users only
+      if (!hasActiveSubscription) {
+        incrementUsage();
+      }
+
       // Refresh sessions list to update order
       loadChatSessions();
 
@@ -538,6 +577,17 @@ export const ChatPage = () => {
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      
+      // Check if free user has reached limit before sending
+      if (!hasActiveSubscription && usage.hasReachedLimit) {
+        toast({
+          title: t('chat.validation.freeTrialEnded.title'),
+          description: t('chat.validation.freeTrialEnded.description'),
+          variant: 'destructive'
+        });
+        return;
+      }
+      
       sendMessage();
     }
   };
@@ -966,19 +1016,35 @@ export const ChatPage = () => {
 
                   {/* Input Area */}
                   <div className="p-3 sm:p-4 border-t border-border/50">
+                    {/* Show limit reached message for free users */}
+                    {!hasActiveSubscription && usage.hasReachedLimit && (
+                      <div className="mb-4 p-3 bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-800 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <AlertTriangle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-orange-900 dark:text-orange-100">
+                              {t('chat.freeChatLimit.limitReached.title')}
+                            </p>
+                            <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
+                              {t('chat.freeChatLimit.limitReached.description')}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     {hasStartedChat && messages.length > 0 ? (
                       <div className="flex space-x-2">
                         <Input
-                          placeholder={t('chat.page.input.placeholder')}
+                          placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
                           onKeyPress={handleKeyPress}
-                          disabled={isSending}
+                          disabled={isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
                           className="flex-1 text-sm"
                         />
                         <Button
                           onClick={sendMessage}
-                          disabled={!message.trim() || isSending}
+                          disabled={!message.trim() || isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
                           className="px-3 sm:px-6"
                         >
                           {isSending ? (
@@ -993,7 +1059,7 @@ export const ChatPage = () => {
                       <div className="text-center">
                         <Button
                           onClick={continueChat}
-                          disabled={isContinuingChat}
+                          disabled={isContinuingChat || (!hasActiveSubscription && usage.hasReachedLimit)}
                           className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
                           size="lg"
                         >
@@ -1017,16 +1083,16 @@ export const ChatPage = () => {
                       // Show normal input for new chats (no existing messages)
                       <div className="flex space-x-2">
                         <Input
-                          placeholder={t('chat.page.input.placeholder')}
+                          placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
                           onKeyPress={handleKeyPress}
-                          disabled={isSending}
+                          disabled={isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
                           className="flex-1 text-sm"
                         />
                         <Button
                           onClick={sendMessage}
-                          disabled={!message.trim() || isSending}
+                          disabled={!message.trim() || isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
                           className="px-3 sm:px-6"
                         >
                           {isSending ? (

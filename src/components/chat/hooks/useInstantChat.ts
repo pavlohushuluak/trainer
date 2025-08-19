@@ -6,7 +6,7 @@ import { useTranslations } from "@/hooks/useTranslations";
 import { assignTrainerForSession } from "../utils/trainerTeam";
 import { useTranslation } from "react-i18next";
 
-const FREE_CHAT_LIMIT = 10; // Gratis-Chat Limit für kostenlose Nutzer
+const FREE_CHAT_LIMIT = 3; // Gratis-Chat Limit für kostenlose Nutzer
 
 interface Message {
   id: string;

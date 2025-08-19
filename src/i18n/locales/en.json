@@ -1341,7 +1341,8 @@
         "title": "Free chat ended! 🎯",
         "description": "You have used all free questions. Your chat history remains saved.",
         "historyNote": "You can still view your previous conversations",
-        "button": "Become Premium now for unlimited chats"
+        "button": "Become Premium now for unlimited chats",
+        "inputPlaceholder": "🔒 Free limit reached - Upgrade for unlimited chats"
       },
       "active": {
         "title": "Free chat: questions used",

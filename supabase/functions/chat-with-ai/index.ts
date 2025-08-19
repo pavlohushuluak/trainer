@@ -303,6 +303,51 @@ serve(async (req) => {
     saveChatMessages(supabaseClient, sessionId, userData.user.id, message, aiResponse, { total_tokens: 0 }).catch(error => {
       console.error('DB save failed but continuing:', error);
     });
+
+    // Update usage tracking for free users (don't block response)
+    const updateUsageTracking = async () => {
+      try {
+        // Check if user has active subscription
+        const { data: subscriberData } = await supabaseClient
+          .from('subscribers')
+          .select('subscribed, subscription_status')
+          .eq('user_id', userData.user.id)
+          .maybeSingle();
+
+        // Only increment usage for free users
+        if (!subscriberData?.subscribed && subscriberData?.subscription_status !== 'active') {
+          // Get current usage first, then increment
+          const { data: currentUsage } = await supabaseClient
+            .from('subscribers')
+            .select('questions_num')
+            .eq('user_id', userData.user.id)
+            .single();
+
+          const newUsage = (currentUsage?.questions_num || 0) + 1;
+          
+          const { error: updateError } = await supabaseClient
+            .from('subscribers')
+            .update({ 
+              questions_num: newUsage,
+              updated_at: new Date().toISOString()
+            })
+            .eq('user_id', userData.user.id);
+
+          if (updateError) {
+            console.error('❌ Error updating chat usage:', updateError);
+          } else {
+            console.log('✅ Chat usage incremented successfully');
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error in usage tracking:', error);
+      }
+    };
+
+    // Run usage tracking asynchronously
+    updateUsageTracking().catch(error => {
+      console.error('Usage tracking failed but continuing:', error);
+    });
     
     return new Response(JSON.stringify({ response: aiResponse }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

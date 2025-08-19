@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 
 // Constants for free user limits
-export const FREE_IMAGE_ANALYSES_LIMIT = 3;
+export const FREE_IMAGE_ANALYSES_LIMIT = 1;
 
 interface ImageAnalysisUsage {
   imageAnalysesUsed: number;

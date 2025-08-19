@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
+import { useFreeChatLimit } from "@/hooks/useFreeChatLimit";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import { useTranslations } from "@/hooks/useTranslations";
 import { useTranslation } from "react-i18next";
@@ -29,6 +31,8 @@ interface Message {
 
 export const useChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
   const { user } = useAuth();
+  const { hasActiveSubscription } = useSubscriptionStatus();
+  const { incrementUsage } = useFreeChatLimit();
   const { startMetric, endMetric } = usePerformanceMonitor('Chat');
   const { currentLanguage } = useTranslations();
   const { t } = useTranslation();
@@ -278,6 +282,11 @@ export const useChat = (isOpen: boolean, preloadedPets: PetProfile[] = []) => {
         content: data.response,
         created_at: new Date().toISOString()
       });
+
+      // Increment usage for free users only
+      if (!hasActiveSubscription) {
+        incrementUsage();
+      }
 
       endMetric(metricKey, 'send-message');
     } catch (error: any) {

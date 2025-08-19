@@ -12,8 +12,8 @@ export const useChatValidation = () => {
   const { hasActiveSubscription } = useSubscriptionStatus();
   const { usage, loading: usageLoading, incrementUsage } = useFreeChatLimit();
 
-  // Super-optimistic: Always allow until explicitly blocked
-  const canSendMessage = true; // Optimistic: Allow immediately, validate when sending
+  // Check if user can send message based on subscription and usage
+  const canSendMessage = hasActiveSubscription || !usage.hasReachedLimit;
 
   const validateChatRequirements = (
     sessionId: string | null,
@@ -52,8 +52,8 @@ export const useChatValidation = () => {
       return { isValid: false, errorShown: true };
     }
 
-    // Optimistic: Only block when limit is clearly reached
-    if (!hasActiveSubscription && usage.hasReachedLimit && !usageLoading) {
+    // Strict: Block when limit is reached (no loading check needed)
+    if (!hasActiveSubscription && usage.hasReachedLimit) {
       toast({
         title: t('chat.validation.freeTrialEnded.title'),
         description: t('chat.validation.freeTrialEnded.description'),
