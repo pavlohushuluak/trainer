@@ -6,9 +6,7 @@ export type ParsedTrainingSections = {
   requiredTools: string;
   learningTips: string;
   commonMistakes: string;
-}
-
-
+};
 
 export function parseTrainingContent(content: string): ParsedTrainingSections {
   const sections: ParsedTrainingSections = {
@@ -21,101 +19,107 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
   };
   if (!content || content.trim() === "") return sections;
 
-  // Build a normalized header map (supports synonyms, EN + DE)
-  const headerSynonyms: Array<[string, keyof ParsedTrainingSections]> = [
-    ["exercise goal", "exerciseGoal"],
-    ["übungsziel", "exerciseGoal"],
-    ["step-by-step guide", "stepByStepGuide"],
-    ["schritt-für-schritt-anleitung", "stepByStepGuide"],
-    ["repetition & duration", "repetitionDuration"],
-    ["repetition and duration", "repetitionDuration"],
-    ["wiederholung & dauer", "repetitionDuration"],
-    ["required tools & framework", "requiredTools"],
-    ["required tools and framework", "requiredTools"],
-    ["benötigte tools & rahmenbedingungen", "requiredTools"],
-    ["learning tips & motivation", "learningTips"],
-    ["learning tips and motivation", "learningTips"],
-    ["lerntipps & motivation", "learningTips"],
-    ["avoid common mistakes", "commonMistakes"],
-    ["häufige fehler vermeiden", "commonMistakes"],
-  ];
+  // ✅ Preprocess: insert line breaks before each known section header
+  let preProcessed = content
+    .replace(/\s*(Exercise Goal:)/gi, "\n$1")
+    .replace(/\s*(Step-by-Step Guide:)/gi, "\n$1")
+    .replace(/\s*(🔁 Repetition & Duration:)/gi, "\n$1")
+    .replace(/\s*(🧰 Required Tools & Framework:)/gi, "\n$1")
+    .replace(/\s*(🧠 Learning Tips & Motivation:)/gi, "\n$1")
+    .replace(/\s*(🚩 Avoid Common Mistakes:)/gi, "\n$1");
 
-  const norm = (s: string) =>
-    s
-      .toLowerCase()
-      .normalize("NFD") // split accents
-      .replace(/[\p{M}]/gu, "") // remove diacritics
-      .replace(/^[\p{P}\p{S}\s]+/gu, "") // drop leading emoji/punct/space only
-      .replace(/\s+/g, " ")
-      .trim();
+  // Split content into lines and clean them
+  const lines = preProcessed
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line);
 
-  const headerMap = new Map<string, keyof ParsedTrainingSections>();
-  for (const [label, key] of headerSynonyms) headerMap.set(norm(label), key);
+  let currentSection = "";
+  let sectionContent: string[] = [];
 
-  const lines = content
-    .split(/\r?\n/)
-    .map((l) => l.trim())
-    .filter(Boolean);
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const lowerLine = line.toLowerCase();
 
-  let current: keyof ParsedTrainingSections = "exerciseGoal";
-  let bucket: string[] = [];
-
-  const save = () => {
-    if (bucket.length) {
-      sections[current] = bucket.join("\n");
-      bucket = [];
-    }
-  };
-
-  for (const rawLine of lines) {
-    // Try to split header + inline content: "[emoji] Title: rest of line"
-    // Keep the colon optional; if no colon, we still try to match a pure header line.
-    const match = rawLine.match(
-      /^\s*([\p{P}\p{S}]*)\s*([^:]+?)(?::\s*(.*))?$/u
-    );
-    if (match) {
-      const titleCandidate = match[2] ?? "";
-      const rest = (match[3] ?? "").trim(); // inline content after :
-
-      const key = headerMap.get(norm(titleCandidate));
-      if (key) {
-        // switch section, save previous
-        save();
-        current = key;
-
-        // If header had inline content after ":", keep it.
-        if (rest) bucket.push(rest);
-        continue; // do not treat header line as content
+    // Section detection
+    if (lowerLine.startsWith("exercise goal:")) {
+      if (currentSection && sectionContent.length > 0) {
+        sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }
+      currentSection = "exerciseGoal";
+      sectionContent = [line.substring(line.indexOf(":") + 1).trim()];
+      continue;
     }
 
-    // Not a header -> normal content
-    bucket.push(rawLine);
+    if (lowerLine.startsWith("step-by-step guide:")) {
+      if (currentSection && sectionContent.length > 0) {
+        sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
+      }
+      currentSection = "stepByStepGuide";
+      sectionContent = [line.substring(line.indexOf(":") + 1).trim()];
+      continue;
+    }
+
+    if (lowerLine.startsWith("🔁 repetition & duration:")) {
+      if (currentSection && sectionContent.length > 0) {
+        sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
+      }
+      currentSection = "repetitionDuration";
+      sectionContent = [line.substring(line.indexOf(":") + 1).trim()];
+      continue;
+    }
+
+    if (lowerLine.startsWith("🧰 required tools & framework:")) {
+      if (currentSection && sectionContent.length > 0) {
+        sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
+      }
+      currentSection = "requiredTools";
+      sectionContent = [line.substring(line.indexOf(":") + 1).trim()];
+      continue;
+    }
+
+    if (lowerLine.startsWith("🧠 learning tips & motivation:")) {
+      if (currentSection && sectionContent.length > 0) {
+        sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
+      }
+      currentSection = "learningTips";
+      sectionContent = [line.substring(line.indexOf(":") + 1).trim()];
+      continue;
+    }
+
+    if (lowerLine.startsWith("🚩 avoid common mistakes:")) {
+      if (currentSection && sectionContent.length > 0) {
+        sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
+      }
+      currentSection = "commonMistakes";
+      sectionContent = [line.substring(line.indexOf(":") + 1).trim()];
+      continue;
+    }
+
+    // Otherwise, add to current section
+    if (currentSection) {
+      sectionContent.push(line);
+    }
   }
 
-  save();
-  
-  // Post-process step-by-step guide to format numbered steps properly
+  // Save the last section
+  if (currentSection && sectionContent.length > 0) {
+    sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
+  }
+
+  // ✅ Post-process formatting
   if (sections.stepByStepGuide) {
     sections.stepByStepGuide = formatStepByStepGuide(sections.stepByStepGuide);
   }
-
-  // Post-process repetition & duration to format titles properly
   if (sections.repetitionDuration) {
     sections.repetitionDuration = formatRepetitionDuration(sections.repetitionDuration);
   }
-
-  // Post-process required tools & framework to format titles properly
   if (sections.requiredTools) {
     sections.requiredTools = formatRequiredTools(sections.requiredTools);
   }
-
-  // Post-process learning tips & motivation to format bullet points properly
   if (sections.learningTips) {
     sections.learningTips = formatLearningTips(sections.learningTips);
   }
-
-  // Post-process common mistakes to format bullet points properly
   if (sections.commonMistakes) {
     sections.commonMistakes = formatCommonMistakes(sections.commonMistakes);
   }

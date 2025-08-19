@@ -11,15 +11,19 @@ interface AnalysisResult {
   recommendation: string;
   followup_suggestion?: string;
   confidence_level?: string;
+  created_plan?: any;
+  plan_creation_success?: boolean;
+  plan_creation_error?: string;
 }
 
 interface ImageAnalysisResultProps {
   result: AnalysisResult;
   onCreatePlan?: () => void;
   onSaveAnalysis?: () => void;
+  onPlanCreated?: (plan: any) => void;
 }
 
-export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis }: ImageAnalysisResultProps) => {
+export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis, onPlanCreated }: ImageAnalysisResultProps) => {
   const { currentLanguage } = useTranslations();
 
   // Language-specific translations
@@ -173,16 +177,59 @@ export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis }: Im
           </div>
           
           <div className="flex flex-col sm:flex-row gap-2">
-            {onCreatePlan && (
-              <Button onClick={onCreatePlan} className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white text-sm sm:text-base min-h-[44px]">
-                <Target className="h-4 w-4 mr-2 flex-shrink-0" />
-                {t.createTrainingPlan}
-              </Button>
-            )}
-            {onSaveAnalysis && (
-              <Button variant="outline" onClick={onSaveAnalysis} className="text-sm sm:text-base min-h-[44px]">
-                💾 {t.saveAnalysis}
-              </Button>
+            {result.plan_creation_success && result.created_plan ? (
+              <div className="w-full">
+                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800 mb-3">
+                  <div className="flex items-center gap-2 text-green-800 dark:text-green-200">
+                    <span className="text-lg">✅</span>
+                    <strong>Training plan created successfully!</strong>
+                  </div>
+                  <p className="text-green-700 dark:text-green-300 text-sm mt-1">
+                    Your personalized training plan has been created and saved to your dashboard.
+                  </p>
+                </div>
+                {onPlanCreated && (
+                  <Button 
+                    onClick={() => onPlanCreated(result.created_plan)} 
+                    className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white text-sm sm:text-base min-h-[44px] w-full"
+                  >
+                    <Target className="h-4 w-4 mr-2 flex-shrink-0" />
+                    View Training Plan
+                  </Button>
+                )}
+              </div>
+            ) : result.plan_creation_error ? (
+              <div className="w-full">
+                <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800 mb-3">
+                  <div className="flex items-center gap-2 text-red-800 dark:text-red-200">
+                    <span className="text-lg">❌</span>
+                    <strong>Plan creation failed</strong>
+                  </div>
+                  <p className="text-red-700 dark:text-red-300 text-sm mt-1">
+                    {result.plan_creation_error}
+                  </p>
+                </div>
+                {onCreatePlan && (
+                  <Button onClick={onCreatePlan} className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white text-sm sm:text-base min-h-[44px] w-full">
+                    <Target className="h-4 w-4 mr-2 flex-shrink-0" />
+                    Try Creating Plan Again
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <>
+                {onCreatePlan && (
+                  <Button onClick={onCreatePlan} className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white text-sm sm:text-base min-h-[44px]">
+                    <Target className="h-4 w-4 mr-2 flex-shrink-0" />
+                    {t.createTrainingPlan}
+                  </Button>
+                )}
+                {onSaveAnalysis && (
+                  <Button variant="outline" onClick={onSaveAnalysis} className="text-sm sm:text-base min-h-[44px]">
+                    💾 {t.saveAnalysis}
+                  </Button>
+                )}
+              </>
             )}
           </div>
         </CardContent>

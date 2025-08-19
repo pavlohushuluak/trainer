@@ -20,6 +20,7 @@ interface AnalysisDisplaySectionProps {
   onSaveAnalysis: () => void;
   onSavePlan: () => void;
   onStartOver: () => void;
+  onPlanCreated?: (plan: any) => void;
 }
 
 export const AnalysisDisplaySection = ({
@@ -30,7 +31,8 @@ export const AnalysisDisplaySection = ({
   onCreatePlan,
   onSaveAnalysis,
   onSavePlan,
-  onStartOver
+  onStartOver,
+  onPlanCreated
 }: AnalysisDisplaySectionProps) => {
   const { currentLanguage } = useTranslations();
 
@@ -64,6 +66,7 @@ export const AnalysisDisplaySection = ({
         result={analysisResult}
         onCreatePlan={onCreatePlan}
         onSaveAnalysis={onSaveAnalysis}
+        onPlanCreated={onPlanCreated}
       />
 
       {showPlan && trainingPlan && (

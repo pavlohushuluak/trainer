@@ -17,9 +17,12 @@ import { usePetProfiles } from '@/hooks/usePetProfiles';
 interface AnimalImageUploadProps {
   onUploadComplete: (result: any, pet?: any) => void;
   disabled?: boolean;
+  createPlan?: boolean;
+  userId?: string;
+  petId?: string;
 }
 
-export const AnimalImageUpload = ({ onUploadComplete, disabled }: AnimalImageUploadProps) => {
+export const AnimalImageUpload = ({ onUploadComplete, disabled, createPlan = false, userId, petId }: AnimalImageUploadProps) => {
   const { t } = useTranslations();
   const [isPetSelectionOpen, setIsPetSelectionOpen] = useState(false);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
@@ -56,7 +59,10 @@ export const AnimalImageUpload = ({ onUploadComplete, disabled }: AnimalImageUpl
       setIsPetSelectionOpen(true);
     },
     canAnalyze,
-    incrementUsage
+    incrementUsage,
+    createPlan,
+    userId,
+    petId
   });
 
   const handlePetSelected = async (pet: any) => {

@@ -134,9 +134,10 @@ const ImageAnalysisPage = () => {
                     onUploadComplete={(result) => {
                       handleUploadComplete(result);
                     }}
-                    petName="Ihr Tier"
-                    petSpecies="Hund"
                     disabled={false}
+                    createPlan={true}
+                    userId={user.id}
+                    petId={null} // For standalone analysis, we don't have a specific pet
                   />
                 )}
               </CardContent>
@@ -166,6 +167,11 @@ const ImageAnalysisPage = () => {
                   onSavePlan={handleSavePlan}
                   onStartOver={() => {
                     handleStartOver();
+                  }}
+                  onPlanCreated={(plan) => {
+                    // Handle when a plan is created from image analysis
+                    console.log('Plan created from image analysis:', plan);
+                    // You can navigate to the plan or show a success message
                   }}
                 />
               </CardContent>

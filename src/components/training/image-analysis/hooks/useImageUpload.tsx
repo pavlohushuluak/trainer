@@ -10,13 +10,19 @@ interface UseImageUploadProps {
   onPetSelectionRequired: (file: File, imagePreview: string) => void;
   canAnalyze: boolean;
   incrementUsage: () => Promise<boolean>;
+  createPlan?: boolean;
+  userId?: string;
+  petId?: string;
 }
 
 export const useImageUpload = ({
   onUploadComplete,
   onPetSelectionRequired,
   canAnalyze,
-  incrementUsage
+  incrementUsage,
+  createPlan = false,
+  userId,
+  petId
 }: UseImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -130,7 +136,10 @@ export const useImageUpload = ({
           image: base64,
           petName: petName,
           petSpecies: petSpecies,
-          language: currentLanguage
+          language: currentLanguage,
+          createPlan: createPlan,
+          userId: userId,
+          petId: petId
         }
       });
 
