@@ -8,19 +8,8 @@ import { useTranslations } from "@/hooks/useTranslations";
 import { StepHeader } from "./StepHeader";
 import { StepActions } from "./StepActions";
 import { ModuleDetails } from "./ModuleDetails";
-import { useLocalizedTrainingStep } from "@/utils/trainingStepLocalization";
-
-interface TrainingStep {
-  id: string;
-  step_number: number;
-  title: string;
-  title_en?: string | null;
-  description: string;
-  description_en?: string | null;
-  is_completed: boolean;
-  points_reward: number;
-  completed_at: string | null;
-}
+import { TrainingStepWithLocalization, useLocalizedTrainingStep } from "@/utils/trainingStepLocalization";
+import { TrainingStep } from "../types";
 
 interface TrainingStepItemProps {
   step: TrainingStep;
@@ -35,7 +24,7 @@ export const TrainingStepItem = ({ step, onStepComplete }: TrainingStepItemProps
   const { t } = useTranslations();
   
   // Get localized step content based on user's language
-  const localizedStep = useLocalizedTrainingStep(step);
+  const localizedStep = useLocalizedTrainingStep(step as TrainingStepWithLocalization);
 
   const handleComplete = async () => {
     if (step.is_completed) return;
@@ -103,7 +92,7 @@ export const TrainingStepItem = ({ step, onStepComplete }: TrainingStepItemProps
       </div>
 
       {/* Expandable Module Details */}
-      <ModuleDetails />
+      <ModuleDetails step={step} />
     </div>
   );
 };

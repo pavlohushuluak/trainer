@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trash2, Play, CheckCircle, Target, Clock, Trophy, Star } from "lucide-react";
+import { Trash2, Play, CheckCircle, Target, Clock, Trophy, Star, Sparkles } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useTranslations } from "@/hooks/useTranslations";
 import { useTrainingSessions } from "../hooks/useTrainingSessions";
@@ -11,6 +11,7 @@ interface TrainingPlanWithSteps extends TrainingPlan {
   pet_name?: string;
   pet_species?: string;
   steps: TrainingStep[];
+  is_ai_generated?: boolean; // Add AI-generated flag
 }
 
 interface CompactPlanCardProps {
@@ -265,17 +266,30 @@ export const CompactPlanCard = ({ plan, onStepComplete, onDeletePlan }: CompactP
   return (
     <Card className={`relative group h-full border-l-4 ${petInfo.colorClasses.leftBorder} bg-gradient-to-br ${petInfo.colorClasses.gradient} ${petInfo.colorClasses.hover} shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer backdrop-blur-sm`}>
       <CardHeader className="pb-3">
-        {/* Pet Badge */}
+        {/* Pet Badge and AI Generated Badge */}
         <div className="flex items-center justify-between">
-          <Badge 
-            variant="outline" 
-            className={petInfo.colorClasses.badgeClasses}
-          >
-            {petInfo.icon} {petInfo.name}
-            {!petInfo.isLinked && (
-              <span className="ml-1 text-xs opacity-75">*</span>
+          <div className="flex items-center gap-2">
+            <Badge 
+              variant="outline" 
+              className={petInfo.colorClasses.badgeClasses}
+            >
+              {petInfo.icon} {petInfo.name}
+              {!petInfo.isLinked && (
+                <span className="ml-1 text-xs opacity-75">*</span>
+              )}
+            </Badge>
+
+            {/* AI Generated Badge */}
+            {plan.is_ai_generated && (
+              <Badge 
+                variant="secondary" 
+                className="text-xs bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 border-purple-200 dark:from-purple-900/30 dark:to-blue-900/30 dark:text-purple-200 dark:border-purple-400/50"
+              >
+                <Sparkles className="h-3 w-3 mr-1" />
+                AI Generated
+              </Badge>
             )}
-          </Badge>
+          </div>
 
           {/* Mastery Badge */}
           {masteryInfo.masteryPercentage > 0 && (

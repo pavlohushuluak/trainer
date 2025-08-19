@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { SessionTracker } from "./SessionTracker";
 import { useLocalizedTrainingStep } from "@/utils/trainingStepLocalization";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Star, Target, Clock, Award } from "lucide-react";
+import { Trophy, Star, Target, Clock, Award, Sparkles } from "lucide-react";
 
 export interface TrainingStep {
   id: string;
@@ -33,6 +33,7 @@ interface TrainingProgressCardProps {
   onStepComplete: () => void;
   petName?: string;
   petSpecies?: string;
+  is_ai_generated?: boolean; // Add AI-generated flag
 }
 
 const getPetIcon = (species?: string) => {
@@ -178,7 +179,8 @@ export const TrainingProgressCard = ({
   steps,
   onStepComplete,
   petName,
-  petSpecies
+  petSpecies,
+  is_ai_generated
 }: TrainingProgressCardProps) => {
   const { t } = useTranslations();
   
@@ -210,13 +212,26 @@ export const TrainingProgressCard = ({
 
   return (
     <Card className={`w-full border-l-4 ${getBorderColor()} bg-gradient-to-br from-background via-background to-muted/20 shadow-sm hover:shadow-lg transition-all duration-300 backdrop-blur-sm`}>
-      {/* Pet Badge */}
+      {/* Pet Badge and AI Generated Badge */}
       {petName && (
         <div className="px-4 pt-3 pb-1">
-          <Badge variant="outline" className={getBadgeClasses()}>
-            {getPetIcon(petSpecies)} {petName}
-            {petSpecies && <span className="text-xs ml-1">({petSpecies})</span>}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className={getBadgeClasses()}>
+              {getPetIcon(petSpecies)} {petName}
+              {petSpecies && <span className="text-xs ml-1">({petSpecies})</span>}
+            </Badge>
+            
+            {/* AI Generated Badge */}
+            {is_ai_generated && (
+              <Badge 
+                variant="secondary" 
+                className="text-xs bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 border-purple-200 dark:from-purple-900/30 dark:to-blue-900/30 dark:text-purple-200 dark:border-purple-400/50"
+              >
+                <Sparkles className="h-3 w-3 mr-1" />
+                AI Generated
+              </Badge>
+            )}
+          </div>
         </div>
       )}
       

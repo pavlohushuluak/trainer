@@ -2,6 +2,7 @@
 import { CheckCircle2, Circle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "@/hooks/useTranslations";
+import { parseTrainingContent } from "@/utils/trainingStepParser";
 
 interface StepHeaderProps {
   step: {
@@ -11,11 +12,34 @@ interface StepHeaderProps {
     is_completed: boolean;
     points_reward: number;
     completed_at: string | null;
+    exercise_goal?: string | null;
+    exercise_goal_en?: string | null;
   };
 }
 
 export const StepHeader = ({ step }: StepHeaderProps) => {
-  const { t } = useTranslations();
+  const { t, currentLanguage } = useTranslations();
+  
+  // Get exercise goal from structured data or parse from description
+  const getExerciseGoal = () => {
+    // First try to get from structured data
+    if (currentLanguage === 'en' && step.exercise_goal_en) {
+      return step.exercise_goal_en;
+    }
+    if (currentLanguage === 'de' && step.exercise_goal) {
+      return step.exercise_goal;
+    }
+    
+    // Fallback: parse from description
+    try {
+      const parsedContent = parseTrainingContent(step.description);
+      return parsedContent.exerciseGoal;
+    } catch (error) {
+      return null;
+    }
+  };
+  
+  const exerciseGoal = getExerciseGoal();
   
   return (
     <div className="flex items-start gap-3 flex-1">
@@ -28,7 +52,11 @@ export const StepHeader = ({ step }: StepHeaderProps) => {
         <h4 className="font-semibold text-base mb-1 text-foreground">
           {t('training.stepHeader.module', { number: step.step_number })}: {step.title}
         </h4>
-        <p className="text-sm text-muted-foreground mb-2">{step.description}</p>
+        {exerciseGoal && (
+          <p className="text-sm text-blue-600 dark:text-blue-400 mb-1 font-medium">
+            📌 {t('training.moduleDetails.exerciseGoal.title')}: {exerciseGoal}
+          </p>
+        )}
         
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-xs text-muted-foreground">

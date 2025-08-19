@@ -201,7 +201,7 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
 
       {/* Plan Detail Modal */}
       <Dialog open={isPlanDetailModalOpen} onOpenChange={setIsPlanDetailModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0" style={{padding: '0px'}}>
           <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-6 border-b sticky top-0 bg-background z-10 px-6 pt-6">
             <div className="flex-1">
               <DialogTitle className="text-2xl font-bold text-foreground">
