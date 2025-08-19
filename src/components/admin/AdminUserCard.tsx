@@ -42,17 +42,22 @@ export const AdminUserCard = ({
     );
   };
 
+  const getStatusBadge = (isActive: boolean) => {
+    return (
+      <Badge variant={isActive ? "default" : "outline"} className="text-xs">
+        {isActive ? t('adminUserCard.status.active') : t('adminUserCard.status.inactive')}
+      </Badge>
+    );
+  };
+
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border rounded-lg gap-3 sm:gap-4">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border rounded-lg gap-3 sm:gap-4 hover:bg-muted/50 transition-colors">
       <div className="flex-1 min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
           <div className="flex-1 min-w-0">
             <h3 className="font-medium text-sm sm:text-base truncate">{admin.email}</h3>
             <p className="text-xs sm:text-sm text-muted-foreground">
               {t('adminUserCard.added', { date: formatDate(admin.created_at) })}
-              {(admin as any).created_by_profile && (
-                <span> {t('adminUserCard.addedBy', { email: (admin as any).created_by_profile.email })}</span>
-              )}
             </p>
             {admin.last_login && (
               <p className="text-xs sm:text-sm text-muted-foreground">
@@ -62,9 +67,7 @@ export const AdminUserCard = ({
           </div>
           <div className="flex flex-wrap gap-1 sm:gap-2">
             {getRoleBadge(admin.role)}
-            <Badge variant={admin.is_active ? "default" : "outline"} className="text-xs">
-              {admin.is_active ? t('adminUserCard.status.active') : t('adminUserCard.status.inactive')}
-            </Badge>
+            {getStatusBadge(admin.is_active)}
           </div>
         </div>
       </div>

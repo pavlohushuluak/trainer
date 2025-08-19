@@ -134,9 +134,9 @@ export const ChatDetailModal = ({ chat, open, onOpenChange }: ChatDetailModalPro
                   <div key={message.id} className="flex gap-2 sm:gap-3">
                     <div className="flex-shrink-0">
                       {message.role === 'user' ? (
-                        <User className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                        <User className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-400" />
                       ) : (
-                        <Bot className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+                        <Bot className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 dark:text-green-400" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">

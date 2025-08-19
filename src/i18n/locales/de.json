@@ -2609,7 +2609,9 @@
   },
   "adminUsersList": {
     "title": "Admin-Benutzer ({{count}})",
-    "noAdmins": "Noch keine Admin-Benutzer"
+    "noAdmins": "Noch keine Admin-Benutzer",
+    "activeCount": "{{count}} aktiv",
+    "inactiveCount": "{{count}} inaktiv"
   },
   "adminUserCard": {
     "added": "Hinzugefügt: {{date}}",
