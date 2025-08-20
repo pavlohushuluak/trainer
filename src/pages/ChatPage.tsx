@@ -1078,7 +1078,7 @@ export const ChatPage = () => {
                             className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/40 dark:hover:to-emerald-900/40 text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <FileText className="h-4 w-4 mr-2" />
-                            {isSending || isCreatingPlan ? t('chat.createPlan.modal.loading') : t('chat.createPlan.button')}
+                            {isCreatingPlan ? t('chat.createPlan.modal.loading') : t('chat.createPlan.button')}
                           </Button>
                         )}
                       </div>
