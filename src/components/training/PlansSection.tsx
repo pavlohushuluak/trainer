@@ -202,8 +202,8 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
       {/* Plan Detail Modal */}
       <Dialog open={isPlanDetailModalOpen} onOpenChange={setIsPlanDetailModalOpen}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0" style={{padding: '0px'}}>
-          <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-6 border-b sticky top-0 bg-background z-10 px-6 pt-6">
-            <div className="flex-1">
+          <DialogHeader className="flex flex-row items-center justify-between space-y-0 border-b sticky top-0 bg-background z-10 p-6">
+            <div className="flex-1 pl-6">
               <DialogTitle className="text-2xl font-bold text-foreground">
                 {selectedPlanForModal?.title}
               </DialogTitle>
@@ -217,7 +217,7 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
               variant="ghost"
               size="sm"
               onClick={() => setIsPlanDetailModalOpen(false)}
-              className="h-8 w-8 p-0 hover:bg-muted"
+              className="h-8 w-8 p-0 hover:bg-muted pr-6"
             >
               <X className="h-4 w-4" />
             </Button>

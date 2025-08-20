@@ -50,7 +50,7 @@ export const StepHeader = ({ step }: StepHeaderProps) => {
       )}
       <div className="flex-1">
         <h4 className="font-semibold text-base mb-1 text-foreground">
-          {t('training.stepHeader.module', { number: step.step_number })}: {step.title}
+          {step.title}
         </h4>
         {exerciseGoal && (
           <p className="text-sm text-blue-600 dark:text-blue-400 mb-1 font-medium">
