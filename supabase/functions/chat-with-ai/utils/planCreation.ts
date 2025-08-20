@@ -214,6 +214,8 @@ export async function createFallbackPlan(
       "🔄 Creating fallback plan for message:",
       userMessage.substring(0, 100)
     );
+    console.log("🔑 OpenAI API Key available:", !!openAIApiKey);
+    console.log("🌍 User language:", userLanguage);
 
     if (!openAIApiKey) {
       console.log("⚠️ No OpenAI API key available for fallback plan creation");
@@ -226,82 +228,71 @@ export async function createFallbackPlan(
         ? `You are a pet training expert. Create a COMPLETELY UNIQUE training plan based on the user's request. 
           Generate personalized content that is tailored to the specific training goal and pet characteristics.
          
-         IMPORTANT: Return ONLY the JSON object, no additional text before or after. Use this exact format:
+         CRITICAL: You MUST return ONLY a valid JSON object. No text before or after the JSON. No explanations. Just the JSON.
+         
+         Use this EXACT format (replace the placeholders with real content):
          {
-           "title": "Custom Training Plan: [Unique Title]",
-           "description": "Detailed description of the specific training approach and goals",
+           "title": "Custom Training Plan: [Create a unique title based on the training goal]",
+           "description": "[Write a detailed description of the training approach and goals]",
            "steps": [
              {
-               "title": "Module 1: [Unique Title]",
-               "description": "Exercise Goal: [What the pet should learn]\n\nStep-by-Step Guide: [Detailed instructions]\n\n🔁 Repetition & Duration:\nDaily Exercise: [time]\nFrequency: [how often]\nTraining Duration: [how long]\n⚠️ [Important note]\n\n🧰 Required Tools & Framework:\nEquipment:\n[list of items]\nLocation: [where]\nTiming: [when]\nSpecies Adaptation: [specific notes]\n\n🧠 Learning Tips & Motivation:\n• [tip 1]\n• [tip 2]\n• [tip 3]\n• [tip 4]\n\n🚩 Avoid Common Mistakes:\n❌ [mistake 1]\n❌ [mistake 2]\n❌ [mistake 3]\n❌ [mistake 4]"
+               "title": "Module 1: [Create a unique module title]",
+               "description": "Exercise Goal: [Write the specific goal for this module]\n\nStep-by-Step Guide: 1. [First step] 2. [Second step] 3. [Third step] 4. [Fourth step]\n\n🔁 Repetition & Duration: [Write time and frequency details] ⚠️ [Write an important note]\n\n🧰 Required Tools & Framework: Equipment: [List equipment needed] Location: [Where to train] Timing: [When to train] Species Adaptation: [Species-specific notes]\n\n🧠 Learning Tips & Motivation: • [Write tip 1] • [Write tip 2] • [Write tip 3] • [Write tip 4]\n\n🚩 Avoid Common Mistakes: ❌ [Write mistake 1] ❌ [Write mistake 2] ❌ [Write mistake 3] ❌ [Write mistake 4]"
              },
              {
-                              "title": "Module 2: [Unique Title]",
-               "description": "Completely different module with unique content, techniques, and progression from the previous module. Use the same structured format as above."
+               "title": "Module 2: [Create a different unique module title]",
+               "description": "Exercise Goal: [Write the specific goal for this module]\n\nStep-by-Step Guide: 1. [First step] 2. [Second step] 3. [Third step] 4. [Fourth step]\n\n🔁 Repetition & Duration: [Write time and frequency details] ⚠️ [Write an important note]\n\n🧰 Required Tools & Framework: Equipment: [List equipment needed] Location: [Where to train] Timing: [When to train] Species Adaptation: [Species-specific notes]\n\n🧠 Learning Tips & Motivation: • [Write tip 1] • [Write tip 2] • [Write tip 3] • [Write tip 4]\n\n🚩 Avoid Common Mistakes: ❌ [Write mistake 1] ❌ [Write mistake 2] ❌ [Write mistake 3] ❌ [Write mistake 4]"
              },
              {
-               "title": "Module 3: [Unique Title]",
-               "description": "Advanced module building on previous progress with new challenges and techniques. Use the same structured format as above."
+               "title": "Module 3: [Create a different unique module title]",
+               "description": "Exercise Goal: [Write the specific goal for this module]\n\nStep-by-Step Guide: 1. [First step] 2. [Second step] 3. [Third step] 4. [Fourth step]\n\n🔁 Repetition & Duration: [Write time and frequency details] ⚠️ [Write an important note]\n\n🧰 Required Tools & Framework: Equipment: [List equipment needed] Location: [Where to train] Timing: [When to train] Species Adaptation: [Species-specific notes]\n\n🧠 Learning Tips & Motivation: • [Write tip 1] • [Write tip 2] • [Write tip 3] • [Write tip 4]\n\n🚩 Avoid Common Mistakes: ❌ [Write mistake 1] ❌ [Write mistake 2] ❌ [Write mistake 3] ❌ [Write mistake 4]"
              }
            ]
          }
          
-                   IMPORTANT: 
-          - Each module must be UNIQUE and different from any template
-          - Generate specific content based on the training goal
-          - Include detailed step-by-step instructions
-          - Make each module progressively more challenging
-          - Never use generic template content
-          - Use only English
-                     - Structure each step description with clear sections using this EXACT format:
-             * Exercise Goal: What the pet should learn
-             * Step-by-Step Guide: Detailed instructions
-             * 🔁 Repetition & Duration: How often and how long
-             * 🧰 Required Tools & Framework: Equipment and setup needed
-             * 🧠 Learning Tips & Motivation: Helpful advice and encouragement
-             * 🚩 Avoid Common Mistakes: What to watch out for
-           - IMPORTANT: All sections must be included within the "description" field as a single string, not as separate JSON properties
-           - CRITICAL: Do not add any text before or after the JSON object. Return ONLY the JSON.`
+         REQUIREMENTS:
+         - Each module must be UNIQUE and different
+         - Generate specific content based on the training goal
+         - Include detailed step-by-step instructions with numbered steps
+         - Make each module progressively more challenging
+         - Use only English
+         - All content must be within the "description" field as a single string
+         - Return ONLY the JSON object, nothing else`
                : `Du bist ein Haustier-Trainingsexperte. Erstelle einen KOMPLETT EINZIGARTIGEN Trainingsplan basierend auf der Anfrage des Benutzers.
           Generiere personalisierten Inhalt, der auf das spezifische Trainingsziel und die Tiercharakteristika zugeschnitten ist.
           
-          WICHTIG: Gib NUR das JSON-Objekt zurück, keine zusätzlichen Texte davor oder danach. Verwende dieses exakte Format:
+          KRITISCH: Du MUSST nur ein gültiges JSON-Objekt zurückgeben. Kein Text vor oder nach dem JSON. Keine Erklärungen. Nur das JSON.
+          
+          Verwende dieses EXAKTE Format (ersetze die Platzhalter mit echtem Inhalt):
          {
-           "title": "Individueller Trainingsplan: [Einzigartiger Titel]",
-           "description": "Detaillierte Beschreibung des spezifischen Trainingsansatzes und der Ziele",
+           "title": "Individueller Trainingsplan: [Erstelle einen einzigartigen Titel basierend auf dem Trainingsziel]",
+           "description": "[Schreibe eine detaillierte Beschreibung des Trainingsansatzes und der Ziele]",
            "steps": [
              {
-               "title": "Modul 1: [Einzigartiger Titel]",
-               "description": "Übungsziel: [Was das Tier lernen soll]\n\nSchritt-für-Schritt-Anleitung: [Detaillierte Anweisungen]\n\n🔁 Wiederholung & Dauer:\nTägliche Übung: [Zeit]\nHäufigkeit: [wie oft]\nTrainingsdauer: [wie lange]\n⚠️ [Wichtiger Hinweis]\n\n🧰 Benötigte Tools & Rahmenbedingungen:\nAusrüstung:\n[Liste der Gegenstände]\nOrt: [wo]\nZeitpunkt: [wann]\nArtanpassung: [spezifische Hinweise]\n\n🧠 Lerntipps & Motivation:\n• [Tipp 1]\n• [Tipp 2]\n• [Tipp 3]\n• [Tipp 4]\n\n🚩 Häufige Fehler vermeiden:\n❌ [Fehler 1]\n❌ [Fehler 2]\n❌ [Fehler 3]\n❌ [Fehler 4]"
+               "title": "Modul 1: [Erstelle einen einzigartigen Modultitel]",
+               "description": "Übungsziel: [Schreibe das spezifische Ziel für dieses Modul]\n\nSchritt-für-Schritt-Anleitung: 1. [Erster Schritt] 2. [Zweiter Schritt] 3. [Dritter Schritt] 4. [Vierter Schritt]\n\n🔁 Wiederholung & Dauer: [Schreibe Zeit- und Häufigkeitsdetails] ⚠️ [Schreibe einen wichtigen Hinweis]\n\n🧰 Benötigte Tools & Rahmenbedingungen: Ausrüstung: [Liste benötigte Ausrüstung] Ort: [Wo trainieren] Zeitpunkt: [Wann trainieren] Artenanpassung: [Arten-spezifische Hinweise]\n\n🧠 Lerntipps & Motivation: • [Schreibe Tipp 1] • [Schreibe Tipp 2] • [Schreibe Tipp 3] • [Schreibe Tipp 4]\n\n🚩 Häufige Fehler vermeiden: ❌ [Schreibe Fehler 1] ❌ [Schreibe Fehler 2] ❌ [Schreibe Fehler 3] ❌ [Schreibe Fehler 4]"
              },
              {
-               "title": "Modul 2: [Einzigartiger Titel]",
-               "description": "Komplett anderes Modul mit einzigartigem Inhalt, Techniken und Fortschritt vom vorherigen Modul. Verwende das gleiche strukturierte Format wie oben."
+               "title": "Modul 2: [Erstelle einen anderen einzigartigen Modultitel]",
+               "description": "Übungsziel: [Schreibe das spezifische Ziel für dieses Modul]\n\nSchritt-für-Schritt-Anleitung: 1. [Erster Schritt] 2. [Zweiter Schritt] 3. [Dritter Schritt] 4. [Vierter Schritt]\n\n🔁 Wiederholung & Dauer: [Schreibe Zeit- und Häufigkeitsdetails] ⚠️ [Schreibe einen wichtigen Hinweis]\n\n🧰 Benötigte Tools & Rahmenbedingungen: Ausrüstung: [Liste benötigte Ausrüstung] Ort: [Wo trainieren] Zeitpunkt: [Wann trainieren] Artenanpassung: [Arten-spezifische Hinweise]\n\n🧠 Lerntipps & Motivation: • [Schreibe Tipp 1] • [Schreibe Tipp 2] • [Schreibe Tipp 3] • [Schreibe Tipp 4]\n\n🚩 Häufige Fehler vermeiden: ❌ [Schreibe Fehler 1] ❌ [Schreibe Fehler 2] ❌ [Schreibe Fehler 3] ❌ [Schreibe Fehler 4]"
              },
              {
-               "title": "Modul 3: [Einzigartiger Titel]",
-               "description": "Fortgeschrittenes Modul, das auf dem vorherigen Fortschritt aufbaut mit neuen Herausforderungen und Techniken. Verwende das gleiche strukturierte Format wie oben."
+               "title": "Modul 3: [Erstelle einen anderen einzigartigen Modultitel]",
+               "description": "Übungsziel: [Schreibe das spezifische Ziel für dieses Modul]\n\nSchritt-für-Schritt-Anleitung: 1. [Erster Schritt] 2. [Zweiter Schritt] 3. [Dritter Schritt] 4. [Vierter Schritt]\n\n🔁 Wiederholung & Dauer: [Schreibe Zeit- und Häufigkeitsdetails] ⚠️ [Schreibe einen wichtigen Hinweis]\n\n🧰 Benötigte Tools & Rahmenbedingungen: Ausrüstung: [Liste benötigte Ausrüstung] Ort: [Wo trainieren] Zeitpunkt: [Wann trainieren] Artenanpassung: [Arten-spezifische Hinweise]\n\n🧠 Lerntipps & Motivation: • [Schreibe Tipp 1] • [Schreibe Tipp 2] • [Schreibe Tipp 3] • [Schreibe Tipp 4]\n\n🚩 Häufige Fehler vermeiden: ❌ [Schreibe Fehler 1] ❌ [Schreibe Fehler 2] ❌ [Schreibe Fehler 3] ❌ [Schreibe Fehler 4]"
              }
            ]
          }
          
-                   WICHTIG:
-          - Jedes Modul muss EINZIGARTIG und anders als jede Vorlage sein
-          - Generiere spezifischen Inhalt basierend auf dem Trainingsziel
-          - Enthält detaillierte Schritt-für-Schritt-Anweisungen
-          - Mache jedes Modul progressiv herausfordernder
-          - Verwende niemals generischen Vorlagen-Inhalt
-          - Verwende nur Deutsch
-          - Strukturiere jede Schrittbeschreibung mit klaren Abschnitten:
-               * Übungsziel: Was das Tier lernen soll
-   * Schritt-für-Schritt-Anleitung: Detaillierte Anweisungen
-   * 🔁 Wiederholung & Dauer: Wie oft und wie lange
-   * 🧰 Benötigte Tools & Rahmenbedingungen: Ausrüstung und Setup
-   * 🧠 Lerntipps & Motivation: Hilfreiche Ratschläge und Ermutigung
-   * 🚩 Häufige Fehler vermeiden: Worauf zu achten ist
-- WICHTIG: Alle Abschnitte müssen innerhalb des "description" Feldes als einzelner String enthalten sein, nicht als separate JSON-Eigenschaften
-- KRITISCH: Füge keinen Text vor oder nach dem JSON-Objekt hinzu. Gib NUR das JSON zurück.`;
+         ANFORDERUNGEN:
+         - Jedes Modul muss EINZIGARTIG und anders sein
+         - Generiere spezifischen Inhalt basierend auf dem Trainingsziel
+         - Enthält detaillierte Schritt-für-Schritt-Anweisungen mit nummerierten Schritten
+         - Mache jedes Modul progressiv herausfordernder
+         - Verwende nur Deutsch
+         - Aller Inhalt muss innerhalb des "description" Feldes als einzelner String sein
+         - Gib nur das JSON-Objekt zurück, nichts anderes`;
 
+    console.log("🚀 Making OpenAI API call for fallback plan...");
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -320,54 +311,97 @@ export async function createFallbackPlan(
             content: userMessage,
           },
         ],
-        max_tokens: 2000,
+        max_tokens: 3000,
         temperature: 0.8, // Add some creativity for unique content
       }),
     });
 
+    console.log("📡 OpenAI response status:", response.status, response.statusText);
+
     if (!response.ok) {
+      const errorText = await response.text();
       console.error(
-        "OpenAI fallback plan API error:",
+        "❌ OpenAI fallback plan API error:",
         response.status,
-        response.statusText
+        response.statusText,
+        "Response:", errorText
       );
       return null;
     }
 
     const data = await response.json();
+    console.log("📦 OpenAI response data structure:", {
+      hasChoices: !!data.choices,
+      choicesLength: data.choices?.length,
+      hasMessage: !!data.choices?.[0]?.message,
+      hasContent: !!data.choices?.[0]?.message?.content
+    });
+
     const planContent = data.choices?.[0]?.message?.content?.trim();
+    console.log("📝 Plan content length:", planContent?.length || 0);
+    console.log("📝 Plan content preview:", planContent?.substring(0, 200) + "...");
 
     if (!planContent) {
-      console.error("No fallback plan content returned from OpenAI");
+      console.error("❌ No fallback plan content returned from OpenAI");
       return null;
     }
 
     // Try to extract JSON from the response
+    console.log("🔍 Looking for JSON in plan content...");
     const jsonMatch = planContent.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      console.error("No JSON found in fallback plan response");
+      console.error("❌ No JSON found in fallback plan response");
+      console.log("📝 Full plan content:", planContent);
       return null;
     }
 
-    const planData = JSON.parse(jsonMatch[0]);
+    console.log("✅ JSON found, attempting to parse...");
+    let planData;
+    try {
+      planData = JSON.parse(jsonMatch[0]);
+      console.log("✅ JSON parsed successfully");
+    } catch (parseError) {
+      console.error("❌ JSON parsing failed:", parseError);
+      console.log("📝 JSON content that failed to parse:", jsonMatch[0]);
+      return null;
+    }
 
     // Validate the plan structure
+    console.log("🔍 Validating plan structure...");
+    console.log("📋 Plan data:", {
+      hasTitle: !!planData.title,
+      hasSteps: !!planData.steps,
+      isStepsArray: Array.isArray(planData.steps),
+      stepsLength: planData.steps?.length || 0,
+      title: planData.title
+    });
+
     if (
       !planData.title ||
       !planData.steps ||
       !Array.isArray(planData.steps) ||
       planData.steps.length === 0
     ) {
-      console.error("Invalid fallback plan structure");
+      console.error("❌ Invalid fallback plan structure");
       return null;
     }
 
     console.log(
       "✅ Fallback plan created successfully with unique personalized content"
     );
+    console.log("📋 Final plan data:", {
+      title: planData.title,
+      stepsCount: planData.steps.length,
+      firstStepTitle: planData.steps[0]?.title
+    });
     return planData;
   } catch (error) {
     console.error("❌ Fallback plan creation failed:", error);
+    console.error("❌ Error details:", {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
     return null;
   }
 }
@@ -430,115 +464,32 @@ export async function createTrainingPlan(
     );
   }
 
-  // Import the parser function (this will be available in the Edge Function environment)
-  const parseTrainingContent = (content: string) => {
-    const sections = {
-      exerciseGoal: '',
-      stepByStepGuide: '',
-      repetitionDuration: '',
-      requiredTools: '',
-      learningTips: '',
-      commonMistakes: ''
-    };
+  // No parsing - save raw plan data directly
+  console.log("💾 Saving raw plan data without parsing");
 
-    const lines = content.split('\n').map(line => line.trim()).filter(line => line);
-    let currentSection = 'exerciseGoal';
-    let sectionContent: string[] = [];
-
-    for (const line of lines) {
-      const lowerLine = line.toLowerCase();
-      
-      if (lowerLine.includes('exercise goal') || lowerLine.includes('übungsziel')) {
-        if (sectionContent.length > 0) {
-          sections[currentSection as keyof typeof sections] = sectionContent.join('\n');
-        }
-        currentSection = 'exerciseGoal';
-        sectionContent = [];
-        continue;
-      }
-      
-      if (lowerLine.includes('step-by-step guide') || lowerLine.includes('schritt-für-schritt-anleitung')) {
-        if (sectionContent.length > 0) {
-          sections[currentSection as keyof typeof sections] = sectionContent.join('\n');
-        }
-        currentSection = 'stepByStepGuide';
-        sectionContent = [];
-        continue;
-      }
-      
-      if (lowerLine.includes('🔁') || lowerLine.includes('repetition & duration') || lowerLine.includes('wiederholung & dauer')) {
-        if (sectionContent.length > 0) {
-          sections[currentSection as keyof typeof sections] = sectionContent.join('\n');
-        }
-        currentSection = 'repetitionDuration';
-        sectionContent = [];
-        continue;
-      }
-      
-      if (lowerLine.includes('🧰') || lowerLine.includes('required tools & framework') || lowerLine.includes('benötigte tools & rahmenbedingungen')) {
-        if (sectionContent.length > 0) {
-          sections[currentSection as keyof typeof sections] = sectionContent.join('\n');
-        }
-        currentSection = 'requiredTools';
-        sectionContent = [];
-        continue;
-      }
-      
-      if (lowerLine.includes('🧠') || lowerLine.includes('learning tips & motivation') || lowerLine.includes('lerntipps & motivation')) {
-        if (sectionContent.length > 0) {
-          sections[currentSection as keyof typeof sections] = sectionContent.join('\n');
-        }
-        currentSection = 'learningTips';
-        sectionContent = [];
-        continue;
-      }
-      
-      if (lowerLine.includes('🚩') || lowerLine.includes('avoid common mistakes') || lowerLine.includes('häufige fehler vermeiden')) {
-        if (sectionContent.length > 0) {
-          sections[currentSection as keyof typeof sections] = sectionContent.join('\n');
-        }
-        currentSection = 'commonMistakes';
-        sectionContent = [];
-        continue;
-      }
-      
-      if (!line.match(/^[🔁🧰🧠🚩]/) && !line.match(/^(Exercise Goal|Step-by-Step Guide|Repetition & Duration|Required Tools & Framework|Learning Tips & Motivation|Avoid Common Mistakes)/i)) {
-        sectionContent.push(line);
-      }
-    }
-
-    if (sectionContent.length > 0) {
-      sections[currentSection as keyof typeof sections] = sectionContent.join('\n');
-    }
-
-    return sections;
-  };
-
-  // Create training steps with structured content
+  // Create training steps with raw data (no parsing)
   const steps = planData.steps.map((step: any, index: number) => {
-    const parsedSections = parseTrainingContent(step.description);
-    
     return {
       training_plan_id: planResult.id,
       step_number: index + 1,
       title: step.title,
       title_en: null, // AI-generated content is already in user's language
-      description: step.description, // Keep original for backward compatibility
+      description: step.description, // Save the raw description as-is
       description_en: null, // AI-generated content is already in user's language
       points_reward: step.points || 15, // Default to 15 points for personalized content
-      is_ai_generated: true, // Mark as personalized
-      // Structured sections
-      exercise_goal: parsedSections.exerciseGoal || null,
+      is_ai_generated: true, // Mark as AI-generated
+      // Set all structured fields to null since we're not parsing
+      exercise_goal: null,
       exercise_goal_en: null,
-      step_by_step_guide: parsedSections.stepByStepGuide || null,
+      step_by_step_guide: null,
       step_by_step_guide_en: null,
-      repetition_duration: parsedSections.repetitionDuration || null,
+      repetition_duration: null,
       repetition_duration_en: null,
-      required_tools: parsedSections.requiredTools || null,
+      required_tools: null,
       required_tools_en: null,
-      learning_tips: parsedSections.learningTips || null,
+      learning_tips: null,
       learning_tips_en: null,
-      common_mistakes: parsedSections.commonMistakes || null,
+      common_mistakes: null,
       common_mistakes_en: null
     };
   });

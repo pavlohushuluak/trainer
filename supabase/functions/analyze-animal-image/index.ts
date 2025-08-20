@@ -10,123 +10,6 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"
 };
-// Function to parse training content and extract structured sections
-function parseTrainingContent(content: string) {
-  const sections = {
-    exerciseGoal: '',
-    stepByStepGuide: '',
-    repetitionDuration: '',
-    requiredTools: '',
-    learningTips: '',
-    commonMistakes: ''
-  };
-
-  if (!content) return sections;
-
-  // Split content into lines and clean them
-  const lines = content.split('\n').map(line => line.trim()).filter(line => line);
-  
-  let currentSection = '';
-  let sectionContent: string[] = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const lowerLine = line.toLowerCase();
-    
-    // Check for section headers
-    if (lowerLine.includes('exercise goal:') || lowerLine.includes('übungsziel:')) {
-      // Save previous section content
-      if (currentSection && sectionContent.length > 0) {
-        sections[currentSection as keyof typeof sections] = sectionContent.join('\n').trim();
-      }
-      currentSection = 'exerciseGoal';
-      sectionContent = [];
-      // Get the content after the colon
-      const afterColon = line.substring(line.indexOf(':') + 1).trim();
-      if (afterColon) {
-        sectionContent.push(afterColon);
-      }
-      continue;
-    }
-    
-    if (lowerLine.includes('step-by-step guide:') || lowerLine.includes('schritt-für-schritt-anleitung:')) {
-      if (currentSection && sectionContent.length > 0) {
-        sections[currentSection as keyof typeof sections] = sectionContent.join('\n').trim();
-      }
-      currentSection = 'stepByStepGuide';
-      sectionContent = [];
-      const afterColon = line.substring(line.indexOf(':') + 1).trim();
-      if (afterColon) {
-        sectionContent.push(afterColon);
-      }
-      continue;
-    }
-    
-    if (lowerLine.includes('🔁 repetition & duration:') || lowerLine.includes('🔁 wiederholung & dauer:')) {
-      if (currentSection && sectionContent.length > 0) {
-        sections[currentSection as keyof typeof sections] = sectionContent.join('\n').trim();
-      }
-      currentSection = 'repetitionDuration';
-      sectionContent = [];
-      const afterColon = line.substring(line.indexOf(':') + 1).trim();
-      if (afterColon) {
-        sectionContent.push(afterColon);
-      }
-      continue;
-    }
-    
-    if (lowerLine.includes('🧰 required tools & framework:') || lowerLine.includes('🧰 benötigte tools & rahmenbedingungen:')) {
-      if (currentSection && sectionContent.length > 0) {
-        sections[currentSection as keyof typeof sections] = sectionContent.join('\n').trim();
-      }
-      currentSection = 'requiredTools';
-      sectionContent = [];
-      const afterColon = line.substring(line.indexOf(':') + 1).trim();
-      if (afterColon) {
-        sectionContent.push(afterColon);
-      }
-      continue;
-    }
-    
-    if (lowerLine.includes('🧠 learning tips & motivation:') || lowerLine.includes('🧠 lerntipps & motivation:')) {
-      if (currentSection && sectionContent.length > 0) {
-        sections[currentSection as keyof typeof sections] = sectionContent.join('\n').trim();
-      }
-      currentSection = 'learningTips';
-      sectionContent = [];
-      const afterColon = line.substring(line.indexOf(':') + 1).trim();
-      if (afterColon) {
-        sectionContent.push(afterColon);
-      }
-      continue;
-    }
-    
-    if (lowerLine.includes('🚩 avoid common mistakes:') || lowerLine.includes('🚩 häufige fehler vermeiden:')) {
-      if (currentSection && sectionContent.length > 0) {
-        sections[currentSection as keyof typeof sections] = sectionContent.join('\n').trim();
-      }
-      currentSection = 'commonMistakes';
-      sectionContent = [];
-      const afterColon = line.substring(line.indexOf(':') + 1).trim();
-      if (afterColon) {
-        sectionContent.push(afterColon);
-      }
-      continue;
-    }
-    
-    // If we're in a section, add the line to the current section content
-    if (currentSection && line) {
-      sectionContent.push(line);
-    }
-  }
-
-  // Save the last section
-  if (currentSection && sectionContent.length > 0) {
-    sections[currentSection as keyof typeof sections] = sectionContent.join('\n').trim();
-  }
-
-  return sections;
-}
 
 // Function to create training plan from analysis
 async function createTrainingPlanFromAnalysis(
@@ -141,86 +24,86 @@ async function createTrainingPlanFromAnalysis(
   try {
     console.log("📝 Creating training plan from image analysis for:", petName);
 
-         // Create a prompt to generate a training plan based on the analysis
+              // Create a prompt to generate a training plan based on the analysis
      const systemPrompt = userLanguage === "en" 
-       ? `You are a pet training expert. Based on the image analysis provided, create a COMPLETELY UNIQUE training plan tailored to the pet's current state and needs.
-        
-        IMPORTANT: Return ONLY the JSON object, no additional text before or after. Use this exact format:
-        {
-          "title": "Custom Training Plan for ${petName}: [Unique Title Based on Analysis]",
-          "description": "Detailed description of the training approach based on the pet's current state and needs",
-          "steps": [
-            {
-              "title": "Module 1: [Unique Title]",
-              "description": "Exercise Goal: [Detailed, specific goal like 'Bella will learn to signal when she needs to go outside to relieve herself, establishing a consistent house training routine']\n\nStep-by-Step Guide: [Numbered steps with specific details like '1. Establish a schedule for feeding and potty breaks (every 2-3 hours). 2. Take Bella outside immediately after meals, naps, and playtime. 3. Use a specific phrase like 'Go potty' when you take her outside. 4. Reward her with treats and praise immediately after she goes outside. 5. If she has an accident indoors, clean it up without scolding her and take her outside right after.']\n\n🔁 Repetition & Duration:\nDaily Exercise: [specific time like '5-10 minutes (potty breaks)']\nFrequency: [specific frequency like 'Every 2-3 hours']\nTraining Duration: [specific duration like '2 weeks or longer as needed']\n⚠️ [Important note like 'Consistency is key; don't skip scheduled breaks']\n\n🧰 Required Tools & Framework:\nEquipment: [specific items like 'leash, treats, designated potty area']\nLocation: [specific location like 'backyard or designated outdoor spot']\nTiming: [specific timing like 'every 2-3 hours']\nSpecies Adaptation: [specific notes like 'Be patient; puppies may take longer to learn']\n\n🧠 Learning Tips & Motivation:\n• [specific tip like 'Always celebrate her successes with treats and praise']\n• [specific tip like 'Be patient and provide frequent potty breaks']\n• [specific tip like 'Keep a consistent schedule to help her learn when to expect potty time']\n• [specific tip like 'Use a designated area to help her associate that spot with going potty']\n\n🚩 Avoid Common Mistakes:\n❌ [specific mistake like 'Don't scold her for accidents; it can create fear']\n❌ [specific mistake like 'Avoid irregular schedules which can confuse her']\n❌ [specific mistake like 'Don't forget to supervise her indoors, especially after meals']\n❌ [specific mistake like 'Never punish her for going in the house; redirecting is key']"
-            },
-            {
-              "title": "Module 2: [Unique Title]",
-              "description": "Completely different module with unique content, techniques, and progression from the previous module. Use the same detailed structured format as above with specific, actionable content."
-            },
-            {
-              "title": "Module 3: [Unique Title]",
-              "description": "Advanced module building on previous progress with new challenges and techniques. Use the same detailed structured format as above with specific, actionable content."
-            }
-          ]
-        }
-        
-        IMPORTANT: 
-        - Each module must be UNIQUE and different from any template
-        - Generate specific, detailed content based on the pet's current state from the analysis
-        - Include detailed step-by-step instructions with numbered steps
-        - Make each module progressively more challenging
-        - Never use generic template content
-        - Use only English
-        - Structure each step description with clear sections using this EXACT format:
-          * Exercise Goal: Detailed, specific goal (like the example provided)
-          * Step-by-Step Guide: Numbered steps with specific details
-          * 🔁 Repetition & Duration: Specific times, frequencies, and durations
-          * 🧰 Required Tools & Framework: Specific equipment, locations, timing, and species notes
-          * 🧠 Learning Tips & Motivation: Specific, actionable tips with bullet points
-          * 🚩 Avoid Common Mistakes: Specific mistakes to avoid with ❌ symbols
-        - IMPORTANT: All sections must be included within the "description" field as a single string, not as separate JSON properties
-        - CRITICAL: Do not add any text before or after the JSON object. Return ONLY the JSON.
-        - Make the content as detailed and specific as the example provided in the user's request.`
-             : `Du bist ein Haustier-Trainingsexperte. Basierend auf der bereitgestellten Bildanalyse erstelle einen KOMPLETT EINZIGARTIGEN Trainingsplan, der auf den aktuellen Zustand und die Bedürfnisse des Haustiers zugeschnitten ist.
-        
-        WICHTIG: Gib NUR das JSON-Objekt zurück, keine zusätzlichen Texte davor oder danach. Verwende dieses exakte Format:
-        {
-          "title": "Individueller Trainingsplan für ${petName}: [Einzigartiger Titel basierend auf Analyse]",
-          "description": "Detaillierte Beschreibung des Trainingsansatzes basierend auf dem aktuellen Zustand und den Bedürfnissen des Haustiers",
-          "steps": [
-            {
-              "title": "Modul 1: [Einzigartiger Titel]",
-              "description": "Übungsziel: [Detailliertes, spezifisches Ziel wie 'Bella wird lernen, zu signalisieren, wenn sie nach draußen muss, um eine konsistente Hauserziehung zu etablieren']\n\nSchritt-für-Schritt-Anleitung: [Nummerierte Schritte mit spezifischen Details wie '1. Etabliere einen Zeitplan für Fütterung und Toilettengänge (alle 2-3 Stunden). 2. Nimm Bella sofort nach Mahlzeiten, Nickerchen und Spielzeit nach draußen. 3. Verwende eine spezifische Phrase wie 'Mach Pipi' wenn du sie nach draußen nimmst. 4. Belohne sie sofort mit Leckerlis und Lob nach dem Toilettengang. 5. Bei einem Unfall drinnen, räume es ohne Schimpfen auf und nimm sie sofort nach draußen.']\n\n🔁 Wiederholung & Dauer:\nTägliche Übung: [spezifische Zeit wie '5-10 Minuten (Toilettengänge)']\nHäufigkeit: [spezifische Häufigkeit wie 'Alle 2-3 Stunden']\nTrainingsdauer: [spezifische Dauer wie '2 Wochen oder länger nach Bedarf']\n⚠️ [Wichtiger Hinweis wie 'Konsistenz ist der Schlüssel; keine geplanten Pausen auslassen']\n\n🧰 Benötigte Tools & Rahmenbedingungen:\nAusrüstung: [spezifische Gegenstände wie 'Leine, Leckerlis, ausgewiesener Toilettenbereich']\nOrt: [spezifischer Ort wie 'Garten oder ausgewiesener Außenbereich']\nZeitpunkt: [spezifischer Zeitpunkt wie 'alle 2-3 Stunden']\nArtanpassung: [spezifische Hinweise wie 'Sei geduldig; Welpen brauchen länger zum Lernen']\n\n🧠 Lerntipps & Motivation:\n• [spezifischer Tipp wie 'Feiere immer ihre Erfolge mit Leckerlis und Lob']\n• [spezifischer Tipp wie 'Sei geduldig und biete häufige Toilettengänge an']\n• [spezifischer Tipp wie 'Halte einen konsistenten Zeitplan ein, um ihr zu helfen zu lernen, wann sie mit Toilettenzeit rechnen kann']\n• [spezifischer Tipp wie 'Verwende einen ausgewiesenen Bereich, um ihr zu helfen, diesen Ort mit dem Toilettengang zu verbinden']\n\n🚩 Häufige Fehler vermeiden:\n❌ [spezifischer Fehler wie 'Schimpfe nicht bei Unfällen; das kann Angst erzeugen']\n❌ [spezifischer Fehler wie 'Vermeide unregelmäßige Zeitpläne, die sie verwirren können']\n❌ [spezifischer Fehler wie 'Vergiss nicht, sie drinnen zu beaufsichtigen, besonders nach Mahlzeiten']\n❌ [spezifischer Fehler wie 'Bestrafe sie niemals für das Gehen im Haus; Umleitung ist der Schlüssel']"
-            },
-            {
-              "title": "Modul 2: [Einzigartiger Titel]",
-              "description": "Komplett anderes Modul mit einzigartigem Inhalt, Techniken und Fortschritt vom vorherigen Modul. Verwende das gleiche detaillierte strukturierte Format wie oben mit spezifischem, umsetzbarem Inhalt."
-            },
-            {
-              "title": "Modul 3: [Einzigartiger Titel]",
-              "description": "Fortgeschrittenes Modul, das auf dem vorherigen Fortschritt aufbaut mit neuen Herausforderungen und Techniken. Verwende das gleiche detaillierte strukturierte Format wie oben mit spezifischem, umsetzbarem Inhalt."
-            }
-          ]
-        }
-        
-        WICHTIG:
-        - Jedes Modul muss EINZIGARTIG und anders als jede Vorlage sein
-        - Generiere spezifischen, detaillierten Inhalt basierend auf dem aktuellen Zustand des Haustiers aus der Analyse
-        - Enthält detaillierte Schritt-für-Schritt-Anweisungen mit nummerierten Schritten
-        - Mache jedes Modul progressiv herausfordernder
-        - Verwende niemals generischen Vorlagen-Inhalt
-        - Verwende nur Deutsch
-        - Strukturiere jede Schrittbeschreibung mit klaren Abschnitten:
-          * Übungsziel: Detailliertes, spezifisches Ziel (wie im bereitgestellten Beispiel)
-          * Schritt-für-Schritt-Anleitung: Nummerierte Schritte mit spezifischen Details
-          * 🔁 Wiederholung & Dauer: Spezifische Zeiten, Häufigkeiten und Dauern
-          * 🧰 Benötigte Tools & Rahmenbedingungen: Spezifische Ausrüstung, Orte, Zeitpunkte und Artenhinweise
-          * 🧠 Lerntipps & Motivation: Spezifische, umsetzbare Tipps mit Aufzählungspunkten
-          * 🚩 Häufige Fehler vermeiden: Spezifische Fehler zu vermeiden mit ❌ Symbolen
-        - WICHTIG: Alle Abschnitte müssen innerhalb des "description" Feldes als einzelner String enthalten sein, nicht als separate JSON-Eigenschaften
-        - KRITISCH: Füge keinen Text vor oder nach dem JSON-Objekt hinzu. Gib NUR das JSON zurück.
-        - Mache den Inhalt so detailliert und spezifisch wie das Beispiel in der Benutzeranfrage.`;
+       ? `You are a pet training expert. Create a COMPLETELY UNIQUE training plan based on the image analysis provided. 
+          Generate personalized content that is tailored to the specific training goal and pet characteristics.
+         
+         IMPORTANT: Return ONLY the JSON object, no additional text before or after. Use this exact format:
+         {
+           "title": "Custom Training Plan: [Unique Title]",
+           "description": "Detailed description of the specific training approach and goals",
+           "steps": [
+             {
+               "title": "Module 1: [Unique Title]",
+               "description": "Exercise Goal: [What the pet should learn]\n\nStep-by-Step Guide: [Detailed instructions]\n\n🔁 Repetition & Duration:\nDaily Exercise: [time]\nFrequency: [how often]\nTraining Duration: [how long]\n⚠️ [Important note]\n\n🧰 Required Tools & Framework:\nEquipment:\n[list of items]\nLocation: [where]\nTiming: [when]\nSpecies Adaptation: [specific notes]\n\n🧠 Learning Tips & Motivation:\n• [tip 1]\n• [tip 2]\n• [tip 3]\n• [tip 4]\n\n🚩 Avoid Common Mistakes:\n❌ [mistake 1]\n❌ [mistake 2]\n❌ [mistake 3]\n❌ [mistake 4]"
+             },
+             {
+               "title": "Module 2: [Unique Title]",
+               "description": "Completely different module with unique content, techniques, and progression from the previous module. Use the same structured format as above."
+             },
+             {
+               "title": "Module 3: [Unique Title]",
+               "description": "Advanced module building on previous progress with new challenges and techniques. Use the same structured format as above."
+             }
+           ]
+         }
+         
+         IMPORTANT: 
+         - Each module must be UNIQUE and different from any template
+         - Generate specific content based on the training goal
+         - Include detailed step-by-step instructions
+         - Make each module progressively more challenging
+         - Never use generic template content
+         - Use only English
+         - Structure each step description with clear sections using this EXACT format:
+           * Exercise Goal: What the pet should learn
+           * Step-by-Step Guide: Detailed instructions
+           * 🔁 Repetition & Duration: How often and how long
+           * 🧰 Required Tools & Framework: Equipment and setup needed
+           * 🧠 Learning Tips & Motivation: Helpful advice and encouragement
+           * 🚩 Avoid Common Mistakes: What to watch out for
+         - IMPORTANT: All sections must be included within the "description" field as a single string, not as separate JSON properties
+         - CRITICAL: Do not add any text before or after the JSON object. Return ONLY the JSON.`
+       : `Du bist ein Haustier-Trainingsexperte. Erstelle einen KOMPLETT EINZIGARTIGEN Trainingsplan basierend auf der Bildanalyse.
+          Generiere personalisierten Inhalt, der auf das spezifische Trainingsziel und die Tiercharakteristika zugeschnitten ist.
+          
+          WICHTIG: Gib NUR das JSON-Objekt zurück, keine zusätzlichen Texte davor oder danach. Verwende dieses exakte Format:
+         {
+           "title": "Individueller Trainingsplan: [Einzigartiger Titel]",
+           "description": "Detaillierte Beschreibung des spezifischen Trainingsansatzes und der Ziele",
+           "steps": [
+             {
+               "title": "Modul 1: [Einzigartiger Titel]",
+               "description": "Übungsziel: [Was das Tier lernen soll]\n\nSchritt-für-Schritt-Anleitung: [Detaillierte Anweisungen]\n\n🔁 Wiederholung & Dauer:\nTägliche Übung: [Zeit]\nHäufigkeit: [wie oft]\nTrainingsdauer: [wie lange]\n⚠️ [Wichtiger Hinweis]\n\n🧰 Benötigte Tools & Rahmenbedingungen:\nAusrüstung:\n[Liste der Gegenstände]\nOrt: [wo]\nZeitpunkt: [wann]\nArtanpassung: [spezifische Hinweise]\n\n🧠 Lerntipps & Motivation:\n• [Tipp 1]\n• [Tipp 2]\n• [Tipp 3]\n• [Tipp 4]\n\n🚩 Häufige Fehler vermeiden:\n❌ [Fehler 1]\n❌ [Fehler 2]\n❌ [Fehler 3]\n❌ [Fehler 4]"
+             },
+             {
+               "title": "Modul 2: [Einzigartiger Titel]",
+               "description": "Komplett anderes Modul mit einzigartigem Inhalt, Techniken und Fortschritt vom vorherigen Modul. Verwende das gleiche strukturierte Format wie oben."
+             },
+             {
+               "title": "Modul 3: [Einzigartiger Titel]",
+               "description": "Fortgeschrittenes Modul, das auf dem vorherigen Fortschritt aufbaut mit neuen Herausforderungen und Techniken. Verwende das gleiche strukturierte Format wie oben."
+             }
+           ]
+         }
+         
+         WICHTIG:
+         - Jedes Modul muss EINZIGARTIG und anders als jede Vorlage sein
+         - Generiere spezifischen Inhalt basierend auf dem Trainingsziel
+         - Enthält detaillierte Schritt-für-Schritt-Anweisungen
+         - Mache jedes Modul progressiv herausfordernder
+         - Verwende niemals generischen Vorlagen-Inhalt
+         - Verwende nur Deutsch
+         - Strukturiere jede Schrittbeschreibung mit klaren Abschnitten:
+           * Übungsziel: Was das Tier lernen soll
+           * Schritt-für-Schritt-Anleitung: Detaillierte Anweisungen
+           * 🔁 Wiederholung & Dauer: Wie oft und wie lange
+           * 🧰 Benötigte Tools & Rahmenbedingungen: Ausrüstung und Setup
+           * 🧠 Lerntipps & Motivation: Hilfreiche Ratschläge und Ermutigung
+           * 🚩 Häufige Fehler vermeiden: Worauf zu achten ist
+         - WICHTIG: Alle Abschnitte müssen innerhalb des "description" Feldes als einzelner String enthalten sein, nicht als separate JSON-Eigenschaften
+         - KRITISCH: Füge keinen Text vor oder nach dem JSON-Objekt hinzu. Gib NUR das JSON zurück.`;
 
          const userPrompt = userLanguage === "en"
        ? `Based on this image analysis of ${petName} (${petSpecies}):
@@ -229,65 +112,87 @@ async function createTrainingPlanFromAnalysis(
         Mood: ${analysisResult.mood_estimation}
         Recommendation: ${analysisResult.recommendation}
         
-        Create a personalized training plan that addresses the pet's current state and needs. Make it as detailed and specific as possible, with numbered steps, specific times, frequencies, and actionable advice. Follow the exact format provided in the system prompt.`
+        Create a personalized training plan that addresses the pet's current state and needs.`
        : `Basierend auf dieser Bildanalyse von ${petName} (${petSpecies}):
         
         Analyse: ${analysisResult.summary_text}
         Stimmung: ${analysisResult.mood_estimation}
         Empfehlung: ${analysisResult.recommendation}
         
-        Erstelle einen personalisierten Trainingsplan, der den aktuellen Zustand und die Bedürfnisse des Haustiers berücksichtigt. Mache ihn so detailliert und spezifisch wie möglich, mit nummerierten Schritten, spezifischen Zeiten, Häufigkeiten und umsetzbaren Ratschlägen. Folge dem exakten Format, das im System-Prompt bereitgestellt wird.`;
+        Erstelle einen personalisierten Trainingsplan, der den aktuellen Zustand und die Bedürfnisse des Haustiers berücksichtigt.`;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${openAIApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: systemPrompt,
-          },
-          {
-            role: "user",
-            content: userPrompt,
-          },
-        ],
-        max_tokens: 2000,
-        temperature: 0.8,
-      }),
-    });
+         console.log("🚀 Sending plan creation request to OpenAI...");
+     console.log("📝 System Prompt Length:", systemPrompt.length);
+     console.log("📝 User Prompt:", userPrompt);
+     
+     const response = await fetch("https://api.openai.com/v1/chat/completions", {
+       method: "POST",
+       headers: {
+         Authorization: `Bearer ${openAIApiKey}`,
+         "Content-Type": "application/json",
+       },
+              body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content: systemPrompt,
+            },
+            {
+              role: "user",
+              content: userPrompt,
+            },
+          ],
+          max_tokens: 2000,
+          temperature: 0.8, // Add some creativity for unique content
+        }),
+     });
 
     if (!response.ok) {
       console.error("OpenAI plan creation API error:", response.status, response.statusText);
       return null;
     }
 
-    const data = await response.json();
-    const planContent = data.choices?.[0]?.message?.content?.trim();
+         const data = await response.json();
+     const planContent = data.choices?.[0]?.message?.content?.trim();
 
-    if (!planContent) {
-      console.error("No plan content returned from OpenAI");
-      return null;
-    }
+     console.log("📄 Raw OpenAI Response:");
+     console.log(planContent);
+     console.log("📄 Response Length:", planContent?.length || 0);
 
-    // Try to extract JSON from the response
-    const jsonMatch = planContent.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.error("No JSON found in plan response");
-      return null;
-    }
+     if (!planContent) {
+       console.error("No plan content returned from OpenAI");
+       return null;
+     }
 
-    const planData = JSON.parse(jsonMatch[0]);
+         // Try to extract JSON from the response (matching chat-with-ai approach)
+     const jsonMatch = planContent.match(/\{[\s\S]*\}/);
+     console.log("🔍 JSON Match Result:", jsonMatch ? "✅ Found" : "❌ Not Found");
+     
+     if (!jsonMatch) {
+       console.error("❌ No JSON found in plan response");
+       return null;
+     }
 
-    // Validate the plan structure
-    if (!planData.title || !planData.steps || !Array.isArray(planData.steps) || planData.steps.length === 0) {
-      console.error("Invalid plan structure");
-      return null;
-    }
+     console.log("✅ JSON found!");
+     console.log("📄 Extracted JSON Length:", jsonMatch[0].length);
+     console.log("📄 Extracted JSON Preview:", jsonMatch[0].substring(0, 500) + "...");
+
+     const planData = JSON.parse(jsonMatch[0]);
+
+         // Validate the plan structure
+     console.log("🔍 Validating plan structure...");
+     console.log("📄 Plan Title:", planData.title);
+     console.log("📄 Plan Steps Count:", planData.steps?.length || 0);
+     console.log("📄 Plan Steps Array:", Array.isArray(planData.steps));
+     
+     if (!planData.title || !planData.steps || !Array.isArray(planData.steps) || planData.steps.length === 0) {
+       console.error("❌ Invalid plan structure");
+       console.log("📄 Plan Data:", JSON.stringify(planData, null, 2));
+       return null;
+     }
+     
+     console.log("✅ Plan structure is valid!");
 
     // Create training plan in database
     const { data: planResult, error: planError } = await supabaseClient
@@ -312,56 +217,47 @@ async function createTrainingPlanFromAnalysis(
       return null;
     }
 
-    // Create training steps with structured content
-    const steps = planData.steps.map((step: any, index: number) => {
-      const parsedSections = parseTrainingContent(step.description);
-      
-      // Debug logging to verify parsing
-      console.log(`📋 Step ${index + 1} parsing results:`, {
-        exerciseGoal: parsedSections.exerciseGoal ? '✅ Found' : '❌ Missing',
-        stepByStepGuide: parsedSections.stepByStepGuide ? '✅ Found' : '❌ Missing',
-        repetitionDuration: parsedSections.repetitionDuration ? '✅ Found' : '❌ Missing',
-        requiredTools: parsedSections.requiredTools ? '✅ Found' : '❌ Missing',
-        learningTips: parsedSections.learningTips ? '✅ Found' : '❌ Missing',
-        commonMistakes: parsedSections.commonMistakes ? '✅ Found' : '❌ Missing'
-      });
-      
-      return {
-        training_plan_id: planResult.id,
-        step_number: index + 1,
-        title: step.title,
-        title_en: null,
-        description: step.description,
-        description_en: null,
-        points_reward: step.points || 15,
-        is_ai_generated: true,
-        // Structured sections
-        exercise_goal: parsedSections.exerciseGoal || null,
-        exercise_goal_en: null,
-        step_by_step_guide: parsedSections.stepByStepGuide || null,
-        step_by_step_guide_en: null,
-        repetition_duration: parsedSections.repetitionDuration || null,
-        repetition_duration_en: null,
-        required_tools: parsedSections.requiredTools || null,
-        required_tools_en: null,
-        learning_tips: parsedSections.learningTips || null,
-        learning_tips_en: null,
-        common_mistakes: parsedSections.commonMistakes || null,
-        common_mistakes_en: null
-      };
-    });
+              // Create training steps (simplified - just save with is_ai_generated = true)
+     console.log("🔍 Creating training steps...");
+     const steps = planData.steps.map((step: any, index: number) => {
+       console.log(`📋 Step ${index + 1}: ${step.title}`);
+       
+       return {
+         training_plan_id: planResult.id,
+         step_number: index + 1,
+         title: step.title,
+         title_en: null,
+         description: step.description,
+         description_en: null,
+         points_reward: step.points || 15,
+         is_ai_generated: true,
+         // Set structured sections to null for now (will be parsed by frontend)
+         exercise_goal: null,
+         exercise_goal_en: null,
+         step_by_step_guide: null,
+         step_by_step_guide_en: null,
+         repetition_duration: null,
+         repetition_duration_en: null,
+         required_tools: null,
+         required_tools_en: null,
+         learning_tips: null,
+         learning_tips_en: null,
+         common_mistakes: null,
+         common_mistakes_en: null
+       };
+     });
 
-    const { error: stepsError } = await supabaseClient
-      .from("training_steps")
-      .insert(steps);
+         const { error: stepsError } = await supabaseClient
+       .from("training_steps")
+       .insert(steps);
 
-    if (stepsError) {
-      console.error("Error creating steps:", stepsError);
-      return null;
-    }
+     if (stepsError) {
+       console.error("Error creating steps:", stepsError);
+       return null;
+     }
 
-    console.log("✅ Training plan created successfully from image analysis");
-    return planResult;
+     console.log("✅ Training plan created successfully from image analysis with is_ai_generated = true");
+     return planResult;
   } catch (error) {
     console.error("❌ Error creating training plan from analysis:", error);
     return null;
@@ -565,22 +461,22 @@ serve(async (req)=>{
     // Extract mood estimation from the analysis using language-specific keywords
     const moodKeywords = currentPrompts.moodKeywords;
     let detectedMood = language1 === "en" ? "attentive" : "aufmerksam";
-    for (const [mood, keywords] of Object.entries(moodKeywords)){
-      if (keywords.some((keyword)=>analysisText.toLowerCase().includes(keyword))) {
-        detectedMood = mood;
-        break;
-      }
-    }
+         for (const [mood, keywords] of Object.entries(moodKeywords)){
+       if ((keywords as string[]).some((keyword)=>analysisText.toLowerCase().includes(keyword))) {
+         detectedMood = mood;
+         break;
+       }
+     }
     // Generate a training recommendation based on the mood
     const recommendations = currentPrompts.recommendations;
     const recommendation = recommendations[detectedMood] || (language1 === "en" ? "I recommend observing the current behavior and adjusting training accordingly." : "Ich empfehle, das aktuelle Verhalten zu beobachten und das Training entsprechend anzupassen.");
-    const result = {
-      summary_text: analysisText,
-      mood_estimation: detectedMood,
-      recommendation: recommendation,
-      followup_suggestion: currentPrompts.followupSuggestion,
-      confidence_level: language1 === "en" ? "high" : "hoch"
-    };
+         const result: any = {
+       summary_text: analysisText,
+       mood_estimation: detectedMood,
+       recommendation: recommendation,
+       followup_suggestion: currentPrompts.followupSuggestion,
+       confidence_level: language1 === "en" ? "high" : "hoch"
+     };
 
     // If plan creation is requested, create a training plan
     if (createPlan && userId && petId) {
@@ -614,7 +510,7 @@ serve(async (req)=>{
     });
   } catch (error) {
     console.error("Error in analyze-animal-image function:", error);
-    const errorMessage = language === "en" ? "Image analysis failed" : "Bildanalyse fehlgeschlagen";
+         const errorMessage = language1 === "en" ? "Image analysis failed" : "Bildanalyse fehlgeschlagen";
     return new Response(JSON.stringify({
       error: errorMessage,
       details: error.message

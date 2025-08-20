@@ -155,6 +155,10 @@ serve(async (req) => {
 
     const { message, sessionId, petId, trainerName, createPlan, language } = requestBody;
     
+    // Check if this is a plan creation request
+    const isPlanCreationRequest = message && message.startsWith('Create plan::');
+    const planReason = isPlanCreationRequest ? message.substring(13) : null; // Remove "Create plan::" prefix
+    
     // Debug: Log the entire request body to see what's being received
     console.log('📨 Request body received:', {
       messageLength: message?.length,
@@ -162,7 +166,9 @@ serve(async (req) => {
       petId,
       trainerName,
       language,
-      hasCreatePlan: !!createPlan
+      hasCreatePlan: !!createPlan,
+      isPlanCreationRequest,
+      planReason: planReason?.substring(0, 50) + '...'
     });
     
     // Get user's language preference from database using their email
@@ -269,17 +275,39 @@ serve(async (req) => {
           });
         }
 
-        // Simplified plan creation - only process if AI response contains plan tags
-        if (aiResponse.includes('[PLAN_CREATION]')) {
+        // Handle plan creation requests specifically
+        if (isPlanCreationRequest && planReason) {
           try {
-            const planData = await processPlanCreationFromResponse(aiResponse, userLanguage, openAIApiKey);
+            console.log('📝 Processing plan creation request for reason:', planReason.substring(0, 100) + '...');
+            
+            // Create a plan using the fallback plan creation function
+            const planData = await createFallbackPlan(
+              planReason, 
+              userLanguage, 
+              openAIApiKey
+            );
+            
             if (planData) {
+              // Save the plan to the database
               await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
-              aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage, false);
+              
+              console.log('✅ Plan created and saved successfully:', planData.title);
+              aiResponse = userLanguage === 'en' 
+                ? `🎉 **Training Plan Created Successfully!**\n\nI've created a personalized training plan for: **${planReason}**\n\n📋 **Plan Details:**\n• **Title:** ${planData.title}\n• **Modules:** ${planData.steps?.length || 0} training modules\n• **Status:** Ready to start\n\nYou can now view and follow this plan in your training dashboard. Each module includes detailed step-by-step instructions, timing guidelines, and helpful tips to ensure successful training.\n\n💡 **Next Steps:**\n1. Go to "My Pet Training" to view your new plan\n2. Start with Module 1 and progress through each step\n3. Track your progress and celebrate achievements\n\nGood luck with your training journey! 🐾`
+                : `🎉 **Trainingsplan erfolgreich erstellt!**\n\nIch habe einen personalisierten Trainingsplan erstellt für: **${planReason}**\n\n📋 **Plan-Details:**\n• **Titel:** ${planData.title}\n• **Module:** ${planData.steps?.length || 0} Trainingsmodule\n• **Status:** Bereit zum Starten\n\nDu kannst diesen Plan jetzt in deinem Trainings-Dashboard ansehen und befolgen. Jedes Modul enthält detaillierte Schritt-für-Schritt-Anweisungen, Zeitrichtlinien und hilfreiche Tipps für erfolgreiches Training.\n\n💡 **Nächste Schritte:**\n1. Gehe zu "Mein Tiertraining" um deinen neuen Plan anzusehen\n2. Beginne mit Modul 1 und arbeite dich durch jeden Schritt\n3. Verfolge deinen Fortschritt und feiere Erfolge\n\nViel Erfolg bei deinem Training! 🐾`;
+            } else {
+              throw new Error('Failed to create plan data');
             }
           } catch (planError) {
-            aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage);
+            console.error('❌ Plan creation failed:', planError);
+            aiResponse = userLanguage === 'en'
+              ? `❌ **Plan Creation Failed**\n\nI apologize, but I couldn't create a training plan for: **${planReason}**\n\nPlease try again with a more specific description of what you'd like to train your pet for.`
+              : `❌ **Plan-Erstellung fehlgeschlagen**\n\nEntschuldigung, aber ich konnte keinen Trainingsplan erstellen für: **${planReason}**\n\nBitte versuche es erneut mit einer spezifischeren Beschreibung dessen, was du dein Haustier trainieren möchtest.`;
           }
+        } else {
+          // Normal chat - no automatic plan creation
+          // Only create plans when explicitly requested with "Create plan::"
+          console.log('💬 Processing normal chat message - no plan creation');
         }
         
       } catch (openaiError) {

@@ -325,6 +325,18 @@
       "placeholder": "Type your message here...",
       "helpMessage": "Press Enter to send, Shift+Enter for new line"
     },
+    "createPlan": {
+      "button": "Create Plan",
+      "modal": {
+        "title": "Create Training Plan",
+        "description": "Tell us what you'd like to train your pet for. Be specific about the behavior, skill, or goal you want to achieve.",
+        "placeholder": "e.g., Teach my dog to sit and stay, Help my cat stop scratching furniture, Train my bird to step up on my hand...",
+        "createButton": "Create Plan",
+        "cancelButton": "Cancel",
+        "loading": "Creating your personalized plan...",
+        "error": "Failed to create training plan. Please try again."
+      }
+    },
     "satisfactionRequest": {
       "question": "Was this helpful?",
       "yes": "Yes",
@@ -1054,6 +1066,19 @@
   },
   "chat": {
     "thinking": "Thinking...",
+    "createPlan": {
+      "button": "Create Plan",
+      "modal": {
+        "title": "Create Training Plan",
+        "description": "Tell us what you'd like to train your pet for. Be specific about the behavior, skill, or goal you want to achieve.",
+        "placeholder": "e.g., Teach my dog to sit and stay, Help my cat stop scratching furniture, Train my bird to step up on my hand...",
+        "createButton": "Create Plan",
+        "cancelButton": "Cancel",
+        "loading": "Creating your personalized plan...",
+        "error": "Failed to create training plan. Please try again.",
+        "success": "Training plan created successfully!"
+      }
+    },
     "petSelection": {
       "title": "Select Pet for Chat",
       "description": "Choose which pet you'd like to chat about, or start a general conversation.",
@@ -1306,6 +1331,7 @@
         "loading": "Loading chat history...",
         "description": "Load previous conversation and continue where you left off",
         "message": "Please continue our previous conversation.",
+        "createPlanHint": "💡 Continue chatting to access the \"Create Plan\" feature",
         "success": {
           "title": "Chat Continued",
           "description": "Your conversation has been loaded and continued successfully."

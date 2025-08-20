@@ -325,6 +325,18 @@
       "placeholder": "Schreiben Sie hier Ihre Nachricht...",
       "helpMessage": "Drücken Sie Enter zum Senden, Shift+Enter für neue Zeile"
     },
+    "createPlan": {
+      "button": "Plan erstellen",
+      "modal": {
+        "title": "Trainingsplan erstellen",
+        "description": "Erzähle uns, was du dein Haustier trainieren möchtest. Sei spezifisch über das Verhalten, die Fähigkeit oder das Ziel, das du erreichen möchtest.",
+        "placeholder": "z.B., Meinem Hund beibringen zu sitzen und zu bleiben, Meiner Katze helfen nicht mehr an Möbeln zu kratzen, Meinen Vogel trainieren auf meine Hand zu steigen...",
+        "createButton": "Plan erstellen",
+        "cancelButton": "Abbrechen",
+        "loading": "Erstelle deinen personalisierten Plan...",
+        "error": "Trainingsplan konnte nicht erstellt werden. Bitte versuche es erneut."
+      }
+    },
     "satisfactionRequest": {
       "question": "War das hilfreich?",
       "yes": "Ja",
@@ -356,7 +368,7 @@
         "closed": "Geschlossen"
       },
       "rating": "Bewertung",
-      "resolvedByAI": "Von KI gelöst"
+      "resolvedByAI": "Von Trainer gelöst"
     },
     "ticketDetail": {
       "status": {
@@ -396,7 +408,7 @@
     "community": "Community"
   },
   "hero": {
-    "title": "Professionelle Haustiererziehung mit KI",
+    "title": "Professionelle Haustiererziehung mit Trainer-Support",
     "startTraining": "Zur Bildanalyse",
     "startChat": "Chat mit Trainer",
     "viewPricing": "Preise & Pakete ansehen",
@@ -1056,6 +1068,19 @@
   },
   "chat": {
     "thinking": "Denkt...",
+    "createPlan": {
+      "button": "Plan erstellen",
+      "modal": {
+        "title": "Trainingsplan erstellen",
+        "description": "Erzähle uns, was du dein Haustier trainieren möchtest. Sei spezifisch über das Verhalten, die Fähigkeit oder das Ziel, das du erreichen möchtest.",
+        "placeholder": "z.B., Meinem Hund beibringen zu sitzen und zu bleiben, Meiner Katze helfen nicht mehr an Möbeln zu kratzen, Meinen Vogel trainieren auf meine Hand zu steigen...",
+        "createButton": "Plan erstellen",
+        "cancelButton": "Abbrechen",
+        "loading": "Erstelle deinen personalisierten Plan...",
+        "error": "Trainingsplan konnte nicht erstellt werden. Bitte versuche es erneut.",
+        "success": "Trainingsplan erfolgreich erstellt!"
+      }
+    },
     "petSelection": {
       "title": "Tier für Chat auswählen",
       "description": "Wähle aus, über welches Tier du chatten möchtest, oder starte eine allgemeine Konversation.",
@@ -1310,6 +1335,7 @@
         "loading": "Chat-Verlauf wird geladen...",
         "description": "Lade den vorherigen Chat und setzte dort fort",
         "message": "Bitte fahre mit unserem vorherigen Chat fort.",
+        "createPlanHint": "💡 Setze das Chatten fort, um auf die \"Plan erstellen\" Funktion zuzugreifen",
         "success": {
           "title": "Chat fortgesetzt",
           "description": "Deine Konversation wurde erfolgreich geladen und fortgesetzt."
@@ -1730,7 +1756,7 @@
       "chatHistory": "Chat-Verlauf",
       "noMessages": "Keine Nachrichten in dieser Sitzung gefunden",
       "user": "Benutzer",
-      "ai": "KI",
+      "ai": "Trainer",
       "tokens": "Tokens"
     }
   },

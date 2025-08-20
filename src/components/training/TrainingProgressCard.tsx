@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { SessionTracker } from "./SessionTracker";
 import { useLocalizedTrainingStep } from "@/utils/trainingStepLocalization";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Star, Target, Clock, Award, Sparkles } from "lucide-react";
+import { Trophy, Star, Target, Clock, Award, Sparkles, UserCheck } from "lucide-react";
 
 export interface TrainingStep {
   id: string;
@@ -33,7 +33,7 @@ interface TrainingProgressCardProps {
   onStepComplete: () => void;
   petName?: string;
   petSpecies?: string;
-  is_ai_generated?: boolean; // Add AI-generated flag
+  is_ai_generated?: boolean; // Trainer-supported plan flag
 }
 
 const getPetIcon = (species?: string) => {
@@ -221,14 +221,14 @@ export const TrainingProgressCard = ({
               {petSpecies && <span className="text-xs ml-1">({petSpecies})</span>}
             </Badge>
             
-            {/* AI Generated Badge */}
+            {/* Trainer Support Badge */}
             {is_ai_generated && (
               <Badge 
                 variant="secondary" 
-                className="text-xs bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 border-purple-200 dark:from-purple-900/30 dark:to-blue-900/30 dark:text-purple-200 dark:border-purple-400/50"
+                className="text-xs bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800 border-emerald-200 dark:from-emerald-900/30 dark:to-teal-900/30 dark:text-emerald-200 dark:border-emerald-400/50 shadow-sm"
               >
-                <Sparkles className="h-3 w-3 mr-1" />
-                AI Generated
+                <UserCheck className="h-3 w-3 mr-1" />
+                Trainer Support
               </Badge>
             )}
           </div>

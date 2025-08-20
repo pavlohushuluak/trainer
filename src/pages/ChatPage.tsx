@@ -51,7 +51,8 @@ import {
   AlertTriangle,
   PawPrint,
   Globe,
-  Check
+  Check,
+  FileText
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { usePetProfiles } from '@/hooks/usePetProfiles';
@@ -98,6 +99,9 @@ export const ChatPage = () => {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [selectedSession, setSelectedSession] = useState<ChatSession | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
+  const [planReason, setPlanReason] = useState('');
+  const [isCreatingPlan, setIsCreatingPlan] = useState(false);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -597,6 +601,114 @@ export const ChatPage = () => {
     setDeleteDialogOpen(true);
   };
 
+  const handleCreatePlan = async () => {
+    if (!planReason.trim() || !selectedSession || isCreatingPlan) return;
+
+    setIsCreatingPlan(true);
+    const userMessage = `Create plan::${planReason.trim()}`;
+    setMessage(userMessage);
+    setCreatePlanModalOpen(false);
+    setPlanReason('');
+
+    // Add user message immediately
+    const userMessageObj: ChatMessage = {
+      id: `temp-${Date.now()}`,
+      role: 'user',
+      content: userMessage,
+      created_at: new Date().toISOString()
+    };
+
+    setMessages(prev => [...prev, userMessageObj]);
+
+    // Add loading message
+    const loadingMessage: ChatMessage = {
+      id: `loading-${Date.now()}`,
+      role: 'assistant',
+      content: `💭 ${t('chat.createPlan.modal.loading')}`,
+      created_at: new Date().toISOString()
+    };
+
+    setMessages(prev => [...prev, loadingMessage]);
+
+    try {
+      const selectedPetData = selectedSession.pet_id && selectedSession.pet_id !== 'none'
+        ? selectedSession.pet_profiles
+        : null;
+
+      const { data, error } = await supabase.functions.invoke('chat-with-ai', {
+        body: {
+          message: userMessage,
+          sessionId: selectedSession.id,
+          petId: selectedSession.pet_id || null,
+          petProfile: selectedPetData,
+          trainerName: selectedSession.title.replace(currentLanguage === 'en' ? 'Chat with ' : 'Chat mit ', ''),
+          language: currentLanguage
+        }
+      });
+
+      if (error) {
+        throw new Error(`Edge Function Error: ${error.message || 'Unknown error'}`);
+      }
+
+      if (!data || !data.response) {
+        throw new Error(t('chat.page.error.noResponse'));
+      }
+
+      // Remove loading message and add AI response
+      setMessages(prev => {
+        const withoutLoading = prev.filter(msg => msg.id !== loadingMessage.id);
+        return [...withoutLoading, {
+          id: `ai-${Date.now()}`,
+          role: 'assistant',
+          content: data.response,
+          created_at: new Date().toISOString()
+        }];
+      });
+
+      // Update session timestamp
+      await supabase
+        .from('chat_sessions')
+        .update({ updated_at: new Date().toISOString() })
+        .eq('id', selectedSession.id);
+
+      // Increment usage for free users only
+      if (!hasActiveSubscription) {
+        incrementUsage();
+      }
+
+      // Refresh sessions list to update order
+      loadChatSessions();
+
+      setMessage("");
+
+      toast({
+        title: t('chat.createPlan.modal.success')
+      });
+
+    } catch (error: any) {
+      console.error('Plan creation error:', error);
+
+      // Remove loading message and add error message
+      setMessages(prev => {
+        const withoutLoading = prev.filter(msg => msg.id !== loadingMessage.id);
+        return [...withoutLoading, {
+          id: `error-${Date.now()}`,
+          role: 'assistant',
+          content: t('chat.createPlan.modal.error'),
+          created_at: new Date().toISOString()
+        }];
+      });
+
+      toast({
+        title: t('chat.createPlan.modal.error'),
+        description: error.message || t('chat.createPlan.modal.error'),
+        variant: 'destructive'
+      });
+    } finally {
+      setIsCreatingPlan(false);
+    }
+  };
+
   const deleteSession = async () => {
     if (!sessionToDelete) return;
 
@@ -935,8 +1047,8 @@ export const ChatPage = () => {
                           )}
                         </div>
                       </div>
-                      {selectedSession.pet_profiles && (
-                        <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2">
+                        {selectedSession.pet_profiles && (
                           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2">
                             <div className="flex items-center space-x-2">
                               <PawPrint className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -950,8 +1062,20 @@ export const ChatPage = () => {
                               </div>
                             </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                        {/* Show Create Plan button when user can chat (either active chat or new chat ready to start) */}
+                        {(hasStartedChat || messages.length === 0) && (
+                          <Button
+                            onClick={() => setCreatePlanModalOpen(true)}
+                            variant="outline"
+                            size="sm"
+                            className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/40 dark:hover:to-emerald-900/40 text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-all duration-200"
+                          >
+                            <FileText className="h-4 w-4 mr-2" />
+                            {t('chat.createPlan.button')}
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </CardHeader>
 
@@ -1077,6 +1201,9 @@ export const ChatPage = () => {
                         </Button>
                         <p className="text-xs text-muted-foreground mt-2">
                           {t('chat.page.continueChat.description')}
+                        </p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                          {t('chat.page.continueChat.createPlanHint')}
                         </p>
                       </div>
                     ) : (
@@ -1410,6 +1537,125 @@ export const ChatPage = () => {
                 {t('common.save')}
               </Button>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Plan Modal */}
+      <Dialog open={createPlanModalOpen} onOpenChange={setCreatePlanModalOpen}>
+        <DialogContent className="max-w-2xl rounded-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3 text-xl font-semibold">
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 p-2 rounded-lg">
+                <FileText className="h-6 w-6 text-green-600 dark:text-green-400" />
+              </div>
+              {t('chat.createPlan.modal.title')}
+            </DialogTitle>
+            <DialogDescription className="text-base leading-relaxed text-muted-foreground">
+              {t('chat.createPlan.modal.description')}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            {/* Professional description with icons */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <div className="flex items-start space-x-3">
+                <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg flex-shrink-0">
+                  <PawPrint className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-blue-900 dark:text-blue-100">
+                    Professional Training Plan Creation
+                  </h4>
+                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                    Our expert trainers will create a personalized training plan tailored to your pet's specific needs, behavior, and learning style. Be as detailed as possible to get the best results.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Input field */}
+            <div className="space-y-3">
+              <Label htmlFor="plan-reason" className="text-sm font-medium">
+                What would you like to train your pet for?
+              </Label>
+              <textarea
+                id="plan-reason"
+                value={planReason}
+                onChange={(e) => setPlanReason(e.target.value)}
+                placeholder={t('chat.createPlan.modal.placeholder')}
+                className="w-full min-h-[120px] p-4 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none transition-all duration-200"
+                disabled={isCreatingPlan}
+              />
+              <p className="text-xs text-muted-foreground">
+                Be specific about the behavior, skill, or goal you want to achieve. The more details you provide, the better your training plan will be.
+              </p>
+            </div>
+
+            {/* Example suggestions */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+              <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center gap-2">
+                <Check className="h-4 w-4" />
+                Example Training Goals
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-green-700 dark:text-green-300">Basic obedience commands</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-green-700 dark:text-green-300">Leash training</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-green-700 dark:text-green-300">Behavior modification</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-green-700 dark:text-green-300">Socialization skills</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-green-700 dark:text-green-300">Trick training</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-green-700 dark:text-green-300">Problem solving</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCreatePlanModalOpen(false);
+                setPlanReason('');
+              }}
+              disabled={isCreatingPlan}
+              className="border-muted-foreground/20 hover:bg-muted/50"
+            >
+              {t('chat.createPlan.modal.cancelButton')}
+            </Button>
+            <Button
+              onClick={handleCreatePlan}
+              disabled={!planReason.trim() || isCreatingPlan}
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+            >
+              {isCreatingPlan ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  {t('chat.createPlan.modal.loading')}
+                </>
+              ) : (
+                <>
+                  <FileText className="h-4 w-4 mr-2" />
+                  {t('chat.createPlan.modal.createButton')}
+                </>
+              )}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

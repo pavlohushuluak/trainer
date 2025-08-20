@@ -22,7 +22,7 @@ export async function callOpenAI(messages: any[], openAIApiKey: string) {
       body: JSON.stringify({
         model: 'gpt-5-mini',
         messages: messages,
-        max_completion_tokens: 3000, // Increased for complete responses
+        max_completion_tokens: 5000, // Increased for complete responses
       }),
     });
 
