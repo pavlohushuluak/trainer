@@ -582,6 +582,11 @@ export const ChatPage = () => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       
+      // Prevent sending if already processing
+      if (isSending) {
+        return;
+      }
+      
       // Check if free user has reached limit before sending
       if (!hasActiveSubscription && usage.hasReachedLimit) {
         toast({
@@ -602,7 +607,7 @@ export const ChatPage = () => {
   };
 
   const handleCreatePlan = async () => {
-    if (!planReason.trim() || !selectedSession || isCreatingPlan) return;
+    if (!planReason.trim() || !selectedSession || isCreatingPlan || isSending) return;
 
     setIsCreatingPlan(true);
     const userMessage = `Create plan::${planReason.trim()}`;
@@ -1069,10 +1074,11 @@ export const ChatPage = () => {
                             onClick={() => setCreatePlanModalOpen(true)}
                             variant="outline"
                             size="sm"
-                            className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/40 dark:hover:to-emerald-900/40 text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-all duration-200"
+                            disabled={isSending || isCreatingPlan}
+                            className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/40 dark:hover:to-emerald-900/40 text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <FileText className="h-4 w-4 mr-2" />
-                            {t('chat.createPlan.button')}
+                            {isSending || isCreatingPlan ? t('chat.createPlan.modal.loading') : t('chat.createPlan.button')}
                           </Button>
                         )}
                       </div>
@@ -1585,7 +1591,7 @@ export const ChatPage = () => {
                 onChange={(e) => setPlanReason(e.target.value)}
                 placeholder={t('chat.createPlan.modal.placeholder')}
                 className="w-full min-h-[120px] p-4 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none transition-all duration-200"
-                disabled={isCreatingPlan}
+                disabled={isCreatingPlan || isSending}
               />
               <p className="text-xs text-muted-foreground">
                 Be specific about the behavior, skill, or goal you want to achieve. The more details you provide, the better your training plan will be.
@@ -1641,7 +1647,7 @@ export const ChatPage = () => {
             </Button>
             <Button
               onClick={handleCreatePlan}
-              disabled={!planReason.trim() || isCreatingPlan}
+              disabled={!planReason.trim() || isCreatingPlan || isSending}
               className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
             >
               {isCreatingPlan ? (

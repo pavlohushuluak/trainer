@@ -1,6 +1,34 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { translatePlanData } from "./translation.ts";
 
+// Function to clean JSON string by fixing common parsing issues
+function cleanJsonString(jsonString: string): string {
+  console.log("🧹 Cleaning JSON string...");
+  
+  let cleaned = jsonString;
+  
+  // Remove any leading/trailing whitespace
+  cleaned = cleaned.trim();
+  
+  // Fix common control character issues
+  cleaned = cleaned
+    // Replace literal newlines in strings with escaped newlines
+    .replace(/\n/g, '\\n')
+    // Replace literal tabs with escaped tabs
+    .replace(/\t/g, '\\t')
+    // Replace literal carriage returns with escaped carriage returns
+    .replace(/\r/g, '\\r')
+    // Fix unescaped quotes inside strings (basic approach)
+    .replace(/"([^"]*)"([^"]*)"([^"]*)"/g, '"$1\\"$2\\"$3"')
+    // Remove any null bytes
+    .replace(/\0/g, '')
+    // Fix common unicode issues
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+  
+  console.log("🧹 JSON cleaning completed");
+  return cleaned;
+}
+
 // Function to translate plan to user's language
 async function translatePlanToUserLanguage(
   planData: any,
@@ -230,6 +258,8 @@ export async function createFallbackPlan(
          
          CRITICAL: You MUST return ONLY a valid JSON object. No text before or after the JSON. No explanations. Just the JSON.
          
+         IMPORTANT: All strings must be properly escaped. Use \\n for newlines, \\" for quotes, and ensure all control characters are escaped.
+         
          Use this EXACT format (replace the placeholders with real content):
          {
            "title": "Custom Training Plan: [Create a unique title based on the training goal]",
@@ -262,6 +292,8 @@ export async function createFallbackPlan(
           Generiere personalisierten Inhalt, der auf das spezifische Trainingsziel und die Tiercharakteristika zugeschnitten ist.
           
           KRITISCH: Du MUSST nur ein gültiges JSON-Objekt zurückgeben. Kein Text vor oder nach dem JSON. Keine Erklärungen. Nur das JSON.
+          
+          WICHTIG: Alle Strings müssen korrekt escaped werden. Verwende \\n für Zeilenumbrüche, \\" für Anführungszeichen und stelle sicher, dass alle Steuerzeichen escaped sind.
           
           Verwende dieses EXAKTE Format (ersetze die Platzhalter mit echtem Inhalt):
          {
@@ -358,12 +390,23 @@ export async function createFallbackPlan(
     console.log("✅ JSON found, attempting to parse...");
     let planData;
     try {
+      // First try to parse the raw JSON
       planData = JSON.parse(jsonMatch[0]);
-      console.log("✅ JSON parsed successfully");
+      console.log("✅ JSON parsed successfully on first try");
     } catch (parseError) {
-      console.error("❌ JSON parsing failed:", parseError);
-      console.log("📝 JSON content that failed to parse:", jsonMatch[0]);
-      return null;
+      console.error("❌ JSON parsing failed, attempting to clean and retry:", parseError);
+      
+      // Try to clean the JSON by fixing common issues
+      try {
+        const cleanedJson = cleanJsonString(jsonMatch[0]);
+        planData = JSON.parse(cleanedJson);
+        console.log("✅ JSON parsed successfully after cleaning");
+      } catch (secondParseError) {
+        console.error("❌ JSON parsing failed even after cleaning:", secondParseError);
+        console.log("📝 Original JSON content:", jsonMatch[0]);
+        console.log("📝 Cleaned JSON content:", cleanJsonString(jsonMatch[0]));
+        return null;
+      }
     }
 
     // Validate the plan structure
