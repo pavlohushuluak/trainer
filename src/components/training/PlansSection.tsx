@@ -217,7 +217,7 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
               variant="ghost"
               size="sm"
               onClick={() => setIsPlanDetailModalOpen(false)}
-              className="h-8 w-8 p-0 hover:bg-muted pr-6"
+              className="h-8 w-8 p-0 hover:bg-muted mr-6"
             >
               <X className="h-4 w-4" />
             </Button>
