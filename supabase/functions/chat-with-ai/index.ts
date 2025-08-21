@@ -18,6 +18,7 @@ import {
 } from "./utils/chatIntelligence.ts";
 import { getUserLanguage, getFallbackLanguage } from "./utils/languageSupport.ts";
 import { cleanAIResponse } from "./utils/responseCleaner.ts";
+import { evaluateResponseQuality, regenerateResponse } from "./utils/qualityAssurance.ts";
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
@@ -390,7 +391,53 @@ serve(async (req) => {
         // Clean up any markdown formatting from the AI response
         aiResponse = cleanAIResponse(aiResponse);
 
-          console.log('✅ OpenAI response received and cleaned successfully');
+        console.log('✅ OpenAI response received and cleaned successfully');
+
+        // QUALITY ASSURANCE: Evaluate and potentially regenerate the response
+        if (!isPlanCreationRequest) { // Only apply QA to normal chat responses
+          try {
+            console.log('🔍 Starting quality assurance evaluation...');
+            
+            const qualityEvaluation = await evaluateResponseQuality(
+              message,
+              aiResponse,
+              petContext,
+              userLanguage as 'en' | 'de',
+              openAIApiKey
+            );
+
+            console.log('📊 Quality evaluation result:', {
+              score: qualityEvaluation.score,
+              feedback: qualityEvaluation.feedback,
+              needsRegeneration: qualityEvaluation.needsRegeneration
+            });
+
+            if (qualityEvaluation.needsRegeneration) {
+              console.log('🔄 Response quality below 9.5, starting continuous quality assurance loop...');
+              
+              const regeneratedResponse = await regenerateResponse(
+                message,
+                aiResponse,
+                petContext,
+                userLanguage as 'en' | 'de',
+                openAIApiKey,
+                enhancedSystemPrompt,
+                chatHistory,
+                qualityEvaluation.feedback
+              );
+
+              // Clean up the regenerated response
+              aiResponse = cleanAIResponse(regeneratedResponse);
+              
+              console.log('✅ Continuous quality assurance loop completed - final response ready');
+            } else {
+              console.log('✅ Response quality meets standards (score:', qualityEvaluation.score, ')');
+            }
+          } catch (qaError) {
+            console.error('❌ Quality assurance failed, using original response:', qaError);
+            // Continue with original response if QA fails
+          }
+        }
         } catch (openaiError) {
           console.error('❌ OpenAI call failed:', openaiError);
           
@@ -403,6 +450,47 @@ serve(async (req) => {
               // Clean up any markdown formatting from the fallback model response
               aiResponse = cleanAIResponse(aiResponse);
               console.log('✅ Fallback model (GPT-4o) succeeded and cleaned');
+              
+              // QUALITY ASSURANCE for fallback response
+              if (!isPlanCreationRequest) {
+                try {
+                  console.log('🔍 Starting quality assurance evaluation for fallback response...');
+                  
+                  const qualityEvaluation = await evaluateResponseQuality(
+                    message,
+                    aiResponse,
+                    petContext,
+                    userLanguage as 'en' | 'de',
+                    openAIApiKey
+                  );
+
+                  console.log('📊 Fallback quality evaluation result:', {
+                    score: qualityEvaluation.score,
+                    feedback: qualityEvaluation.feedback,
+                    needsRegeneration: qualityEvaluation.needsRegeneration
+                  });
+
+                  if (qualityEvaluation.needsRegeneration) {
+                    console.log('🔄 Fallback response quality below 9.5, starting continuous quality assurance loop...');
+                    
+                    const regeneratedResponse = await regenerateResponse(
+                      message,
+                      aiResponse,
+                      petContext,
+                      userLanguage as 'en' | 'de',
+                      openAIApiKey,
+                      enhancedSystemPrompt,
+                      chatHistory,
+                      qualityEvaluation.feedback
+                    );
+
+                    aiResponse = cleanAIResponse(regeneratedResponse);
+                    console.log('✅ Continuous quality assurance loop completed for fallback - final response ready');
+                  }
+                } catch (qaError) {
+                  console.error('❌ Quality assurance for fallback failed:', qaError);
+                }
+              }
             } catch (fallbackError) {
               console.error('❌ Fallback model also failed:', fallbackError);
               aiResponse = userLanguage === 'en' 
