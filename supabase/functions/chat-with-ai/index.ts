@@ -154,7 +154,7 @@ serve(async (req) => {
       throw new Error('Invalid request body format');
     }
 
-    const { message, sessionId, petId, trainerName, createPlan, language } = requestBody;
+    const { message, sessionId, petId, petProfile, trainerName, createPlan, language } = requestBody;
     
     // Check if this is a plan creation request
     const continuationPhrases = [
@@ -197,6 +197,9 @@ serve(async (req) => {
       messageLength: message?.length,
       sessionId,
       petId,
+      hasPetProfile: !!petProfile,
+      petProfileName: petProfile?.name,
+      petProfileSpecies: petProfile?.species,
       trainerName,
       language,
       hasCreatePlan: !!createPlan,
@@ -223,13 +226,92 @@ serve(async (req) => {
       await createTrainingPlan(supabaseClient, userData.user.id, petId, createPlan, openAIApiKey);
     }
 
-    // Parallel data fetching for better performance
-    const [petContextResult, rawChatHistory] = await Promise.all([
-      getPetContext(supabaseClient, petId, userData.user.id),
-      getChatHistory(supabaseClient, sessionId)
-    ]);
+    // Use provided petProfile if available, otherwise fetch from database
+    let petContext = "";
+    let petData: any = null;
     
-    const { petContext, petData } = petContextResult;
+    if (petProfile && petProfile.id) {
+      // Use the provided petProfile data
+      petData = petProfile;
+      
+      // Build pet context from provided data
+      let contextParts: string[] = [];
+      
+      // Basic info with enhanced detail
+      contextParts.push(petProfile.name);
+      
+      // Age calculation with months precision for young animals
+      let ageInfo = '';
+      if (petProfile.age) {
+        ageInfo = `${petProfile.age}J`;
+      } else if (petProfile.birth_date) {
+        const birthDate = new Date(petProfile.birth_date);
+        const now = new Date();
+        const ageInMonths = Math.floor((now.getTime() - birthDate.getTime()) / (30.44 * 24 * 60 * 60 * 1000));
+        const years = Math.floor(ageInMonths / 12);
+        const months = ageInMonths % 12;
+        
+        if (years === 0) {
+          ageInfo = `${ageInMonths}M`; // Show months for animals under 1 year
+        } else if (months === 0) {
+          ageInfo = `${years}J`;
+        } else {
+          ageInfo = `${years}J${months}M`;
+        }
+      }
+      if (ageInfo) contextParts.push(ageInfo);
+      
+      // Species and breed with enhanced info
+      const speciesBreed = petProfile.species + (petProfile.breed ? `/${petProfile.breed}` : '');
+      contextParts.push(speciesBreed);
+      
+      // Behavior focus - keep full text for better AI understanding
+      if (petProfile.behavior_focus) {
+        contextParts.push(`Fokus: ${petProfile.behavior_focus}`);
+      }
+      
+      // Notes - keep more detail for context
+      if (petProfile.notes) {
+        contextParts.push(`Notizen: ${petProfile.notes}`);
+      }
+      
+      // Enhanced context with development stage indicators
+      const ageInMonths = petProfile.age ? petProfile.age * 12 : 
+        (petProfile.birth_date ? Math.floor((Date.now() - new Date(petProfile.birth_date).getTime()) / (30.44 * 24 * 60 * 60 * 1000)) : 0);
+      
+      if (ageInMonths <= 6) {
+        contextParts.push('Entwicklungsphase: Welpe/Jungtier');
+      } else if (ageInMonths <= 18) {
+        contextParts.push('Entwicklungsphase: Junghund/Adoleszent');
+      } else if (ageInMonths <= 84) {
+        contextParts.push('Entwicklungsphase: Erwachsen');
+      } else {
+        contextParts.push('Entwicklungsphase: Senior');
+      }
+      
+      petContext = contextParts.join(', ');
+      
+      console.log('🐾 Using provided petProfile data:', {
+        petName: petProfile.name,
+        species: petProfile.species,
+        breed: petProfile.breed,
+        age: petProfile.age,
+        context: petContext
+      });
+    } else if (petId) {
+      // Fallback to database fetch if no petProfile provided
+      const petContextResult = await getPetContext(supabaseClient, petId, userData.user.id);
+      petContext = petContextResult.petContext;
+      petData = petContextResult.petData;
+      
+      console.log('🐾 Fetched pet data from database:', {
+        petId,
+        context: petContext
+      });
+    }
+    
+    // Fetch chat history
+    const rawChatHistory = await getChatHistory(supabaseClient, sessionId);
     const chatHistory = getCompleteChatHistory(rawChatHistory);
     
     console.log('📚 Sending complete chat history to GPT:', {
@@ -258,6 +340,17 @@ serve(async (req) => {
 
         // Generate simplified system prompt
         const enhancedSystemPrompt = generateSystemPrompt(trainerName, petContext, isNewPet, petData, userLanguage as 'en' | 'de');
+        
+        // Log pet information being sent to AI
+        console.log('🐾 Pet information for AI:', {
+          petContext,
+          petDataName: petData?.name,
+          petDataSpecies: petData?.species,
+          petDataBreed: petData?.breed,
+          petDataAge: petData?.age,
+          isNewPet,
+          language: userLanguage
+        });
 
         // For plan creation requests, modify the message to instruct AI to create a plan
         let processedMessage = message;
