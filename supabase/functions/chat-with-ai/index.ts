@@ -17,6 +17,7 @@ import {
   analyzeConversationContext 
 } from "./utils/chatIntelligence.ts";
 import { getUserLanguage, getFallbackLanguage } from "./utils/languageSupport.ts";
+import { cleanAIResponse } from "./utils/responseCleaner.ts";
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
@@ -242,6 +243,8 @@ serve(async (req) => {
     // ENHANCED OPENAI INTEGRATION WITH COMPREHENSIVE ERROR HANDLING
     if (!openAIApiKey) {
       aiResponse = getFallbackResponse(message, trainerName, petContext, userLanguage);
+      // Clean up any markdown formatting from the fallback response
+      aiResponse = cleanAIResponse(aiResponse);
     } else {
       try {
         // Simplified context gathering
@@ -291,7 +294,10 @@ serve(async (req) => {
         const responseStartTime = Date.now();
         aiResponse = streamingResponse;
 
-          console.log('✅ OpenAI response received successfully');
+        // Clean up any markdown formatting from the AI response
+        aiResponse = cleanAIResponse(aiResponse);
+
+          console.log('✅ OpenAI response received and cleaned successfully');
         } catch (openaiError) {
           console.error('❌ OpenAI call failed:', openaiError);
           
@@ -301,12 +307,16 @@ serve(async (req) => {
             try {
               const fallbackResponse = await callOpenAIStreaming(messages, openAIApiKey, true); // Use GPT-4o
               aiResponse = fallbackResponse;
-              console.log('✅ Fallback model (GPT-4o) succeeded');
+              // Clean up any markdown formatting from the fallback model response
+              aiResponse = cleanAIResponse(aiResponse);
+              console.log('✅ Fallback model (GPT-4o) succeeded and cleaned');
             } catch (fallbackError) {
               console.error('❌ Fallback model also failed:', fallbackError);
               aiResponse = userLanguage === 'en' 
                 ? "I apologize, but I'm taking too long to respond. Please try asking your question again, or try a simpler request."
                 : "Entschuldigung, aber ich brauche zu lange für eine Antwort. Bitte versuche deine Frage noch einmal zu stellen oder eine einfachere Anfrage.";
+              // Clean up any markdown formatting from the timeout response
+              aiResponse = cleanAIResponse(aiResponse);
             }
           } else {
             // Use fallback response for other errors
@@ -360,6 +370,8 @@ serve(async (req) => {
               
               // Clean up the response to remove [PLAN_CREATION] blocks and show success message
               aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage as 'en' | 'de', false);
+              // Clean up any markdown formatting from the response
+              aiResponse = cleanAIResponse(aiResponse);
             } else {
               throw new Error('Failed to create plan data');
             }
@@ -367,6 +379,8 @@ serve(async (req) => {
             console.error('❌ Plan creation failed:', planError);
             // Clean up failed plan creation from response
             aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage as 'en' | 'de');
+            // Clean up any markdown formatting from the response
+            aiResponse = cleanAIResponse(aiResponse);
           }
         } else {
           // Normal chat - check if AI response contains plan creation blocks
@@ -375,6 +389,8 @@ serve(async (req) => {
             console.log('📝 Found plan creation in normal chat response');
             await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
             aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage as 'en' | 'de', false);
+            // Clean up any markdown formatting from the response
+            aiResponse = cleanAIResponse(aiResponse);
           } else {
             console.log('💬 Processing normal chat message - no plan creation');
           }
@@ -394,6 +410,9 @@ serve(async (req) => {
         
         // Add error note to response for debugging
         aiResponse += `\n\n💡 *Debug-Info: OpenAI-Service temporär nicht verfügbar (${errorContext.substring(0, 50)}...)*`;
+        
+        // Clean up any markdown formatting from the fallback response
+        aiResponse = cleanAIResponse(aiResponse);
       }
     }
 
