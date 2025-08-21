@@ -17,7 +17,7 @@ import {
   analyzeConversationContext 
 } from "./utils/chatIntelligence.ts";
 import { getUserLanguage, getFallbackLanguage } from "./utils/languageSupport.ts";
-import { cleanAIResponse } from "./utils/responseCleaner.ts";
+import { cleanAIResponse, cleanStructuredResponse } from "./utils/responseCleaner.ts";
 import { evaluateResponseQuality, regenerateResponse } from "./utils/qualityAssurance.ts";
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
@@ -327,7 +327,7 @@ serve(async (req) => {
     if (!openAIApiKey) {
       aiResponse = getFallbackResponse(message, trainerName, petContext, userLanguage);
       // Clean up any markdown formatting from the fallback response
-      aiResponse = cleanAIResponse(aiResponse);
+      aiResponse = cleanStructuredResponse(aiResponse);
     } else {
       try {
         // Simplified context gathering
@@ -389,7 +389,7 @@ serve(async (req) => {
         aiResponse = streamingResponse;
 
         // Clean up any markdown formatting from the AI response
-        aiResponse = cleanAIResponse(aiResponse);
+        aiResponse = cleanStructuredResponse(aiResponse);
 
         console.log('✅ OpenAI response received and cleaned successfully');
 
@@ -427,7 +427,7 @@ serve(async (req) => {
               );
 
               // Clean up the regenerated response
-              aiResponse = cleanAIResponse(regeneratedResponse);
+              aiResponse = cleanStructuredResponse(regeneratedResponse);
               
               console.log('✅ Continuous quality assurance loop completed - final response ready');
                          } else {
@@ -451,7 +451,7 @@ serve(async (req) => {
               const fallbackResponse = await callOpenAIStreaming(messages, openAIApiKey, true); // Use GPT-4o
               aiResponse = fallbackResponse;
               // Clean up any markdown formatting from the fallback model response
-              aiResponse = cleanAIResponse(aiResponse);
+              aiResponse = cleanStructuredResponse(aiResponse);
               console.log('✅ Fallback model (GPT-4o) succeeded and cleaned');
               
               // QUALITY ASSURANCE for fallback response
@@ -487,7 +487,7 @@ serve(async (req) => {
                       qualityEvaluation.feedback
                     );
 
-                    aiResponse = cleanAIResponse(regeneratedResponse);
+                    aiResponse = cleanStructuredResponse(regeneratedResponse);
                     console.log('✅ Continuous quality assurance loop completed for fallback - final response ready');
                   }
                 } catch (qaError) {
@@ -504,7 +504,7 @@ serve(async (req) => {
                 ? "I apologize, but I'm taking too long to respond. Please try asking your question again, or try a simpler request."
                 : "Entschuldigung, aber ich brauche zu lange für eine Antwort. Bitte versuche deine Frage noch einmal zu stellen oder eine einfachere Anfrage.";
               // Clean up any markdown formatting from the timeout response
-              aiResponse = cleanAIResponse(aiResponse);
+              aiResponse = cleanStructuredResponse(aiResponse);
             }
           } else {
             // Use fallback response for other errors
@@ -559,7 +559,7 @@ serve(async (req) => {
               // Clean up the response to remove [PLAN_CREATION] blocks and show success message
               aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage as 'en' | 'de', false);
               // Clean up any markdown formatting from the response
-              aiResponse = cleanAIResponse(aiResponse);
+              aiResponse = cleanStructuredResponse(aiResponse);
             } else {
               throw new Error('Failed to create plan data');
             }
@@ -568,7 +568,7 @@ serve(async (req) => {
             // Clean up failed plan creation from response
             aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage as 'en' | 'de');
             // Clean up any markdown formatting from the response
-            aiResponse = cleanAIResponse(aiResponse);
+            aiResponse = cleanStructuredResponse(aiResponse);
           }
         } else {
           // Normal chat - check if AI response contains plan creation blocks
@@ -578,7 +578,7 @@ serve(async (req) => {
             await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
             aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage as 'en' | 'de', false);
             // Clean up any markdown formatting from the response
-            aiResponse = cleanAIResponse(aiResponse);
+            aiResponse = cleanStructuredResponse(aiResponse);
           } else {
             console.log('💬 Processing normal chat message - no plan creation');
           }
@@ -600,7 +600,7 @@ serve(async (req) => {
         aiResponse += `\n\n💡 *Debug-Info: OpenAI-Service temporär nicht verfügbar (${errorContext.substring(0, 50)}...)*`;
         
         // Clean up any markdown formatting from the fallback response
-        aiResponse = cleanAIResponse(aiResponse);
+        aiResponse = cleanStructuredResponse(aiResponse);
       }
     }
 
