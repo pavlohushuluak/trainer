@@ -22,6 +22,29 @@ import { evaluateResponseQuality, regenerateResponse } from "./utils/qualityAssu
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
+/**
+ * Detects if a message is a greeting
+ */
+function isGreeting(message: string, language: 'en' | 'de'): boolean {
+  const lowerMessage = message.toLowerCase().trim();
+  
+  if (language === 'en') {
+    const englishGreetings = [
+      'hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening',
+      'morning', 'afternoon', 'evening', 'greetings', 'howdy', 'yo',
+      'good day', 'hi there', 'hello there', 'hey there'
+    ];
+    return englishGreetings.some(greeting => lowerMessage.includes(greeting));
+  } else {
+    const germanGreetings = [
+      'hallo', 'hi', 'hey', 'guten morgen', 'guten tag', 'guten abend',
+      'morgen', 'tag', 'abend', 'grüße', 'servus', 'moin',
+      'guten tag', 'hallo da', 'hi da', 'hey da'
+    ];
+    return germanGreetings.some(greeting => lowerMessage.includes(greeting));
+  }
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -276,29 +299,37 @@ serve(async (req) => {
         contextParts.push(`Notizen: ${petProfile.notes}`);
       }
       
-      // Enhanced context with development stage indicators
-      const ageInMonths = petProfile.age ? petProfile.age * 12 : 
-        (petProfile.birth_date ? Math.floor((Date.now() - new Date(petProfile.birth_date).getTime()) / (30.44 * 24 * 60 * 60 * 1000)) : 0);
-      
-      if (ageInMonths <= 6) {
-        contextParts.push('Entwicklungsphase: Welpe/Jungtier');
-      } else if (ageInMonths <= 18) {
-        contextParts.push('Entwicklungsphase: Junghund/Adoleszent');
-      } else if (ageInMonths <= 84) {
-        contextParts.push('Entwicklungsphase: Erwachsen');
-      } else {
-        contextParts.push('Entwicklungsphase: Senior');
-      }
+              // Enhanced context with development stage indicators and birthday
+        const ageInMonths = petProfile.age ? petProfile.age * 12 : 
+          (petProfile.birth_date ? Math.floor((Date.now() - new Date(petProfile.birth_date).getTime()) / (30.44 * 24 * 60 * 60 * 1000)) : 0);
+        
+        // Add birthday information if available
+        if (petProfile.birth_date) {
+          const birthDate = new Date(petProfile.birth_date);
+          const formattedBirthday = birthDate.toLocaleDateString(userLanguage === 'en' ? 'en-US' : 'de-DE');
+          contextParts.push(`Geburtstag: ${formattedBirthday}`);
+        }
+        
+        if (ageInMonths <= 6) {
+          contextParts.push('Entwicklungsphase: Welpe/Jungtier');
+        } else if (ageInMonths <= 18) {
+          contextParts.push('Entwicklungsphase: Junghund/Adoleszent');
+        } else if (ageInMonths <= 84) {
+          contextParts.push('Entwicklungsphase: Erwachsen');
+        } else {
+          contextParts.push('Entwicklungsphase: Senior');
+        }
       
       petContext = contextParts.join(', ');
       
-      console.log('🐾 Using provided petProfile data:', {
-        petName: petProfile.name,
-        species: petProfile.species,
-        breed: petProfile.breed,
-        age: petProfile.age,
-        context: petContext
-      });
+             console.log('🐾 Using provided petProfile data:', {
+         petName: petProfile.name,
+         species: petProfile.species,
+         breed: petProfile.breed,
+         age: petProfile.age,
+         birthDate: petProfile.birth_date,
+         context: petContext
+       });
     } else if (petId) {
       // Fallback to database fetch if no petProfile provided
       const petContextResult = await getPetContext(supabaseClient, petId, userData.user.id);
@@ -347,10 +378,11 @@ serve(async (req) => {
           petContext,
           petDataName: petData?.name,
           petDataSpecies: petData?.species,
-          petDataBreed: petData?.breed,
-          petDataAge: petData?.age,
-          isNewPet,
-          language: userLanguage
+                     petDataBreed: petData?.breed,
+           petDataAge: petData?.age,
+           petDataBirthDate: petData?.birth_date,
+           isNewPet,
+           language: userLanguage
         });
 
         // For plan creation requests, modify the message to instruct AI to create a plan
@@ -391,10 +423,13 @@ serve(async (req) => {
         // Clean up any markdown formatting from the AI response
         aiResponse = cleanAIResponse(aiResponse);
 
-        console.log('✅ OpenAI response received and cleaned successfully');
+                  console.log('✅ OpenAI response received and cleaned successfully');
 
-        // QUALITY ASSURANCE: Evaluate and potentially regenerate the response
-        if (!isPlanCreationRequest) { // Only apply QA to normal chat responses
+          // Check if this is a greeting message (skip QA for quick response)
+          const isGreetingMessage = isGreeting(message, userLanguage as 'en' | 'de');
+
+          // QUALITY ASSURANCE: Evaluate and potentially regenerate the response
+          if (!isPlanCreationRequest && !isGreetingMessage) { // Only apply QA to normal chat responses, skip greetings
           try {
             console.log('🔍 Starting quality assurance evaluation...');
             
@@ -433,11 +468,16 @@ serve(async (req) => {
             } else {
               console.log('✅ Response quality meets standards (score:', qualityEvaluation.score, ')');
             }
-          } catch (qaError) {
-            console.error('❌ Quality assurance failed, using original response:', qaError);
-            // Continue with original response if QA fails
+                      } catch (qaError) {
+              console.error('❌ Quality assurance failed, using original response:', qaError);
+              // Continue with original response if QA fails - always ensure user gets a response
+              aiResponse = aiResponse || userLanguage === 'en' 
+                ? "I apologize, but I'm having trouble generating a response right now. Please try asking your question again."
+                : "Entschuldigung, aber ich habe gerade Schwierigkeiten, eine Antwort zu generieren. Bitte versuche deine Frage noch einmal zu stellen.";
+            }
+          } else if (isGreetingMessage) {
+            console.log('👋 Greeting message detected - skipping quality assurance for quick response');
           }
-        }
         } catch (openaiError) {
           console.error('❌ OpenAI call failed:', openaiError);
           
@@ -451,8 +491,8 @@ serve(async (req) => {
               aiResponse = cleanAIResponse(aiResponse);
               console.log('✅ Fallback model (GPT-4o) succeeded and cleaned');
               
-              // QUALITY ASSURANCE for fallback response
-              if (!isPlanCreationRequest) {
+                              // QUALITY ASSURANCE for fallback response
+                if (!isPlanCreationRequest) {
                 try {
                   console.log('🔍 Starting quality assurance evaluation for fallback response...');
                   
@@ -489,6 +529,10 @@ serve(async (req) => {
                   }
                 } catch (qaError) {
                   console.error('❌ Quality assurance for fallback failed:', qaError);
+                  // Ensure fallback response is still available even if QA fails
+                  aiResponse = aiResponse || userLanguage === 'en' 
+                    ? "I apologize, but I'm having trouble generating a response right now. Please try asking your question again."
+                    : "Entschuldigung, aber ich habe gerade Schwierigkeiten, eine Antwort zu generieren. Bitte versuche deine Frage noch einmal zu stellen.";
                 }
               }
             } catch (fallbackError) {
@@ -527,14 +571,15 @@ serve(async (req) => {
                 userLanguage as 'en' | 'de', 
                 openAIApiKey,
                 {
-                  pets: petData ? [{
-                    id: petId,
-                    name: petData.name,
-                    species: petData.species,
-                    breed: petData.breed,
-                    ageYears: petData.age,
-                    focus: petData.behavior_focus
-                  }] : [],
+                                     pets: petData ? [{
+                     id: petId,
+                     name: petData.name,
+                     species: petData.species,
+                     breed: petData.breed,
+                     ageYears: petData.age,
+                     birthDate: petData.birth_date,
+                     focus: petData.behavior_focus
+                   }] : [],
                   lastActivePetId: petId,
                   user: {
                     goals: [planReason]

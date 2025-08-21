@@ -47,6 +47,7 @@ export interface PetMemory {
   species?: string;   // dog | cat | horse | small | ...
   breed?: string;
   ageYears?: number;  // convenience
+  birthDate?: string; // ISO date string
   focus?: string;     // e.g., "leash pulling", "reactivity"
 }
 
