@@ -93,7 +93,8 @@ export const CreatePlanModal = ({ isOpen, onClose, onPlanCreated, pets }: Create
           description: formData.description,
           pet_id: formData.petId === 'none' ? null : formData.petId,
           status: formData.status,
-          user_id: user.id
+          user_id: user.id,
+          is_ai_generated: false // Explicitly mark as manual plan
         });
 
       if (error) throw error;

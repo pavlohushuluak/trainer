@@ -70,7 +70,8 @@ export const usePlans = () => {
           description: planData.description,
           pet_id: planData.pet_id === 'none' ? null : planData.pet_id || null,
           status: planData.status,
-          user_id: user.id
+          user_id: user.id,
+          is_ai_generated: false // Explicitly mark as manual plan
         })
         .select()
         .single();

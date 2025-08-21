@@ -4,34 +4,16 @@ export async function getChatHistory(supabaseClient: any, sessionId: string) {
     .from('chat_messages')
     .select('role, content')
     .eq('session_id', sessionId)
-    .order('created_at', { ascending: true })
-    .limit(5); // Optimiert: Genau 5 Messages für OpenAI
+    .order('created_at', { ascending: true });
+    // Removed limit to get ALL chat history
 
   return chatHistory || [];
 }
 
-// Neue Funktion: Chat History zusammenfassen
-export function summarizeChatHistory(messages: any[]): any[] {
-  if (messages.length <= 5) return messages;
-  
-  // Behalte die letzten 3 Messages vollständig
-  const recentMessages = messages.slice(-3);
-  
-  // Fasse ältere Messages zusammen
-  const olderMessages = messages.slice(0, -3);
-  const userQuestions = olderMessages.filter(m => m.role === 'user');
-  const aiResponses = olderMessages.filter(m => m.role === 'assistant');
-  
-  if (userQuestions.length > 0) {
-    const summaryMessage = {
-      role: 'assistant',
-      content: `Zusammenfassung vorheriger Gespräche: ${userQuestions.length} Fragen zu Themen wie ${userQuestions.slice(-2).map(q => q.content.substring(0, 30)).join(', ')}...`
-    };
-    
-    return [summaryMessage, ...recentMessages];
-  }
-  
-  return recentMessages;
+// Function to get complete chat history (no summarization)
+export function getCompleteChatHistory(messages: any[]): any[] {
+  // Return all messages without summarization
+  return messages;
 }
 
 export async function saveChatMessages(

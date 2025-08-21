@@ -66,7 +66,7 @@ export const generateVideoThumbnail = async (
             thumbnailUrl,
             thumbnailBlob: blob
           });
-        }, 'image/jpeg', 0.8); // JPEG with 80% quality
+        }, 'image/png', 0.8); // PNG format for better compatibility
       } catch (error) {
         reject(error);
       }
@@ -89,27 +89,29 @@ export const uploadThumbnail = async (
 ): Promise<string> => {
   const { supabase } = await import("@/integrations/supabase/client");
   
-
-  const fileName = `${userId}/${postId}/thumbnail.jpg`;
+  console.log('🖼️ Uploading thumbnail to storage...');
+  const fileName = `${userId}/${postId}/thumbnail.png`;
 
   // Upload thumbnail to Supabase Storage
   const { data, error } = await supabase.storage
     .from('community-videos')
     .upload(fileName, thumbnailBlob, {
       upsert: true,
-      contentType: 'image/jpeg'
+      contentType: 'image/png'
     });
 
   if (error) {
-    throw new Error(`Thumbnail-Upload fehlgeschlagen: ${error.message}`);
+    console.error('❌ Thumbnail upload error:', error);
+    throw new Error(`Thumbnail upload failed: ${error.message}`);
   }
 
-
+  console.log('✅ Thumbnail upload successful:', data);
 
   // Get public URL
   const { data: urlData } = supabase.storage
     .from('community-videos')
     .getPublicUrl(fileName);
 
+  console.log('🔗 Thumbnail public URL:', urlData.publicUrl);
   return urlData.publicUrl;
 };

@@ -20,6 +20,12 @@ export const useVideoUploadLogic = (onVideoSelect: (file: File | null) => void) 
     
     if (!file) return;
 
+    console.log('🎬 Video file selected:', {
+      name: file.name,
+      size: file.size,
+      type: file.type
+    });
+
     if (!validateVideoFile(file)) return;
 
     setOriginalFileSize(file.size);
@@ -27,16 +33,32 @@ export const useVideoUploadLogic = (onVideoSelect: (file: File | null) => void) 
     // Decide if compression is needed
     const shouldCompress = file.size > DEFAULT_COMPRESSION_OPTIONS.maxSizeMB * 1024 * 1024;
 
+    console.log('📊 Compression decision:', {
+      shouldCompress,
+      fileSizeMB: (file.size / (1024 * 1024)).toFixed(1),
+      maxSizeMB: DEFAULT_COMPRESSION_OPTIONS.maxSizeMB
+    });
+
     if (shouldCompress) {
       setIsCompressing(true);
       
       try {
+        console.log('🔄 Starting video compression...');
         
         const compressedFile = await compressVideo(
           file,
           DEFAULT_COMPRESSION_OPTIONS,
-          (progress) => setCompressionProgress(progress)
+          (progress) => {
+            console.log('📈 Compression progress:', progress);
+            setCompressionProgress(progress);
+          }
         );
+
+        console.log('✅ Video compression completed:', {
+          originalSize: (file.size / (1024 * 1024)).toFixed(1) + 'MB',
+          compressedSize: (compressedFile.size / (1024 * 1024)).toFixed(1) + 'MB',
+          compressionRatio: ((1 - compressedFile.size / file.size) * 100).toFixed(1) + '%'
+        });
 
         // Create preview URL
         const url = URL.createObjectURL(compressedFile);
@@ -52,6 +74,7 @@ export const useVideoUploadLogic = (onVideoSelect: (file: File | null) => void) 
         });
 
       } catch (error) {
+        console.error('❌ Video compression failed:', error);
         
         toast({
           title: t('community.videoUpload.logic.compressionFailed.title'),
@@ -60,6 +83,7 @@ export const useVideoUploadLogic = (onVideoSelect: (file: File | null) => void) 
         });
 
         // Fallback: Use original file
+        console.log('🔄 Using original file as fallback');
         const url = URL.createObjectURL(file);
         setVideoPreviewUrl(url);
         onVideoSelect(file);
@@ -69,6 +93,7 @@ export const useVideoUploadLogic = (onVideoSelect: (file: File | null) => void) 
       }
     } else {
       // No compression needed
+      console.log('✅ No compression needed, using original file');
       const url = URL.createObjectURL(file);
       setVideoPreviewUrl(url);
       onVideoSelect(file);

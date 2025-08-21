@@ -138,7 +138,8 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
           pet_id: petToUse.id,
           title: trainingPlan.title,
           description: trainingPlan.description,
-          status: 'planned'
+          status: 'planned',
+          is_ai_generated: true // Mark as AI-generated (from image analysis)
         })
         .select()
         .single();

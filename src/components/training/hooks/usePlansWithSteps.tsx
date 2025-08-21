@@ -10,11 +10,13 @@ interface TrainingPlanWithSteps extends TrainingPlan {
   steps: TrainingStep[];
 }
 
-export const usePlansWithSteps = (selectedPetFilter: string) => {
+export const usePlansWithSteps = (selectedPlanType: string, selectedPetId: string) => {
   const { user } = useAuth();
 
+  console.log('🔍 usePlansWithSteps: selectedPlanType =', selectedPlanType, 'selectedPetId =', selectedPetId);
+
   return useQuery({
-    queryKey: ['training-plans-with-steps', user?.id, selectedPetFilter],
+    queryKey: ['training-plans-with-steps', user?.id, selectedPlanType, selectedPetId],
     queryFn: async (): Promise<TrainingPlanWithSteps[]> => {
 
       if (!user) {
@@ -22,7 +24,7 @@ export const usePlansWithSteps = (selectedPetFilter: string) => {
       }
 
       try {
-        let query = supabase
+        let query: any = supabase
           .from('training_plans')
           .select(`
             *,
@@ -44,22 +46,34 @@ export const usePlansWithSteps = (selectedPetFilter: string) => {
           `)
           .eq('user_id', user.id);
 
-        // Apply pet filter with detailed logging
-        if (selectedPetFilter === "none") {
-          query = query.is('pet_id', null);
-        } else if (selectedPetFilter === "unassigned") {
-          query = query.is('pet_id', null);
-        } else if (selectedPetFilter !== "all") {
-          // Show plans for specific pet OR unassigned plans (pet_id is null)
-          query = query.or(`pet_id.eq.${selectedPetFilter},pet_id.is.null`);
-        } else {
+        // Apply filters based on selection
+        console.log('🔍 Filtering plans with selectedPlanType:', selectedPlanType, 'selectedPetId:', selectedPetId);
+        
+        // Apply plan type filter
+        if (selectedPlanType === "supported") {
+          console.log('🎯 Filtering for supported plans (trainer-supported)');
+          query = query.eq('is_ai_generated', true);
+        } else if (selectedPlanType === "manual") {
+          console.log('🎯 Filtering for manual plans');
+          query = query.eq('is_ai_generated', false);
         }
+        // For "all" plan type - no additional filter needed
+        
+        // Apply pet filter
+        if (selectedPetId !== "all") {
+          console.log('🎯 Filtering for pet-specific plans (pet_id =', selectedPetId, 'or null)');
+          // Pet-specific filter: show plans for this pet OR unassigned plans
+          query = query.or(`pet_id.eq.${selectedPetId},pet_id.is.null`);
+        }
+        // For "all" pets - no additional filter needed
 
         const { data: plans, error: plansError } = await query
           .order('created_at', { ascending: false });
         
+        console.log('🔍 Database query result:', { plansCount: plans?.length || 0, error: plansError });
 
         if (plansError) {
+          console.error('❌ Database query error:', plansError);
           // Don't throw immediately, try to provide useful info
           if (plansError.message?.includes('RLS')) {
             throw new Error('Authentication required to access training plans');
@@ -82,6 +96,29 @@ export const usePlansWithSteps = (selectedPetFilter: string) => {
             steps: (plan.training_steps || []).sort((a, b) => a.step_number - b.step_number)
           };
         });
+
+        console.log('📊 Plans returned:', plansWithSteps.length);
+        plansWithSteps.forEach(plan => {
+          console.log(`📋 Plan: ${plan.title} | is_ai_generated: ${plan.is_ai_generated} | pet_id: ${plan.pet_id}`);
+        });
+
+        // Check for plans with null is_ai_generated values and log them
+        const plansWithNullAI = plansWithSteps.filter(p => p.is_ai_generated === null || p.is_ai_generated === undefined);
+        if (plansWithNullAI.length > 0) {
+          console.log('⚠️ Plans with null is_ai_generated values:', plansWithNullAI.map(p => p.title));
+          console.log('💡 These plans will not appear in either "Supported Plans" or "Manual Plans" filters');
+        }
+
+        // Debug: Show filter summary
+        if (selectedPlanType === "supported" || selectedPlanType === "manual") {
+          const supportedPlans = plansWithSteps.filter(p => p.is_ai_generated === true).length;
+          const manualPlans = plansWithSteps.filter(p => p.is_ai_generated === false).length;
+          const nullPlans = plansWithSteps.filter(p => p.is_ai_generated === null || p.is_ai_generated === undefined).length;
+          console.log(`🔍 Filter Summary - Trainer Supported: ${supportedPlans}, Manual: ${manualPlans}, Null/Undefined: ${nullPlans}`);
+          console.log(`🎯 Current Filter: ${selectedPlanType === "supported" ? "Trainer-Supported Plans" : "Manual Plans"}`);
+        }
+
+
 
 
 

@@ -6,7 +6,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { processPlanCreationFromResponse, removePlanCreationFromResponse, cleanupFailedPlanCreation, createTrainingPlan, createFallbackPlan } from './utils/planCreation.ts';
 import { getPetContext } from "./utils/petContext.ts";
 import { generateSystemPrompt } from "./utils/systemPrompt.ts";
-import { getChatHistory, saveChatMessages, summarizeChatHistory } from "./utils/chatHistory.ts";
+import { getChatHistory, saveChatMessages, getCompleteChatHistory } from "./utils/chatHistory.ts";
 import { callOpenAI } from "./utils/openai.ts";
 import { callOpenAIStreaming, processStreamingResponse } from "./utils/openaiStreaming.ts";
 import { 
@@ -45,15 +45,15 @@ const trainerTeam = [
 // Fallback responses wenn OpenAI nicht verfügbar ist
 const getFallbackResponse = (message: string, trainerName: string, petContext: string, language: string = 'de') => {
   const responses = language === 'en' ? [
-    `Hello! I'm ${trainerName}, your pet trainer. ⏱️ My AI system is currently overloaded, but I can still give you basic tips.`,
-    `That's an interesting question! As ${trainerName}, I recommend: 🎯 Patience and positive reinforcement are the key to any training.`,
-    `Thank you for your message! 💭 Although my full AI system is currently overloaded, I can tell you: Consistency in training is very important.`,
-    `As ${trainerName}, I advise you: ⭐ Short, regular training sessions (5-10 min) are often more effective than long sessions.`
+    `Hello! I'm ${trainerName}, your pet trainer. I'm currently busy but can give you some quick tips.`,
+    `That's an interesting question! As ${trainerName}, I recommend: Patience and positive reinforcement are the key to any training.`,
+    `Thank you for your message! I can tell you: Consistency in training is very important.`,
+    `As ${trainerName}, I advise you: Short, regular training sessions (5-10 min) are often more effective than long sessions.`
   ] : [
-    `Hallo! Ich bin ${trainerName}, dein Tiertrainer. ⏱️ Mein KI-System ist momentan überlastet, aber ich kann dir trotzdem grundlegende Tipps geben.`,
-    `Das ist eine interessante Frage! Als ${trainerName} empfehle ich dir: 🎯 Geduld und positive Verstärkung sind bei jedem Training das A und O.`,
-    `Danke für deine Nachricht! 💭 Obwohl mein vollständiges KI-System gerade überlastet ist, kann ich dir sagen: Konstanz beim Training ist sehr wichtig.`,
-    `Als ${trainerName} rate ich dir: ⭐ Kurze, regelmäßige Trainingseinheiten (5-10 Min) sind oft effektiver als lange Sessions.`
+    `Hallo! Ich bin ${trainerName}, dein Tiertrainer. Ich bin momentan beschäftigt, kann dir aber trotzdem grundlegende Tipps geben.`,
+    `Das ist eine interessante Frage! Als ${trainerName} empfehle ich dir: Geduld und positive Verstärkung sind bei jedem Training das A und O.`,
+    `Danke für deine Nachricht! Ich kann dir sagen: Konstanz beim Training ist sehr wichtig.`,
+    `Als ${trainerName} rate ich dir: Kurze, regelmäßige Trainingseinheiten (5-10 Min) sind oft effektiver als lange Sessions.`
   ];
   
   // Check for specific training topics and provide targeted advice
@@ -86,16 +86,16 @@ const getFallbackResponse = (message: string, trainerName: string, petContext: s
   
   if (language === 'en') {
     if (petContext) {
-      return `${randomResponse}\n\n🐾 For your pet: Reward desired behavior immediately and ignore unwanted behavior instead of punishing.${specificAdvice}\n\n💡 *Note: This is a shortened response. Our full AI system is currently overloaded - please try again in a few minutes for more detailed advice.*`;
+      return `${randomResponse}\n\nFor your pet: Reward desired behavior immediately and ignore unwanted behavior instead of punishing.${specificAdvice}\n\nNote: This is a quick response. Please try again in a few minutes for more detailed advice.`;
     }
     
-    return `${randomResponse}\n\n🎓 Basic rule: Positive reinforcement works better than punishment for all animals.${specificAdvice}\n\n💡 *Note: This is a shortened response. Our full AI system is currently overloaded.*`;
+    return `${randomResponse}\n\nBasic rule: Positive reinforcement works better than punishment for all animals.${specificAdvice}\n\nNote: This is a quick response. Please try again later for more detailed guidance.`;
   } else {
     if (petContext) {
-      return `${randomResponse}\n\n🐾 Für dein Tier gilt: Belohne erwünschtes Verhalten sofort und ignoriere unerwünschtes Verhalten, anstatt zu bestrafen.${specificAdvice}\n\n💡 *Hinweis: Dies ist eine verkürzte Antwort. Unser vollständiges KI-System ist momentan überlastet - bitte versuche es in wenigen Minuten erneut für eine detailliertere Beratung.*`;
+      return `${randomResponse}\n\nFür dein Tier gilt: Belohne erwünschtes Verhalten sofort und ignoriere unerwünschtes Verhalten, anstatt zu bestrafen.${specificAdvice}\n\nHinweis: Dies ist eine kurze Antwort. Bitte versuche es in wenigen Minuten erneut für eine detailliertere Beratung.`;
     }
     
-    return `${randomResponse}\n\n🎓 Grundregel: Positive Verstärkung funktioniert bei allen Tieren besser als Bestrafung.${specificAdvice}\n\n💡 *Hinweis: Dies ist eine verkürzte Antwort. Unser vollständiges KI-System ist momentan überlastet.*`;
+    return `${randomResponse}\n\nGrundregel: Positive Verstärkung funktioniert bei allen Tieren besser als Bestrafung.${specificAdvice}\n\nHinweis: Dies ist eine kurze Antwort. Bitte versuche es später erneut für eine detailliertere Beratung.`;
   }
 };
 
@@ -156,8 +156,40 @@ serve(async (req) => {
     const { message, sessionId, petId, trainerName, createPlan, language } = requestBody;
     
     // Check if this is a plan creation request
-    const isPlanCreationRequest = message && message.startsWith('Create plan::');
+    const continuationPhrases = [
+      // English phrases
+      'please continue our previous conversation',
+      'continue our conversation',
+      'continue the conversation',
+      'let\'s continue',
+      'go on',
+      'continue',
+      // German phrases
+      'bitte fahre mit unserem vorherigen chat fort',
+      'fahre mit unserem gespräch fort',
+      'setze unser gespräch fort',
+      'lass uns weitermachen',
+      'mach weiter',
+      'fortsetzen',
+      'weitermachen',
+      'fahre fort'
+    ];
+    const isContinuationRequest = continuationPhrases.some(phrase => 
+      message.toLowerCase().includes(phrase)
+    );
+    const isPlanCreationRequest = message && message.startsWith('Create plan::') && !isContinuationRequest;
     const planReason = isPlanCreationRequest ? message.substring(13) : null; // Remove "Create plan::" prefix
+    
+    console.log('🔍 Plan creation detection:', {
+      originalMessage: message,
+      isPlanCreationRequest,
+      planReason,
+      messageStartsWith: message?.startsWith('Create plan::'),
+      isContinuationRequest,
+      detectedContinuationPhrase: continuationPhrases.find(phrase => 
+        message.toLowerCase().includes(phrase)
+      )
+    });
     
     // Debug: Log the entire request body to see what's being received
     console.log('📨 Request body received:', {
@@ -197,7 +229,13 @@ serve(async (req) => {
     ]);
     
     const { petContext, petData } = petContextResult;
-    const chatHistory = summarizeChatHistory(rawChatHistory);
+    const chatHistory = getCompleteChatHistory(rawChatHistory);
+    
+    console.log('📚 Sending complete chat history to GPT:', {
+      totalMessages: chatHistory.length,
+      sessionId: sessionId,
+      hasHistory: chatHistory.length > 0
+    });
 
     let aiResponse;
 
@@ -216,7 +254,14 @@ serve(async (req) => {
         const isNewPet = (petChatHistory?.length || 0) === 0;
 
         // Generate simplified system prompt
-        const enhancedSystemPrompt = generateSystemPrompt(trainerName, petContext, isNewPet, petData, userLanguage);
+        const enhancedSystemPrompt = generateSystemPrompt(trainerName, petContext, isNewPet, petData, userLanguage as 'en' | 'de');
+
+        // For plan creation requests, modify the message to instruct AI to create a plan
+        let processedMessage = message;
+        if (isPlanCreationRequest && planReason) {
+          processedMessage = `Create plan::${planReason}`;
+          console.log('🔧 Plan creation detected, processed message:', processedMessage);
+        }
 
         const messages = [
           {
@@ -224,7 +269,7 @@ serve(async (req) => {
             content: enhancedSystemPrompt
           },
           ...chatHistory,
-          { role: 'user', content: message }
+          { role: 'user', content: processedMessage }
         ];
 
         // ENHANCED OpenAI Call with detailed logging and timeout handling
@@ -280,34 +325,59 @@ serve(async (req) => {
           try {
             console.log('📝 Processing plan creation request for reason:', planReason.substring(0, 100) + '...');
             
-            // Create a plan using the fallback plan creation function
-            const planData = await createFallbackPlan(
-              planReason, 
-              userLanguage, 
-              openAIApiKey
-            );
+            // First, try to extract plan from AI response if it contains [PLAN_CREATION] blocks
+            let planData = await processPlanCreationFromResponse(aiResponse, userLanguage as 'en' | 'de', openAIApiKey);
+            
+            // If no plan found in response, create one using fallback
+            if (!planData) {
+              console.log('🔄 No plan found in AI response, creating fallback plan...');
+              planData = await createFallbackPlan(
+                planReason, 
+                userLanguage as 'en' | 'de', 
+                openAIApiKey,
+                {
+                  pets: petData ? [{
+                    id: petId,
+                    name: petData.name,
+                    species: petData.species,
+                    breed: petData.breed,
+                    ageYears: petData.age,
+                    focus: petData.behavior_focus
+                  }] : [],
+                  lastActivePetId: petId,
+                  user: {
+                    goals: [planReason]
+                  }
+                }
+              );
+            }
             
             if (planData) {
               // Save the plan to the database
               await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
               
               console.log('✅ Plan created and saved successfully:', planData.title);
-              aiResponse = userLanguage === 'en' 
-                ? `🎉 **Training Plan Created Successfully!**\n\nI've created a personalized training plan for: **${planReason}**\n\n📋 **Plan Details:**\n• **Title:** ${planData.title}\n• **Modules:** ${planData.steps?.length || 0} training modules\n• **Status:** Ready to start\n\nYou can now view and follow this plan in your training dashboard. Each module includes detailed step-by-step instructions, timing guidelines, and helpful tips to ensure successful training.\n\n💡 **Next Steps:**\n1. Go to "My Pet Training" to view your new plan\n2. Start with Module 1 and progress through each step\n3. Track your progress and celebrate achievements\n\nGood luck with your training journey! 🐾`
-                : `🎉 **Trainingsplan erfolgreich erstellt!**\n\nIch habe einen personalisierten Trainingsplan erstellt für: **${planReason}**\n\n📋 **Plan-Details:**\n• **Titel:** ${planData.title}\n• **Module:** ${planData.steps?.length || 0} Trainingsmodule\n• **Status:** Bereit zum Starten\n\nDu kannst diesen Plan jetzt in deinem Trainings-Dashboard ansehen und befolgen. Jedes Modul enthält detaillierte Schritt-für-Schritt-Anweisungen, Zeitrichtlinien und hilfreiche Tipps für erfolgreiches Training.\n\n💡 **Nächste Schritte:**\n1. Gehe zu "Mein Tiertraining" um deinen neuen Plan anzusehen\n2. Beginne mit Modul 1 und arbeite dich durch jeden Schritt\n3. Verfolge deinen Fortschritt und feiere Erfolge\n\nViel Erfolg bei deinem Training! 🐾`;
+              
+              // Clean up the response to remove [PLAN_CREATION] blocks and show success message
+              aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage as 'en' | 'de', false);
             } else {
               throw new Error('Failed to create plan data');
             }
           } catch (planError) {
             console.error('❌ Plan creation failed:', planError);
-            aiResponse = userLanguage === 'en'
-              ? `❌ **Plan Creation Failed**\n\nI apologize, but I couldn't create a training plan for: **${planReason}**\n\nPlease try again with a more specific description of what you'd like to train your pet for.`
-              : `❌ **Plan-Erstellung fehlgeschlagen**\n\nEntschuldigung, aber ich konnte keinen Trainingsplan erstellen für: **${planReason}**\n\nBitte versuche es erneut mit einer spezifischeren Beschreibung dessen, was du dein Haustier trainieren möchtest.`;
+            // Clean up failed plan creation from response
+            aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage as 'en' | 'de');
           }
         } else {
-          // Normal chat - no automatic plan creation
-          // Only create plans when explicitly requested with "Create plan::"
-          console.log('💬 Processing normal chat message - no plan creation');
+          // Normal chat - check if AI response contains plan creation blocks
+          const planData = await processPlanCreationFromResponse(aiResponse, userLanguage as 'en' | 'de', openAIApiKey);
+          if (planData) {
+            console.log('📝 Found plan creation in normal chat response');
+            await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
+            aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage as 'en' | 'de', false);
+          } else {
+            console.log('💬 Processing normal chat message - no plan creation');
+          }
         }
         
       } catch (openaiError) {

@@ -31,6 +31,15 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [selectedPetFilter, setSelectedPetFilter] = useState<string>("all");
+  const [selectedPlanType, setSelectedPlanType] = useState<string>("all");
+  const [selectedPetId, setSelectedPetId] = useState<string>("all");
+
+  // Debug filter state changes
+  useEffect(() => {
+    console.log('🎯 PlansSection: selectedPetFilter changed to:', selectedPetFilter);
+    console.log('🎯 PlansSection: selectedPlanType changed to:', selectedPlanType);
+    console.log('🎯 PlansSection: selectedPetId changed to:', selectedPetId);
+  }, [selectedPetFilter, selectedPlanType, selectedPetId]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [planToDelete, setPlanToDelete] = useState<string | null>(null);
@@ -45,7 +54,8 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
   // Debug pets data when component mounts or pets change
   useEffect(() => {
     // Validate that the currently selected pet still exists
-    if (selectedPetFilter !== "all" && selectedPetFilter !== "none") {
+    // Only validate if it's a pet-specific filter (not "all", "supported", or "manual")
+    if (selectedPetFilter !== "all" && selectedPetFilter !== "supported" && selectedPetFilter !== "manual") {
       const selectedPetExists = pets.some(pet => pet.id === selectedPetFilter);
       if (!selectedPetExists && pets.length > 0) {
         setSelectedPetFilter(pets[0].id);
@@ -55,7 +65,7 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
     }
   }, [pets, selectedPetFilter]);
 
-  const { data: plansWithSteps, isLoading: plansLoading, error: plansError, refetch } = usePlansWithSteps(selectedPetFilter);
+  const { data: plansWithSteps, isLoading: plansLoading, error: plansError, refetch } = usePlansWithSteps(selectedPlanType, selectedPetId);
   const { handleTemplateSelect, handleDeletePlan } = usePlanActions(refetch);
 
   // Enhanced refetch with success notification and congratulations
@@ -158,12 +168,14 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
 
       {/* Pet Filter - Only show pet filter, no view switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-        <PetFilter 
-          pets={pets}
-          selectedPetFilter={selectedPetFilter}
-          onPetFilterChange={setSelectedPetFilter}
-          plansCount={plansWithSteps?.length || 0}
-        />
+                    <PetFilter
+              pets={pets}
+              selectedPlanType={selectedPlanType}
+              selectedPetId={selectedPetId}
+              onPlanTypeChange={setSelectedPlanType}
+              onPetChange={setSelectedPetId}
+              plansCount={plansWithSteps?.length || 0}
+            />
       </div>
 
       {/* Training Plans Grid */}

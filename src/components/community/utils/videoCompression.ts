@@ -24,6 +24,11 @@ export const compressVideo = async (
   onProgress?: (progress: CompressionProgress) => void
 ): Promise<File> => {
 
+  // Check if MediaRecorder is supported
+  if (!window.MediaRecorder) {
+    console.warn('⚠️ MediaRecorder not supported, returning original file');
+    return file;
+  }
 
   // Wenn die Datei bereits klein genug ist, keine Komprimierung nötig
   if (file.size <= options.maxSizeMB * 1024 * 1024) {
@@ -36,7 +41,14 @@ export const compressVideo = async (
     const ctx = canvas.getContext('2d');
 
     if (!ctx) {
+      console.error('❌ Canvas context not available');
       reject(new Error('Canvas context not available'));
+      return;
+    }
+
+    if (!canvas.captureStream) {
+      console.error('❌ Canvas captureStream not supported');
+      reject(new Error('Video compression not supported in this browser'));
       return;
     }
 
@@ -58,8 +70,25 @@ export const compressVideo = async (
 
       // Erstelle MediaRecorder für Komprimierung
       const stream = canvas.captureStream(30); // 30 FPS
+      
+      // Check for supported MIME types
+      const supportedTypes = [
+        'video/webm;codecs=vp9',
+        'video/webm;codecs=vp8',
+        'video/webm',
+        'video/mp4'
+      ];
+      
+      let selectedMimeType = 'video/webm';
+      for (const mimeType of supportedTypes) {
+        if (MediaRecorder.isTypeSupported(mimeType)) {
+          selectedMimeType = mimeType;
+          break;
+        }
+      }
+      
       const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'video/webm;codecs=vp9',
+        mimeType: selectedMimeType,
         videoBitsPerSecond: calculateBitrate(options.maxSizeMB, video.duration)
       });
 
@@ -74,10 +103,11 @@ export const compressVideo = async (
       mediaRecorder.onstop = () => {
         onProgress?.({ progress: 90, stage: 'finalizing' });
 
-        const compressedBlob = new Blob(chunks, { type: 'video/webm' });
+        const compressedBlob = new Blob(chunks, { type: selectedMimeType });
+        const fileExtension = selectedMimeType.includes('webm') ? 'webm' : 'mp4';
         const compressedFile = new File([compressedBlob], 
-          file.name.replace(/\.[^/.]+$/, '.webm'), 
-          { type: 'video/webm' }
+          file.name.replace(/\.[^/.]+$/, `.${fileExtension}`), 
+          { type: selectedMimeType }
         );
 
 

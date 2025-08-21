@@ -2797,11 +2797,11 @@
     "moduleDetails": {
       "showDetails": "📚 Show Module Details",
       "exerciseGoal": {
-        "title": "📌 Exercise Goal",
+        "title": "Exercise Goal",
         "description": "The animal should learn to understand basic commands and respond to them. Building a trusting relationship between animal and owner."
       },
       "stepByStep": {
-        "title": "🧭 Step-by-Step Guide",
+        "title": "Step-by-Step Guide",
         "step1": {
           "title": "Step 1",
           "description": "Prepare the training environment and ensure quiet"
@@ -2824,17 +2824,17 @@
         }
       },
       "repetition": {
-        "title": "🔁 Repetition & Duration",
+        "title": "Repetition & Duration",
         "dailyExercise": "Daily Exercise",
         "dailyExerciseValue": "3-5 minutes per session",
         "frequency": "Frequency",
         "frequencyValue": "2-3× per day",
         "duration": "Training Duration",
         "durationValue": "1-2 weeks for first progress",
-        "warning": "⚠️ Only practice when calm & motivated – no force!"
+        "warning": "Only practice when calm & motivated – no force!"
       },
       "tools": {
-        "title": "🧰 Required Tools & Framework",
+        "title": "Required Tools & Framework",
         "equipment": "Equipment",
         "treats": "Treats",
         "clicker": "Clicker (optional)",
@@ -2847,14 +2847,14 @@
         "speciesAdaptationValue": "Work quietly with cats"
       },
       "tips": {
-        "title": "🧠 Learning Tips & Motivation",
+        "title": "Learning Tips & Motivation",
         "tip1": "Stay calm, friendly and consistent",
         "tip2": "Reward even small progress visibly",
         "tip3": "Take training breaks, no constant pressure",
         "tip4": "Set early on rituals & recognition"
       },
       "mistakes": {
-        "title": "🚩 Avoid Common Mistakes",
+        "title": "Avoid Common Mistakes",
         "mistake1": "No scolding or punishment",
         "mistake2": "Increasing difficulty too quickly",
         "mistake3": "Missing reward = exercise loses appeal",

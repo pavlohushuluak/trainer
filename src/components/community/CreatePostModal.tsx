@@ -104,7 +104,7 @@ export const CreatePostModal = ({ isOpen, onClose }: CreatePostModalProps) => {
             .update({
               video_url: videoResult.videoUrl,
               video_thumbnail_url: videoResult.thumbnailUrl,
-              video_duration: videoResult.duration,
+              video_duration: Math.round(videoResult.duration || 0),
               video_size: videoResult.size
             })
             .eq('id', post.id);

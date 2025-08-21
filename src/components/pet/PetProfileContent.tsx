@@ -61,8 +61,8 @@ export const PetProfileContent = ({
     return (
       <Card>
         <CardContent className="py-8 text-center">
-          <div className="text-gray-500">
-            <Heart className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+          <div className="text-muted-foreground">
+            <Heart className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
             <p className="text-lg mb-2">{t('pets.noPets')}</p>
             <p className="text-sm">{t('pets.addFirstPet')}</p>
           </div>
@@ -99,7 +99,7 @@ export const PetProfileContent = ({
                     size="sm"
                     onClick={() => onDelete(pet.id, pet.name)}
                     disabled={petIsPending}
-                    className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-950/20"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -113,7 +113,7 @@ export const PetProfileContent = ({
             <CardContent className="space-y-3">
               {/* Age Information */}
               {(pet.age || pet.birth_date) && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4" />
                   <span>
                     {pet.birth_date 
@@ -127,11 +127,11 @@ export const PetProfileContent = ({
               {/* Behavior Focus */}
               {pet.behavior_focus && (
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <Heart className="h-4 w-4" />
                     {t('pets.behaviorFocus')}
                   </div>
-                  <p className="text-sm text-gray-600 bg-blue-50 p-2 rounded">
+                  <p className="text-sm text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-2 rounded">
                     {pet.behavior_focus}
                   </p>
                 </div>
@@ -140,17 +140,17 @@ export const PetProfileContent = ({
               {/* Notes */}
               {pet.notes && (
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <FileText className="h-4 w-4" />
                     {t('pets.notes')}
                   </div>
-                  <p className="text-sm text-gray-600 bg-gray-50 p-2 rounded">
+                  <p className="text-sm text-muted-foreground bg-muted p-2 rounded">
                     {pet.notes}
                   </p>
                 </div>
               )}
 
-              <div className="pt-2 border-t text-xs text-gray-500">
+              <div className="pt-2 border-t border-border text-xs text-muted-foreground">
                 {t('common.created')}: {formatDate(pet.created_at)}
               </div>
             </CardContent>

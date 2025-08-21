@@ -36,7 +36,7 @@ async function createTrainingPlanFromAnalysis(
            "steps": [
              {
                "title": "Module 1: [Unique Title]",
-               "description": "Exercise Goal: [What the pet should learn]\n\nStep-by-Step Guide: [Detailed instructions]\n\n🔁 Repetition & Duration:\nDaily Exercise: [time]\nFrequency: [how often]\nTraining Duration: [how long]\n⚠️ [Important note]\n\n🧰 Required Tools & Framework:\nEquipment:\n[list of items]\nLocation: [where]\nTiming: [when]\nSpecies Adaptation: [specific notes]\n\n🧠 Learning Tips & Motivation:\n• [tip 1]\n• [tip 2]\n• [tip 3]\n• [tip 4]\n\n🚩 Avoid Common Mistakes:\n❌ [mistake 1]\n❌ [mistake 2]\n❌ [mistake 3]\n❌ [mistake 4]"
+               "description": "Exercise Goal: [What the pet should learn]\n\nStep-by-Step Guide: [Detailed instructions]\n\nRepetition & Duration:\nDaily Exercise: [time]\nFrequency: [how often]\nTraining Duration: [how long]\n⚠️ [Important note]\n\nRequired Tools & Framework:\nEquipment:\n[list of items]\nLocation: [where]\nTiming: [when]\nSpecies Adaptation: [specific notes]\n\nLearning Tips & Motivation:\n• [tip 1]\n• [tip 2]\n• [tip 3]\n• [tip 4]\n\nAvoid Common Mistakes:\n❌ [mistake 1]\n❌ [mistake 2]\n❌ [mistake 3]\n❌ [mistake 4]"
              },
              {
                "title": "Module 2: [Unique Title]",
@@ -59,10 +59,10 @@ async function createTrainingPlanFromAnalysis(
          - Structure each step description with clear sections using this EXACT format:
            * Exercise Goal: What the pet should learn
            * Step-by-Step Guide: Detailed instructions
-           * 🔁 Repetition & Duration: How often and how long
-           * 🧰 Required Tools & Framework: Equipment and setup needed
-           * 🧠 Learning Tips & Motivation: Helpful advice and encouragement
-           * 🚩 Avoid Common Mistakes: What to watch out for
+           * Repetition & Duration: How often and how long
+           * Required Tools & Framework: Equipment and setup needed
+           * Learning Tips & Motivation: Helpful advice and encouragement
+           * Avoid Common Mistakes: What to watch out for
          - IMPORTANT: All sections must be included within the "description" field as a single string, not as separate JSON properties
          - CRITICAL: Do not add any text before or after the JSON object. Return ONLY the JSON.`
        : `Du bist ein Haustier-Trainingsexperte. Erstelle einen KOMPLETT EINZIGARTIGEN Trainingsplan basierend auf der Bildanalyse.
@@ -98,10 +98,10 @@ async function createTrainingPlanFromAnalysis(
          - Strukturiere jede Schrittbeschreibung mit klaren Abschnitten:
            * Übungsziel: Was das Tier lernen soll
            * Schritt-für-Schritt-Anleitung: Detaillierte Anweisungen
-           * 🔁 Wiederholung & Dauer: Wie oft und wie lange
-           * 🧰 Benötigte Tools & Rahmenbedingungen: Ausrüstung und Setup
-           * 🧠 Lerntipps & Motivation: Hilfreiche Ratschläge und Ermutigung
-           * 🚩 Häufige Fehler vermeiden: Worauf zu achten ist
+           * Wiederholung & Dauer: Wie oft und wie lange
+           * Benötigte Tools & Rahmenbedingungen: Ausrüstung und Setup
+           * Lerntipps & Motivation: Hilfreiche Ratschläge und Ermutigung
+           * Häufige Fehler vermeiden: Worauf zu achten ist
          - WICHTIG: Alle Abschnitte müssen innerhalb des "description" Feldes als einzelner String enthalten sein, nicht als separate JSON-Eigenschaften
          - KRITISCH: Füge keinen Text vor oder nach dem JSON-Objekt hinzu. Gib NUR das JSON zurück.`;
 

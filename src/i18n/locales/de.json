@@ -2801,11 +2801,11 @@
     "moduleDetails": {
       "showDetails": "📚 Modul-Details anzeigen",
       "exerciseGoal": {
-        "title": "📌 Ziel der Übung",
+        "title": "Ziel der Übung",
         "description": "Das Tier soll lernen, grundlegende Kommandos zu verstehen und darauf zu reagieren. Aufbau einer vertrauensvollen Beziehung zwischen Tier und Halter."
       },
       "stepByStep": {
-        "title": "🧭 Schritt-für-Schritt-Anleitung",
+        "title": "Schritt-für-Schritt-Anleitung",
         "step1": {
           "title": "Schritt 1",
           "description": "Bereiten Sie die Trainingsumgebung vor und sorgen Sie für Ruhe"
@@ -2828,17 +2828,17 @@
         }
       },
       "repetition": {
-        "title": "🔁 Wiederholung & Dauer",
+        "title": "Wiederholung & Dauer",
         "dailyExercise": "Tägliche Übung",
         "dailyExerciseValue": "3-5 Minuten je Session",
         "frequency": "Häufigkeit",
         "frequencyValue": "2-3× pro Tag",
         "duration": "Trainingsdauer",
         "durationValue": "1-2 Wochen für erste Fortschritte",
-        "warning": "⚠️ Nur bei Ruhe & Motivation üben – kein Zwang!"
+        "warning": "Nur bei Ruhe & Motivation üben – kein Zwang!"
       },
       "tools": {
-        "title": "🧰 Benötigte Tools & Rahmenbedingungen",
+        "title": "Benötigte Tools & Rahmenbedingungen",
         "equipment": "Equipment",
         "treats": "Leckerli",
         "clicker": "Clicker (optional)",
@@ -2851,14 +2851,14 @@
         "speciesAdaptationValue": "Bei Katzen leise arbeiten"
       },
       "tips": {
-        "title": "🧠 Lerntipps & Motivation",
+        "title": "Lerntipps & Motivation",
         "tip1": "Bleibe ruhig, freundlich und konsequent",
         "tip2": "Belohne auch kleine Fortschritte sichtbar",
         "tip3": "Trainingspausen einhalten, kein Dauerdruck",
         "tip4": "Setze früh auf Rituale & Wiedererkennung"
       },
       "mistakes": {
-        "title": "🚩 Typische Fehler vermeiden",
+        "title": "Typische Fehler vermeiden",
         "mistake1": "Kein Schimpfen oder Strafen",
         "mistake2": "Zu schnelles Steigern der Schwierigkeit",
         "mistake3": "Fehlende Belohnung = Übung verliert Reiz",

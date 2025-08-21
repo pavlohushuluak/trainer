@@ -414,21 +414,6 @@ export const PostCard = ({ post }: PostCardProps) => {
                   </div>
                 )}
               </div>
-              
-              {post.video_size && (
-                <div className="text-center text-xs text-muted-foreground mt-2">
-                  <span className="hidden sm:inline">
-                    {t('community.postCard.video.fileSize', { size: (post.video_size / (1024 * 1024)).toFixed(1) })}
-                    {post.video_thumbnail_url && (
-                      <span className="ml-2">{t('community.postCard.video.withThumbnail')}</span>
-                    )}
-                  </span>
-                  <span className="sm:hidden">
-                    {(post.video_size / (1024 * 1024)).toFixed(1)}MB
-                    {post.video_thumbnail_url && " + thumb"}
-                  </span>
-                </div>
-              )}
             </div>
           )}
 

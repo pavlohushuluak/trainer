@@ -33,29 +33,29 @@ export const VideoCompressionProgress = ({
     <Card className="w-full max-w-md mx-auto">
       <CardContent className="p-6">
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+          <div className="flex items-center justify-center w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full">
             {progress.progress < 100 ? (
-              <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />
+              <Loader2 className="h-5 w-5 text-blue-600 dark:text-blue-400 animate-spin" />
             ) : (
-              <Video className="h-5 w-5 text-blue-600" />
+              <Video className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             )}
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-gray-900">{t('community.videoUpload.compressionProgress.title')}</h3>
-            <p className="text-sm text-gray-600 truncate">{fileName}</p>
+            <h3 className="font-medium text-foreground">{t('community.videoUpload.compressionProgress.title')}</h3>
+            <p className="text-sm text-muted-foreground truncate">{fileName}</p>
           </div>
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">{getStageText(progress.stage)}</span>
-            <span className="text-gray-900 font-medium">{Math.round(progress.progress)}%</span>
+            <span className="text-muted-foreground">{getStageText(progress.stage)}</span>
+            <span className="text-foreground font-medium">{Math.round(progress.progress)}%</span>
           </div>
           <Progress value={progress.progress} className="h-2" />
         </div>
 
         {progress.stage === 'compressing' && (
-          <p className="text-xs text-gray-500 mt-3 text-center">
+          <p className="text-xs text-muted-foreground mt-3 text-center">
             {t('community.videoUpload.compressionProgress.timeNote')}
           </p>
         )}

@@ -33,7 +33,8 @@ export const usePlanActions = (refetch: () => void) => {
           description: template.description,
           user_id: user.id,
           pet_id: selectedPetId === 'none' ? null : selectedPetId,
-          status: 'planned'
+          status: 'planned',
+          is_ai_generated: false // Explicitly mark as manual plan (template-based)
         })
         .select()
         .single();

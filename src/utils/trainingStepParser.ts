@@ -23,10 +23,10 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
   let preProcessed = content
     .replace(/\s*(Exercise Goal:)/gi, "\n$1")
     .replace(/\s*(Step-by-Step Guide:)/gi, "\n$1")
-    .replace(/\s*(🔁 Repetition & Duration:)/gi, "\n$1")
-    .replace(/\s*(🧰 Required Tools & Framework:)/gi, "\n$1")
-    .replace(/\s*(🧠 Learning Tips & Motivation:)/gi, "\n$1")
-    .replace(/\s*(🚩 Avoid Common Mistakes:)/gi, "\n$1");
+    .replace(/\s*(Repetition & Duration:)/gi, "\n$1")
+    .replace(/\s*(Required Tools & Framework:)/gi, "\n$1")
+    .replace(/\s*(Learning Tips & Motivation:)/gi, "\n$1")
+    .replace(/\s*(Avoid Common Mistakes:)/gi, "\n$1");
 
   // Split content into lines and clean them
   const lines = preProcessed
@@ -60,7 +60,7 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
       continue;
     }
 
-    if (lowerLine.startsWith("🔁 repetition & duration:")) {
+    if (lowerLine.startsWith("repetition & duration:")) {
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }
@@ -69,7 +69,7 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
       continue;
     }
 
-    if (lowerLine.startsWith("🧰 required tools & framework:")) {
+    if (lowerLine.startsWith("required tools & framework:")) {
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }
@@ -78,7 +78,7 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
       continue;
     }
 
-    if (lowerLine.startsWith("🧠 learning tips & motivation:")) {
+    if (lowerLine.startsWith("learning tips & motivation:")) {
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }
@@ -87,7 +87,7 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
       continue;
     }
 
-    if (lowerLine.startsWith("🚩 avoid common mistakes:")) {
+    if (lowerLine.startsWith("avoid common mistakes:")) {
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }

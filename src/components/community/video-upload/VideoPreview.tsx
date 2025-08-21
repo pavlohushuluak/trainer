@@ -53,8 +53,8 @@ export const VideoPreview = ({
           onClick={togglePlayPause}
         >
           {!isPlaying && (
-            <div className="bg-white bg-opacity-80 rounded-full p-3">
-              <Play className="h-8 w-8 text-gray-800" />
+            <div className="bg-white bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-full p-3">
+              <Play className="h-8 w-8 text-gray-800 dark:text-gray-200" />
             </div>
           )}
         </div>
@@ -71,14 +71,14 @@ export const VideoPreview = ({
         </Button>
       </div>
 
-      <div className="text-center text-sm text-gray-600">
+      <div className="text-center text-sm text-muted-foreground">
         <p className="font-medium">{selectedVideo.name}</p>
         <div className="flex items-center justify-center gap-2">
           <span>{(selectedVideo.size / (1024 * 1024)).toFixed(2)} MB</span>
           {originalFileSize && originalFileSize > selectedVideo.size && (
             <>
-              <span className="text-gray-400">•</span>
-              <div className="flex items-center gap-1 text-green-600">
+              <span className="text-muted-foreground/60">•</span>
+              <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
                 <Zap className="h-3 w-3" />
                 <span className="text-xs">
                   {t('community.videoUpload.preview.compressed', { percent: ((originalFileSize - selectedVideo.size) / originalFileSize * 100).toFixed(0) })}

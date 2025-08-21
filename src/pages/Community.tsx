@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle, Users, MessageCircle, Heart } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useTranslations } from "@/hooks/useTranslations";
-import { MainLayout } from "@/components/layout/MainLayout";
 
 const Community = () => {
   const [showCreatePost, setShowCreatePost] = useState(false);
@@ -27,7 +26,7 @@ const Community = () => {
 
   return (
     <ProtectedRoute>
-      <MainLayout>
+      <div>
         <div className="container mx-auto px-4 py-4 sm:py-8 max-w-4xl">
           {/* Header */}
           <div className="mb-6 sm:mb-8">
@@ -101,7 +100,7 @@ const Community = () => {
           onClose={() => setShowCreatePost(false)}
         />
       </div>
-    </MainLayout>
+    </div>
     </ProtectedRoute>
   );
 };
