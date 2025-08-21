@@ -10,7 +10,7 @@
  *  Configuration
  * ========================= */
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-const MODEL_DEFAULT = "gpt-5-mini";
+const MODEL_DEFAULT = "gpt-5";
 const MAX_COMPLETION_TOKENS = 5000;
 const DEFAULT_STEP_POINTS = 15;
 
