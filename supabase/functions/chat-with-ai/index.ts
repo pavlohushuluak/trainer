@@ -412,8 +412,8 @@ serve(async (req) => {
               needsRegeneration: qualityEvaluation.needsRegeneration
             });
 
-            if (qualityEvaluation.needsRegeneration) {
-              console.log('🔄 Response quality below 9.5, starting continuous quality assurance loop...');
+                         if (qualityEvaluation.needsRegeneration) {
+               console.log('🔄 Response quality below 10.0, starting continuous quality assurance loop...');
               
               const regeneratedResponse = await regenerateResponse(
                 message,
@@ -430,9 +430,9 @@ serve(async (req) => {
               aiResponse = cleanAIResponse(regeneratedResponse);
               
               console.log('✅ Continuous quality assurance loop completed - final response ready');
-            } else {
-              console.log('✅ Response quality meets standards (score:', qualityEvaluation.score, ')');
-            }
+                         } else {
+               console.log('✅ Response quality meets perfect standards (score:', qualityEvaluation.score, ')');
+             }
           } catch (qaError) {
             console.error('❌ Quality assurance failed, using original response:', qaError);
             // Continue with original response if QA fails - always ensure user gets a response
@@ -473,8 +473,8 @@ serve(async (req) => {
                     needsRegeneration: qualityEvaluation.needsRegeneration
                   });
 
-                  if (qualityEvaluation.needsRegeneration) {
-                    console.log('🔄 Fallback response quality below 9.5, starting continuous quality assurance loop...');
+                                   if (qualityEvaluation.needsRegeneration) {
+                   console.log('🔄 Fallback response quality below 10.0, starting continuous quality assurance loop...');
                     
                     const regeneratedResponse = await regenerateResponse(
                       message,

@@ -64,7 +64,7 @@ Respond with ONLY a JSON object in this exact format:
 {
   "score": [number 0-10 with decimal precision],
   "feedback": "[detailed explanation of score with specific areas for improvement]",
-  "needsRegeneration": [true if score < 9.5, false if score >= 9.5]
+  "needsRegeneration": [true if score < 10.0, false if score >= 10.0]
 }`
 
     : `Du bist ein Senior-Qualitätssicherungsexperte, der Antworten von Experten-Tiertrainern bewertet. Du hast 20+ Jahre Erfahrung in professionellem Tiertraining und Verhaltensberatung. Bewerte diese Trainer-Antwort gegen EXPERTEN-TOP-TRAINER-Standards (10/10 = weltklasse Expertenniveau).
@@ -113,7 +113,7 @@ Antworte NUR mit einem JSON-Objekt in diesem exakten Format:
 {
   "score": [Zahl 0-10 mit Dezimalpräzision],
   "feedback": "[detaillierte Erklärung der Bewertung mit spezifischen Verbesserungsbereichen]",
-  "needsRegeneration": [true wenn Bewertung < 9.5, false wenn Bewertung >= 9.5]
+     "needsRegeneration": [true wenn Bewertung < 10.0, false wenn Bewertung >= 10.0]
 }`;
 
   try {
@@ -189,7 +189,7 @@ export async function regenerateResponse(
   qualityFeedback: string
 ): Promise<string> {
   let regenerationPrompt = language === 'en'
-    ? `The previous response to this question was rated below 9.5/10 for quality. You must provide a PERFECT 10/10 EXPERT-LEVEL response that meets world-class trainer standards.
+         ? `The previous response to this question was rated below 10.0/10 for quality. You must provide a PERFECT 10/10 EXPERT-LEVEL response that meets world-class trainer standards.
 
 ORIGINAL USER QUESTION: "${userMessage}"
 PET CONTEXT: "${petContext}"
@@ -234,7 +234,7 @@ This must be a PERFECT 10/10 response that would impress even the most experienc
 
 Respond with ONLY the perfect expert-level response, no explanations or meta-commentary.`
 
-    : `Die vorherige Antwort auf diese Frage wurde mit unter 9,5/10 bewertet. Du musst eine PERFEKTE 10/10 EXPERTEN-LEVEL Antwort geben, die weltklasse Trainer-Standards erfüllt.
+         : `Die vorherige Antwort auf diese Frage wurde mit unter 10,0/10 bewertet. Du musst eine PERFEKTE 10/10 EXPERTEN-LEVEL Antwort geben, die weltklasse Trainer-Standards erfüllt.
 
 ORIGINALE NUTZERFRAGE: "${userMessage}"
 TIER-KONTEXT: "${petContext}"
@@ -282,7 +282,7 @@ Antworte NUR mit der perfekten Experten-Level Antwort, keine Erklärungen oder M
   let currentResponse = originalResponse;
   let currentFeedback = qualityFeedback;
   let attemptCount = 0;
-  const maxAttempts = 3; // Prevent infinite loops
+     const maxAttempts = 1; // Limit to 2 regeneration attempts
 
   while (attemptCount < maxAttempts) {
     try {
@@ -331,11 +331,11 @@ Antworte NUR mit der perfekten Experten-Level Antwort, keine Erklärungen oder M
         openAIApiKey
       );
 
-      console.log(`Regeneration attempt ${attemptCount + 1}: Score ${qualityEvaluation.score}/10 - ${qualityEvaluation.feedback}`);
+             console.log(`Regeneration attempt ${attemptCount + 1}/2: Score ${qualityEvaluation.score}/10 - ${qualityEvaluation.feedback}`);
 
-             // If score is >= 9.5, we're done
-       if (qualityEvaluation.score >= 9.5) {
-         console.log(`Perfect response achieved after ${attemptCount + 1} attempts!`);
+             // If score is >= 10.0, we're done
+       if (qualityEvaluation.score >= 10.0) {
+         console.log(`Perfect 10/10 response achieved after ${attemptCount + 1}/2 attempts!`);
          return regeneratedResponse;
        }
 
@@ -346,7 +346,7 @@ Antworte NUR mit der perfekten Experten-Level Antwort, keine Erklärungen oder M
              // If we haven't reached max attempts, prepare for next iteration
        if (attemptCount < maxAttempts - 1) {
         
-                 // Update the regeneration prompt with new feedback
+                 // Update the regeneration prompt with new feedback for perfect 10/10
          regenerationPrompt = language === 'en'
            ? `The previous response to this question was rated ${qualityEvaluation.score}/10 for quality. You must provide a PERFECT 10/10 EXPERT-LEVEL response that meets world-class trainer standards.
 
@@ -447,7 +447,7 @@ Antworte NUR mit der perfekten Experten-Level Antwort, keine Erklärungen oder M
     }
   }
 
-     // Always return the final response, even if it doesn't meet the target score
-   console.log(`Quality assurance loop completed after ${attemptCount} attempts. Final score: ${currentResponse ? 'Evaluated' : 'Not evaluated'}. Returning final response.`);
+     // Return the final response after 2 attempts, even if it doesn't achieve perfect 10/10
+   console.log(`Quality assurance loop completed after ${attemptCount} attempts. Final response ready (may not be perfect 10/10).`);
    return currentResponse;
 }
