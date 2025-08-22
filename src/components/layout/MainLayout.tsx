@@ -345,8 +345,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       {/* Footer */}
       {showFooter && !isChatPage && <Footer />}
       
-      {/* Support Button - Hide on Index page and Chat page */}
-      {showSupportButton && !isIndexPage && !isChatPage && <SupportButton />}
+      {/* Support Button - Show on all pages for premium users */}
+      <SupportButton />
     </div>
   );
 }; 

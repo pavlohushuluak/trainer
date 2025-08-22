@@ -2,9 +2,14 @@
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import { useTranslations } from "@/hooks/useTranslations";
+import { useAuth } from "@/hooks/useAuth";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 
 export const StickyPremiumButton = () => {
   const { t } = useTranslations();
+  const { user } = useAuth();
+  const { hasActiveSubscription } = useSubscriptionStatus();
+
   const scrollToPricingCards = () => {
     // Use requestAnimationFrame to ensure smooth scrolling
     requestAnimationFrame(() => {
@@ -63,6 +68,12 @@ export const StickyPremiumButton = () => {
     });
   };
 
+  // Only show for free users or non-logged in users
+  if (user && hasActiveSubscription) {
+    return null; // Don't show anything for premium users
+  }
+
+  // For free users or non-logged in users, show Start Premium Now button
   return (
     <div className="fixed bottom-4 right-4 z-50 animate-fade-in-up">
       <Button 

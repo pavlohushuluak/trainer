@@ -117,7 +117,7 @@ Always answer in English and with maximum 200 words. Offer concrete, actionable 
     let openaiResponse;
     try {
       // Try GPT-5-mini first, fallback to GPT-4o if it fails
-      const models = ["gpt-5-mini"];
+      const models = ["gpt-5"];
       let lastError: string | null = null;
       
       for (const model of models) {
