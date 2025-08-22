@@ -114,6 +114,7 @@ export const ChatPage = () => {
   const [hasStartedChat, setHasStartedChat] = useState(false);
   const [isContinuingChat, setIsContinuingChat] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Load chat sessions on component mount
   useEffect(() => {
@@ -575,6 +576,10 @@ export const ChatPage = () => {
       });
     } finally {
       setIsSending(false);
+      // Restore focus to input field after sending message
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
     }
   };
 
@@ -711,6 +716,10 @@ export const ChatPage = () => {
       });
     } finally {
       setIsCreatingPlan(false);
+      // Restore focus to input field after creating plan
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
     }
   };
 
@@ -1165,6 +1174,7 @@ export const ChatPage = () => {
                     {hasStartedChat && messages.length > 0 ? (
                       <div className="flex space-x-2">
                         <Input
+                          ref={inputRef}
                           placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
@@ -1216,6 +1226,7 @@ export const ChatPage = () => {
                       // Show normal input for new chats (no existing messages)
                       <div className="flex space-x-2">
                         <Input
+                          ref={inputRef}
                           placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
