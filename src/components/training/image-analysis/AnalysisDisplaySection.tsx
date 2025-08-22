@@ -1,7 +1,6 @@
 
 import { Button } from '@/components/ui/button';
 import { ImageAnalysisResult } from './ImageAnalysisResult';
-import { TrainingPlanPreview } from './TrainingPlanPreview';
 import { RotateCcw } from 'lucide-react';
 import { useTranslations } from '@/hooks/useTranslations';
 
@@ -14,11 +13,9 @@ interface Pet {
 interface AnalysisDisplaySectionProps {
   selectedPet?: Pet;
   analysisResult: any;
-  trainingPlan: any;
-  showPlan: boolean;
+  isCreatingPlan?: boolean;
   onCreatePlan: () => void;
   onSaveAnalysis: () => void;
-  onSavePlan: () => void;
   onStartOver: () => void;
   onPlanCreated?: (plan: any) => void;
 }
@@ -26,11 +23,9 @@ interface AnalysisDisplaySectionProps {
 export const AnalysisDisplaySection = ({
   selectedPet,
   analysisResult,
-  trainingPlan,
-  showPlan,
+  isCreatingPlan,
   onCreatePlan,
   onSaveAnalysis,
-  onSavePlan,
   onStartOver,
   onPlanCreated
 }: AnalysisDisplaySectionProps) => {
@@ -64,17 +59,11 @@ export const AnalysisDisplaySection = ({
 
       <ImageAnalysisResult 
         result={analysisResult}
+        isCreatingPlan={isCreatingPlan}
         onCreatePlan={onCreatePlan}
         onSaveAnalysis={onSaveAnalysis}
         onPlanCreated={onPlanCreated}
       />
-
-      {showPlan && trainingPlan && (
-        <TrainingPlanPreview 
-          plan={trainingPlan}
-          onSavePlan={onSavePlan}
-        />
-      )}
     </div>
   );
 };

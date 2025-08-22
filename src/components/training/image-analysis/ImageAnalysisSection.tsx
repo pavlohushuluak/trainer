@@ -29,12 +29,10 @@ export const ImageAnalysisSection = ({ selectedPet, onPlanCreated }: ImageAnalys
   
   const {
     analysisResult,
-    trainingPlan,
-    showPlan,
     analysisPet,
+    isCreatingPlan,
     handleUploadComplete,
     handleCreatePlan,
-    handleSavePlan,
     handleSaveAnalysis,
     handleStartOver
   } = useImageAnalysisLogic(selectedPet, onPlanCreated);
@@ -85,11 +83,9 @@ export const ImageAnalysisSection = ({ selectedPet, onPlanCreated }: ImageAnalys
         <AnalysisDisplaySection
           selectedPet={analysisPet || selectedPet}
           analysisResult={analysisResult}
-          trainingPlan={trainingPlan}
-          showPlan={showPlan}
+          isCreatingPlan={isCreatingPlan}
           onCreatePlan={handleCreatePlan}
           onSaveAnalysis={handleSaveAnalysis}
-          onSavePlan={handleSavePlan}
           onStartOver={handleStartOver}
         />
       )}

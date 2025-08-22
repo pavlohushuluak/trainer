@@ -18,12 +18,13 @@ interface AnalysisResult {
 
 interface ImageAnalysisResultProps {
   result: AnalysisResult;
+  isCreatingPlan?: boolean;
   onCreatePlan?: () => void;
   onSaveAnalysis?: () => void;
   onPlanCreated?: (plan: any) => void;
 }
 
-export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis, onPlanCreated }: ImageAnalysisResultProps) => {
+export const ImageAnalysisResult = ({ result, isCreatingPlan, onCreatePlan, onSaveAnalysis, onPlanCreated }: ImageAnalysisResultProps) => {
   const { currentLanguage } = useTranslations();
 
   // Language-specific translations
@@ -219,13 +220,31 @@ export const ImageAnalysisResult = ({ result, onCreatePlan, onSaveAnalysis, onPl
             ) : (
               <>
                 {onCreatePlan && (
-                  <Button onClick={onCreatePlan} className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white text-sm sm:text-base min-h-[44px]">
-                    <Target className="h-4 w-4 mr-2 flex-shrink-0" />
-                    {t.createTrainingPlan}
+                  <Button 
+                    onClick={onCreatePlan} 
+                    disabled={isCreatingPlan}
+                    className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white text-sm sm:text-base min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isCreatingPlan ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        {currentLanguage === 'en' ? 'Creating Plan...' : 'Plan wird erstellt...'}
+                      </>
+                    ) : (
+                      <>
+                        <Target className="h-4 w-4 mr-2 flex-shrink-0" />
+                        {t.createTrainingPlan}
+                      </>
+                    )}
                   </Button>
                 )}
                 {onSaveAnalysis && (
-                  <Button variant="outline" onClick={onSaveAnalysis} className="text-sm sm:text-base min-h-[44px]">
+                  <Button 
+                    variant="outline" 
+                    onClick={onSaveAnalysis} 
+                    disabled={isCreatingPlan}
+                    className="text-sm sm:text-base min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     💾 {t.saveAnalysis}
                   </Button>
                 )}

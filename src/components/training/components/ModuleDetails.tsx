@@ -15,6 +15,7 @@ export const ModuleDetails = ({ step }: ModuleDetailsProps) => {
   
   // Get structured content from database fields based on language
   const getStructuredContent = () => {
+    console.log('step', step);
     // First try to get structured content from database fields
     const structuredContent = {
       exerciseGoal: step.exercise_goal_en || step.exercise_goal || '',

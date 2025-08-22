@@ -116,10 +116,10 @@ export function cleanStructuredResponse(text: string): string {
   // Remove links but keep the text
   cleaned = cleaned.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
 
-  // Remove headers but preserve the text content
+  // Remove headers but preserve the text content with proper spacing
   cleaned = cleaned.replace(/^#{1,6}\s+/gm, '');
 
-  // Remove list markers but preserve content and structure
+  // Remove list markers but preserve content and structure with proper spacing
   cleaned = cleaned.replace(/^[\s]*[-*+•◦‣⁃]\s+/gm, '');
   cleaned = cleaned.replace(/^[\s]*(\d+\.)\s+/gm, '$1 ');
   cleaned = cleaned.replace(/^[\s]*([0-9]+\))\s+/gm, '$1 ');
@@ -138,13 +138,13 @@ export function cleanStructuredResponse(text: string): string {
   cleaned = cleaned.replace(/([.!?])\s*([A-Z])/g, '$1 $2');
   cleaned = cleaned.replace(/([.!?])\s*([a-z])/g, '$1 $2');
 
-  // Normalize spacing while preserving structure
-  cleaned = cleaned.replace(/\s+/g, ' ');
-  cleaned = cleaned.replace(/\n\s+/g, '\n');
-  cleaned = cleaned.replace(/\n\n\n+/g, '\n\n');
+  // Normalize spacing while preserving structure - be more careful
+  cleaned = cleaned.replace(/\n\s+/g, '\n'); // Remove leading spaces after line breaks
+  cleaned = cleaned.replace(/\n\n\n+/g, '\n\n'); // Ensure consistent paragraph breaks
+  cleaned = cleaned.replace(/^\s+|\s+$/g, ''); // Final trim
 
-  // Final cleanup
-  cleaned = cleaned.replace(/^\s+|\s+$/g, '');
+  // Preserve line breaks for better readability
+  cleaned = cleaned.replace(/\n\s*\n/g, '\n\n'); // Normalize paragraph breaks
 
   return cleaned.trim();
 }

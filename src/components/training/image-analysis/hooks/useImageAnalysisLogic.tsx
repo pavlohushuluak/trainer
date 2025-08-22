@@ -15,9 +15,8 @@ interface Pet {
 
 export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => void) => {
   const [analysisResult, setAnalysisResult] = useState<any>(null);
-  const [trainingPlan, setTrainingPlan] = useState<any>(null);
-  const [showPlan, setShowPlan] = useState(false);
   const [analysisPet, setAnalysisPet] = useState<Pet | null>(null);
+  const [isCreatingPlan, setIsCreatingPlan] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const { currentLanguage, t } = useTranslations();
@@ -27,97 +26,10 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const handleUploadComplete = async (result: any, pet?: Pet) => {
     setAnalysisResult(result);
     setAnalysisPet(pet || selectedPet || null);
-    setShowPlan(false);
-    setTrainingPlan(null);
   };
 
   const handleCreatePlan = async () => {
-    if (!analysisResult) return;
-
-    const petName = analysisPet?.name || selectedPet?.name || (currentLanguage === 'en' ? 'your pet' : 'dein Tier');
-    
-    // Language-specific training plan content
-    const planContent = {
-      de: {
-        title: `${analysisResult.recommendation} - Training für ${petName}`,
-        description: `Basierend auf der Bildanalyse: ${analysisResult.mood_estimation}`,
-        goals: [
-          t('training.imageAnalysis.logic.trainingPlan.goals.relaxed', { petName }),
-          t('training.imageAnalysis.logic.trainingPlan.goals.bonding'),
-          t('training.imageAnalysis.logic.trainingPlan.goals.wellbeing')
-        ],
-        steps: [
-          {
-            title: t('training.imageAnalysis.logic.trainingPlan.steps.observation.title'),
-            description: t('training.imageAnalysis.logic.trainingPlan.steps.observation.description', { petName }),
-            duration_minutes: 10,
-            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.observation.difficulty')
-          },
-          {
-            title: t('training.imageAnalysis.logic.trainingPlan.steps.targeted.title'),
-            description: analysisResult.recommendation,
-            duration_minutes: 15,
-            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.targeted.difficulty')
-          },
-          {
-            title: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.title'),
-            description: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.description', { petName }),
-            duration_minutes: 5,
-            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.difficulty')
-          }
-        ]
-      },
-      en: {
-        title: `${analysisResult.recommendation} - Training for ${petName}`,
-        description: `Based on image analysis: ${analysisResult.mood_estimation}`,
-        goals: [
-          t('training.imageAnalysis.logic.trainingPlan.goals.relaxed', { petName }),
-          t('training.imageAnalysis.logic.trainingPlan.goals.bonding'),
-          t('training.imageAnalysis.logic.trainingPlan.goals.wellbeing')
-        ],
-        steps: [
-          {
-            title: t('training.imageAnalysis.logic.trainingPlan.steps.observation.title'),
-            description: t('training.imageAnalysis.logic.trainingPlan.steps.observation.description', { petName }),
-            duration_minutes: 10,
-            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.observation.difficulty')
-          },
-          {
-            title: t('training.imageAnalysis.logic.trainingPlan.steps.targeted.title'),
-            description: analysisResult.recommendation,
-            duration_minutes: 15,
-            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.targeted.difficulty')
-          },
-          {
-            title: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.title'),
-            description: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.description', { petName }),
-            duration_minutes: 5,
-            difficulty: t('training.imageAnalysis.logic.trainingPlan.steps.reinforcement.difficulty')
-          }
-        ]
-      }
-    };
-
-    const content = planContent[currentLanguage as keyof typeof planContent] || planContent.de;
-    
-    try {
-      const planData = {
-        title: content.title,
-        description: content.description,
-        goals: content.goals,
-        steps: content.steps,
-        estimated_days: 7
-      };
-
-      setTrainingPlan(planData);
-      setShowPlan(true);
-    } catch (error) {
-      console.error('Error creating training plan:', error);
-    }
-  };
-
-  const handleSavePlan = async () => {
-    if (!trainingPlan || !user) return;
+    if (!analysisResult || !user) return;
 
     const petToUse = analysisPet || selectedPet;
     
@@ -130,58 +42,150 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
       return;
     }
 
+    setIsCreatingPlan(true);
+
     try {
-      const { data: plan, error: planError } = await supabase
-        .from('training_plans')
-        .insert({
-          user_id: user.id,
-          pet_id: petToUse.id,
-          title: trainingPlan.title,
-          description: trainingPlan.description,
-          status: 'planned',
-          is_ai_generated: true // Mark as AI-generated (from image analysis)
-        })
-        .select()
-        .single();
-
-      if (planError) throw planError;
-
-      const stepsToInsert = trainingPlan.steps.map((step: any, index: number) => ({
-        training_plan_id: plan.id,
-        step_number: index + 1,
-        title: step.title,
-        description: step.description,
-        points_reward: 15
-      }));
-
-      const { error: stepsError } = await supabase
-        .from('training_steps')
-        .insert(stepsToInsert);
-
-      if (stepsError) throw stepsError;
-
+      // Show loading state with proper translations
+      const loadingMessages = {
+        de: {
+          title: 'Trainingsplan wird erstellt...',
+          description: 'Bitte warten Sie, während wir Ihren personalisierten Plan erstellen.'
+        },
+        en: {
+          title: 'Creating training plan...',
+          description: 'Please wait while we generate your personalized plan.'
+        }
+      };
+      
+      const loadingT = loadingMessages[currentLanguage as keyof typeof loadingMessages] || loadingMessages.de;
+      
       toast({
-        title: t('training.imageAnalysis.logic.planSaved.title'),
-        description: t('training.imageAnalysis.logic.planSaved.description'),
+        title: loadingT.title,
+        description: loadingT.description,
       });
 
-      // Invalidate training plans query to refresh the list
-      queryClient.invalidateQueries({ queryKey: ['training-plans-with-steps'] });
+      // Call the analyze-animal-image function with createPlan=true
+      console.log('🌍 Frontend - Sending language:', currentLanguage);
+      console.log('🌍 Frontend - User ID:', user.id);
+      console.log('🌍 Frontend - Pet ID:', petToUse.id);
       
-      if (onPlanCreated) onPlanCreated();
-      
-      // Reset the analysis view after saving plan
-      setShowPlan(false);
-      setTrainingPlan(null);
+      const { data: result, error } = await supabase.functions.invoke('analyze-animal-image', {
+        body: {
+          image: analysisResult.original_image, // Use the original image from analysis result
+          petName: petToUse.name,
+          petSpecies: petToUse.species,
+          language: currentLanguage,
+          createPlan: true,
+          userId: user.id,
+          petId: petToUse.id
+        }
+      });
+
+      if (error) {
+        console.error('Edge Function error details:', error);
+        throw new Error(`Edge Function error: ${error.message || 'Unknown error'}`);
+      }
+
+      if (!result) {
+        throw new Error('No response from analyze-animal-image function');
+      }
+
+      console.log('Plan creation response:', result);
+
+      if (result.plan_creation_success && result.created_plan) {
+        // Plan was created successfully
+        const successMessages = {
+          de: {
+            title: 'Trainingsplan erstellt!',
+            description: `"${result.created_plan.title}" wurde in Ihren Trainingsplänen gespeichert.`
+          },
+          en: {
+            title: 'Training plan created!',
+            description: `"${result.created_plan.title}" has been saved to your training plans.`
+          }
+        };
+        
+        const successT = successMessages[currentLanguage as keyof typeof successMessages] || successMessages.de;
+        
+        toast({
+          title: successT.title,
+          description: successT.description,
+        });
+
+        // Invalidate training plans query to refresh the list
+        queryClient.invalidateQueries({ queryKey: ['training-plans-with-steps'] });
+        
+        if (onPlanCreated) onPlanCreated();
+        
+        // Reset the analysis view after creating plan
+        // No need to reset since we don't show plan preview anymore
+      } else if (result.plan_creation_error) {
+        // Plan creation failed
+        const errorMessages = {
+          de: {
+            title: 'Plan-Erstellung fehlgeschlagen',
+            description: result.plan_creation_error
+          },
+          en: {
+            title: 'Plan creation failed',
+            description: result.plan_creation_error
+          }
+        };
+        
+        const errorT = errorMessages[currentLanguage as keyof typeof errorMessages] || errorMessages.de;
+        
+        toast({
+          title: errorT.title,
+          description: errorT.description,
+          variant: "destructive"
+        });
+      } else {
+        // Unexpected response
+        const unexpectedMessages = {
+          de: {
+            title: 'Unerwartete Antwort',
+            description: 'Bitte versuchen Sie, den Plan erneut zu erstellen.'
+          },
+          en: {
+            title: 'Unexpected response',
+            description: 'Please try creating the plan again.'
+          }
+        };
+        
+        const unexpectedT = unexpectedMessages[currentLanguage as keyof typeof unexpectedMessages] || unexpectedMessages.de;
+        
+        toast({
+          title: unexpectedT.title,
+          description: unexpectedT.description,
+          variant: "destructive"
+        });
+      }
     } catch (error) {
-      console.error('Error saving plan:', error);
+      console.error('Error creating training plan:', error);
+      const catchErrorMessages = {
+        de: {
+          title: 'Fehler beim Erstellen des Plans',
+          description: 'Beim Erstellen Ihres Trainingsplans ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.'
+        },
+        en: {
+          title: 'Error creating plan',
+          description: 'There was an error creating your training plan. Please try again.'
+        }
+      };
+      
+      const catchErrorT = catchErrorMessages[currentLanguage as keyof typeof catchErrorMessages] || catchErrorMessages.de;
+      
       toast({
-        title: t('training.imageAnalysis.logic.savePlanError.title'),
-        description: t('training.imageAnalysis.logic.savePlanError.description'),
+        title: catchErrorT.title,
+        description: catchErrorT.description,
         variant: "destructive"
       });
+    } finally {
+      setIsCreatingPlan(false);
     }
   };
+
+  // handleSavePlan function removed - no longer needed since plans are created directly via API
 
   const handleSaveAnalysis = async () => {
     if (!analysisResult || !user) return;
@@ -208,19 +212,15 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
 
   const handleStartOver = () => {
     setAnalysisResult(null);
-    setTrainingPlan(null);
-    setShowPlan(false);
     setAnalysisPet(null);
   };
 
   return {
     analysisResult,
-    trainingPlan,
-    showPlan,
     analysisPet,
+    isCreatingPlan,
     handleUploadComplete,
     handleCreatePlan,
-    handleSavePlan,
     handleSaveAnalysis,
     handleStartOver
   };
