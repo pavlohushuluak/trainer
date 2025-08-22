@@ -33,8 +33,8 @@ export function cleanMarkdownFormatting(text: string): string {
   // Remove markdown list markers (- * +) - preserve the content
   cleaned = cleaned.replace(/^[\s]*[-*+]\s+/gm, '');
 
-  // Handle numbered lists more carefully - preserve the numbering and content
-  cleaned = cleaned.replace(/^[\s]*(\d+\.)\s+/gm, '$1 ');
+  // Remove numbered lists completely - don't preserve numbering
+  cleaned = cleaned.replace(/^[\s]*\d+\.\s+/gm, '');
 
   // Remove blockquote markers (>) - preserve the quoted content
   cleaned = cleaned.replace(/^>\s+/gm, '');
@@ -46,7 +46,7 @@ export function cleanMarkdownFormatting(text: string): string {
   cleaned = cleaned.replace(/^[\s]*[•◦‣⁃]\s+/gm, '');
 
   // Remove any remaining numbered list patterns with parentheses
-  cleaned = cleaned.replace(/^[\s]*([0-9]+\))\s+/gm, '$1 ');
+  cleaned = cleaned.replace(/^[\s]*\d+\)\s+/gm, '');
 
   // Clean up excessive whitespace while preserving structure
   cleaned = cleaned.replace(/\n\s*\n\s*\n/g, '\n\n'); // Reduce multiple line breaks to double
@@ -74,7 +74,7 @@ export function cleanAIResponse(text: string): string {
   cleaned = cleaned.replace(/^[\s]*[•◦‣⁃]\s+/gm, '');
 
   // Remove any remaining numbered lists that might have been missed
-  cleaned = cleaned.replace(/^[\s]*([0-9]+\))\s+/gm, '$1 ');
+  cleaned = cleaned.replace(/^[\s]*\d+\)\s+/gm, '');
 
   // Preserve paragraph structure - ensure proper spacing
   cleaned = cleaned.replace(/\n\s*\n\s*\n/g, '\n\n'); // Maintain double line breaks for paragraphs
@@ -119,10 +119,10 @@ export function cleanStructuredResponse(text: string): string {
   // Remove headers but preserve the text content
   cleaned = cleaned.replace(/^#{1,6}\s+/gm, '');
 
-  // Remove list markers but preserve content and structure
-  cleaned = cleaned.replace(/^[\s]*[-*+•◦‣⁃]\s+/gm, '');
-  cleaned = cleaned.replace(/^[\s]*(\d+\.)\s+/gm, '$1 ');
-  cleaned = cleaned.replace(/^[\s]*([0-9]+\))\s+/gm, '$1 ');
+  // Remove ALL list markers and numbering - this is the key fix
+  cleaned = cleaned.replace(/^[\s]*[-*+•◦‣⁃]\s+/gm, ''); // Remove bullet points
+  cleaned = cleaned.replace(/^[\s]*\d+\.\s+/gm, ''); // Remove numbered lists (1., 2., etc.)
+  cleaned = cleaned.replace(/^[\s]*\d+\)\s+/gm, ''); // Remove numbered lists with parentheses (1), 2), etc.)
 
   // Remove blockquotes but preserve content
   cleaned = cleaned.replace(/^>\s+/gm, '');
