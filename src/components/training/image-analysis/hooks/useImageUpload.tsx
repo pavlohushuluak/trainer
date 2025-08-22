@@ -112,7 +112,7 @@ export const useImageUpload = ({
     }
   };
 
-  const performAnalysis = async (file: File, petName: string, petSpecies: string) => {
+  const performAnalysis = async (file: File, petName: string, petSpecies: string, petProfile?: any) => {
     setIsUploading(true);
     setUploadError(null);
     
@@ -131,16 +131,36 @@ export const useImageUpload = ({
         reader.readAsDataURL(file);
       });
 
+      // Prepare the request body with complete pet data
+      const requestBody: any = { 
+        image: base64,
+        petName: petName,
+        petSpecies: petSpecies,
+        language: currentLanguage,
+        createPlan: createPlan,
+        userId: userId,
+        petId: petId
+      };
+
+      // Add complete pet profile data if available
+      if (petProfile) {
+        requestBody.petProfile = {
+          id: petProfile.id,
+          name: petProfile.name,
+          species: petProfile.species,
+          breed: petProfile.breed,
+          age: petProfile.age,
+          birth_date: petProfile.birth_date,
+          behavior_focus: petProfile.behavior_focus,
+          notes: petProfile.notes
+        };
+        console.log('📋 Sending complete pet profile data:', requestBody.petProfile);
+      } else {
+        console.log('⚠️ No pet profile data available, using basic info only');
+      }
+
       const { data, error } = await supabase.functions.invoke('analyze-animal-image', {
-        body: { 
-          image: base64,
-          petName: petName,
-          petSpecies: petSpecies,
-          language: currentLanguage,
-          createPlan: createPlan,
-          userId: userId,
-          petId: petId
-        }
+        body: requestBody
       });
 
       if (error) {

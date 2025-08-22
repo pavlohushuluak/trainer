@@ -68,7 +68,7 @@ export const AnimalImageUpload = ({ onUploadComplete, disabled, createPlan = fal
   const handlePetSelected = async (pet: any) => {
     if (pendingFile) {
       try {
-        const result = await performAnalysis(pendingFile, pet.name, pet.species);
+        const result = await performAnalysis(pendingFile, pet.name, pet.species, pet);
         // Pass the selected pet to the parent component
         onUploadComplete(result, pet);
       } finally {

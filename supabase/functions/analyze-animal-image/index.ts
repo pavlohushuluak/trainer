@@ -3,7 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 // Import utilities from chat-with-ai
-import { createTrainingPlan } from './utils/planCreation.ts';
+import { createTrainingPlan, createFallbackPlan } from './utils/planCreation.ts';
 import { callOpenAIStreaming } from './utils/openaiStreaming.ts';
 import { cleanStructuredResponse } from './utils/responseCleaner.ts';
 import { getUserLanguage, getFallbackLanguage } from './utils/languageSupport.ts';
@@ -121,7 +121,7 @@ const getRecommendation = (mood: string, language: string = "de") => {
     : "Ich empfehle, das aktuelle Verhalten zu beobachten und das Training entsprechend anzupassen.");
 };
 
-// Enhanced plan creation using OpenAI (similar to chat-with-ai)
+// Enhanced plan creation using the proper utility function
 async function createTrainingPlanFromAnalysis(
   supabaseClient: any,
   userId: string,
@@ -129,96 +129,65 @@ async function createTrainingPlanFromAnalysis(
   petName: string,
   petSpecies: string,
   analysisResult: any,
-  userLanguage: string = "de"
+  userLanguage: string = "de",
+  petData?: any
 ) {
   try {
     console.log("📝 Creating personalized training plan from image analysis for:", petName);
 
-    // Natural, conversational prompt for plan creation
-     const systemPrompt = userLanguage === "en" 
-      ? `Hi! I'm a pet trainer with lots of experience. I need to create a training plan based on what I saw in a photo, and I want to make it feel natural and helpful - like I'm sitting down with the owner and giving them a personalized plan.
-
-I'll write it in a warm, conversational way that flows naturally. No rigid sections or technical jargon - just clear, friendly guidance that builds on what I observed.
-
-I need to return this as a JSON object with a title, description, and three training modules. Each module should feel like a natural conversation about what to work on, how to do it, and what to expect. I'll make each one build on the previous one, getting a bit more challenging as they progress.
-
-I'll write everything in English and keep it encouraging and practical.`
-      : `Hallo! Ich bin ein Tiertrainer mit viel Erfahrung. Ich muss einen Trainingsplan basierend auf dem erstellen, was ich auf einem Foto gesehen habe, und ich möchte, dass er sich natürlich und hilfreich anfühlt - als würde ich mit dem Besitzer zusammensitzen und ihm einen personalisierten Plan geben.
-
-Ich schreibe es in einer warmen, gesprächigen Art, die natürlich fließt. Keine starren Abschnitte oder Fachjargon - nur klare, freundliche Anleitung, die auf dem aufbaut, was ich beobachtet habe.
-
-Ich muss das als JSON-Objekt mit einem Titel, einer Beschreibung und drei Trainingsmodulen zurückgeben. Jedes Modul sollte sich wie ein natürliches Gespräch darüber anfühlen, woran gearbeitet werden soll, wie es gemacht wird und was zu erwarten ist. Ich werde jedes auf dem vorherigen aufbauen lassen und es wird etwas herausfordernder, während sie fortschreiten.
-
-Ich schreibe alles auf Deutsch und halte es ermutigend und praktisch.`;
-
-         const userPrompt = userLanguage === "en"
-       ? `I just looked at a photo of ${petName} and here's what I noticed: ${analysisResult.summary_text}
+    // Build the user message for plan creation
+    const userMessage = userLanguage === "en"
+      ? `I just looked at a photo of ${petName} and here's what I noticed: ${analysisResult.summary_text}
         
 They seem to be in a ${analysisResult.mood_estimation} mood, and I think ${analysisResult.recommendation}
         
 Can you help me create a training plan that would work well for them right now? I want it to feel natural and build on what I observed.`
-       : `Ich habe mir gerade ein Foto von ${petName} angesehen und hier ist, was mir aufgefallen ist: ${analysisResult.summary_text}
+      : `Ich habe mir gerade ein Foto von ${petName} angesehen und hier ist, was mir aufgefallen ist: ${analysisResult.summary_text}
         
 Sie scheinen in einer ${analysisResult.mood_estimation} Stimmung zu sein, und ich denke ${analysisResult.recommendation}
         
 Kannst du mir helfen, einen Trainingsplan zu erstellen, der gut für sie funktionieren würde? Ich möchte, dass er sich natürlich anfühlt und auf dem aufbaut, was ich beobachtet habe.`;
 
-         console.log("🚀 Sending plan creation request to OpenAI...");
+    // Prepare memory context for the plan creation
+    const memoryContext = {
+      pets: petData ? [{
+        id: petId || undefined,
+        name: petData.name,
+        species: petData.species,
+        breed: petData.breed,
+        ageYears: petData.age,
+        focus: petData.behavior_focus
+      }] : [],
+      lastActivePetId: petId || undefined,
+      user: {
+        goals: [`Training based on image analysis showing ${analysisResult.mood_estimation} mood`]
+      }
+    };
+
+    console.log("🚀 Creating plan using createFallbackPlan utility...");
     console.log("📝 Language:", userLanguage);
     console.log("📝 Pet data:", petData ? "Available" : "Not available");
-    console.log("📝 System prompt language:", userLanguage === "en" ? "English" : "German");
-    console.log("📝 User prompt language:", userLanguage === "en" ? "English" : "German");
-    
-    const messages = [
-            {
-              role: "system",
-              content: systemPrompt,
-            },
-            {
-              role: "user",
-              content: userPrompt,
-            },
-    ];
+    console.log("📝 Memory context:", memoryContext);
 
-    // Add timeout protection for plan creation
-    const planCreationPromise = callOpenAIStreaming(messages, openAIApiKey!, false);
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Plan creation timeout after 30 seconds')), 30000)
+    // Use the createFallbackPlan utility which handles all the complex logic
+    const planData = await createFallbackPlan(
+      userMessage,
+      userLanguage as 'en' | 'de',
+      openAIApiKey,
+      memoryContext
     );
 
-    const planContent = await Promise.race([planCreationPromise, timeoutPromise]);
+    if (!planData) {
+      console.error("❌ Failed to create plan using createFallbackPlan");
+      return null;
+    }
 
-     if (!planContent) {
-       console.error("No plan content returned from OpenAI");
-       return null;
-     }
-
-    // Extract JSON from the response
-     const jsonMatch = planContent.match(/\{[\s\S]*\}/);
-     if (!jsonMatch) {
-      console.error("No JSON found in plan response");
-       return null;
-     }
-
-     const planData = JSON.parse(jsonMatch[0]);
-
-         // Validate the plan structure
-     if (!planData.title || !planData.steps || !Array.isArray(planData.steps) || planData.steps.length === 0) {
-      console.error("Invalid plan structure");
-       return null;
-     }
-     
-     console.log("✅ Plan structure is valid!");
-
-    // Add language information to plan data for debugging
-    console.log("📝 Plan data language check:", {
-          title: planData.title,
-      description: planData.description?.substring(0, 100) + "...",
-      stepsCount: planData.steps.length,
-      expectedLanguage: userLanguage
+    console.log("✅ Plan created successfully using createFallbackPlan:", {
+      title: planData.title,
+      stepsCount: planData.steps.length
     });
 
-    // Use the createTrainingPlan utility from chat-with-ai
+    // Use the createTrainingPlan utility to save to database
     const createdPlan = await createTrainingPlan(
       supabaseClient,
       userId,
@@ -227,7 +196,7 @@ Kannst du mir helfen, einen Trainingsplan zu erstellen, der gut für sie funktio
       openAIApiKey
     );
 
-    console.log("✅ Training plan created successfully from image analysis");
+    console.log("✅ Training plan saved to database successfully");
     return createdPlan;
   } catch (error) {
     console.error("❌ Error creating training plan from analysis:", error);
@@ -243,7 +212,7 @@ serve(async (req) => {
   }
 
   try {
-    const { image, petName, petSpecies, language = "de", createPlan = false, userId, petId } = await req.json();
+    const { image, petName, petSpecies, language = "de", createPlan = false, userId, petId, petProfile } = await req.json();
     
     if (!image) {
       throw new Error(language === "en" ? "No image provided" : "Kein Bild bereitgestellt");
@@ -255,6 +224,7 @@ serve(async (req) => {
     
     console.log("🌍 Language detection - Input language:", language);
     console.log("🌍 Language detection - User ID:", userId);
+    console.log("📋 Pet profile data received:", petProfile ? "Yes" : "No");
     
     if (userId) {
       try {
@@ -274,14 +244,23 @@ serve(async (req) => {
           userLanguage = getFallbackLanguage(language);
         }
         
-        // Get detailed pet data if petId is provided
-        if (petId) {
-          console.log("🔍 Fetching detailed pet data for analysis...");
+        // Use provided petProfile data if available, otherwise fetch from database
+        if (petProfile && petProfile.id) {
+          console.log("✅ Using provided pet profile data:", {
+            name: petProfile.name,
+            species: petProfile.species,
+            breed: petProfile.breed,
+            age: petProfile.age,
+            behavior_focus: petProfile.behavior_focus
+          });
+          petData = petProfile;
+        } else if (petId) {
+          console.log("🔍 Fetching detailed pet data from database...");
           const petContextResult = await getPetContext(supabaseClient, petId, userId);
           petData = petContextResult.petData;
           
           if (petData) {
-            console.log("✅ Pet data retrieved:", {
+            console.log("✅ Pet data retrieved from database:", {
               name: petData.name,
               species: petData.species,
               breed: petData.breed,
@@ -396,7 +375,8 @@ serve(async (req) => {
           petName,
           petSpecies,
           result,
-          userLanguage
+          userLanguage,
+          petData
         );
         
         if (createdPlan) {

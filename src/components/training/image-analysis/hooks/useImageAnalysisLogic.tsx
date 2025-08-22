@@ -11,6 +11,11 @@ interface Pet {
   id: string;
   name: string;
   species: string;
+  breed?: string;
+  age?: number;
+  birth_date?: string;
+  behavior_focus?: string;
+  notes?: string;
 }
 
 export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => void) => {
@@ -69,16 +74,36 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
       console.log('🌍 Frontend - User ID:', user.id);
       console.log('🌍 Frontend - Pet ID:', petToUse.id);
       
+      // Prepare request body with complete pet data
+      const requestBody: any = {
+        image: analysisResult.original_image, // Use the original image from analysis result
+        petName: petToUse.name,
+        petSpecies: petToUse.species,
+        language: currentLanguage,
+        createPlan: true,
+        userId: user.id,
+        petId: petToUse.id
+      };
+
+      // Add complete pet profile data if available
+      if (petToUse && typeof petToUse === 'object' && 'id' in petToUse) {
+        requestBody.petProfile = {
+          id: petToUse.id,
+          name: petToUse.name,
+          species: petToUse.species,
+          breed: petToUse.breed,
+          age: petToUse.age,
+          birth_date: petToUse.birth_date,
+          behavior_focus: petToUse.behavior_focus,
+          notes: petToUse.notes
+        };
+        console.log('📋 Sending complete pet profile data for plan creation:', requestBody.petProfile);
+      } else {
+        console.log('⚠️ No complete pet profile data available for plan creation');
+      }
+      
       const { data: result, error } = await supabase.functions.invoke('analyze-animal-image', {
-        body: {
-          image: analysisResult.original_image, // Use the original image from analysis result
-          petName: petToUse.name,
-          petSpecies: petToUse.species,
-          language: currentLanguage,
-          createPlan: true,
-          userId: user.id,
-          petId: petToUse.id
-        }
+        body: requestBody
       });
 
       if (error) {
