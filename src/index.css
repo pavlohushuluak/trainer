@@ -1104,3 +1104,19 @@ body.scrollbar-preserved * {
     animation: none;
   }
 }
+
+/* Custom thinking animation */
+@keyframes thinking-bounce {
+  0%, 60%, 100% {
+    transform: translateY(2px);
+    opacity: 0.6;
+  }
+  30% {
+    transform: translateY(-2px);
+    opacity: 1;
+  }
+}
+
+.animate-thinking-bounce {
+  animation: thinking-bounce 1.4s ease-in-out infinite;
+}

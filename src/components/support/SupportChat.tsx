@@ -12,6 +12,7 @@ import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { SatisfactionRequest } from './SatisfactionRequest';
 import { useTranslations } from '@/hooks/useTranslations';
+import { AnimatedDots } from '@/components/ui/animated-dots';
 
 interface SupportChatProps {
   isOpen: boolean;
@@ -179,7 +180,9 @@ export const SupportChat = ({ isOpen, onClose, onTicketChange }: SupportChatProp
                 <div className="flex justify-start">
                   <div className="bg-muted p-3 rounded-lg flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-sm">{t('support.chat.thinking')}</span>
+                    <span className="text-sm">
+                      <AnimatedDots text={t('support.chat.thinking')} />
+                    </span>
                   </div>
                 </div>
               )}
@@ -189,7 +192,7 @@ export const SupportChat = ({ isOpen, onClose, onTicketChange }: SupportChatProp
                   <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg flex items-center gap-2 border border-blue-200 dark:border-blue-800">
                     <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
                     <span className="text-sm text-blue-700 dark:text-blue-300">
-                      {t('support.chat.resolvingPreviousTicket')}
+                      <AnimatedDots text={t('support.chat.resolvingPreviousTicket')} />
                     </span>
                   </div>
                 </div>

@@ -22,6 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { ThinkingAnimation } from '@/components/chat/ThinkingAnimation';
 import {
   Dialog,
   DialogContent,
@@ -33,13 +34,13 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Shield } from 'lucide-react';
-import { 
-  MessageSquare, 
-  Plus, 
-  Send, 
-  Loader2, 
-  History, 
-  User, 
+import {
+  MessageSquare,
+  Plus,
+  Send,
+  Loader2,
+  History,
+  User,
   Bot,
   Calendar,
   Clock,
@@ -65,6 +66,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useTranslation as useI18n } from 'react-i18next';
+import { AnimatedDots } from '@/components/ui/animated-dots';
 
 interface ChatSession {
   id: string;
@@ -226,7 +228,7 @@ export const ChatPage = () => {
 
   const continueChat = async () => {
     if (!selectedSession) return;
-    
+
     // Check if free user has reached limit
     if (!hasActiveSubscription && usage.hasReachedLimit) {
       toast({
@@ -279,7 +281,7 @@ export const ChatPage = () => {
         const loadingMessage: ChatMessage = {
           id: `loading-${Date.now()}`,
           role: 'assistant',
-          content: `💭 ${t('chat.thinking')}`,
+          content: `💭 ${t('chat.thinking')}...`,
           created_at: new Date().toISOString(),
         };
 
@@ -350,7 +352,7 @@ export const ChatPage = () => {
         const loadingMessage: ChatMessage = {
           id: `loading-${Date.now()}`,
           role: 'assistant',
-          content: `💭 ${t('chat.thinking')}`,
+          content: `💭 ${t('chat.thinking')}...`,
           created_at: new Date().toISOString(),
         };
 
@@ -409,10 +411,10 @@ export const ChatPage = () => {
 
     } catch (error) {
       console.error('Error continuing chat:', error);
-      
+
       // Remove loading message if it exists
       setMessages(prev => prev.filter(msg => !msg.id.startsWith('loading-')));
-      
+
       toast({
         title: t('chat.page.continueChat.error.title'),
         description: t('chat.page.continueChat.error.description'),
@@ -468,7 +470,7 @@ export const ChatPage = () => {
 
   const sendMessage = async () => {
     if (!message.trim() || !selectedSession || isSending) return;
-    
+
     // Check if free user has reached limit
     if (!hasActiveSubscription && usage.hasReachedLimit) {
       toast({
@@ -500,7 +502,7 @@ export const ChatPage = () => {
     const loadingMessage: ChatMessage = {
       id: `loading-${Date.now()}`,
       role: 'assistant',
-      content: `💭 ${t('chat.thinking')}`,
+      content: `💭 ${t('chat.thinking')}...`,
       created_at: new Date().toISOString()
     };
 
@@ -586,12 +588,12 @@ export const ChatPage = () => {
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      
+
       // Prevent sending if already processing
       if (isSending) {
         return;
       }
-      
+
       // Check if free user has reached limit before sending
       if (!hasActiveSubscription && usage.hasReachedLimit) {
         toast({
@@ -601,7 +603,7 @@ export const ChatPage = () => {
         });
         return;
       }
-      
+
       sendMessage();
     }
   };
@@ -634,7 +636,7 @@ export const ChatPage = () => {
     const loadingMessage: ChatMessage = {
       id: `loading-${Date.now()}`,
       role: 'assistant',
-      content: `💭 ${t('chat.createPlan.modal.loading')}`,
+      content: `💭 ${t('chat.createPlan.modal.loading')}...`,
       created_at: new Date().toISOString()
     };
 
@@ -764,17 +766,17 @@ export const ChatPage = () => {
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
 
     if (diffInHours < 24) {
-      return date.toLocaleString([], { 
-        hour: '2-digit', 
+      return date.toLocaleString([], {
+        hour: '2-digit',
         minute: '2-digit',
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
       });
     } else {
-      return date.toLocaleString([], { 
-        day: '2-digit', 
-        month: '2-digit', 
+      return date.toLocaleString([], {
+        day: '2-digit',
+        month: '2-digit',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
@@ -843,7 +845,7 @@ export const ChatPage = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={() => {
                       i18n.changeLanguage('en');
                       localStorage.setItem('language', 'en');
@@ -856,7 +858,7 @@ export const ChatPage = () => {
                     </div>
                     {i18n.language === 'en' && <Check className="h-4 w-4 text-primary" />}
                   </DropdownMenuItem>
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={() => {
                       i18n.changeLanguage('de');
                       localStorage.setItem('language', 'de');
@@ -942,13 +944,15 @@ export const ChatPage = () => {
                   </Button>
                 </div>
               </CardHeader>
-              
+
               <CardContent className="p-0 flex-1">
                 <ScrollArea className="h-[calc(100vh-9rem)] sm:h-[calc(100vh-10rem)] lg:h-[calc(100vh-16rem)]">
                   {isLoadingSessions ? (
                     <div className="flex items-center justify-center p-8">
                       <Loader2 className="h-6 w-6 animate-spin" />
-                      <span className="ml-2 text-sm text-muted-foreground">{t('chat.loading.sessions')}</span>
+                      <span className="ml-2 text-sm text-muted-foreground">
+                        <AnimatedDots text={t('chat.loading.sessions')} />
+                      </span>
                     </div>
                   ) : filteredSessions.length === 0 ? (
                     <div className="text-center p-6 sm:p-8 text-muted-foreground">
@@ -972,8 +976,8 @@ export const ChatPage = () => {
                         <div
                           key={session.id}
                           className={`group relative p-3 sm:p-3 rounded-lg cursor-pointer transition-all duration-200 ${selectedSession?.id === session.id
-                              ? 'bg-primary/10 border border-primary/20 shadow-sm'
-                              : 'hover:bg-muted/50 border border-transparent hover:border-border/30'
+                            ? 'bg-primary/10 border border-primary/20 shadow-sm'
+                            : 'hover:bg-muted/50 border border-transparent hover:border-border/30'
                             }`}
                           onClick={() => setSelectedSession(session)}
                         >
@@ -1004,7 +1008,7 @@ export const ChatPage = () => {
                               }}
                             >
                               <Trash2 className="h-3 w-3" />
-            </Button>
+                            </Button>
                           </div>
                         </div>
                       ))}
@@ -1014,7 +1018,7 @@ export const ChatPage = () => {
               </CardContent>
             </Card>
           </div>
-          
+
           {/* Main Chat Area */}
           <div className="lg:col-span-3">
             <Card className="h-[calc(100vh-6rem)] sm:h-[calc(100vh-7rem)] bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 flex flex-col">
@@ -1030,8 +1034,8 @@ export const ChatPage = () => {
                     <p className="text-sm sm:text-base text-muted-foreground mb-6 leading-relaxed">
                       {t('chat.page.welcome.description')}
                     </p>
-                    <Button 
-                      onClick={handleCreateNewSession} 
+                    <Button
+                      onClick={handleCreateNewSession}
                       className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
                       size="lg"
                     >
@@ -1087,7 +1091,11 @@ export const ChatPage = () => {
                             className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/40 dark:hover:to-emerald-900/40 text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <FileText className="h-4 w-4 mr-2" />
-                            {isCreatingPlan ? t('chat.createPlan.modal.loading') : t('chat.createPlan.button')}
+                            {isCreatingPlan ? (
+                              t('chat.createPlan.modal.loading')
+                            ) : (
+                              t('chat.createPlan.button')
+                            )}
                           </Button>
                         )}
                       </div>
@@ -1100,7 +1108,9 @@ export const ChatPage = () => {
                       {isLoading ? (
                         <div className="flex items-center justify-center h-32">
                           <Loader2 className="h-6 w-6 animate-spin" />
-                          <span className="ml-2 text-sm text-muted-foreground">{t('chat.loading.messages')}</span>
+                          <span className="ml-2 text-sm text-muted-foreground">
+                            <AnimatedDots text={t('chat.loading.messages')} />
+                          </span>
                         </div>
                       ) : messages.length === 0 ? (
                         <div className="text-center py-8 sm:py-12">
@@ -1137,7 +1147,13 @@ export const ChatPage = () => {
                                     </Avatar>
                                   )}
                                   <div className="flex-1 min-w-0">
-                                    <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{msg.content}</div>
+                                    <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">
+                                      {msg.content.startsWith('💭') ? (
+                                        <ThinkingAnimation trainerName="Trainer" />
+                                      ) : (
+                                        <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{msg.content}</div>
+                                      )}
+                                    </div>
                                     <div className="flex items-center space-x-1 mt-1 text-xs opacity-70">
                                       <Clock className="h-3 w-3" />
                                       <span>{formatDate(msg.created_at)}</span>
@@ -1206,7 +1222,7 @@ export const ChatPage = () => {
                           {isContinuingChat ? (
                             <>
                               <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                              {t('chat.page.continueChat.loading')}
+                              <AnimatedDots text={t('chat.page.continueChat.loading')} />
                             </>
                           ) : (
                             <>
@@ -1363,7 +1379,7 @@ export const ChatPage = () => {
       </Dialog>
 
       {/* Settings Modal */}
-      <Dialog open={false} onOpenChange={() => {}}>
+      <Dialog open={false} onOpenChange={() => { }}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -1547,10 +1563,10 @@ export const ChatPage = () => {
             </ScrollArea>
 
             <div className="flex justify-end gap-2 pt-4 border-t">
-              <Button variant="outline" onClick={() => {}}>
+              <Button variant="outline" onClick={() => { }}>
                 {t('common.cancel')}
               </Button>
-              <Button onClick={() => {}}>
+              <Button onClick={() => { }}>
                 {t('common.save')}
               </Button>
             </div>
@@ -1664,7 +1680,7 @@ export const ChatPage = () => {
               {isCreatingPlan ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  {t('chat.createPlan.modal.loading')}
+                  <AnimatedDots text={t('chat.createPlan.modal.loading')} />
                 </>
               ) : (
                 <>
