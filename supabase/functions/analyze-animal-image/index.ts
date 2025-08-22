@@ -3,7 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 // Import utilities from chat-with-ai
-import { createTrainingPlan, createFallbackPlan } from './utils/planCreation.ts';
+import { createTrainingPlan } from './utils/planCreation.ts';
 import { callOpenAIStreaming } from './utils/openaiStreaming.ts';
 import { cleanStructuredResponse } from './utils/responseCleaner.ts';
 import { getUserLanguage, getFallbackLanguage } from './utils/languageSupport.ts';
@@ -286,6 +286,7 @@ serve(async (req) => {
               species: petData.species,
               breed: petData.breed,
               age: petData.age,
+              birth_date: petData.birth_date,
               behavior_focus: petData.behavior_focus
             });
           } else {
@@ -363,6 +364,7 @@ serve(async (req) => {
         species: petData.species,
         breed: petData.breed,
         age: petData.age,
+        birth_date: petData.birth_date,
         behavior_focus: petData.behavior_focus,
         development_stage: petData.age ? 
           (petData.age <= 0.5 ? "puppy/kitten" : 
@@ -421,68 +423,10 @@ serve(async (req) => {
             created_at: createdPlan.created_at
           };
         } else {
-          console.error("❌ Plan creation returned null, trying fallback plan...");
-          
-          // Try fallback plan creation
-          try {
-            const fallbackPlan = await createFallbackPlan(
-              `Image analysis for ${petName}: ${result.summary_text}`,
-              userLanguage as 'en' | 'de',
-              openAIApiKey,
-              {
-                pets: petData ? [{
-                  id: petId,
-                  name: petData.name,
-                  species: petData.species,
-                  breed: petData.breed,
-                  ageYears: petData.age,
-                  focus: petData.behavior_focus
-                }] : [],
-                lastActivePetId: petId,
-                user: {
-                  goals: [`Training based on image analysis: ${result.mood_estimation} mood, ${result.recommendation}`]
-                }
-              }
-            );
-            
-            if (fallbackPlan) {
-              console.log("✅ Fallback plan created successfully");
-              const createdFallbackPlan = await createTrainingPlan(
-                supabaseClient,
-                userId,
-                petId,
-                fallbackPlan,
-                openAIApiKey
-              );
-              
-              if (createdFallbackPlan) {
-                result.created_plan = createdFallbackPlan;
-                result.plan_creation_success = true;
-                result.plan_message = userLanguage === "en" 
-                  ? `I've created a training plan called "${createdFallbackPlan.title}" based on this analysis. You can find it in your dashboard under Training Plans.`
-                  : `Ich habe basierend auf dieser Analyse einen Trainingsplan namens "${createdFallbackPlan.title}" erstellt. Du findest ihn in deinem Dashboard unter Trainingspläne.`;
-                
-                result.plan_details = {
-                  id: createdFallbackPlan.id,
-                  title: createdFallbackPlan.title,
-                  description: createdFallbackPlan.description,
-                  steps_count: fallbackPlan.steps.length,
-                  created_at: createdFallbackPlan.created_at,
-                  is_fallback: true
-                };
-              }
-            } else {
-              console.error("❌ Fallback plan creation also failed");
-              result.plan_creation_error = userLanguage === "en" 
-                ? "Failed to create training plan - please try again" 
-                : "Trainingsplan konnte nicht erstellt werden - bitte versuche es erneut";
-            }
-          } catch (fallbackError) {
-            console.error("❌ Fallback plan creation failed:", fallbackError);
-            result.plan_creation_error = userLanguage === "en" 
-              ? "Failed to create training plan - please try again" 
-              : "Trainingsplan konnte nicht erstellt werden - bitte versuche es erneut";
-          }
+          console.error("❌ Plan creation failed - returning error immediately");
+          result.plan_creation_error = userLanguage === "en" 
+            ? "Failed to create training plan - please try again" 
+            : "Trainingsplan konnte nicht erstellt werden - bitte versuche es erneut";
         }
       } catch (planError) {
         console.error("❌ Error creating training plan:", planError);

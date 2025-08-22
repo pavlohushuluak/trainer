@@ -3,7 +3,7 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
-import { processPlanCreationFromResponse, removePlanCreationFromResponse, cleanupFailedPlanCreation, createTrainingPlan, createFallbackPlan } from './utils/planCreation.ts';
+import { processPlanCreationFromResponse, removePlanCreationFromResponse, cleanupFailedPlanCreation, createTrainingPlan } from './utils/planCreation.ts';
 import { getPetContext } from "./utils/petContext.ts";
 import { generateSystemPrompt } from "./utils/systemPrompt.ts";
 import { getChatHistory, saveChatMessages, getCompleteChatHistory } from "./utils/chatHistory.ts";
@@ -232,21 +232,38 @@ serve(async (req) => {
     let petData: any = null;
     
     if (petProfile && petProfile.id) {
-      // Use the provided petProfile data
-      petData = petProfile;
+      // Ensure both age and birth_date are always present in provided petProfile
+      let enhancedPetProfile = { ...petProfile };
+      
+      // Calculate age from birth_date if age is missing
+      if (!enhancedPetProfile.age && enhancedPetProfile.birth_date) {
+        const birthDate = new Date(enhancedPetProfile.birth_date);
+        const now = new Date();
+        const ageInMonths = Math.floor((now.getTime() - birthDate.getTime()) / (30.44 * 24 * 60 * 60 * 1000));
+        enhancedPetProfile.age = Math.floor(ageInMonths / 12);
+      }
+      
+      // Calculate birth_date from age if birth_date is missing
+      if (!enhancedPetProfile.birth_date && enhancedPetProfile.age) {
+        const now = new Date();
+        const birthYear = now.getFullYear() - enhancedPetProfile.age;
+        enhancedPetProfile.birth_date = new Date(birthYear, 0, 1).toISOString().split('T')[0];
+      }
+      
+      petData = enhancedPetProfile;
       
       // Build pet context from provided data
       let contextParts: string[] = [];
       
       // Basic info with enhanced detail
-      contextParts.push(petProfile.name);
+      contextParts.push(enhancedPetProfile.name);
       
       // Age calculation with months precision for young animals
       let ageInfo = '';
-      if (petProfile.age) {
-        ageInfo = `${petProfile.age}J`;
-      } else if (petProfile.birth_date) {
-        const birthDate = new Date(petProfile.birth_date);
+      if (enhancedPetProfile.age) {
+        ageInfo = `${enhancedPetProfile.age}J`;
+      } else if (enhancedPetProfile.birth_date) {
+        const birthDate = new Date(enhancedPetProfile.birth_date);
         const now = new Date();
         const ageInMonths = Math.floor((now.getTime() - birthDate.getTime()) / (30.44 * 24 * 60 * 60 * 1000));
         const years = Math.floor(ageInMonths / 12);
@@ -263,22 +280,22 @@ serve(async (req) => {
       if (ageInfo) contextParts.push(ageInfo);
       
       // Species and breed with enhanced info
-      const speciesBreed = petProfile.species + (petProfile.breed ? `/${petProfile.breed}` : '');
+      const speciesBreed = enhancedPetProfile.species + (enhancedPetProfile.breed ? `/${enhancedPetProfile.breed}` : '');
       contextParts.push(speciesBreed);
       
       // Behavior focus - keep full text for better AI understanding
-      if (petProfile.behavior_focus) {
-        contextParts.push(`Fokus: ${petProfile.behavior_focus}`);
+      if (enhancedPetProfile.behavior_focus) {
+        contextParts.push(`Fokus: ${enhancedPetProfile.behavior_focus}`);
       }
       
       // Notes - keep more detail for context
-      if (petProfile.notes) {
-        contextParts.push(`Notizen: ${petProfile.notes}`);
+      if (enhancedPetProfile.notes) {
+        contextParts.push(`Notizen: ${enhancedPetProfile.notes}`);
       }
       
       // Enhanced context with development stage indicators
-      const ageInMonths = petProfile.age ? petProfile.age * 12 : 
-        (petProfile.birth_date ? Math.floor((Date.now() - new Date(petProfile.birth_date).getTime()) / (30.44 * 24 * 60 * 60 * 1000)) : 0);
+      const ageInMonths = enhancedPetProfile.age ? enhancedPetProfile.age * 12 : 
+        (enhancedPetProfile.birth_date ? Math.floor((Date.now() - new Date(enhancedPetProfile.birth_date).getTime()) / (30.44 * 24 * 60 * 60 * 1000)) : 0);
       
       if (ageInMonths <= 6) {
         contextParts.push('Entwicklungsphase: Welpe/Jungtier');
@@ -293,10 +310,11 @@ serve(async (req) => {
       petContext = contextParts.join(', ');
       
       console.log('🐾 Using provided petProfile data:', {
-        petName: petProfile.name,
-        species: petProfile.species,
-        breed: petProfile.breed,
-        age: petProfile.age,
+        petName: enhancedPetProfile.name,
+        species: enhancedPetProfile.species,
+        breed: enhancedPetProfile.breed,
+        age: enhancedPetProfile.age,
+        birth_date: enhancedPetProfile.birth_date,
         context: petContext
       });
     } else if (petId) {
@@ -434,28 +452,10 @@ serve(async (req) => {
             // First, try to extract plan from AI response if it contains [PLAN_CREATION] blocks
             let planData = await processPlanCreationFromResponse(aiResponse, userLanguage as 'en' | 'de', openAIApiKey);
             
-            // If no plan found in response, create one using fallback
+            // If no plan found in response, return error immediately for speed
             if (!planData) {
-              console.log('🔄 No plan found in AI response, creating fallback plan...');
-              planData = await createFallbackPlan(
-                planReason, 
-                userLanguage as 'en' | 'de', 
-                openAIApiKey,
-                {
-                  pets: petData ? [{
-                    id: petId,
-                    name: petData.name,
-                    species: petData.species,
-                    breed: petData.breed,
-                    ageYears: petData.age,
-                    focus: petData.behavior_focus
-                  }] : [],
-                  lastActivePetId: petId,
-                  user: {
-                    goals: [planReason]
-                  }
-                }
-              );
+              console.log('❌ No plan found in AI response - returning error immediately');
+              throw new Error('Failed to create plan data');
             }
             
             if (planData) {
