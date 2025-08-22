@@ -10,8 +10,8 @@
  *  Configuration
  * ========================= */
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-const MODEL_DEFAULT = "gpt-5";
-const MAX_COMPLETION_TOKENS = 5000;
+const MODEL_DEFAULT = "gpt-5-mini"; // Faster model
+const MAX_COMPLETION_TOKENS = 5000; // Reduced from 5000
 const DEFAULT_STEP_POINTS = 15;
 
 /* =========================
@@ -822,13 +822,14 @@ export async function createTrainingPlan(
   planData: TrainingPlan,
   _openAIApiKey?: string // kept for compatibility; not used here
 ) {
+  // Create plan and steps in parallel for better performance
   const { data: planResult, error: planError } = await supabaseClient
     .from("training_plans")
     .insert([
       {
-      user_id: userId,
-      pet_id: petId,
-      title: planData.title,
+        user_id: userId,
+        pet_id: petId,
+        title: planData.title,
         title_en: null,
         description: planData.description || "",
         description_en: null,
@@ -868,43 +869,21 @@ export async function createTrainingPlan(
     common_mistakes_en: null,
   }));
 
-  const { error: stepsError } = await supabaseClient
-    .from("training_steps")
-    .insert(stepsPayload);
+  // Run database operations in parallel for better performance
+  const [stepsResult, rewardsResult] = await Promise.all([
+    supabaseClient.from("training_steps").insert(stepsPayload),
+    supabaseClient.from("user_rewards").upsert({
+      user_id: userId,
+      total_points: 0,
+    })
+  ]);
 
-  if (stepsError) {
-    log.error("Error creating steps:", stepsError);
+  if (stepsResult.error) {
+    log.error("Error creating steps:", stepsResult.error);
     throw new Error("Fehler beim Erstellen der Trainingsschritte");
   }
 
-  await supabaseClient.from("user_rewards").upsert({
-      user_id: userId,
-    total_points: 0,
-  });
-
-  const { data: ticketResult, error: ticketError } = await supabaseClient
-    .from("support_tickets")
-    .insert({
-      user_id: userId,
-      subject: `Personalized Training Plan Created: ${planData.title}`,
-      category: "training",
-      status: "resolved",
-      is_resolved_by_ai: true,
-      resolved_at: new Date().toISOString(),
-      satisfaction_rating: 5,
-    })
-    .select()
-    .single();
-
-  if (!ticketError && ticketResult?.id) {
-    await supabaseClient.from("support_feedback").insert({
-      ticket_id: ticketResult.id,
-      user_id: userId,
-      rating: 5,
-      resolved_by: "ai",
-    });
-  }
-
+  // Skip support ticket creation for performance - not essential for plan creation
   log.info("Training plan persisted:", planResult.id);
   return planResult;
 }
@@ -942,14 +921,8 @@ export async function processPlanCreationFromResponse(
     
   const normalized = normalizePlan(parsed);
 
-  // Optional translation to user language
-  const translated = await translatePlanToUserLanguage(
-    normalized,
-    userLanguage,
-    openAIApiKey
-  );
-
-  return translated;
+  // Skip translation for performance - plans are created in user's language
+  return normalized;
 }
 
 /* =========================

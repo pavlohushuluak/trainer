@@ -431,66 +431,45 @@ serve(async (req) => {
         // Handle plan creation requests specifically
         if (isPlanCreationRequest && planReason) {
           try {
-            console.log('📝 Processing plan creation request for reason:', planReason.substring(0, 100) + '...');
+            console.log('📝 Creating plan for:', planReason.substring(0, 50) + '...');
             
-            // First, try to extract plan from AI response if it contains [PLAN_CREATION] blocks
-            let planData = await processPlanCreationFromResponse(aiResponse, userLanguage as 'en' | 'de', openAIApiKey);
-            
-            // If no plan found in response, create one using fallback
-            if (!planData) {
-              console.log('🔄 No plan found in AI response, creating fallback plan...');
-              planData = await createFallbackPlan(
-                planReason, 
-                userLanguage as 'en' | 'de', 
-                openAIApiKey,
-                {
-                  pets: petData ? [{
-                    id: petId,
-                    name: petData.name,
-                    species: petData.species,
-                    breed: petData.breed,
-                    ageYears: petData.age,
-                    focus: petData.behavior_focus
-                  }] : [],
-                  lastActivePetId: petId,
-                  user: {
-                    goals: [planReason]
-                  }
+            // Create plan directly using fallback (faster than processing AI response)
+            const planData = await createFallbackPlan(
+              planReason, 
+              userLanguage as 'en' | 'de', 
+              openAIApiKey,
+              {
+                pets: petData ? [{
+                  id: petId,
+                  name: petData.name,
+                  species: petData.species,
+                  breed: petData.breed,
+                  ageYears: petData.age,
+                  focus: petData.behavior_focus
+                }] : [],
+                lastActivePetId: petId,
+                user: {
+                  goals: [planReason]
                 }
-              );
-            }
+              }
+            );
             
             if (planData) {
               // Save the plan to the database
               await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
               
-              console.log('✅ Plan created and saved successfully:', planData.title);
+              console.log('✅ Plan created successfully:', planData.title);
               
-              // Clean up the response to remove [PLAN_CREATION] blocks and show success message
+              // Show success message
               aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage as 'en' | 'de', false);
-              // Clean up any markdown formatting from the response
               aiResponse = cleanStructuredResponse(aiResponse);
             } else {
               throw new Error('Failed to create plan data');
             }
           } catch (planError) {
             console.error('❌ Plan creation failed:', planError);
-            // Clean up failed plan creation from response
             aiResponse = cleanupFailedPlanCreation(aiResponse, userLanguage as 'en' | 'de');
-            // Clean up any markdown formatting from the response
             aiResponse = cleanStructuredResponse(aiResponse);
-          }
-        } else {
-          // Normal chat - check if AI response contains plan creation blocks
-          const planData = await processPlanCreationFromResponse(aiResponse, userLanguage as 'en' | 'de', openAIApiKey);
-          if (planData) {
-            console.log('📝 Found plan creation in normal chat response');
-            await createTrainingPlan(supabaseClient, userData.user.id, petId, planData, openAIApiKey);
-            aiResponse = removePlanCreationFromResponse(aiResponse, planData.title, userLanguage as 'en' | 'de', false);
-            // Clean up any markdown formatting from the response
-            aiResponse = cleanStructuredResponse(aiResponse);
-          } else {
-            console.log('💬 Processing normal chat message - no plan creation');
           }
         }
         
