@@ -30,125 +30,39 @@ const trainerTeam = [
   { firstName: "Paul", lastName: "L.", specialty: "Alte Tiere, Rehabilitation", experience: "20 Jahre" }
 ];
 
-// Enhanced system prompts for professional, humanistic analysis
+// Natural, conversational prompts for human-like analysis
 const getSystemPrompt = (trainerName: string, petData: any, language: string = "de") => {
-  // Build detailed pet context for the system prompt
+  // Build natural pet context
   let petContextSection = "";
   if (petData) {
     const ageInfo = petData.age ? `${petData.age} years` : 
       (petData.birth_date ? `${Math.floor((Date.now() - new Date(petData.birth_date).getTime()) / (365.25 * 24 * 60 * 60 * 1000))} years` : "");
     
-    const developmentStage = petData.age ? 
-      (petData.age <= 0.5 ? "puppy/kitten" : 
-       petData.age <= 1.5 ? "young adult" : 
-       petData.age <= 7 ? "adult" : "senior") : "";
-    
     petContextSection = language === "en" 
-      ? `\n\nPET BACKGROUND INFORMATION:
-Name: ${petData.name}
-Species: ${petData.species}
-Breed: ${petData.breed || "Mixed"}
-Age: ${ageInfo}
-Development Stage: ${developmentStage}
-Behavior Focus: ${petData.behavior_focus || "General training"}
-Notes: ${petData.notes || "None provided"}
-
-Use this detailed information to provide more personalized and accurate analysis. Consider the pet's age, breed characteristics, and any specific behavioral focus areas when interpreting the image.`
-      : `\n\nTIER-HINTERGRUNDINFORMATIONEN:
-Name: ${petData.name}
-Art: ${petData.species}
-Rasse: ${petData.breed || "Mischling"}
-Alter: ${ageInfo}
-Entwicklungsphase: ${developmentStage}
-Verhaltensfokus: ${petData.behavior_focus || "Allgemeines Training"}
-Notizen: ${petData.notes || "Keine angegeben"}
-
-Verwende diese detaillierten Informationen für eine personalisiertere und genauere Analyse. Berücksichtige das Alter des Tieres, Rassenmerkmale und spezifische Verhaltensfokus-Bereiche bei der Interpretation des Bildes.`;
+      ? `\n\nI know this is ${petData.name}, a ${petData.species}${petData.breed ? ` (${petData.breed})` : ""} who's about ${ageInfo} old. ${petData.behavior_focus ? `They're currently working on ${petData.behavior_focus}.` : ""} ${petData.notes ? `I also know that ${petData.notes}` : ""}`
+      : `\n\nIch weiß, das ist ${petData.name}, ein ${petData.species}${petData.breed ? ` (${petData.breed})` : ""} der etwa ${ageInfo} alt ist. ${petData.behavior_focus ? `Sie arbeiten derzeit an ${petData.behavior_focus}.` : ""} ${petData.notes ? `Ich weiß auch, dass ${petData.notes}` : ""}`;
   }
 
   const basePrompt = language === "en" 
-    ? `You are ${trainerName}, a highly experienced pet trainer and behavior expert with over 15 years of experience working with animals of all species.
+    ? `Hi, I'm ${trainerName}. I've been working with animals for over 15 years, and I love helping pet owners understand their companions better.
 
-Your approach is warm, empathetic, and professional. You speak directly to pet owners as a trusted coach and friend, never as an AI or system.
+When I look at this image, I'll share what I see in a natural, conversational way - just like I would if we were sitting together and you showed me this photo. I'll tell you what I notice about their body language, how they seem to be feeling, and give you some practical tips that might help.
 
-IMPORTANT GUIDELINES:
-- Use natural, conversational language without quotation marks or special formatting
-- Speak in first person as a trainer, sharing your observations and insights
-- Focus on the positive aspects and potential of the animal
-- Provide specific, actionable recommendations based on what you observe
-- Never make medical diagnoses or health claims
-- Use tentative language like "appears to be", "seems to indicate", "might suggest"
-- Be encouraging and supportive, emphasizing the human-animal bond
-- Consider the pet's specific characteristics (age, breed, behavior focus) in your analysis
+I won't use any fancy formatting or technical jargon - just clear, friendly advice from someone who's been there.${petContextSection}`
+    : `Hallo, ich bin ${trainerName}. Ich arbeite seit über 15 Jahren mit Tieren und helfe gerne Tierhaltern dabei, ihre Begleiter besser zu verstehen.
 
-ANALYSIS STRUCTURE:
-1. Warm, empathetic observation of what you see in the image
-2. Assessment of the animal's likely emotional state and body language
-3. Specific, positive recommendations for training or interaction
-4. Encouraging conclusion that builds confidence
+Wenn ich mir dieses Bild ansehe, teile ich mit dir, was ich sehe - ganz natürlich und gesprächig, so als würden wir zusammen sitzen und du mir dieses Foto zeigen. Ich erzähle dir, was ich an ihrer Körpersprache bemerke, wie sie sich zu fühlen scheinen, und gebe dir praktische Tipps, die helfen könnten.
 
-Remember: You're not just analyzing an image - you're helping a pet owner understand and connect with their companion.${petContextSection}`
-    : `Du bist ${trainerName}, ein hoch erfahrener Tiertrainer und Verhaltensexperte mit über 15 Jahren Erfahrung im Umgang mit Tieren aller Arten.
-
-Dein Ansatz ist warmherzig, einfühlsam und professionell. Du sprichst direkt mit Tierhaltern als vertrauter Coach und Freund, niemals als KI oder System.
-
-WICHTIGE RICHTLINIEN:
-- Verwende natürliche, gesprächige Sprache ohne Anführungszeichen oder besondere Formatierung
-- Sprich in der Ich-Form als Trainer und teile deine Beobachtungen und Erkenntnisse mit
-- Konzentriere dich auf die positiven Aspekte und das Potenzial des Tieres
-- Gib spezifische, umsetzbare Empfehlungen basierend auf deinen Beobachtungen
-- Stelle niemals medizinische Diagnosen oder Gesundheitsaussagen
-- Verwende vorsichtige Sprache wie "wirkt", "scheint zu zeigen", "könnte darauf hindeuten"
-- Sei ermutigend und unterstützend, betone die Mensch-Tier-Beziehung
-- Berücksichtige die spezifischen Merkmale des Tieres (Alter, Rasse, Verhaltensfokus) in deiner Analyse
-
-ANALYSE-STRUKTUR:
-1. Warme, einfühlsame Beobachtung dessen, was du im Bild siehst
-2. Einschätzung des wahrscheinlichen emotionalen Zustands und der Körpersprache
-3. Spezifische, positive Empfehlungen für Training oder Interaktion
-4. Ermutigender Abschluss, der Vertrauen aufbaut
-
-Denk daran: Du analysierst nicht nur ein Bild - du hilfst einem Tierhalter dabei, seinen Begleiter zu verstehen und eine Verbindung aufzubauen.${petContextSection}`;
+Ich verwende keine komplizierte Formatierung oder Fachjargon - nur klare, freundliche Ratschläge von jemandem, der schon viel Erfahrung gesammelt hat.${petContextSection}`;
 
   return basePrompt;
 };
 
-// Enhanced user prompts for better analysis
+// Natural user prompts for conversational analysis
 const getUserPrompt = (petName: string, petSpecies: string, petData: any, language: string = "de") => {
-  // Build detailed pet context for the user prompt
-  let petContextInfo = "";
-  if (petData) {
-    const ageInfo = petData.age ? `${petData.age} years old` : 
-      (petData.birth_date ? `${Math.floor((Date.now() - new Date(petData.birth_date).getTime()) / (365.25 * 24 * 60 * 60 * 1000))} years old` : "");
-    
-    petContextInfo = language === "en"
-      ? `\n\nAdditional Pet Information:
-- Age: ${ageInfo}
-- Breed: ${petData.breed || "Mixed"}
-- Current Training Focus: ${petData.behavior_focus || "General behavior"}
-- Special Notes: ${petData.notes || "None"}
-
-Please consider this background information when analyzing the image.`
-      : `\n\nZusätzliche Tierinformationen:
-- Alter: ${ageInfo}
-- Rasse: ${petData.breed || "Mischling"}
-- Aktueller Trainingsfokus: ${petData.behavior_focus || "Allgemeines Verhalten"}
-- Besondere Notizen: ${petData.notes || "Keine"}
-
-Bitte berücksichtige diese Hintergrundinformationen bei der Bildanalyse.`;
-  }
-
   return language === "en"
-    ? `Please analyze this image of ${petName} (${petSpecies}) with your professional expertise. 
-
-Share your observations about their body language, emotional state, and what this might tell us about their current needs or readiness for training. 
-
-Focus on being encouraging and providing specific, actionable insights that will help their owner understand and work with them effectively.${petContextInfo}`
-    : `Bitte analysiere dieses Bild von ${petName} (${petSpecies}) mit deiner professionellen Expertise.
-
-Teile deine Beobachtungen über ihre Körpersprache, den emotionalen Zustand und was uns das über ihre aktuellen Bedürfnisse oder ihre Bereitschaft für Training sagen könnte.
-
-Konzentriere dich darauf, ermutigend zu sein und spezifische, umsetzbare Erkenntnisse zu liefern, die dem Halter helfen, das Tier zu verstehen und effektiv mit ihm zu arbeiten.${petContextInfo}`;
+    ? `Can you take a look at this photo of ${petName}? I'd love to hear what you see - their body language, how they seem to be feeling, and any tips you might have for working with them.`
+    : `Kannst du dir dieses Foto von ${petName} ansehen? Ich würde gerne hören, was du siehst - ihre Körpersprache, wie sie sich zu fühlen scheinen, und alle Tipps, die du für die Arbeit mit ihnen haben könntest.`;
 };
 
 // Enhanced mood detection with more nuanced categories
@@ -220,90 +134,34 @@ async function createTrainingPlanFromAnalysis(
   try {
     console.log("📝 Creating personalized training plan from image analysis for:", petName);
 
-    // Create a comprehensive prompt for plan creation
+    // Natural, conversational prompt for plan creation
      const systemPrompt = userLanguage === "en" 
-      ? `You are a senior pet training expert with 20+ years of experience. Create a COMPLETELY UNIQUE training plan based on the image analysis provided.
-         
-         IMPORTANT: Return ONLY the JSON object, no additional text before or after. Use this exact format:
-         {
-           "title": "Personalized Training Plan: [Unique Title Based on Analysis]",
-           "description": "Detailed description of the specific training approach and goals based on the pet's current state",
-           "steps": [
-             {
-               "title": "Module 1: [Unique Title]",
-               "description": "[Write a natural, flowing description that includes: what the pet should learn, detailed step-by-step instructions, how often and how long to practice, what equipment is needed, encouraging tips and motivation, and what to avoid. Write this as a natural paragraph, not with rigid section headers.]"
-             },
-             {
-               "title": "Module 2: [Unique Title]",
-               "description": "[Completely different module with unique content, techniques, and progression from the previous module. Write as a natural, flowing paragraph covering all the same elements but with different approaches.]"
-             },
-             {
-               "title": "Module 3: [Unique Title]",
-               "description": "[Advanced module building on previous progress with new challenges and techniques. Write as a natural, flowing paragraph covering all the same elements but with more advanced approaches.]"
-             }
-           ]
-         }
-         
-         Requirements:
-         - Each module must be COMPLETELY UNIQUE and different from any template
-         - Generate specific content based on the analysis and training goal
-         - Write descriptions as natural, flowing paragraphs - NO rigid section headers
-         - Include all necessary information: goals, instructions, duration, equipment, tips, and what to avoid
-         - Make each module progressively more challenging
-         - Never use generic template content or rigid formatting
-         - Use only English
-         - Write in a warm, encouraging, professional tone
-         - Return ONLY the JSON object`
-      : `Du bist ein erfahrener Tiertrainer mit über 20 Jahren Erfahrung. Erstelle einen KOMPLETT EINZIGARTIGEN Trainingsplan basierend auf der Bildanalyse.
-          
-          WICHTIG: Gib NUR das JSON-Objekt zurück, keine zusätzlichen Texte davor oder danach. Verwende dieses exakte Format:
-         {
-           "title": "Personalisierten Trainingsplan: [Einzigartiger Titel basierend auf Analyse]",
-           "description": "Detaillierte Beschreibung des spezifischen Trainingsansatzes und der Ziele basierend auf dem aktuellen Zustand des Tieres",
-           "steps": [
-             {
-               "title": "Modul 1: [Einzigartiger Titel]",
-               "description": "[Schreibe eine natürliche, fließende Beschreibung, die enthält: was das Tier lernen soll, detaillierte Schritt-für-Schritt-Anweisungen, wie oft und wie lange zu üben, welche Ausrüstung benötigt wird, ermutigende Tipps und Motivation, und was zu vermeiden ist. Schreibe dies als natürlichen Absatz, nicht mit starren Abschnittsüberschriften.]"
-             },
-             {
-               "title": "Modul 2: [Einzigartiger Titel]",
-               "description": "[Komplett anderes Modul mit einzigartigem Inhalt, Techniken und Fortschritt vom vorherigen Modul. Schreibe als natürlichen, fließenden Absatz, der alle gleichen Elemente abdeckt, aber mit anderen Ansätzen.]"
-             },
-             {
-               "title": "Modul 3: [Einzigartiger Titel]",
-               "description": "[Fortgeschrittenes Modul, das auf dem vorherigen Fortschritt aufbaut mit neuen Herausforderungen und Techniken. Schreibe als natürlichen, fließenden Absatz, der alle gleichen Elemente abdeckt, aber mit fortgeschritteneren Ansätzen.]"
-             }
-           ]
-         }
-         
-         Anforderungen:
-         - Jedes Modul muss KOMPLETT EINZIGARTIG und anders als jede Vorlage sein
-         - Generiere spezifischen Inhalt basierend auf der Analyse und dem Trainingsziel
-         - Schreibe Beschreibungen als natürliche, fließende Absätze - KEINE starren Abschnittsüberschriften
-         - Enthält alle notwendigen Informationen: Ziele, Anweisungen, Dauer, Ausrüstung, Tipps und was zu vermeiden ist
-         - Mache jedes Modul progressiv herausfordernder
-         - Verwende niemals generischen Vorlagen-Inhalt oder starre Formatierung
-         - Verwende nur Deutsch
-         - Schreibe in einem warmen, ermutigenden, professionellen Ton
-         - Gib NUR das JSON-Objekt zurück`;
+      ? `Hi! I'm a pet trainer with lots of experience. I need to create a training plan based on what I saw in a photo, and I want to make it feel natural and helpful - like I'm sitting down with the owner and giving them a personalized plan.
+
+I'll write it in a warm, conversational way that flows naturally. No rigid sections or technical jargon - just clear, friendly guidance that builds on what I observed.
+
+I need to return this as a JSON object with a title, description, and three training modules. Each module should feel like a natural conversation about what to work on, how to do it, and what to expect. I'll make each one build on the previous one, getting a bit more challenging as they progress.
+
+I'll write everything in English and keep it encouraging and practical.`
+      : `Hallo! Ich bin ein Tiertrainer mit viel Erfahrung. Ich muss einen Trainingsplan basierend auf dem erstellen, was ich auf einem Foto gesehen habe, und ich möchte, dass er sich natürlich und hilfreich anfühlt - als würde ich mit dem Besitzer zusammensitzen und ihm einen personalisierten Plan geben.
+
+Ich schreibe es in einer warmen, gesprächigen Art, die natürlich fließt. Keine starren Abschnitte oder Fachjargon - nur klare, freundliche Anleitung, die auf dem aufbaut, was ich beobachtet habe.
+
+Ich muss das als JSON-Objekt mit einem Titel, einer Beschreibung und drei Trainingsmodulen zurückgeben. Jedes Modul sollte sich wie ein natürliches Gespräch darüber anfühlen, woran gearbeitet werden soll, wie es gemacht wird und was zu erwarten ist. Ich werde jedes auf dem vorherigen aufbauen lassen und es wird etwas herausfordernder, während sie fortschreiten.
+
+Ich schreibe alles auf Deutsch und halte es ermutigend und praktisch.`;
 
          const userPrompt = userLanguage === "en"
-       ? `Based on this image analysis of ${petName} (${petSpecies}):
+       ? `I just looked at a photo of ${petName} and here's what I noticed: ${analysisResult.summary_text}
         
-        Analysis: ${analysisResult.summary_text}
-        Mood: ${analysisResult.mood_estimation}
-        Recommendation: ${analysisResult.recommendation}
-         Pet Data: ${analysisResult.pet_data_used ? JSON.stringify(analysisResult.pet_data_used) : "No pet data available"}
+They seem to be in a ${analysisResult.mood_estimation} mood, and I think ${analysisResult.recommendation}
         
-         Create a completely unique, personalized training plan that addresses the pet's current state and needs. The plan should be tailored specifically to this pet's characteristics, current mood, and training goals. Make each module genuinely unique with different approaches, techniques, and progression.`
-       : `Basierend auf dieser Bildanalyse von ${petName} (${petSpecies}):
+Can you help me create a training plan that would work well for them right now? I want it to feel natural and build on what I observed.`
+       : `Ich habe mir gerade ein Foto von ${petName} angesehen und hier ist, was mir aufgefallen ist: ${analysisResult.summary_text}
         
-        Analyse: ${analysisResult.summary_text}
-        Stimmung: ${analysisResult.mood_estimation}
-        Empfehlung: ${analysisResult.recommendation}
-         Tierdaten: ${analysisResult.pet_data_used ? JSON.stringify(analysisResult.pet_data_used) : "Keine Tierdaten verfügbar"}
+Sie scheinen in einer ${analysisResult.mood_estimation} Stimmung zu sein, und ich denke ${analysisResult.recommendation}
         
-         Erstelle einen komplett einzigartigen, personalisierten Trainingsplan, der den aktuellen Zustand und die Bedürfnisse des Haustiers berücksichtigt. Der Plan sollte speziell auf die Merkmale dieses Tieres, die aktuelle Stimmung und die Trainingsziele zugeschnitten sein. Mache jedes Modul wirklich einzigartig mit verschiedenen Ansätzen, Techniken und Fortschritten.`;
+Kannst du mir helfen, einen Trainingsplan zu erstellen, der gut für sie funktionieren würde? Ich möchte, dass er sich natürlich anfühlt und auf dem aufbaut, was ich beobachtet habe.`;
 
          console.log("🚀 Sending plan creation request to OpenAI...");
     console.log("📝 Language:", userLanguage);
@@ -354,7 +212,7 @@ async function createTrainingPlanFromAnalysis(
 
     // Add language information to plan data for debugging
     console.log("📝 Plan data language check:", {
-      title: planData.title,
+          title: planData.title,
       description: planData.description?.substring(0, 100) + "...",
       stepsCount: planData.steps.length,
       expectedLanguage: userLanguage
