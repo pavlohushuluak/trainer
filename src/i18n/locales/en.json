@@ -1065,7 +1065,7 @@
     }
   },
   "chat": {
-    "thinking": "Thinking...",
+    "thinking": "Thinking",
     "createPlan": {
       "button": "Create Plan",
       "modal": {
