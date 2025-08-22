@@ -26,7 +26,13 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
     .replace(/\s*(Repetition & Duration:)/gi, "\n$1")
     .replace(/\s*(Required Tools & Framework:)/gi, "\n$1")
     .replace(/\s*(Learning Tips & Motivation:)/gi, "\n$1")
-    .replace(/\s*(Avoid Common Mistakes:)/gi, "\n$1");
+    .replace(/\s*(Avoid Common Mistakes:)/gi, "\n$1")
+    .replace(/\s*(Übungsziel:)/gi, "\n$1")
+    .replace(/\s*(Schritt-für-Schritt:)/gi, "\n$1")
+    .replace(/\s*(Wiederholung & Dauer:)/gi, "\n$1")
+    .replace(/\s*(Benötigte Tools & Framework:)/gi, "\n$1")
+    .replace(/\s*(Lerntipps & Motivation:)/gi, "\n$1")
+    .replace(/\s*(Fehler vermeiden:)/gi, "\n$1");
 
   // Split content into lines and clean them
   const lines = preProcessed
@@ -42,7 +48,7 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
     const lowerLine = line.toLowerCase();
 
     // Section detection
-    if (lowerLine.startsWith("exercise goal:")) {
+    if (lowerLine.startsWith("exercise goal:") || lowerLine.startsWith("übungsziel:")) {
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }
@@ -51,7 +57,7 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
       continue;
     }
 
-    if (lowerLine.startsWith("step-by-step guide:")) {
+    if (lowerLine.startsWith("step-by-step guide:") || lowerLine.startsWith("schritt-für-schritt:")) {
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }
@@ -60,7 +66,7 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
       continue;
     }
 
-    if (lowerLine.startsWith("repetition & duration:")) {
+    if (lowerLine.startsWith("repetition & duration:") || lowerLine.startsWith("wiederholung & dauer:")) {
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }
@@ -69,7 +75,7 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
       continue;
     }
 
-    if (lowerLine.startsWith("required tools & framework:")) {
+    if (lowerLine.startsWith("required tools & framework:") || lowerLine.startsWith("benötigte tools & framework:")) {
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }
@@ -78,7 +84,7 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
       continue;
     }
 
-    if (lowerLine.startsWith("learning tips & motivation:")) {
+    if (lowerLine.startsWith("learning tips & motivation:") || lowerLine.startsWith("lerntipps & motivation:")) {
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }
@@ -87,7 +93,7 @@ export function parseTrainingContent(content: string): ParsedTrainingSections {
       continue;
     }
 
-    if (lowerLine.startsWith("avoid common mistakes:")) {
+    if (lowerLine.startsWith("avoid common mistakes:") || lowerLine.startsWith("fehler vermeiden:")) {
       if (currentSection && sectionContent.length > 0) {
         sections[currentSection as keyof ParsedTrainingSections] = sectionContent.join("\n").trim();
       }

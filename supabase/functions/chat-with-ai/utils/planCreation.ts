@@ -740,7 +740,7 @@ Format:
            "steps": [
              {
       "title": "Modul 1: [einzigartiger Modultitel]",
-      "description": "Übungsziel: [spezifisch]\\n\\nSchritt-für-Schritt: 1. [Erster] 2. [Zweiter] 3. [Dritter] 4. [Vierter]\\n\\nWiederholung & Dauer: [Zeit/Häufigkeit] Hinweis: [wichtig]\\n\\nBenötigte Tools & Framework: [Liste]\\nOrt: [wo]\\nZeitpunkt: [wann]\\nArtenanpassung: [Hinweise]\\n\\nLerntipps: [Tipp1] [Tipp2] [Tipp3]\\n\\nFehler vermeiden: [F1] [F2] [F3]"
+      "description": "Übungsziel: [spezifisch]\\n\\nSchritt-für-Schritt: 1. [Erster] 2. [Zweiter] 3. [Dritter] 4. [Vierter]\\n\\nWiederholung & Dauer: [Zeit/Häufigkeit] Hinweis: [wichtig]\\n\\nBenötigte Tools & Framework: [Liste]\\nOrt: [wo]\\nZeitpunkt: [wann]\\nArtenanpassung: [Hinweise]\\n\\nLerntipps & Motivation: [Tipp1] [Tipp2] [Tipp3]\\n\\nFehler vermeiden: [F1] [F2] [F3]"
     },
     { "title": "Modul 2: ...", "description": "..." },
     { "title": "Modul 3: ...", "description": "..." }
