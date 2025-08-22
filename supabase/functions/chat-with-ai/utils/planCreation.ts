@@ -882,6 +882,29 @@ export async function createTrainingPlan(
     total_points: 0,
   });
 
+  const { data: ticketResult, error: ticketError } = await supabaseClient
+    .from("support_tickets")
+    .insert({
+      user_id: userId,
+      subject: `Personalized Training Plan Created: ${planData.title}`,
+      category: "training",
+      status: "resolved",
+      is_resolved_by_ai: true,
+      resolved_at: new Date().toISOString(),
+      satisfaction_rating: 5,
+    })
+    .select()
+    .single();
+
+  if (!ticketError && ticketResult?.id) {
+    await supabaseClient.from("support_feedback").insert({
+      ticket_id: ticketResult.id,
+      user_id: userId,
+      rating: 5,
+      resolved_by: "ai",
+    });
+  }
+
   log.info("Training plan persisted:", planResult.id);
   return planResult;
 }
@@ -919,8 +942,14 @@ export async function processPlanCreationFromResponse(
     
   const normalized = normalizePlan(parsed);
 
-  // Skip translation for speed optimization
-  return normalized;
+  // Optional translation to user language
+  const translated = await translatePlanToUserLanguage(
+    normalized,
+    userLanguage,
+    openAIApiKey
+  );
+
+  return translated;
 }
 
 /* =========================

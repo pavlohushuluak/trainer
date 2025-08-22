@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send } from 'lucide-react';
@@ -19,29 +19,11 @@ export const ChatInput = ({
   isLoading 
 }: ChatInputProps) => {
   const { t } = useTranslations();
-  const inputRef = useRef<HTMLInputElement>(null);
-  
-  // Maintain focus after sending message
-  useEffect(() => {
-    if (!isLoading && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isLoading]);
-  
-  const handleSendMessage = () => {
-    onSendMessage();
-    // Focus input after sending
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    }, 100);
-  };
   
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      onSendMessage();
     }
   };
 
@@ -49,17 +31,15 @@ export const ChatInput = ({
     <div className="p-4">
       <div className="flex gap-2">
         <Input
-          ref={inputRef}
           placeholder={t('support.chatInput.placeholder')}
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={handleKeyPress}
           disabled={isLoading}
           className="flex-1"
-          autoFocus
         />
         <Button
-          onClick={handleSendMessage}
+          onClick={onSendMessage}
           disabled={isLoading || !newMessage.trim()}
           size="icon"
         >

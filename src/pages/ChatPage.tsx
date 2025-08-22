@@ -65,7 +65,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useTranslation as useI18n } from 'react-i18next';
-import { ThinkingAnimation } from '@/components/chat/ThinkingAnimation';
 
 interface ChatSession {
   id: string;
@@ -115,7 +114,6 @@ export const ChatPage = () => {
   const [hasStartedChat, setHasStartedChat] = useState(false);
   const [isContinuingChat, setIsContinuingChat] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   // Load chat sessions on component mount
   useEffect(() => {
@@ -577,12 +575,6 @@ export const ChatPage = () => {
       });
     } finally {
       setIsSending(false);
-      // Focus input after sending
-      setTimeout(() => {
-        if (inputRef.current) {
-          inputRef.current.focus();
-        }
-      }, 100);
     }
   };
 
@@ -1136,11 +1128,7 @@ export const ChatPage = () => {
                                     </Avatar>
                                   )}
                                   <div className="flex-1 min-w-0">
-                                    {msg.content.startsWith('💭') ? (
-                                      <ThinkingAnimation trainerName="Trainer" />
-                                    ) : (
-                                      <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{msg.content}</div>
-                                    )}
+                                    <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{msg.content}</div>
                                     <div className="flex items-center space-x-1 mt-1 text-xs opacity-70">
                                       <Clock className="h-3 w-3" />
                                       <span>{formatDate(msg.created_at)}</span>
@@ -1177,14 +1165,12 @@ export const ChatPage = () => {
                     {hasStartedChat && messages.length > 0 ? (
                       <div className="flex space-x-2">
                         <Input
-                          ref={inputRef}
                           placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
                           onKeyPress={handleKeyPress}
                           disabled={isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
                           className="flex-1 text-sm"
-                          autoFocus
                         />
                         <Button
                           onClick={sendMessage}
@@ -1230,14 +1216,12 @@ export const ChatPage = () => {
                       // Show normal input for new chats (no existing messages)
                       <div className="flex space-x-2">
                         <Input
-                          ref={inputRef}
                           placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
                           onKeyPress={handleKeyPress}
                           disabled={isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
                           className="flex-1 text-sm"
-                          autoFocus
                         />
                         <Button
                           onClick={sendMessage}

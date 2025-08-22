@@ -28,25 +28,7 @@ export async function getPetContext(supabaseClient: any, petId: string | null, u
     }
     
     if (pet) {
-      // Ensure both age and birth_date are always present
-      let enhancedPetData = { ...pet };
-      
-      // Calculate age from birth_date if age is missing
-      if (!enhancedPetData.age && enhancedPetData.birth_date) {
-        const birthDate = new Date(enhancedPetData.birth_date);
-        const now = new Date();
-        const ageInMonths = Math.floor((now.getTime() - birthDate.getTime()) / (30.44 * 24 * 60 * 60 * 1000));
-        enhancedPetData.age = Math.floor(ageInMonths / 12);
-      }
-      
-      // Calculate birth_date from age if birth_date is missing
-      if (!enhancedPetData.birth_date && enhancedPetData.age) {
-        const now = new Date();
-        const birthYear = now.getFullYear() - enhancedPetData.age;
-        enhancedPetData.birth_date = new Date(birthYear, 0, 1).toISOString().split('T')[0];
-      }
-      
-      petData = enhancedPetData;
+      petData = pet;
       
       // Enhanced context for better AI personalization
       let contextParts: string[] = [];
@@ -56,10 +38,10 @@ export async function getPetContext(supabaseClient: any, petId: string | null, u
       
       // Age calculation with months precision for young animals
       let ageInfo = '';
-      if (enhancedPetData.age) {
-        ageInfo = `${enhancedPetData.age}J`;
-      } else if (enhancedPetData.birth_date) {
-        const birthDate = new Date(enhancedPetData.birth_date);
+      if (pet.age) {
+        ageInfo = `${pet.age}J`;
+      } else if (pet.birth_date) {
+        const birthDate = new Date(pet.birth_date);
         const now = new Date();
         const ageInMonths = Math.floor((now.getTime() - birthDate.getTime()) / (30.44 * 24 * 60 * 60 * 1000));
         const years = Math.floor(ageInMonths / 12);
@@ -90,8 +72,8 @@ export async function getPetContext(supabaseClient: any, petId: string | null, u
       }
       
       // Enhanced context with development stage indicators
-      const ageInMonths = enhancedPetData.age ? enhancedPetData.age * 12 : 
-        (enhancedPetData.birth_date ? Math.floor((Date.now() - new Date(enhancedPetData.birth_date).getTime()) / (30.44 * 24 * 60 * 60 * 1000)) : 0);
+      const ageInMonths = pet.age ? pet.age * 12 : 
+        (pet.birth_date ? Math.floor((Date.now() - new Date(pet.birth_date).getTime()) / (30.44 * 24 * 60 * 60 * 1000)) : 0);
       
       if (ageInMonths <= 6) {
         contextParts.push('Entwicklungsphase: Welpe/Jungtier');

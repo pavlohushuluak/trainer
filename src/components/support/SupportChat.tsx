@@ -12,7 +12,6 @@ import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { SatisfactionRequest } from './SatisfactionRequest';
 import { useTranslations } from '@/hooks/useTranslations';
-import { ThinkingAnimation } from '../chat/ThinkingAnimation';
 
 interface SupportChatProps {
   isOpen: boolean;
@@ -177,7 +176,12 @@ export const SupportChat = ({ isOpen, onClose, onTicketChange }: SupportChatProp
               )}
               
               {isLoading && (
-                <ThinkingAnimation trainerName="Support" />
+                <div className="flex justify-start">
+                  <div className="bg-muted p-3 rounded-lg flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span className="text-sm">{t('support.chat.thinking')}</span>
+                  </div>
+                </div>
               )}
               
               {isResolvingTicket && (

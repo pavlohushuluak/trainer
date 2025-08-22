@@ -286,7 +286,6 @@ serve(async (req) => {
               species: petData.species,
               breed: petData.breed,
               age: petData.age,
-              birth_date: petData.birth_date,
               behavior_focus: petData.behavior_focus
             });
           } else {
@@ -364,7 +363,6 @@ serve(async (req) => {
         species: petData.species,
         breed: petData.breed,
         age: petData.age,
-        birth_date: petData.birth_date,
         behavior_focus: petData.behavior_focus,
         development_stage: petData.age ? 
           (petData.age <= 0.5 ? "puppy/kitten" : 
@@ -423,7 +421,7 @@ serve(async (req) => {
             created_at: createdPlan.created_at
           };
         } else {
-          console.error("❌ Plan creation failed - returning error immediately");
+          console.error("❌ Plan creation failed");
           result.plan_creation_error = userLanguage === "en" 
             ? "Failed to create training plan - please try again" 
             : "Trainingsplan konnte nicht erstellt werden - bitte versuche es erneut";
