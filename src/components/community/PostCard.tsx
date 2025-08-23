@@ -8,10 +8,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Heart, MessageCircle, CheckCircle, Clock, User, Play, Trash2, MoreVertical } from "lucide-react";
+import { Heart, MessageCircle, CheckCircle, Clock, User, Play, Trash2, MoreVertical, Maximize2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { de, enUS } from "date-fns/locale";
 import { CommentSection } from "./CommentSection";
+import { VideoModal } from "./VideoModal";
 import { useToast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
@@ -98,6 +99,7 @@ export const PostCard = ({ post }: PostCardProps) => {
   const { t, currentLanguage } = useTranslations();
   const [showComments, setShowComments] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   // Check if current user is the post owner
@@ -113,6 +115,12 @@ export const PostCard = ({ post }: PostCardProps) => {
         videoElement.play();
       }
     }
+  };
+
+  // Full window video handler
+  const handleFullWindowVideo = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the video toggle
+    setShowVideoModal(true);
   };
 
   // Fetch user profile only if post has a real user_id
@@ -398,6 +406,16 @@ export const PostCard = ({ post }: PostCardProps) => {
                   </div>
                 )}
 
+                {/* Full Window Button */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleFullWindowVideo}
+                  className="absolute top-2 right-2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white border border-white border-opacity-20 z-10"
+                >
+                  <Maximize2 className="h-4 w-4" />
+                </Button>
+
                 {/* Video Info */}
                 {post.video_duration && (
                   <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 bg-black bg-opacity-70 text-white text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded">
@@ -449,6 +467,15 @@ export const PostCard = ({ post }: PostCardProps) => {
           )}
         </CardContent>
       </Card>
+
+      {/* Video Modal */}
+      <VideoModal
+        isOpen={showVideoModal}
+        onClose={() => setShowVideoModal(false)}
+        videoUrl={post.video_url}
+        videoTitle={post.title}
+        posterUrl={post.video_thumbnail_url}
+      />
 
       {/* Delete Confirmation Dialog - only for real users */}
       {post.user_id && (

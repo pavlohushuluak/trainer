@@ -179,11 +179,11 @@ Kannst du mir helfen, einen Trainingsplan zu erstellen, der gut für sie funktio
 
     if (!planData) {
       console.error("❌ Failed to create plan using createFallbackPlan");
-      return null;
-    }
+       return null;
+     }
 
     console.log("✅ Plan created successfully using createFallbackPlan:", {
-      title: planData.title,
+          title: planData.title,
       stepsCount: planData.steps.length
     });
 

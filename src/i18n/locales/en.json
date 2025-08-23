@@ -5098,6 +5098,9 @@
         "fileSize": "File size: {size} MB",
         "withThumbnail": "• With thumbnail"
       },
+      "videoModal": {
+        "fullscreenHint": "Press F for fullscreen"
+      },
       "toasts": {
         "actionError": "Error",
         "actionErrorDescription": "Action could not be performed",

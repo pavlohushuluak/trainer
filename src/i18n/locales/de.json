@@ -4330,6 +4330,9 @@
           "fileSize": "Dateigröße: {size} MB",
           "withThumbnail": "• Mit Vorschaubild"
         },
+        "videoModal": {
+          "fullscreenHint": "F drücken für Vollbild"
+        },
         "toasts": {
           "actionError": "Fehler",
           "actionErrorDescription": "Aktion konnte nicht ausgeführt werden",
