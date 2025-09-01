@@ -61,8 +61,8 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex h-screen">
+    <div className="bg-background">
+      <div className="flex">
         {/* Mobile sidebar overlay */}
         {sidebarOpen && (
           <div 
