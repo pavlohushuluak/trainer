@@ -7,7 +7,6 @@ import { MetricCard } from './MetricCard';
 import { SubscriberMetrics } from './SubscriberMetrics';
 import { TrafficMetrics } from './TrafficMetrics';
 import { SupportMetrics } from './SupportMetrics';
-import { TrialConversionMetrics } from './TrialConversionMetrics';
 import { TimeRangeFilter } from './TimeRangeFilter';
 import { useState } from 'react';
 import { Users, UserCheck, UserPlus, TrendingUp } from 'lucide-react';
@@ -113,7 +112,6 @@ export const OptimizedAnalyticsDashboard = () => {
         <SubscriberMetrics timeRange={timeRange} />
         <TrafficMetrics timeRange={timeRange} />
         <SupportMetrics timeRange={timeRange} />
-        <TrialConversionMetrics timeRange={timeRange} />
       </div>
     </div>
   );

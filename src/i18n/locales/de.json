@@ -1543,12 +1543,22 @@
     "traffic": {
       "pageViews": "Seitenaufrufe",
       "uniqueUsers": "Eindeutige Benutzer",
-      "trialStarted": "Test gestartet",
       "totalViews": "Gesamtaufrufe",
       "differentVisitors": "Verschiedene Besucher",
       "newTrialUsers": "Neue Testbenutzer",
       "trafficTrend": "Verkehrstrend",
-      "trafficDescription": "Seitenaufrufe und eindeutige Benutzer über Zeit"
+      "trafficDescription": "Seitenaufrufe und eindeutige Benutzer über Zeit",
+      "mainPageViews": "Hauptseiten-Aufrufe",
+      "homePageViews": "Startseiten-Aufrufe",
+      "otherPageViews": "Andere Seiten-Aufrufe",
+      "mainPageVisits": "Hauptseiten-Besuche",
+      "homePageVisits": "Startseiten-Besuche",
+      "otherPageVisits": "Andere Seiten-Besuche",
+      "differentVisitors": "Verschiedene Besucher",
+      "pageViewsOverview": "Seitenaufrufe Übersicht",
+      "pageViewsByType": "Seitenaufrufe nach Typ über Zeit",
+      "uniqueUsersTrend": "Eindeutige Benutzer Trend",
+      "uniqueUsersOverTime": "Eindeutige Benutzer über Zeit"
     },
     "subscribers": {
       "monthly": "Monatlich",

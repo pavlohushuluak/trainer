@@ -1544,7 +1544,18 @@
       "differentVisitors": "Different Visitors",
       "newTrialUsers": "New Trial Users",
       "trafficTrend": "Traffic Trend",
-      "trafficDescription": "Page views and unique users over time"
+      "trafficDescription": "Page views and unique users over time",
+      "mainPageViews": "Main Page Views",
+      "homePageViews": "Home Page Views",
+      "otherPageViews": "Other Page Views",
+      "mainPageVisits": "Main page visits",
+      "homePageVisits": "Home page visits",
+      "otherPageVisits": "Other page visits",
+      "differentVisitors": "Different visitors",
+      "pageViewsOverview": "Page Views Overview",
+      "pageViewsByType": "Page views by type over time",
+      "uniqueUsersTrend": "Unique Users Trend",
+      "uniqueUsersOverTime": "Unique users over time"
     },
     "subscribers": {
       "monthly": "Monthly",
