@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { ThinkingAnimation } from '@/components/chat/ThinkingAnimation';
+import { FreeChatLimitDisplay } from '@/components/chat/FreeChatLimitDisplay';
 import {
   Dialog,
   DialogContent,
@@ -96,6 +97,22 @@ export const ChatPage = () => {
   const { i18n } = useI18n();
   const { hasActiveSubscription } = useSubscriptionStatus();
   const { usage, incrementUsage } = useFreeChatLimit();
+
+  // Debug: Log whenever usage changes in ChatPage
+  useEffect(() => {
+    console.log('🔄 ChatPage - usage changed:', {
+      userId: user?.id,
+      usage,
+      timestamp: new Date().toISOString()
+    });
+  }, [usage, user?.id]);
+
+  // Debug logging for usage state
+  console.log('🔍 ChatPage Debug:', {
+    hasActiveSubscription,
+    usage,
+    user: user?.id
+  });
 
   // State management
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -919,13 +936,27 @@ export const ChatPage = () => {
                     </h2>
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  onClick={handleCreateNewSession}
-                  className="h-8 w-8 p-0 bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
+                <div className="flex items-center space-x-2">
+                  {/* Show usage indicator for free users */}
+                  {!hasActiveSubscription && (
+                    <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 border border-orange-200 dark:border-orange-800 rounded-lg px-2 py-1">
+                      <div className="flex items-center space-x-1">
+                        <MessageSquare className="h-3 w-3 text-orange-600 dark:text-orange-400" />
+                        <span className="text-xs font-medium text-orange-900 dark:text-orange-100">
+                          {usage.questionsUsed}/{usage.maxQuestions}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  <Button
+                    size="sm"
+                    onClick={handleCreateNewSession}
+                    disabled={!hasActiveSubscription && usage.hasReachedLimit}
+                    className="h-8 w-8 p-0 bg-blue-600 hover:bg-blue-700 text-white shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
 
               {/* Desktop Header */}
@@ -935,13 +966,16 @@ export const ChatPage = () => {
                     <History className="h-4 w-4 sm:h-5 sm:w-5" />
                     <span>{t('chat.page.history.title')}</span>
                   </CardTitle>
-                  <Button
-                    size="sm"
-                    onClick={handleCreateNewSession}
-                    className="h-8 w-8 p-0"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      size="sm"
+                      onClick={handleCreateNewSession}
+                      disabled={!hasActiveSubscription && usage.hasReachedLimit}
+                      className="h-8 w-8 p-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
 
@@ -956,6 +990,17 @@ export const ChatPage = () => {
                     </div>
                   ) : filteredSessions.length === 0 ? (
                     <div className="text-center p-6 sm:p-8 text-muted-foreground">
+                      {/* Show free chat limit display for free users */}
+                      {!hasActiveSubscription && (
+                        <div className="mb-4">
+                          <FreeChatLimitDisplay
+                            questionsUsed={usage.questionsUsed}
+                            maxQuestions={usage.maxQuestions}
+                            hasReachedLimit={usage.hasReachedLimit}
+                            onUpgrade={() => navigate('/#pricing')}
+                          />
+                        </div>
+                      )}
                       <MessageSquare className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
                       <p className="text-sm sm:text-base">
                         {t('chat.page.history.empty')}
@@ -964,7 +1009,8 @@ export const ChatPage = () => {
                         variant="outline"
                         size="sm"
                         onClick={handleCreateNewSession}
-                        className="mt-4"
+                        disabled={!hasActiveSubscription && usage.hasReachedLimit}
+                        className="mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Plus className="h-4 w-4 mr-2" />
                         {t('chat.page.history.startChat')}
@@ -1025,6 +1071,17 @@ export const ChatPage = () => {
               {!selectedSession ? (
                 <div className="flex-1 flex items-center justify-center p-4">
                   <div className="text-center max-w-md">
+                    {/* Show free chat limit display for free users */}
+                    {!hasActiveSubscription && (
+                      <div className="mb-6">
+                        <FreeChatLimitDisplay
+                          questionsUsed={usage.questionsUsed}
+                          maxQuestions={usage.maxQuestions}
+                          hasReachedLimit={usage.hasReachedLimit}
+                          onUpgrade={() => navigate('/#pricing')}
+                        />
+                      </div>
+                    )}
                     <div className="bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
                       <MessageSquare className="h-10 w-10 text-blue-600 dark:text-blue-400" />
                     </div>
@@ -1036,7 +1093,8 @@ export const ChatPage = () => {
                     </p>
                     <Button
                       onClick={handleCreateNewSession}
-                      className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                      disabled={!hasActiveSubscription && usage.hasReachedLimit}
+                      className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       size="lg"
                     >
                       <Plus className="h-5 w-5 mr-2" />
@@ -1066,6 +1124,22 @@ export const ChatPage = () => {
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
+                        {/* Show usage indicator for free users */}
+                        {!hasActiveSubscription && (
+                          <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 border border-orange-200 dark:border-orange-800 rounded-lg px-3 py-2">
+                            <div className="flex items-center space-x-2">
+                              <MessageSquare className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                              <div className="text-sm">
+                                <span className="font-medium text-orange-900 dark:text-orange-100">
+                                  {usage.questionsUsed}/{usage.maxQuestions}
+                                </span>
+                                <span className="text-orange-600 dark:text-orange-400 ml-1">
+                                  {usage.hasReachedLimit ? ' • Limit reached' : ' • Questions remaining'}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                         {selectedSession.pet_profiles && (
                           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2">
                             <div className="flex items-center space-x-2">
@@ -1087,7 +1161,7 @@ export const ChatPage = () => {
                             onClick={() => setCreatePlanModalOpen(true)}
                             variant="outline"
                             size="sm"
-                            disabled={isSending || isCreatingPlan}
+                            disabled={isSending || isCreatingPlan || (!hasActiveSubscription && usage.hasReachedLimit)}
                             className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/40 dark:hover:to-emerald-900/40 text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <FileText className="h-4 w-4 mr-2" />
@@ -1171,21 +1245,14 @@ export const ChatPage = () => {
 
                   {/* Input Area */}
                   <div className="p-3 sm:p-4 border-t border-border/50">
-                    {/* Show limit reached message for free users */}
-                    {!hasActiveSubscription && usage.hasReachedLimit && (
-                      <div className="mb-4 p-3 bg-orange-50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-800 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <AlertTriangle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                          <div className="flex-1">
-                            <p className="text-sm font-medium text-orange-900 dark:text-orange-100">
-                              {t('chat.freeChatLimit.limitReached.title')}
-                            </p>
-                            <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
-                              {t('chat.freeChatLimit.limitReached.description')}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+                    {/* Show free chat limit display for free users */}
+                    {!hasActiveSubscription && (
+                      <FreeChatLimitDisplay
+                        questionsUsed={usage.questionsUsed}
+                        maxQuestions={usage.maxQuestions}
+                        hasReachedLimit={usage.hasReachedLimit}
+                        onUpgrade={() => navigate('/#pricing')}
+                      />
                     )}
                     {hasStartedChat && messages.length > 0 ? (
                       <div className="flex space-x-2">
@@ -1341,6 +1408,18 @@ export const ChatPage = () => {
               {t('chat.petSelection.description')}
             </DialogDescription>
           </DialogHeader>
+
+          {/* Show free chat limit display for free users */}
+          {!hasActiveSubscription && (
+            <div className="mb-4">
+              <FreeChatLimitDisplay
+                questionsUsed={usage.questionsUsed}
+                maxQuestions={usage.maxQuestions}
+                hasReachedLimit={usage.hasReachedLimit}
+                onUpgrade={() => navigate('/#pricing')}
+              />
+            </div>
+          )}
 
           <div className="space-y-3">
             {pets.map((pet) => (
@@ -1590,6 +1669,17 @@ export const ChatPage = () => {
           </DialogHeader>
 
           <div className="space-y-6">
+            {/* Show free chat limit display for free users */}
+            {!hasActiveSubscription && (
+              <div className="mb-4">
+                <FreeChatLimitDisplay
+                  questionsUsed={usage.questionsUsed}
+                  maxQuestions={usage.maxQuestions}
+                  hasReachedLimit={usage.hasReachedLimit}
+                  onUpgrade={() => navigate('/#pricing')}
+                />
+              </div>
+            )}
             {/* Professional description with icons */}
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <div className="flex items-start space-x-3">
@@ -1674,8 +1764,8 @@ export const ChatPage = () => {
             </Button>
             <Button
               onClick={handleCreatePlan}
-              disabled={!planReason.trim() || isCreatingPlan || isSending}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              disabled={!planReason.trim() || isCreatingPlan || isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isCreatingPlan ? (
                 <>

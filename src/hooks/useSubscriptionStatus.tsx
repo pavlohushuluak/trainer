@@ -12,6 +12,7 @@ export const useSubscriptionStatus = () => {
       if (!user) return null;
       
       try {
+        console.log('🔍 Querying subscribers table for user:', user.id);
         const { data, error } = await supabase
           .from('subscribers')
           .select('*')
@@ -20,6 +21,12 @@ export const useSubscriptionStatus = () => {
 
         if (error) {
           console.error('❌ Database subscription query error:', error);
+          console.error('❌ Error details:', {
+            code: error.code,
+            message: error.message,
+            details: error.details,
+            hint: error.hint
+          });
           // Don't throw error for missing subscription (normal for free users)
           if (error.code === 'PGRST116') {
             return null;
@@ -27,6 +34,7 @@ export const useSubscriptionStatus = () => {
           throw error;
         }
         
+        console.log('📊 Raw subscription data from DB:', data);
         return data;
       } catch (error) {
         console.error('💥 CRITICAL: Direct subscription query failed:', error);
@@ -69,12 +77,34 @@ export const useSubscriptionStatus = () => {
     return 'free';
   };
 
+  // Debug logging for subscription mode calculation
+  console.log('🔍 getSubscriptionMode Debug:', {
+    isLoading,
+    subscription,
+    isActiveSubscription: subscription?.subscribed === true && 
+      (subscription?.subscription_status === 'active' || subscription?.subscription_status === 'trialing'),
+    isExpired: subscription?.subscription_end ? 
+      new Date(subscription.subscription_end) < new Date() : false,
+    mode: getSubscriptionMode()
+  });
+
   const subscriptionMode = getSubscriptionMode();
   
   const hasActiveSubscription = subscriptionMode === 'premium' || subscriptionMode === 'trial';
   const isTrialing = subscriptionMode === 'trial';
   const isPremium = subscriptionMode === 'premium';
-  const isExpired = subscription?.subscription_end ? new Date(subscription.subscription_end) < new Date() : false;
+  const isExpired = subscription?.subscribed ? new Date(subscription.subscription_end) < new Date() : false;
+
+  // Debug logging
+  console.log('🔍 useSubscriptionStatus Debug:', {
+    userId: user?.id,
+    subscription,
+    subscriptionMode,
+    hasActiveSubscription,
+    isTrialing,
+    isPremium,
+    isExpired
+  });
 
   // Manual refresh function that also clears cache
   const forceRefresh = async () => {
