@@ -73,13 +73,20 @@ export const TrafficMetrics = ({ timeRange }: TrafficMetricsProps) => {
       });
 
       // Convert to array and format
-      const chartData = Object.values(dailyStats).map(day => ({
-        date: new Date(day.date).toLocaleDateString('de-DE', { month: 'short', day: 'numeric' }),
-        mainPageViews: day.mainPageViews,
-        homePageViews: day.homePageViews,
-        otherPageViews: day.otherPageViews,
-        uniqueUsers: day.uniqueUsers.size
-      }));
+      const chartData = Object.values(dailyStats).map(day => {
+        // Create date in local timezone to avoid UTC conversion issues
+        const [year, month, dayOfMonth] = day.date.split('-').map(Number);
+        const localDate = new Date(year, month - 1, dayOfMonth); // month is 0-indexed
+        const formattedDate = localDate.toLocaleDateString('de-DE', { month: 'short', day: 'numeric' });
+        
+        return {
+          date: formattedDate,
+          mainPageViews: day.mainPageViews,
+          homePageViews: day.homePageViews,
+          otherPageViews: day.otherPageViews,
+          uniqueUsers: day.uniqueUsers.size
+        };
+      });
 
       // Calculate totals
       const totalMainPageViews = events?.filter(e => e.event_type === 'mainpage_view').length || 0;
