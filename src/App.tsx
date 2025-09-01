@@ -10,6 +10,7 @@ import { AuthProvider } from "@/hooks/auth/AuthProvider";
 import { ThemeProvider } from "@/hooks/ThemeProvider";
 import { PerformanceMonitor } from "@/components/performance/PerformanceMonitor";
 import { ResourcePreloader } from "@/components/performance/ResourcePreloader";
+import { PageViewTracker } from "@/components/analytics/PageViewTracker";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { store } from "@/store";
 import { usePetProfiles } from "@/hooks/usePetProfiles";
@@ -127,6 +128,7 @@ const App = () => {
                 <LanguageInitializer />
                 <PerformanceMonitor />
                 <ResourcePreloader resources={criticalResources} />
+                <PageViewTracker />
                 
                 {/* Centralized pet profiles data manager */}
                 <PetProfilesDataManager />

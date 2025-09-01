@@ -47,7 +47,7 @@ const Index = () => {
   });
 
   useEffect(() => {
-    trackEvent('page_view');
+    // Page view tracking is now handled by PageViewTracker component
     
     // Handle OAuth callback and auto-login logic
     const handleOAuthCallback = async () => {

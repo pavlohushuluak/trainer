@@ -12,7 +12,7 @@ export const useAnalytics = () => {
   const { user } = useAuth();
 
   const trackEvent = async (
-    eventType: 'page_view' | 'chat_started' | 'subscription_created' | 'trial_started' | 'auth_required_for_chat' | 'performance_lcp' | 'performance_cls' | 'performance_fid' | 'performance_ttfb' | 'performance_load_time',
+    eventType: 'page_view' | 'homepage_view' | 'mainpage_view' | 'chat_started' | 'subscription_created' | 'trial_started' | 'auth_required_for_chat' | 'performance_lcp' | 'performance_cls' | 'performance_fid' | 'performance_ttfb' | 'performance_load_time',
     metadata?: Record<string, any>
   ) => {
     try {
@@ -54,5 +54,21 @@ export const useAnalytics = () => {
     }
   };
 
-  return { trackEvent };
+  // Specialized function for tracking page views based on current path
+  const trackPageView = async (metadata?: Record<string, any>) => {
+    const currentPath = window.location.pathname;
+    
+    if (currentPath === '/') {
+      // Homepage view
+      await trackEvent('homepage_view', metadata);
+    } else if (currentPath === '/mein-tiertraining') {
+      // Main training page view
+      await trackEvent('mainpage_view', metadata);
+    } else {
+      // Generic page view for other pages
+      await trackEvent('page_view', metadata);
+    }
+  };
+
+  return { trackEvent, trackPageView };
 };
