@@ -25,25 +25,25 @@ export const FreeConversionMetrics = ({ timeRange }: FreeConversionMetricsProps)
       // Get free users and their conversion status
       const { data: subscribers } = await supabase
         .from('subscribers')
-        .select('subscription_status, created_at, subscribed, questions_num')
+        .select('subscription_status, created_at, subscribed, questions_num, subscription_tier')
         .gte('created_at', startDate.toISOString());
 
       // Free users are those who are not subscribed and have used some questions
       const freeUsers = subscribers?.filter(s => 
-        !s.subscribed && s.questions_num && s.questions_num > 0
+        s.subscription_tier === 'free'
       ) || [];
       
       // Converted users are those who became paying customers
-      const convertedUsers = subscribers?.filter(s => s.subscribed === true) || [];
+      const convertedUsers = subscribers?.filter(s => s.subscription_tier !== 'free') || [];
       
       // Free users who haven't converted (still using free tier)
       const activeFreeUsers = subscribers?.filter(s => 
-        !s.subscribed && s.questions_num && s.questions_num > 0 && s.questions_num < 10
+        s.subscription_tier === 'free'
       ) || [];
       
       // Free users who have reached their limit but haven't converted
       const limitReachedUsers = subscribers?.filter(s => 
-        !s.subscribed && s.questions_num && s.questions_num >= 10
+        s.subscription_tier === 'free' && s.questions_num && s.questions_num >= 10
       ) || [];
 
       // Group by week for chart
@@ -56,7 +56,7 @@ export const FreeConversionMetrics = ({ timeRange }: FreeConversionMetricsProps)
         
         if (!weeklyData[weekKey]) {
           weeklyData[weekKey] = {
-            week: weekStart.toLocaleDateString('de-DE', { month: 'short', day: 'numeric' }),
+            week: weekStart.toLocaleDateString(t('i18n.locale') === 'de' ? 'de-DE' : 'en-US', { month: 'short', day: 'numeric' }),
             weekKey: weekKey, // Store the actual week key for sorting
             newFreeUsers: 0,
             conversions: 0,
@@ -64,10 +64,10 @@ export const FreeConversionMetrics = ({ timeRange }: FreeConversionMetricsProps)
           };
         }
 
-        if (!sub.subscribed && sub.questions_num && sub.questions_num > 0) {
+        if (sub.subscription_tier === 'free') {
           weeklyData[weekKey].newFreeUsers++;
         }
-        if (sub.subscribed) {
+        if (sub.subscription_tier !== 'free') {
           weeklyData[weekKey].conversions++;
         }
       });

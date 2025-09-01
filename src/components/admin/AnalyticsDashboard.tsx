@@ -53,13 +53,13 @@ export const AnalyticsDashboard = () => {
         // Total users
         supabase.from('profiles').select('*', { count: 'exact', head: true }),
         // Active subscribers
-        supabase.from('subscribers').select('*', { count: 'exact', head: true }).eq('subscribed', true),
+        supabase.from('subscribers').select('*', { count: 'exact', head: true }).not('subscription_tier', 'eq', 'free'),
         // Free users (users who are not subscribed and have used questions)
-        supabase.from('subscribers').select('count', { count: 'exact', head: true }).not('subscribed', 'eq', true).not('questions_num', 'eq', 0).not('questions_num', 'is', null),
+        supabase.from('subscribers').select('count', { count: 'exact', head: true }).eq('subscription_tier', 'free'),
         // New signups in time range
         supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', startDate).lte('created_at', endDate),
         // Conversion data (users who became paying customers)
-        supabase.from('subscribers').select('count', { count: 'exact', head: true }).eq('subscribed', true).gte('created_at', startDate).lte('created_at', endDate)
+        supabase.from('subscribers').select('count', { count: 'exact', head: true }).not('subscription_tier', 'eq', 'free')
       ]);
 
       // Extract results with fallbacks
@@ -70,7 +70,7 @@ export const AnalyticsDashboard = () => {
       const conversions = conversionsResult.status === 'fulfilled' ? conversionsResult.value.count || 0 : 0;
 
       // Calculate conversion rate
-      const conversionRate = freeUsers > 0 ? Math.round((conversions / freeUsers) * 100) : 0;
+      const conversionRate = freeUsers > 0 ? Math.round((conversions / (freeUsers + activeSubscribers)) * 100) : 0;
 
       // Log any errors
       [totalUsersResult, activeSubscribersResult, freeUsersResult, newSignupsResult, conversionsResult].forEach((result, index) => {
@@ -153,7 +153,7 @@ export const AnalyticsDashboard = () => {
           title={t('adminAnalytics.metrics.conversionRate')}
           value={`${overviewStats?.conversionRate || 0}%`}
           icon={TrendingUp}
-          description={t('adminAnalytics.metrics.trialToPaying')}
+          description={t('adminAnalytics.metrics.freeToPaying')}
         />
       </div>
 

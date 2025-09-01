@@ -1520,6 +1520,7 @@
     "metrics": {
       "totalUsers": "Total Users",
       "activeSubscriptions": "Active Subscriptions",
+      "activeSubscribers": "Active Subscribers",
       "freeUsers": "Free Users",
       "newSignups": "New Signups",
       "conversionRate": "Conversion Rate",
@@ -1529,6 +1530,10 @@
       "lastDays": "Last {{days}} days",
       "freeToPaying": "Free → Paying",
       "vsPreviousPeriod": "vs. Previous Period"
+    },
+    "dashboard": {
+      "title": "Analytics Dashboard (Optimized)",
+      "description": "Performance-optimized analytics with caching and lazy loading"
     },
     "tabs": {
       "traffic": "Traffic & Engagement",
@@ -1565,7 +1570,15 @@
       "yearlySubscribers": "Yearly Subscribers",
       "churnRate": "Churn Rate",
       "growth": "Growth",
-      "churn": "Churn"
+      "churn": "Churn",
+      "subscriberGrowth": "Subscriber Growth",
+      "growthChurnNetGrowth": "Growth, churn and net growth",
+      "activeSubscribersTrend": "Active Subscribers Trend",
+      "activeSubscribersOverTime": "Development of active subscribers over time",
+      "planDistribution": "Plan Distribution",
+      "monthlyVsYearlyPlans": "Monthly vs. yearly subscription plans",
+      "netGrowth": "Net Growth",
+      "totalActive": "Total Active"
     },
     "support": {
       "technicalIssues": "Technical Issues",

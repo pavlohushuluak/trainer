@@ -49,7 +49,8 @@ export const SubscriberMetrics = ({ timeRange }: SubscriberMetricsProps) => {
         
         if (!monthlyGrowth[monthKey]) {
           monthlyGrowth[monthKey] = {
-            month: date.toLocaleDateString('de-DE', { year: 'numeric', month: 'short' }),
+            month: date.toLocaleDateString(t('i18n.locale') === 'de' ? 'de-DE' : 'en-US', { year: 'numeric', month: 'short' }),
+            monthKey: monthKey, // Store the actual month key for sorting
             newSubs: 0,
             churned: 0,
             netGrowth: 0,
@@ -82,7 +83,10 @@ export const SubscriberMetrics = ({ timeRange }: SubscriberMetricsProps) => {
         month.totalActive = runningTotal;
       });
 
-      const chartData = Object.values(monthlyGrowth);
+      // Sort chart data by month key for proper chronological order
+      const chartData = Object.values(monthlyGrowth).sort((a, b) => {
+        return a.monthKey.localeCompare(b.monthKey);
+      });
 
       // Plan distribution with theme-aware colors
       const planDistribution = [
@@ -185,8 +189,8 @@ export const SubscriberMetrics = ({ timeRange }: SubscriberMetricsProps) => {
         {/* Subscriber Growth Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>{t('adminAnalytics.subscribers.growth')}</CardTitle>
-            <CardDescription>{t('adminAnalytics.subscribers.growth')}, {t('adminAnalytics.subscribers.churn')} und Netto-Wachstum</CardDescription>
+            <CardTitle>{t('adminAnalytics.subscribers.subscriberGrowth')}</CardTitle>
+            <CardDescription>{t('adminAnalytics.subscribers.growthChurnNetGrowth')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig}>
@@ -211,8 +215,8 @@ export const SubscriberMetrics = ({ timeRange }: SubscriberMetricsProps) => {
         {/* Active Subscribers Trend */}
         <Card>
           <CardHeader>
-            <CardTitle>{t('adminAnalytics.subscribers.activeSubscribers')} Trend</CardTitle>
-            <CardDescription>Entwicklung der aktiven Abonnenten über Zeit</CardDescription>
+            <CardTitle>{t('adminAnalytics.subscribers.activeSubscribersTrend')}</CardTitle>
+            <CardDescription>{t('adminAnalytics.subscribers.activeSubscribersOverTime')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig}>

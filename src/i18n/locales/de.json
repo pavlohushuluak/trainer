@@ -1524,6 +1524,7 @@
     "metrics": {
       "totalUsers": "Gesamtbenutzer",
       "activeSubscriptions": "Aktive Abonnements",
+      "activeSubscribers": "Aktive Abonnenten",
       "freeUsers": "Kostenlose Benutzer",
       "newSignups": "Neue Anmeldungen",
       "conversionRate": "Konversionsrate",
@@ -1533,6 +1534,10 @@
       "lastDays": "Letzte {{days}} Tage",
       "freeToPaying": "Kostenlos → Zahlend",
       "vsPreviousPeriod": "vs. Vorheriger Zeitraum"
+    },
+    "dashboard": {
+      "title": "Analytics Dashboard (Optimiert)",
+      "description": "Leistungsoptimierte Analysen mit Caching und Lazy Loading"
     },
     "tabs": {
       "traffic": "Verkehr & Engagement",
@@ -1568,7 +1573,15 @@
       "yearlySubscribers": "Jährliche Abonnenten",
       "churnRate": "Kündigungsrate",
       "growth": "Wachstum",
-      "churn": "Kündigungen"
+      "churn": "Kündigungen",
+      "subscriberGrowth": "Abonnenten-Wachstum",
+      "growthChurnNetGrowth": "Wachstum, Kündigungen und Netto-Wachstum",
+      "activeSubscribersTrend": "Aktive Abonnenten Trend",
+      "activeSubscribersOverTime": "Entwicklung der aktiven Abonnenten über Zeit",
+      "planDistribution": "Plan-Verteilung",
+      "monthlyVsYearlyPlans": "Monatliche vs. jährliche Abonnement-Pläne",
+      "netGrowth": "Netto-Wachstum",
+      "totalActive": "Gesamt Aktiv"
     },
     "support": {
       "technicalIssues": "Technische Probleme",
