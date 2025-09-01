@@ -8,30 +8,42 @@ import { Loader2, UserPlus, TrendingUp, Target } from 'lucide-react';
 import { useThemeContext } from '@/hooks/ThemeProvider';
 import { useTranslation } from 'react-i18next';
 
-interface TrialConversionMetricsProps {
+interface FreeConversionMetricsProps {
   timeRange: string;
 }
 
-export const TrialConversionMetrics = ({ timeRange }: TrialConversionMetricsProps) => {
+export const FreeConversionMetrics = ({ timeRange }: FreeConversionMetricsProps) => {
   const { t } = useTranslation();
   const { resolvedTheme } = useThemeContext();
   const { data: conversionData, isLoading } = useQuery({
-    queryKey: ['conversion-metrics', timeRange],
+    queryKey: ['free-conversion-metrics', timeRange],
     queryFn: async () => {
       const days = parseInt(timeRange);
       const now = new Date();
       const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
 
-      // Get trial users and their conversion status
+      // Get free users and their conversion status
       const { data: subscribers } = await supabase
         .from('subscribers')
-        .select('subscription_status, created_at, trial_end, subscribed')
+        .select('subscription_status, created_at, subscribed, questions_num')
         .gte('created_at', startDate.toISOString());
 
-      const trialUsers = subscribers?.filter(s => s.subscription_status === 'trialing') || [];
+      // Free users are those who are not subscribed and have used some questions
+      const freeUsers = subscribers?.filter(s => 
+        !s.subscribed && s.questions_num && s.questions_num > 0
+      ) || [];
+      
+      // Converted users are those who became paying customers
       const convertedUsers = subscribers?.filter(s => s.subscribed === true) || [];
-      const expiredTrials = subscribers?.filter(s => 
-        s.trial_end && new Date(s.trial_end) < now && !s.subscribed
+      
+      // Free users who haven't converted (still using free tier)
+      const activeFreeUsers = subscribers?.filter(s => 
+        !s.subscribed && s.questions_num && s.questions_num > 0 && s.questions_num < 10
+      ) || [];
+      
+      // Free users who have reached their limit but haven't converted
+      const limitReachedUsers = subscribers?.filter(s => 
+        !s.subscribed && s.questions_num && s.questions_num >= 10
       ) || [];
 
       // Group by week for chart
@@ -45,14 +57,15 @@ export const TrialConversionMetrics = ({ timeRange }: TrialConversionMetricsProp
         if (!weeklyData[weekKey]) {
           weeklyData[weekKey] = {
             week: weekStart.toLocaleDateString('de-DE', { month: 'short', day: 'numeric' }),
-            newTrials: 0,
+            weekKey: weekKey, // Store the actual week key for sorting
+            newFreeUsers: 0,
             conversions: 0,
             conversionRate: 0
           };
         }
 
-        if (sub.subscription_status === 'trialing') {
-          weeklyData[weekKey].newTrials++;
+        if (!sub.subscribed && sub.questions_num && sub.questions_num > 0) {
+          weeklyData[weekKey].newFreeUsers++;
         }
         if (sub.subscribed) {
           weeklyData[weekKey].conversions++;
@@ -61,30 +74,35 @@ export const TrialConversionMetrics = ({ timeRange }: TrialConversionMetricsProp
 
       // Calculate conversion rates
       Object.values(weeklyData).forEach((week: any) => {
-        week.conversionRate = week.newTrials > 0 ? 
-          Math.round((week.conversions / week.newTrials) * 100) : 0;
+        week.conversionRate = week.newFreeUsers > 0 ? 
+          Math.round((week.conversions / week.newFreeUsers) * 100) : 0;
       });
 
-      const chartData = Object.values(weeklyData);
+      // Convert to array and sort by date (week key)
+      const chartData = Object.values(weeklyData).sort((a, b) => {
+        // Sort by weekKey which contains the actual date string (YYYY-MM-DD format)
+        return a.weekKey.localeCompare(b.weekKey);
+      });
 
       // Pie chart data for conversion funnel with theme-aware colors
       const funnelData = [
-        { name: t('adminAnalytics.trialConversion.activeTrialUsers'), value: trialUsers.length, fill: resolvedTheme === 'dark' ? '#8b5cf6' : '#8884d8' },
-        { name: t('adminAnalytics.trialConversion.converted'), value: convertedUsers.length, fill: resolvedTheme === 'dark' ? '#10b981' : '#82ca9d' },
-        { name: t('adminAnalytics.trialConversion.trialExpired'), value: expiredTrials.length, fill: resolvedTheme === 'dark' ? '#f59e0b' : '#ffc658' }
+        { name: t('adminAnalytics.freeConversion.activeFreeUsers'), value: activeFreeUsers.length, fill: resolvedTheme === 'dark' ? '#8b5cf6' : '#8884d8' },
+        { name: t('adminAnalytics.freeConversion.converted'), value: convertedUsers.length, fill: resolvedTheme === 'dark' ? '#10b981' : '#82ca9d' },
+        { name: t('adminAnalytics.freeConversion.limitReached'), value: limitReachedUsers.length, fill: resolvedTheme === 'dark' ? '#f59e0b' : '#ffc658' }
       ];
 
-      const totalConversionRate = trialUsers.length > 0 ? 
-        Math.round((convertedUsers.length / (trialUsers.length + convertedUsers.length + expiredTrials.length)) * 100) : 0;
+      const totalConversionRate = freeUsers.length > 0 ? 
+        Math.round((convertedUsers.length / (freeUsers.length + convertedUsers.length)) * 100) : 0;
 
       return {
         chartData,
         funnelData,
         totals: {
-          newTrials: trialUsers.length,
+          newFreeUsers: freeUsers.length,
           conversions: convertedUsers.length,
           conversionRate: totalConversionRate,
-          expiredTrials: expiredTrials.length
+          limitReachedUsers: limitReachedUsers.length,
+          activeFreeUsers: activeFreeUsers.length
         }
       };
     },
@@ -99,12 +117,12 @@ export const TrialConversionMetrics = ({ timeRange }: TrialConversionMetricsProp
   }
 
   const chartConfig = {
-    newTrials: {
-      label: t('adminAnalytics.trialConversion.newTrials'),
+    newFreeUsers: {
+      label: t('adminAnalytics.freeConversion.newFreeUsers'),
       color: resolvedTheme === 'dark' ? "hsl(250, 95%, 60%)" : "hsl(var(--chart-1))",
     },
     conversions: {
-      label: t('adminAnalytics.trialConversion.conversions'),
+      label: t('adminAnalytics.freeConversion.conversions'),
       color: resolvedTheme === 'dark' ? "hsl(142, 76%, 36%)" : "hsl(var(--chart-2))",
     },
   };
@@ -115,45 +133,45 @@ export const TrialConversionMetrics = ({ timeRange }: TrialConversionMetricsProp
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.trialConversion.newTrialUsers')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('adminAnalytics.freeConversion.newFreeUsers')}</CardTitle>
             <UserPlus className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{conversionData?.totals.newTrials || 0}</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.trialConversion.inTrial')}</p>
+            <div className="text-2xl font-bold">{conversionData?.totals.newFreeUsers || 0}</div>
+            <p className="text-xs text-muted-foreground">{t('adminAnalytics.freeConversion.usingFreeTier')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.trialConversion.conversions')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('adminAnalytics.freeConversion.conversions')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{conversionData?.totals.conversions || 0}</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.trialConversion.trialToPaying')}</p>
+            <p className="text-xs text-muted-foreground">{t('adminAnalytics.freeConversion.freeToPaying')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.trialConversion.conversionRate')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('adminAnalytics.freeConversion.conversionRate')}</CardTitle>
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{conversionData?.totals.conversionRate || 0}%</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.trialConversion.successRate')}</p>
+            <p className="text-xs text-muted-foreground">{t('adminAnalytics.freeConversion.successRate')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.trialConversion.expiredTrials')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('adminAnalytics.freeConversion.limitReached')}</CardTitle>
             <UserPlus className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{conversionData?.totals.expiredTrials || 0}</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.trialConversion.notConverted')}</p>
+            <div className="text-2xl font-bold">{conversionData?.totals.limitReachedUsers || 0}</div>
+            <p className="text-xs text-muted-foreground">{t('adminAnalytics.freeConversion.notConverted')}</p>
           </CardContent>
         </Card>
       </div>
@@ -162,8 +180,8 @@ export const TrialConversionMetrics = ({ timeRange }: TrialConversionMetricsProp
         {/* Weekly Conversion Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>{t('adminAnalytics.trialConversion.weeklyConversion')}</CardTitle>
-            <CardDescription>{t('adminAnalytics.trialConversion.newTrialsAndConversions')}</CardDescription>
+            <CardTitle>{t('adminAnalytics.freeConversion.weeklyConversion')}</CardTitle>
+            <CardDescription>{t('adminAnalytics.freeConversion.newFreeUsersAndConversions')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig}>
@@ -178,8 +196,8 @@ export const TrialConversionMetrics = ({ timeRange }: TrialConversionMetricsProp
                   axisLine={{ stroke: resolvedTheme === 'dark' ? '#374151' : '#d1d5db' }}
                 />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="newTrials" fill={resolvedTheme === 'dark' ? '#8b5cf6' : '#8884d8'} name={t('adminAnalytics.trialConversion.newTrials')} />
-                <Bar dataKey="conversions" fill={resolvedTheme === 'dark' ? '#10b981' : '#82ca9d'} name={t('adminAnalytics.trialConversion.conversions')} />
+                <Bar dataKey="newFreeUsers" fill={resolvedTheme === 'dark' ? '#8b5cf6' : '#8884d8'} name={t('adminAnalytics.freeConversion.newFreeUsers')} />
+                <Bar dataKey="conversions" fill={resolvedTheme === 'dark' ? '#10b981' : '#82ca9d'} name={t('adminAnalytics.freeConversion.conversions')} />
               </BarChart>
             </ChartContainer>
           </CardContent>
@@ -188,8 +206,8 @@ export const TrialConversionMetrics = ({ timeRange }: TrialConversionMetricsProp
         {/* Conversion Funnel */}
         <Card>
           <CardHeader>
-            <CardTitle>{t('adminAnalytics.trialConversion.conversionFunnel')}</CardTitle>
-            <CardDescription>{t('adminAnalytics.trialConversion.userStatusDistribution')}</CardDescription>
+            <CardTitle>{t('adminAnalytics.freeConversion.conversionFunnel')}</CardTitle>
+            <CardDescription>{t('adminAnalytics.freeConversion.userStatusDistribution')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-80">

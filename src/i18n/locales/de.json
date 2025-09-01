@@ -1524,19 +1524,19 @@
     "metrics": {
       "totalUsers": "Gesamtbenutzer",
       "activeSubscriptions": "Aktive Abonnements",
-      "trialUsers": "Testbenutzer",
+      "freeUsers": "Kostenlose Benutzer",
       "newSignups": "Neue Anmeldungen",
       "conversionRate": "Konversionsrate",
       "registeredProfiles": "Registrierte Profile",
       "payingCustomers": "Zahlende Kunden",
-      "inTrial": "In Testphase",
+      "freeUsersDescription": "Nutzen kostenlosen Tarif",
       "lastDays": "Letzte {{days}} Tage",
-      "trialToPaying": "Test → Zahlend",
+      "freeToPaying": "Kostenlos → Zahlend",
       "vsPreviousPeriod": "vs. Vorheriger Zeitraum"
     },
     "tabs": {
       "traffic": "Verkehr & Engagement",
-      "conversion": "Test & Konversion",
+      "conversion": "Kostenlos & Konversion",
       "subscribers": "Abonnenten",
       "support": "Kundensupport"
     },
@@ -1588,6 +1588,22 @@
       "ticketVolumeAndResolution": "Ticket-Volumen und Lösungsrate",
       "supportCategories": "Support-Kategorien",
       "requestTypeDistribution": "Anfragetyp-Verteilung"
+    },
+    "freeConversion": {
+      "newFreeUsers": "Neue kostenlose Benutzer",
+      "conversions": "Konversionen",
+      "conversionRate": "Konversionsrate",
+      "limitReached": "Limit erreicht",
+      "usingFreeTier": "Nutzen kostenlosen Tarif",
+      "freeToPaying": "Kostenlos → Zahlend",
+      "successRate": "Erfolgsrate",
+      "notConverted": "Nicht konvertiert",
+      "weeklyConversion": "Wöchentliche Konversion",
+      "newFreeUsersAndConversions": "Neue kostenlose Benutzer und Konversionen",
+      "conversionFunnel": "Konversions-Trichter",
+      "userStatusDistribution": "Benutzerstatus-Verteilung",
+      "activeFreeUsers": "Aktive kostenlose Benutzer",
+      "converted": "Konvertiert"
     },
     "trialConversion": {
       "newTrialUsers": "Neue Testbenutzer",

@@ -15,7 +15,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { TrafficMetrics } from './analytics/TrafficMetrics';
-import { TrialConversionMetrics } from './analytics/TrialConversionMetrics';
+import { FreeConversionMetrics } from './analytics/FreeConversionMetrics';
 import { SubscriberMetrics } from './analytics/SubscriberMetrics';
 import { SupportMetrics } from './analytics/SupportMetrics';
 import { MetricCard } from './analytics/MetricCard';
@@ -46,7 +46,7 @@ export const AnalyticsDashboard = () => {
       const [
         totalUsersResult,
         activeSubscribersResult,
-        trialUsersResult,
+        freeUsersResult,
         newSignupsResult,
         conversionsResult
       ] = await Promise.allSettled([
@@ -54,43 +54,38 @@ export const AnalyticsDashboard = () => {
         supabase.from('profiles').select('*', { count: 'exact', head: true }),
         // Active subscribers
         supabase.from('subscribers').select('*', { count: 'exact', head: true }).eq('subscribed', true),
-        // Trial users
-        supabase.from('subscribers').select('*', { count: 'exact', head: true }).eq('subscription_status', 'trialing'),
+        // Free users (users who are not subscribed and have used questions)
+        supabase.from('subscribers').select('count', { count: 'exact', head: true }).not('subscribed', 'eq', true).not('questions_num', 'eq', 0).not('questions_num', 'is', null),
         // New signups in time range
         supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', startDate).lte('created_at', endDate),
-        // Conversion data
-        supabase.from('subscribers').select('subscription_status, created_at').gte('created_at', startDate).lte('created_at', endDate)
+        // Conversion data (users who became paying customers)
+        supabase.from('subscribers').select('count', { count: 'exact', head: true }).eq('subscribed', true).gte('created_at', startDate).lte('created_at', endDate)
       ]);
 
       // Extract results with fallbacks
       const totalUsers = totalUsersResult.status === 'fulfilled' ? totalUsersResult.value.count || 0 : 0;
       const activeSubscribers = activeSubscribersResult.status === 'fulfilled' ? activeSubscribersResult.value.count || 0 : 0;
-      const trialUsers = trialUsersResult.status === 'fulfilled' ? trialUsersResult.value.count || 0 : 0;
+      const freeUsers = freeUsersResult.status === 'fulfilled' ? freeUsersResult.value.count || 0 : 0;
       const newSignups = newSignupsResult.status === 'fulfilled' ? newSignupsResult.value.count || 0 : 0;
+      const conversions = conversionsResult.status === 'fulfilled' ? conversionsResult.value.count || 0 : 0;
 
-      // Calculate conversion rate with error handling
-      let conversionRate = 0;
-      if (conversionsResult.status === 'fulfilled' && conversionsResult.value.data) {
-        const conversions = conversionsResult.value.data;
-        const trialToActiveConversions = conversions.filter(s => s.subscription_status === 'active').length;
-        const totalTrials = conversions.filter(s => s.subscription_status === 'trialing').length;
-        conversionRate = totalTrials > 0 ? (trialToActiveConversions / totalTrials) * 100 : 0;
-      }
+      // Calculate conversion rate
+      const conversionRate = freeUsers > 0 ? Math.round((conversions / freeUsers) * 100) : 0;
 
-      // Log any failures
-      [totalUsersResult, activeSubscribersResult, trialUsersResult, newSignupsResult, conversionsResult].forEach((result, index) => {
+      // Log any errors
+      [totalUsersResult, activeSubscribersResult, freeUsersResult, newSignupsResult, conversionsResult].forEach((result, index) => {
         if (result.status === 'rejected') {
-          const queryNames = ['totalUsers', 'activeSubscribers', 'trialUsers', 'newSignups', 'conversions'];
-          console.warn(`❌ Failed to load ${queryNames[index]}:`, result.reason);
+          const queryNames = ['totalUsers', 'activeSubscribers', 'freeUsers', 'newSignups', 'conversions'];
+          console.error(`Error fetching ${queryNames[index]}:`, result.reason);
         }
       });
 
       return {
         totalUsers,
         activeSubscribers,
-        trialUsers,
+        freeUsers,
         newSignups,
-        conversionRate: Math.round(conversionRate * 100) / 100
+        conversionRate
       };
     },
   });
@@ -143,10 +138,10 @@ export const AnalyticsDashboard = () => {
           description={t('adminAnalytics.metrics.payingCustomers')}
         />
         <MetricCard
-          title={t('adminAnalytics.metrics.trialUsers')}
-          value={overviewStats?.trialUsers || 0}
+          title={t('adminAnalytics.metrics.freeUsers')}
+          value={overviewStats?.freeUsers || 0}
           icon={UserPlus}
-          description={t('adminAnalytics.metrics.inTrial')}
+          description={t('adminAnalytics.metrics.freeUsersDescription')}
         />
         <MetricCard
           title={t('adminAnalytics.metrics.newSignups')}
@@ -176,7 +171,7 @@ export const AnalyticsDashboard = () => {
         </TabsContent>
 
         <TabsContent value="conversion">
-          <TrialConversionMetrics timeRange={timeRange} />
+          <FreeConversionMetrics timeRange={timeRange} />
         </TabsContent>
 
         <TabsContent value="subscribers">

@@ -1520,19 +1520,19 @@
     "metrics": {
       "totalUsers": "Total Users",
       "activeSubscriptions": "Active Subscriptions",
-      "trialUsers": "Trial Users",
+      "freeUsers": "Free Users",
       "newSignups": "New Signups",
       "conversionRate": "Conversion Rate",
       "registeredProfiles": "Registered Profiles",
       "payingCustomers": "Paying Customers",
-      "inTrial": "In Trial",
+      "freeUsersDescription": "Using Free Tier",
       "lastDays": "Last {{days}} days",
-      "trialToPaying": "Trial → Paying",
+      "freeToPaying": "Free → Paying",
       "vsPreviousPeriod": "vs. Previous Period"
     },
     "tabs": {
       "traffic": "Traffic & Engagement",
-      "conversion": "Trial & Conversion",
+      "conversion": "Free & Conversion",
       "subscribers": "Subscribers",
       "support": "Customer Support"
     },
@@ -1585,6 +1585,22 @@
       "ticketVolumeAndResolution": "Ticket Volume and Resolution Rate",
       "supportCategories": "Support Categories",
       "requestTypeDistribution": "Request Type Distribution"
+    },
+    "freeConversion": {
+      "newFreeUsers": "New Free Users",
+      "conversions": "Conversions",
+      "conversionRate": "Conversion Rate",
+      "limitReached": "Limit Reached",
+      "usingFreeTier": "Using Free Tier",
+      "freeToPaying": "Free → Paying",
+      "successRate": "Success Rate",
+      "notConverted": "Not Converted",
+      "weeklyConversion": "Weekly Conversion",
+      "newFreeUsersAndConversions": "New free users and conversions",
+      "conversionFunnel": "Conversion Funnel",
+      "userStatusDistribution": "User status distribution",
+      "activeFreeUsers": "Active Free Users",
+      "converted": "Converted"
     },
     "trialConversion": {
       "newTrialUsers": "New Trial Users",
