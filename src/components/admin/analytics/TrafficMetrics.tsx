@@ -137,47 +137,55 @@ export const TrafficMetrics = ({ timeRange }: TrafficMetricsProps) => {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-200 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.traffic.mainPageViews')}</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-blue-700 dark:text-blue-300">{t('adminAnalytics.traffic.mainPageViews')}</CardTitle>
+            <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+              <Eye className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{trafficData?.totals.mainPageViews || 0}</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.traffic.mainPageVisits')}</p>
+            <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">{trafficData?.totals.mainPageViews || 0}</div>
+            <p className="text-xs text-blue-600 dark:text-blue-400">{t('adminAnalytics.traffic.mainPageVisits')}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-200 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.traffic.homePageViews')}</CardTitle>
-            <Home className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-green-700 dark:text-green-300">{t('adminAnalytics.traffic.homePageViews')}</CardTitle>
+            <div className="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+              <Home className="h-4 w-4 text-green-600 dark:text-green-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{trafficData?.totals.homePageViews || 0}</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.traffic.homePageVisits')}</p>
+            <div className="text-2xl font-bold text-green-900 dark:text-green-100">{trafficData?.totals.homePageViews || 0}</div>
+            <p className="text-xs text-green-600 dark:text-green-400">{t('adminAnalytics.traffic.homePageVisits')}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-200 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.traffic.otherPageViews')}</CardTitle>
-            <Globe className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-amber-700 dark:text-amber-300">{t('adminAnalytics.traffic.otherPageViews')}</CardTitle>
+            <div className="h-8 w-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+              <Globe className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{trafficData?.totals.otherPageViews || 0}</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.traffic.otherPageVisits')}</p>
+            <div className="text-2xl font-bold text-amber-900 dark:text-amber-100">{trafficData?.totals.otherPageViews || 0}</div>
+            <p className="text-xs text-amber-600 dark:text-amber-400">{t('adminAnalytics.traffic.otherPageVisits')}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-200 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.traffic.uniqueUsers')}</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-purple-700 dark:text-purple-300">{t('adminAnalytics.traffic.uniqueUsers')}</CardTitle>
+            <div className="h-8 w-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+              <Users className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{trafficData?.totals.uniqueUsers || 0}</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.traffic.differentVisitors')}</p>
+            <div className="text-2xl font-bold text-purple-900 dark:text-purple-100">{trafficData?.totals.uniqueUsers || 0}</div>
+            <p className="text-xs text-purple-600 dark:text-purple-400">{t('adminAnalytics.traffic.differentVisitors')}</p>
           </CardContent>
         </Card>
       </div>
@@ -185,12 +193,12 @@ export const TrafficMetrics = ({ timeRange }: TrafficMetricsProps) => {
       {/* Traffic Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Page Views Bar Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('adminAnalytics.traffic.pageViewsOverview')}</CardTitle>
-            <CardDescription>{t('adminAnalytics.traffic.pageViewsByType')}</CardDescription>
+        <Card className="hover:shadow-lg transition-shadow duration-200">
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-t-lg">
+            <CardTitle className="text-blue-900 dark:text-blue-100">{t('adminAnalytics.traffic.pageViewsOverview')}</CardTitle>
+            <CardDescription className="text-blue-600 dark:text-blue-400">{t('adminAnalytics.traffic.pageViewsByType')}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <ChartContainer config={chartConfig}>
               <BarChart data={trafficData?.chartData || []}>
                 <XAxis 
@@ -224,12 +232,12 @@ export const TrafficMetrics = ({ timeRange }: TrafficMetricsProps) => {
         </Card>
 
         {/* Unique Users Line Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('adminAnalytics.traffic.uniqueUsersTrend')}</CardTitle>
-            <CardDescription>{t('adminAnalytics.traffic.uniqueUsersOverTime')}</CardDescription>
+        <Card className="hover:shadow-lg transition-shadow duration-200">
+          <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-t-lg">
+            <CardTitle className="text-green-900 dark:text-green-100">{t('adminAnalytics.traffic.uniqueUsersTrend')}</CardTitle>
+            <CardDescription className="text-green-600 dark:text-green-400">{t('adminAnalytics.traffic.uniqueUsersOverTime')}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <ChartContainer config={chartConfig}>
               <LineChart data={trafficData?.chartData || []}>
                 <XAxis 
