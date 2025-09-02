@@ -131,59 +131,67 @@ export const FreeConversionMetrics = ({ timeRange }: FreeConversionMetricsProps)
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-200 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.freeConversion.newFreeUsers')}</CardTitle>
-            <UserPlus className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-blue-600 dark:text-blue-400">{t('adminAnalytics.freeConversion.newFreeUsers')}</CardTitle>
+            <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+              <UserPlus className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{conversionData?.totals.newFreeUsers || 0}</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.freeConversion.usingFreeTier')}</p>
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{conversionData?.totals.newFreeUsers || 0}</div>
+            <p className="text-xs text-blue-500 dark:text-blue-300">{t('adminAnalytics.freeConversion.usingFreeTier')}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-200 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.freeConversion.conversions')}</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-green-600 dark:text-green-400">{t('adminAnalytics.freeConversion.conversions')}</CardTitle>
+            <div className="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+              <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{conversionData?.totals.conversions || 0}</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.freeConversion.freeToPaying')}</p>
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">{conversionData?.totals.conversions || 0}</div>
+            <p className="text-xs text-green-500 dark:text-green-300">{t('adminAnalytics.freeConversion.freeToPaying')}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-200 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.freeConversion.conversionRate')}</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-purple-600 dark:text-purple-400">{t('adminAnalytics.freeConversion.conversionRate')}</CardTitle>
+            <div className="h-8 w-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+              <Target className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{conversionData?.totals.conversionRate || 0}%</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.freeConversion.successRate')}</p>
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{conversionData?.totals.conversionRate || 0}%</div>
+            <p className="text-xs text-purple-500 dark:text-purple-300">{t('adminAnalytics.freeConversion.successRate')}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow duration-200 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminAnalytics.freeConversion.limitReached')}</CardTitle>
-            <UserPlus className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-amber-600 dark:text-amber-400">{t('adminAnalytics.freeConversion.limitReached')}</CardTitle>
+            <div className="h-8 w-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+              <UserPlus className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{conversionData?.totals.limitReachedUsers || 0}</div>
-            <p className="text-xs text-muted-foreground">{t('adminAnalytics.freeConversion.notConverted')}</p>
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{conversionData?.totals.limitReachedUsers || 0}</div>
+            <p className="text-xs text-amber-500 dark:text-amber-300">{t('adminAnalytics.freeConversion.notConverted')}</p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Weekly Conversion Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('adminAnalytics.freeConversion.weeklyConversion')}</CardTitle>
-            <CardDescription>{t('adminAnalytics.freeConversion.newFreeUsersAndConversions')}</CardDescription>
+        <Card className="hover:shadow-lg transition-shadow duration-200">
+          <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-t-lg">
+            <CardTitle className="text-green-700 dark:text-green-300">{t('adminAnalytics.freeConversion.weeklyConversion')}</CardTitle>
+            <CardDescription className="text-green-600 dark:text-green-400">{t('adminAnalytics.freeConversion.newFreeUsersAndConversions')}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <ChartContainer config={chartConfig}>
               <BarChart data={conversionData?.chartData || []}>
                 <XAxis 
@@ -204,13 +212,13 @@ export const FreeConversionMetrics = ({ timeRange }: FreeConversionMetricsProps)
         </Card>
 
         {/* Conversion Funnel */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('adminAnalytics.freeConversion.conversionFunnel')}</CardTitle>
-            <CardDescription>{t('adminAnalytics.freeConversion.userStatusDistribution')}</CardDescription>
+        <Card className="hover:shadow-lg transition-shadow duration-200">
+          <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 rounded-t-lg">
+            <CardTitle className="text-purple-700 dark:text-purple-300">{t('adminAnalytics.freeConversion.conversionFunnel')}</CardTitle>
+            <CardDescription className="text-purple-600 dark:text-purple-400">{t('adminAnalytics.freeConversion.userStatusDistribution')}</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="h-80">
+          <CardContent className="pt-6">
+            <div className="h-80 relative">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -218,10 +226,20 @@ export const FreeConversionMetrics = ({ timeRange }: FreeConversionMetricsProps)
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
+                    label={({ name, value, percent }) => {
+                      // Only show label if percentage is significant (>5%)
+                      if (percent > 0.05) {
+                        return `${name}\n${(percent * 100).toFixed(0)}%`;
+                      }
+                      return '';
+                    }}
+                    outerRadius={90}
+                    innerRadius={30}
                     fill="#8884d8"
                     dataKey="value"
+                    paddingAngle={2}
+                    stroke={resolvedTheme === 'dark' ? '#1f2937' : '#ffffff'}
+                    strokeWidth={2}
                   >
                     {conversionData?.funnelData?.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -231,11 +249,40 @@ export const FreeConversionMetrics = ({ timeRange }: FreeConversionMetricsProps)
                     contentStyle={{
                       backgroundColor: resolvedTheme === 'dark' ? '#1f2937' : '#ffffff',
                       border: resolvedTheme === 'dark' ? '1px solid #374151' : '1px solid #d1d5db',
-                      color: resolvedTheme === 'dark' ? '#e5e7eb' : '#374151'
+                      color: resolvedTheme === 'dark' ? '#e5e7eb' : '#374151',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                     }}
                   />
                 </PieChart>
               </ResponsiveContainer>
+              
+              {/* Center summary */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-700 dark:text-purple-300">
+                    {conversionData?.totals.newFreeUsers || 0}
+                  </div>
+                  <div className="text-xs text-purple-600 dark:text-purple-400">
+                    Total Users
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Legend */}
+            <div className="mt-4 flex flex-wrap justify-center gap-4">
+              {conversionData?.funnelData?.map((entry, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <div 
+                    className="w-3 h-3 rounded-full" 
+                    style={{ backgroundColor: entry.fill }}
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    {entry.name}: {entry.value}
+                  </span>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
