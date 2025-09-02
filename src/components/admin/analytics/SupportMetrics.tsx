@@ -10,13 +10,14 @@ import { useTranslation } from 'react-i18next';
 
 interface SupportMetricsProps {
   timeRange: string;
+  refreshKey?: number;
 }
 
-export const SupportMetrics = ({ timeRange }: SupportMetricsProps) => {
+export const SupportMetrics = ({ timeRange, refreshKey }: SupportMetricsProps) => {
   const { t, i18n } = useTranslation();
   const { resolvedTheme } = useThemeContext();
   const { data: supportData, isLoading } = useQuery({
-    queryKey: ['support-metrics', timeRange],
+    queryKey: ['support-metrics', timeRange, refreshKey],
     queryFn: async () => {
       const days = parseInt(timeRange);
       const now = new Date();

@@ -8,17 +8,29 @@ import { SubscriberMetrics } from './SubscriberMetrics';
 import { TrafficMetrics } from './TrafficMetrics';
 import { SupportMetrics } from './SupportMetrics';
 import { TimeRangeFilter } from './TimeRangeFilter';
-import { useState } from 'react';
-import { Users, UserCheck, UserPlus, TrendingUp } from 'lucide-react';
+import { useState, useCallback, useEffect } from 'react';
+import { Users, UserCheck, UserPlus, TrendingUp, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
 
 export const OptimizedAnalyticsDashboard = () => {
   const { t } = useTranslation();
   const [timeRange, setTimeRange] = useState('7d');
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Function to force refresh of all data
+  const handleRefresh = useCallback(() => {
+    setRefreshKey(prev => prev + 1);
+  }, []);
+
+  // Force refresh when component mounts to ensure fresh data
+  useEffect(() => {
+    handleRefresh();
+  }, [handleRefresh]);
 
   // Cached query for overview metrics
   const { data: overviewMetrics, isLoading: overviewLoading } = useCachedQuery(
-    ['analytics-overview', timeRange],
+    ['analytics-overview', timeRange, refreshKey],
     {
       queryFn: async () => {
         const { data: profiles, error: profilesError } = await supabase
@@ -74,8 +86,8 @@ export const OptimizedAnalyticsDashboard = () => {
           conversionRate
         };
       },
-      queryKey: ['analytics-overview', timeRange],
-      cacheTTL: 5,
+      queryKey: ['analytics-overview', timeRange, refreshKey],
+      cacheTTL: 1,
       cacheKey: `overview-${timeRange}`
     }
   );
@@ -89,7 +101,19 @@ export const OptimizedAnalyticsDashboard = () => {
             {t('adminAnalytics.dashboard.description')}
           </p>
         </div>
-        <TimeRangeFilter value={timeRange} onChange={setTimeRange} />
+        <div className="flex items-center gap-2">
+          <TimeRangeFilter value={timeRange} onChange={setTimeRange} />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={overviewLoading}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className={`h-4 w-4 ${overviewLoading ? 'animate-spin' : ''}`} />
+            {t('adminAnalytics.refresh')}
+          </Button>
+        </div>
       </div>
 
       {/* Cache Status */}
@@ -130,9 +154,9 @@ export const OptimizedAnalyticsDashboard = () => {
 
       {/* Detailed Metrics */}
       <div className="grid gap-6 md:grid-cols-2">
-        <SubscriberMetrics timeRange={timeRange} />
-        <TrafficMetrics timeRange={timeRange} />
-        <SupportMetrics timeRange={timeRange} />
+        <SubscriberMetrics timeRange={timeRange} refreshKey={refreshKey} />
+        <TrafficMetrics timeRange={timeRange} refreshKey={refreshKey} />
+        <SupportMetrics timeRange={timeRange} refreshKey={refreshKey} />
       </div>
     </div>
   );

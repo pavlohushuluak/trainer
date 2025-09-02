@@ -10,13 +10,14 @@ import { useTranslation } from 'react-i18next';
 
 interface TrafficMetricsProps {
   timeRange: string;
+  refreshKey?: number;
 }
 
-export const TrafficMetrics = ({ timeRange }: TrafficMetricsProps) => {
+export const TrafficMetrics = ({ timeRange, refreshKey }: TrafficMetricsProps) => {
   const { t } = useTranslation();
   const { resolvedTheme } = useThemeContext();
   const { data: trafficData, isLoading } = useQuery({
-    queryKey: ['traffic-metrics', timeRange],
+    queryKey: ['traffic-metrics', timeRange, refreshKey],
     queryFn: async () => {
       const days = parseInt(timeRange);
       const now = new Date();

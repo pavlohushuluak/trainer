@@ -1531,10 +1531,11 @@
       "freeToPaying": "Free → Paying",
       "vsPreviousPeriod": "vs. Previous Period"
     },
-    "dashboard": {
-      "title": "Analytics Dashboard (Optimized)",
-      "description": "Performance-optimized analytics with caching and lazy loading"
-    },
+            "dashboard": {
+          "title": "Analytics Dashboard (Optimized)",
+          "description": "Performance-optimized analytics with caching and lazy loading"
+        },
+        "refresh": "Refresh",
     "tabs": {
       "traffic": "Traffic & Engagement",
       "conversion": "Free & Conversion",
