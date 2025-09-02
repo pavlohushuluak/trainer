@@ -8,7 +8,7 @@ import { PaymentManagement } from '@/components/admin/PaymentManagement';
 import { SupportManagement } from '@/components/admin/SupportManagement';
 import { SystemMonitoring } from '@/components/admin/SystemMonitoring';
 import { AdminSettings } from '@/components/admin/AdminSettings';
-import { OptimizedAnalyticsDashboard } from '@/components/admin/analytics/OptimizedAnalyticsDashboard';
+import { AnalyticsDashboard } from '@/components/admin/AnalyticsDashboard';
 import { NetworkDiagnostics } from '@/components/admin/NetworkDiagnostics';
 
 const AdminDashboard = () => {
@@ -19,7 +19,7 @@ const AdminDashboard = () => {
       <AdminLayout>
         <Routes>
           <Route path="/" element={<Navigate to="analytics" replace />} />
-          <Route path="analytics" element={<OptimizedAnalyticsDashboard />} />
+          <Route path="analytics" element={<AnalyticsDashboard />} />
           <Route path="users" element={<UserManagement />} />
           <Route path="chats" element={<ChatManagement />} />
           <Route path="payments" element={<PaymentManagement />} />

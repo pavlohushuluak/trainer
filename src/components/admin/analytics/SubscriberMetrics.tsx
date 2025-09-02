@@ -10,14 +10,13 @@ import { useTranslation } from 'react-i18next';
 
 interface SubscriberMetricsProps {
   timeRange: string;
-  refreshKey?: number;
 }
 
-export const SubscriberMetrics = ({ timeRange, refreshKey }: SubscriberMetricsProps) => {
+export const SubscriberMetrics = ({ timeRange }: SubscriberMetricsProps) => {
   const { t } = useTranslation();
   const { resolvedTheme } = useThemeContext();
   const { data: subscriberData, isLoading } = useQuery({
-    queryKey: ['subscriber-metrics', timeRange, refreshKey],
+    queryKey: ['subscriber-metrics', timeRange],
     queryFn: async () => {
       const days = parseInt(timeRange);
       const now = new Date();

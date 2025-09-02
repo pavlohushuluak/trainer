@@ -109,8 +109,7 @@ export const useAuthOperations = () => {
   };
 
   const signInWithOAuth = async (provider: 'google' | 'github') => {
-    // Use the main domain as the final redirect destination
-    const redirectUrl = "https://www.tiertrainer24.com";
+    const redirectUrl = `${window.location.origin}/auth/callback`;
     
     try {
       // Clear any existing auth errors first
@@ -120,11 +119,11 @@ export const useAuthOperations = () => {
         provider,
         options: {
           redirectTo: redirectUrl,
-          // queryParams: {
-          //   // Add additional parameters for better OAuth handling
-          //   access_type: 'offline',
-          //   prompt: 'consent'
-          // }
+          queryParams: {
+            // Add additional parameters for better OAuth handling
+            access_type: 'offline',
+            prompt: 'consent'
+          }
         }
       });
       

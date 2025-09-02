@@ -1535,11 +1535,10 @@
       "freeToPaying": "Kostenlos → Zahlend",
       "vsPreviousPeriod": "vs. Vorheriger Zeitraum"
     },
-            "dashboard": {
-          "title": "Analytics Dashboard (Optimiert)",
-          "description": "Leistungsoptimierte Analysen mit Caching und Lazy Loading"
-        },
-        "refresh": "Aktualisieren",
+    "dashboard": {
+      "title": "Analytics Dashboard (Optimiert)",
+      "description": "Leistungsoptimierte Analysen mit Caching und Lazy Loading"
+    },
     "tabs": {
       "traffic": "Verkehr & Engagement",
       "conversion": "Kostenlos & Konversion",
