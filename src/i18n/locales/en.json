@@ -1627,7 +1627,19 @@
       "weeklySupportTrend": "Weekly Support Trend",
       "ticketVolumeAndResolution": "Ticket Volume and Resolution Rate",
       "supportCategories": "Support Categories",
-      "requestTypeDistribution": "Request Type Distribution"
+      "requestTypeDistribution": "Request Type Distribution",
+      "cancellationEmail": "Cancellation Email",
+      "welcomeEmail": "Welcome Email",
+      "checkoutConfirmation": "Checkout Confirmation",
+      "supportNotification": "Support Notification",
+      "emailConfig": "Email Configuration",
+      "emailConfigChange": "Email Config Change",
+      "cancellationSuccessful": "Cancellation Successful",
+      "premiumDeactivation": "Premium Deactivation",
+      "testUserWelcome": "Test User Welcome",
+      "systemTest": "System Test",
+      "confirmSignup": "Confirm Signup",
+      "magicLink": "Magic Link"
     },
     "freeConversion": {
       "newFreeUsers": "New Free Users",

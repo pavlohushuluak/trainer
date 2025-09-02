@@ -1630,7 +1630,19 @@
       "weeklySupportTrend": "Wöchentlicher Support-Trend",
       "ticketVolumeAndResolution": "Ticket-Volumen und Lösungsrate",
       "supportCategories": "Support-Kategorien",
-      "requestTypeDistribution": "Anfragetyp-Verteilung"
+      "requestTypeDistribution": "Anfragetyp-Verteilung",
+      "cancellationEmail": "Kündigungs-E-Mail",
+      "welcomeEmail": "Willkommens-E-Mail",
+      "checkoutConfirmation": "Checkout-Bestätigung",
+      "supportNotification": "Support-Benachrichtigung",
+      "emailConfig": "E-Mail-Konfiguration",
+      "emailConfigChange": "E-Mail-Config-Änderung",
+      "cancellationSuccessful": "Kündigung erfolgreich",
+      "premiumDeactivation": "Premium-Deaktivierung",
+      "testUserWelcome": "Testbenutzer-Willkommen",
+      "systemTest": "System-Test",
+      "confirmSignup": "Anmeldung bestätigen",
+      "magicLink": "Magic Link"
     },
     "freeConversion": {
       "newFreeUsers": "Neue kostenlose Benutzer",
