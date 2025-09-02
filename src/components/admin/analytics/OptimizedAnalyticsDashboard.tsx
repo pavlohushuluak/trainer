@@ -11,17 +11,33 @@ import { FreeConversionMetrics } from './FreeConversionMetrics';
 import { TimeRangeFilter } from './TimeRangeFilter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useState, useEffect } from 'react';
-import { Users, UserCheck, UserPlus, TrendingUp } from 'lucide-react';
+import { Users, UserCheck, UserPlus, TrendingUp, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
 
 export const OptimizedAnalyticsDashboard = () => {
   const { t } = useTranslation();
   const [timeRange, setTimeRange] = useState('7');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Log time range changes for debugging
   useEffect(() => {
     console.log('Analytics Dashboard - Time range changed to:', timeRange);
   }, [timeRange]);
+
+  // Refresh function to reload all analytics data
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      // Force refresh by invalidating and refetching all queries
+      // This will trigger a re-render of all components with fresh data
+      window.location.reload();
+    } catch (error) {
+      console.error('Error refreshing analytics:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   // Static overview metrics (not time-dependent)
   const { data: overviewMetrics, isLoading: overviewLoading } = useCachedQuery(
@@ -129,8 +145,18 @@ export const OptimizedAnalyticsDashboard = () => {
           <TabsTrigger value="support" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.support')}</TabsTrigger>
         </TabsList>
         
-        <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 items-center">
           <TimeRangeFilter value={timeRange} onChange={setTimeRange} />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="flex items-center gap-2 hover:bg-primary/5 transition-colors"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            {isRefreshing ? t('adminAnalytics.refreshing') : t('adminAnalytics.refresh')}
+          </Button>
         </div>
 
         <TabsContent value="traffic">

@@ -1535,6 +1535,8 @@
       "title": "Analytics Dashboard (Optimized)",
       "description": "Performance-optimized analytics with caching and lazy loading"
     },
+    "refresh": "Refresh",
+    "refreshing": "Refreshing...",
     "tabs": {
       "traffic": "Traffic & Engagement",
       "conversion": "Free & Conversion",

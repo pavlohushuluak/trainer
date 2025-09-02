@@ -12,7 +12,8 @@ import {
   DollarSign,
   HeadphonesIcon,
   Calendar,
-  Loader2
+  Loader2,
+  RefreshCw
 } from 'lucide-react';
 import { TrafficMetrics } from './analytics/TrafficMetrics';
 import { FreeConversionMetrics } from './analytics/FreeConversionMetrics';
@@ -21,11 +22,13 @@ import { SupportMetrics } from './analytics/SupportMetrics';
 import { MetricCard } from './analytics/MetricCard';
 import { TimeRangeFilter } from './analytics/TimeRangeFilter';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
 
 export const AnalyticsDashboard = () => {
   const { t } = useTranslation();
   const [timeRange, setTimeRange] = useState('30');
   const [comparison, setComparison] = useState('previous_period');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Get date range based on selection
   const getDateRange = () => {
@@ -90,6 +93,19 @@ export const AnalyticsDashboard = () => {
     },
   });
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      // Force refresh by invalidating and refetching all queries
+      // This will trigger a re-render of all components with fresh data
+      window.location.reload();
+    } catch (error) {
+      console.error('Error refreshing analytics:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   if (overviewLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -110,6 +126,16 @@ export const AnalyticsDashboard = () => {
         </div>
         <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
           <TimeRangeFilter value={timeRange} onChange={setTimeRange} />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="flex items-center gap-2 hover:bg-primary/5 transition-colors"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            {isRefreshing ? t('adminAnalytics.refreshing') : t('adminAnalytics.refresh')}
+          </Button>
         </div>
       </div>
 
