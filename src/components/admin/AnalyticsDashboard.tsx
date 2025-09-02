@@ -5,10 +5,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  TrendingUp, 
-  Users, 
-  UserPlus, 
+import {
+  TrendingUp,
+  Users,
+  UserPlus,
   DollarSign,
   HeadphonesIcon,
   Calendar,
@@ -41,7 +41,7 @@ export const AnalyticsDashboard = () => {
   const { data: overviewStats, isLoading: overviewLoading, error: overviewError } = useQuery({
     queryKey: ['analytics-overview', timeRange],
     queryFn: async () => {
-      
+
       // Use Promise.allSettled for resilient loading
       const [
         totalUsersResult,
@@ -108,18 +108,8 @@ export const AnalyticsDashboard = () => {
             {t('adminAnalytics.description')}
           </p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
           <TimeRangeFilter value={timeRange} onChange={setTimeRange} />
-          <Select value={comparison} onValueChange={setComparison}>
-            <SelectTrigger className="w-full sm:w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="previous_period">{t('adminAnalytics.comparison.previousPeriod')}</SelectItem>
-              <SelectItem value="previous_year">{t('adminAnalytics.comparison.previousYear')}</SelectItem>
-              <SelectItem value="no_comparison">{t('adminAnalytics.comparison.noComparison')}</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </div>
 
@@ -144,21 +134,22 @@ export const AnalyticsDashboard = () => {
           description={t('adminAnalytics.metrics.freeUsersDescription')}
         />
         <MetricCard
-          title={t('adminAnalytics.metrics.newSignups')}
-          value={overviewStats?.newSignups || 0}
-          icon={TrendingUp}
-          description={t('adminAnalytics.metrics.lastDays', { days: timeRange })}
-        />
-        <MetricCard
           title={t('adminAnalytics.metrics.conversionRate')}
           value={`${overviewStats?.conversionRate || 0}%`}
           icon={TrendingUp}
           description={t('adminAnalytics.metrics.freeToPaying')}
         />
+        <MetricCard
+          title={t('adminAnalytics.metrics.newSignups')}
+          value={overviewStats?.newSignups || 0}
+          icon={TrendingUp}
+          description={t('adminAnalytics.metrics.lastDays', { days: timeRange })}
+        />
       </div>
 
       {/* Detailed Analytics Tabs */}
       <Tabs defaultValue="traffic" className="space-y-4">
+
         <TabsList className="grid w-full h-full grid-cols-2 sm:grid-cols-4">
           <TabsTrigger value="traffic" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.traffic')}</TabsTrigger>
           <TabsTrigger value="conversion" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.conversion')}</TabsTrigger>
