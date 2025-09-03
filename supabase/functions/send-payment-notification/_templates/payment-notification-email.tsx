@@ -20,6 +20,7 @@ interface PaymentNotificationEmailProps {
   currency: string
   nextRetry?: string
   failureReason?: string
+  language?: string
 }
 
 export const PaymentNotificationEmail = ({
@@ -29,130 +30,195 @@ export const PaymentNotificationEmail = ({
   currency,
   nextRetry,
   failureReason,
-}: PaymentNotificationEmailProps) => (
-  <Html>
-    <Head />
-    <Preview>
-      {paymentType === 'payment_failed' && 'Zahlungsproblem bei Ihrem TierTrainer-Abo'}
-      {paymentType === 'payment_retry' && 'Zahlung wird erneut versucht'}
-      {paymentType === 'payment_method_required' && 'Zahlungsmethode aktualisieren erforderlich'}
-    </Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Heading style={h1}>
-          {paymentType === 'payment_failed' && '⚠️ Zahlungsproblem'}
-          {paymentType === 'payment_retry' && '🔄 Zahlung wird wiederholt'}
-          {paymentType === 'payment_method_required' && '💳 Zahlungsmethode aktualisieren'}
-        </Heading>
-        
-        <Text style={text}>
-          Hallo {userName},
-        </Text>
-        
-        {paymentType === 'payment_failed' && (
-          <>
-            <Text style={text}>
-              Bei der Abrechnung Ihres TierTrainer-Abonnements ist ein Problem aufgetreten.
-            </Text>
-            
-            <Section style={errorBox}>
-              <Text style={errorTitle}>💳 Zahlungsdetails</Text>
-              <Text style={errorDetails}>
-                <strong>Betrag:</strong> {amount ? `${(amount / 100).toFixed(2)} ${currency}` : 'Siehe Rechnung'}<br/>
-                <strong>Problem:</strong> {failureReason || 'Zahlung konnte nicht verarbeitet werden'}<br/>
-                {nextRetry && <><strong>Nächster Versuch:</strong> {new Date(nextRetry).toLocaleDateString('de-DE')}<br/></>}
-                <strong>Status:</strong> Zahlung fehlgeschlagen
+  language = 'de',
+}: PaymentNotificationEmailProps) => {
+  const content = language === 'en' ? {
+    paymentFailed: 'Payment problem with your TierTrainer subscription',
+    paymentRetry: 'Payment will be retried',
+    paymentMethodRequired: 'Payment method update required',
+    paymentProblem: '⚠️ Payment Problem',
+    paymentRetrying: '🔄 Payment Retrying',
+    paymentMethodUpdate: '💳 Update Payment Method',
+    greeting: `Hello ${userName},`,
+    failedDescription: 'There was a problem processing your TierTrainer subscription payment.',
+    paymentDetails: '💳 Payment Details',
+    amount: 'Amount:',
+    problem: 'Problem:',
+    nextAttempt: 'Next attempt:',
+    status: 'Status:',
+    paymentFailed: 'Payment failed',
+    whatYouCanDo: 'What you can do now:',
+    failedActions: [
+      'Check your account for sufficient funds',
+      'Verify your credit card validity',
+      'Update your payment method',
+      'Contact our support if you have questions'
+    ],
+    retryDescription: 'Your last payment could not be processed. We will try again automatically.',
+    retryPayment: '🔄 Payment Retry',
+    retryDetails: 'Retry Details',
+    remainingAttempts: 'Remaining attempts:',
+    retryRecommendation: 'To ensure your subscription remains active, we recommend checking your payment details.',
+    methodRequiredDescription: 'Your payment method needs to be updated to continue your subscription.',
+    methodRequiredDetails: 'Method Update Required',
+    updateRequired: 'Update Required:',
+    updateDescription: 'Please update your payment method to avoid service interruption.',
+    supportContact: 'If you need help, please contact our support team.',
+    updateNow: 'Update Now',
+    contactSupport: 'Contact Support',
+    footer: 'This is an automated message. Please do not reply to this email.',
+    copyright: '© 2024 TierTrainer24 - Professional Dog Training Platform'
+  } : {
+    paymentFailed: 'Zahlungsproblem bei Ihrem TierTrainer-Abo',
+    paymentRetry: 'Zahlung wird erneut versucht',
+    paymentMethodRequired: 'Zahlungsmethode aktualisieren erforderlich',
+    paymentProblem: '⚠️ Zahlungsproblem',
+    paymentRetrying: '🔄 Zahlung wird wiederholt',
+    paymentMethodUpdate: '💳 Zahlungsmethode aktualisieren',
+    greeting: `Hallo ${userName},`,
+    failedDescription: 'Bei der Abrechnung Ihres TierTrainer-Abonnements ist ein Problem aufgetreten.',
+    paymentDetails: '💳 Zahlungsdetails',
+    amount: 'Betrag:',
+    problem: 'Problem:',
+    nextAttempt: 'Nächster Versuch:',
+    status: 'Status:',
+    paymentFailed: 'Zahlung fehlgeschlagen',
+    whatYouCanDo: 'Was Sie jetzt tun können:',
+    failedActions: [
+      'Überprüfen Sie Ihr Konto auf ausreichende Deckung',
+      'Kontrollieren Sie die Gültigkeit Ihrer Kreditkarte',
+      'Aktualisieren Sie Ihre Zahlungsmethode',
+      'Kontaktieren Sie bei Fragen unseren Support'
+    ],
+    retryDescription: 'Ihre letzte Zahlung konnte nicht verarbeitet werden. Wir versuchen es automatisch erneut.',
+    retryPayment: '🔄 Erneuter Zahlungsversuch',
+    retryDetails: 'Wiederholungsdetails',
+    remainingAttempts: 'Versuche verbleibend:',
+    retryRecommendation: 'Um sicherzustellen, dass Ihr Abo aktiv bleibt, empfehlen wir Ihnen, Ihre Zahlungsdaten zu überprüfen.',
+    methodRequiredDescription: 'Ihre Zahlungsmethode muss aktualisiert werden, um Ihr Abonnement fortzusetzen.',
+    methodRequiredDetails: 'Methoden-Update erforderlich',
+    updateRequired: 'Update erforderlich:',
+    updateDescription: 'Bitte aktualisieren Sie Ihre Zahlungsmethode, um eine Dienstunterbrechung zu vermeiden.',
+    supportContact: 'Falls Sie Hilfe benötigen, kontaktieren Sie bitte unser Support-Team.',
+    updateNow: 'Jetzt aktualisieren',
+    contactSupport: 'Support kontaktieren',
+    footer: 'Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail.',
+    copyright: '© 2024 TierTrainer24 - Professionelle Hundetraining-Plattform'
+  };
+
+  return (
+    <Html>
+      <Head />
+      <Preview>
+        {paymentType === 'payment_failed' && content.paymentFailed}
+        {paymentType === 'payment_retry' && content.paymentRetry}
+        {paymentType === 'payment_method_required' && content.paymentMethodRequired}
+      </Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Heading style={h1}>
+            {paymentType === 'payment_failed' && content.paymentProblem}
+            {paymentType === 'payment_retry' && content.paymentRetrying}
+            {paymentType === 'payment_method_required' && content.paymentMethodUpdate}
+          </Heading>
+          
+          <Text style={text}>
+            {content.greeting}
+          </Text>
+          
+          {paymentType === 'payment_failed' && (
+            <>
+              <Text style={text}>
+                {content.failedDescription}
               </Text>
-            </Section>
-            
-            <Text style={text}>
-              <strong>Was Sie jetzt tun können:</strong>
-            </Text>
-            
-            <Text style={bulletList}>
-              • Überprüfen Sie Ihr Konto auf ausreichende Deckung<br/>
-              • Kontrollieren Sie die Gültigkeit Ihrer Kreditkarte<br/>
-              • Aktualisieren Sie Ihre Zahlungsmethode<br/>
-              • Kontaktieren Sie bei Fragen unseren Support
-            </Text>
-          </>
-        )}
-
-        {paymentType === 'payment_retry' && (
-          <>
-            <Text style={text}>
-              Ihre letzte Zahlung konnte nicht verarbeitet werden. Wir versuchen es automatisch erneut.
-            </Text>
-            
-            <Section style={retryBox}>
-              <Text style={retryTitle}>🔄 Erneuter Zahlungsversuch</Text>
-              <Text style={retryDetails}>
-                <strong>Betrag:</strong> {amount ? `${(amount / 100).toFixed(2)} ${currency}` : 'Siehe Rechnung'}<br/>
-                {nextRetry && <><strong>Nächster Versuch:</strong> {new Date(nextRetry).toLocaleDateString('de-DE')}<br/></>}
-                <strong>Versuche verbleibend:</strong> 2-3 weitere Versuche
+              
+              <Section style={errorBox}>
+                <Text style={errorTitle}>{content.paymentDetails}</Text>
+                <Text style={errorDetails}>
+                  <strong>{content.amount}</strong> {amount ? `${(amount / 100).toFixed(2)} ${currency}` : (language === 'en' ? 'See invoice' : 'Siehe Rechnung')}<br/>
+                  <strong>{content.problem}</strong> {failureReason || (language === 'en' ? 'Payment could not be processed' : 'Zahlung konnte nicht verarbeitet werden')}<br/>
+                  {nextRetry && <><strong>{content.nextAttempt}</strong> {new Date(nextRetry).toLocaleDateString(language === 'en' ? 'en-US' : 'de-DE')}<br/></>}
+                  <strong>{content.status}</strong> {content.paymentFailed}
+                </Text>
+              </Section>
+              
+              <Text style={text}>
+                <strong>{content.whatYouCanDo}</strong>
               </Text>
-            </Section>
-            
-            <Text style={text}>
-              Um sicherzustellen, dass Ihr Abo aktiv bleibt, empfehlen wir Ihnen, Ihre Zahlungsdaten zu überprüfen.
-            </Text>
-          </>
-        )}
-
-        {paymentType === 'payment_method_required' && (
-          <>
-            <Text style={text}>
-              Ihre aktuelle Zahlungsmethode ist nicht mehr gültig. Bitte aktualisieren Sie diese, um Ihr Abo fortzusetzen.
-            </Text>
-            
-            <Section style={warningBox}>
-              <Text style={warningTitle}>⚠️ Handlung erforderlich</Text>
-              <Text style={warningDetails}>
-                <strong>Problem:</strong> Zahlungsmethode ungültig oder abgelaufen<br/>
-                <strong>Auswirkung:</strong> Abo wird pausiert, bis Zahlung erfolgt<br/>
-                <strong>Lösung:</strong> Neue Zahlungsmethode hinterlegen
+              
+              <Text style={bulletList}>
+                {content.failedActions.map(action => `• ${action}`).join('<br/>')}
               </Text>
-            </Section>
-            
+            </>
+          )}
+
+          {paymentType === 'payment_retry' && (
+            <>
+              <Text style={text}>
+                {content.retryDescription}
+              </Text>
+              
+              <Section style={retryBox}>
+                <Text style={retryTitle}>{content.retryPayment}</Text>
+                <Text style={retryDetails}>
+                  <strong>{content.amount}</strong> {amount ? `${(amount / 100).toFixed(2)} ${currency}` : (language === 'en' ? 'See invoice' : 'Siehe Rechnung')}<br/>
+                  {nextRetry && <><strong>{content.nextAttempt}</strong> {new Date(nextRetry).toLocaleDateString(language === 'en' ? 'en-US' : 'de-DE')}<br/></>}
+                  <strong>{content.remainingAttempts}</strong> {language === 'en' ? '2-3 more attempts' : '2-3 weitere Versuche'}
+                </Text>
+              </Section>
+              
+              <Text style={text}>
+                {content.retryRecommendation}
+              </Text>
+            </>
+          )}
+
+          {paymentType === 'payment_method_required' && (
+            <>
+              <Text style={text}>
+                {content.methodRequiredDescription}
+              </Text>
+              
+              <Section style={warningBox}>
+                <Text style={warningTitle}>{content.methodRequiredDetails}</Text>
+                <Text style={warningDetails}>
+                  <strong>{content.updateRequired}</strong> {content.updateDescription}<br/>
+                  <strong>{content.status}</strong> {language === 'en' ? 'Action required' : 'Aktion erforderlich'}
+                </Text>
+              </Section>
+              
+              <Text style={text}>
+                {content.supportContact}
+              </Text>
+            </>
+          )}
+
+          <div style={buttonContainer}>
+            <Link href="https://tiertrainer24.com/mein-tiertraining" style={button}>
+              {content.updateNow}
+            </Link>
+          </div>
+
+          <div style={helpBox}>
             <Text style={text}>
-              Ihr Zugang zu TierTrainer wird eingeschränkt, bis eine gültige Zahlungsmethode hinterlegt ist.
+              <strong>{language === 'en' ? 'Need help?' : 'Brauchen Sie Hilfe?'}</strong><br/>
+              {content.supportContact}
             </Text>
-          </>
-        )}
+          </div>
 
-        <Section style={buttonContainer}>
-          <Button style={button} href="https://tiertrainer24.com/mein-tiertraining?tab=subscription">
-            💳 Zahlungsmethode aktualisieren
-          </Button>
-        </Section>
-
-        <Text style={helpBox}>
-          <strong>💡 Benötigen Sie Hilfe?</strong><br/>
-          Unser Support-Team hilft Ihnen gerne bei Zahlungsproblemen. 
-          Kontaktieren Sie uns einfach über unseren Support-Bereich.
-        </Text>
-
-        <Section style={buttonContainer}>
-          <Button style={{...button, backgroundColor: '#6b7280'}} href="https://tiertrainer24.com/support">
-            🎫 Support kontaktieren
-          </Button>
-        </Section>
-
-        <Text style={text}>
-          Vielen Dank für Ihr Verständnis!<br/>
-          Ihr TierTrainer-Team 🐾
-        </Text>
-
-        <Text style={footer}>
-          TierTrainer24 - Für das beste Miteinander mit Ihrem Tier<br/>
-          <Link href="https://tiertrainer24.com/impressum" style={footerLink}>Impressum</Link> | 
-          <Link href="https://tiertrainer24.com/datenschutz" style={footerLink}>Datenschutz</Link> | 
-          <Link href="https://tiertrainer24.com/support" style={footerLink}>Support</Link>
-        </Text>
-      </Container>
-    </Body>
-  </Html>
-)
+          <div style={footer}>
+            <Text style={footer}>
+              {content.footer}
+            </Text>
+            <Text style={footer}>
+              {content.copyright}
+            </Text>
+          </div>
+        </Container>
+      </Body>
+    </Html>
+  );
+};
 
 const main = {
   backgroundColor: '#f6f9fc',

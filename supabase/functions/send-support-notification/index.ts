@@ -103,7 +103,8 @@ serve(async (req) => {
         ticketId,
         ticketSubject,
         adminMessage,
-        ticketStatus
+        ticketStatus,
+        language: userLanguage
       })
     );
 

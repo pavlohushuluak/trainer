@@ -207,12 +207,38 @@ const generateSignupConfirmationEmail = (data: AuthEmailData, language: string =
 const generateMagicLinkEmail = (data: AuthEmailData, language: string = 'de') => {
   const userName = data.user.user_metadata?.first_name || 
                    data.user.user_metadata?.full_name || 
-                   'Tierfreund';
+                   (language === 'en' ? 'Pet Friend' : 'Tierfreund');
   
   const magicLinkUrl = `${data.email_data.site_url}/verify?token=${data.email_data.token_hash}&type=${data.email_data.email_action_type}&redirect_to=${data.email_data.redirect_to}&apikey=${Deno.env.get('SUPABASE_ANON_KEY')}`;
   
-  return {
+  const content = language === 'en' ? {
+    subject: '🔐 Your TierTrainer24 Login Link',
+    title: `Hello ${userName}! 🔐`,
+    subtitle: 'Here is your secure login link',
+    description: 'Click the button below to securely log in to TierTrainer24:',
+    buttonText: '🔐 Login Now',
+    codeText: 'Or use this code:',
+    linkText: 'If the button doesn\'t work, copy this link:',
+    securityTitle: '⚠️ Security Notice:',
+    securityText: 'This login link is only valid for 15 minutes. If you didn\'t want to log in, please ignore this email.',
+    footerText: `This email was sent to <strong>${data.user.email}</strong>.`,
+    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+  } : {
     subject: '🔐 Ihr TierTrainer24 Login-Link',
+    title: `Hallo ${userName}! 🔐`,
+    subtitle: 'Hier ist Ihr sicherer Login-Link',
+    description: 'Klicken Sie auf den Button unten, um sich sicher bei TierTrainer24 anzumelden:',
+    buttonText: '🔐 Jetzt einloggen',
+    codeText: 'Oder verwenden Sie diesen Code:',
+    linkText: 'Falls der Button nicht funktioniert, kopieren Sie diesen Link:',
+    securityTitle: '⚠️ Sicherheitshinweis:',
+    securityText: 'Dieser Login-Link ist nur 15 Minuten gültig. Falls Sie sich nicht einloggen wollten, ignorieren Sie diese E-Mail.',
+    footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.`,
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+  };
+  
+  return {
+    subject: content.subject,
     html: `
       <!DOCTYPE html>
       <html>
@@ -223,49 +249,48 @@ const generateMagicLinkEmail = (data: AuthEmailData, language: string = 'de') =>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">Professionelles Hundetraining</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #7c3aed, #5b21b6); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
-            <h2 style="margin: 0 0 15px 0;">Hallo ${userName}! 🔐</h2>
-            <p style="margin: 0; font-size: 16px;">Hier ist Ihr sicherer Login-Link</p>
+            <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
+            <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>
           
           <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 25px 0;">
             <p style="margin: 0 0 20px 0; font-size: 16px;">
-              Klicken Sie auf den Button unten, um sich sicher bei TierTrainer24 anzumelden:
+              ${content.description}
             </p>
             
             <div style="text-align: center; margin: 25px 0;">
               <a href="${magicLinkUrl}" 
                  style="display: inline-block; background: #7c3aed; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
-                🔐 Jetzt einloggen
+                ${content.buttonText}
               </a>
             </div>
             
             <p style="margin: 20px 0 10px 0; font-size: 14px; color: #666;">
-              Oder verwenden Sie diesen Code: <strong style="color: #7c3aed; font-size: 16px;">${data.email_data.token}</strong>
+              ${content.codeText} <strong style="color: #7c3aed; font-size: 16px;">${data.email_data.token}</strong>
             </p>
             
             <p style="margin: 10px 0 0 0; font-size: 14px; color: #666;">
-              Falls der Button nicht funktioniert, kopieren Sie diesen Link:<br>
+              ${content.linkText}<br>
               <a href="${magicLinkUrl}" style="color: #2563eb; word-break: break-all;">${magicLinkUrl}</a>
             </p>
           </div>
           
           <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #f59e0b;">
             <p style="margin: 0; color: #92400e; font-size: 14px;">
-              ⚠️ <strong>Sicherheitshinweis:</strong> Dieser Login-Link ist nur 15 Minuten gültig. 
-              Falls Sie sich nicht einloggen wollten, ignorieren Sie diese E-Mail.
+              ${content.securityTitle} ${content.securityText}
             </p>
           </div>
           
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 14px;">
             <p style="margin: 0;">
-              Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.
+              ${content.footerText}
             </p>
             <p style="margin: 15px 0 0 0;">
-              © 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining
+              ${content.copyright}
             </p>
           </div>
         </body>
@@ -277,12 +302,44 @@ const generateMagicLinkEmail = (data: AuthEmailData, language: string = 'de') =>
 const generatePasswordResetEmail = (data: AuthEmailData, language: string = 'de') => {
   const userName = data.user.user_metadata?.first_name || 
                    data.user.user_metadata?.full_name || 
-                   'Tierfreund';
+                   (language === 'en' ? 'Pet Friend' : 'Tierfreund');
   
   const resetUrl = `${data.email_data.site_url}/verify?token=${data.email_data.token_hash}&type=${data.email_data.email_action_type}&redirect_to=${data.email_data.redirect_to}&apikey=${Deno.env.get('SUPABASE_ANON_KEY')}`;
   
-  return {
+  const content = language === 'en' ? {
+    subject: '🔒 TierTrainer24 - Reset Password',
+    title: 'Reset Password 🔒',
+    subtitle: `Hello ${userName}, reset your password`,
+    description: 'You have requested a password reset for your TierTrainer24 account. Click the button below to create a new password:',
+    buttonText: '🔒 Create New Password',
+    linkText: 'If the button doesn\'t work, copy this link:',
+    securityTitle: '⚠️ Important Security Notice:',
+    securityPoints: [
+      'This link is only valid for 1 hour',
+      'If you didn\'t request this, please ignore this email',
+      'Your current password remains active until you create a new one'
+    ],
+    footerText: `This email was sent to <strong>${data.user.email}</strong>.`,
+    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+  } : {
     subject: '🔒 TierTrainer24 - Passwort zurücksetzen',
+    title: 'Passwort zurücksetzen 🔒',
+    subtitle: `Hallo ${userName}, setzen Sie Ihr Passwort zurück`,
+    description: 'Sie haben eine Passwort-Zurücksetzung für Ihr TierTrainer24 Konto angefordert. Klicken Sie auf den Button unten, um ein neues Passwort zu erstellen:',
+    buttonText: '🔒 Neues Passwort erstellen',
+    linkText: 'Falls der Button nicht funktioniert, kopieren Sie diesen Link:',
+    securityTitle: '⚠️ Wichtiger Sicherheitshinweis:',
+    securityPoints: [
+      'Dieser Link ist nur 1 Stunde gültig',
+      'Falls Sie diese Anfrage nicht gestellt haben, ignorieren Sie diese E-Mail',
+      'Ihr aktuelles Passwort bleibt solange aktiv, bis Sie ein neues erstellen'
+    ],
+    footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.`,
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+  };
+  
+  return {
+    subject: content.subject,
     html: `
       <!DOCTYPE html>
       <html>
@@ -293,48 +350,45 @@ const generatePasswordResetEmail = (data: AuthEmailData, language: string = 'de'
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">Professionelles Hundetraining</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
-            <h2 style="margin: 0 0 15px 0;">Passwort zurücksetzen 🔒</h2>
-            <p style="margin: 0; font-size: 16px;">Hallo ${userName}, setzen Sie Ihr Passwort zurück</p>
+            <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
+            <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>
           
           <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 25px 0;">
             <p style="margin: 0 0 20px 0; font-size: 16px;">
-              Sie haben eine Passwort-Zurücksetzung für Ihr TierTrainer24 Konto angefordert. 
-              Klicken Sie auf den Button unten, um ein neues Passwort zu erstellen:
+              ${content.description}
             </p>
             
             <div style="text-align: center; margin: 25px 0;">
               <a href="${resetUrl}" 
                  style="display: inline-block; background: #dc2626; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
-                🔒 Neues Passwort erstellen
+                ${content.buttonText}
               </a>
             </div>
             
             <p style="margin: 20px 0 0 0; font-size: 14px; color: #666;">
-              Falls der Button nicht funktioniert, kopieren Sie diesen Link:<br>
+              ${content.linkText}<br>
               <a href="${resetUrl}" style="color: #2563eb; word-break: break-all;">${resetUrl}</a>
             </p>
           </div>
           
           <div style="background: #fef2f2; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #dc2626;">
             <p style="margin: 0; color: #991b1b; font-size: 14px;">
-              ⚠️ <strong>Wichtiger Sicherheitshinweis:</strong><br>
-              • Dieser Link ist nur 1 Stunde gültig<br>
-              • Falls Sie diese Anfrage nicht gestellt haben, ignorieren Sie diese E-Mail<br>
-              • Ihr aktuelles Passwort bleibt solange aktiv, bis Sie ein neues erstellen
+              ${content.securityTitle}<br>
+              ${content.securityPoints.map(point => `• ${point}`).join('<br>')}
             </p>
           </div>
           
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 14px;">
             <p style="margin: 0;">
-              Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.
+              ${content.footerText}
             </p>
             <p style="margin: 15px 0 0 0;">
-              © 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining
+              ${content.copyright}
             </p>
           </div>
         </body>
@@ -346,12 +400,44 @@ const generatePasswordResetEmail = (data: AuthEmailData, language: string = 'de'
 const generateEmailChangeEmail = (data: AuthEmailData, language: string = 'de') => {
   const userName = data.user.user_metadata?.first_name || 
                    data.user.user_metadata?.full_name || 
-                   'Tierfreund';
+                   (language === 'en' ? 'Pet Friend' : 'Tierfreund');
   
   const confirmUrl = `${data.email_data.site_url}/verify?token=${data.email_data.token_hash}&type=${data.email_data.email_action_type}&redirect_to=${data.email_data.redirect_to}&apikey=${Deno.env.get('SUPABASE_ANON_KEY')}`;
   
-  return {
+  const content = language === 'en' ? {
+    subject: '📧 TierTrainer24 - Confirm Email Address',
+    title: 'Change Email Address 📧',
+    subtitle: `Hello ${userName}, confirm your new email`,
+    description: 'You have requested to change your email address at TierTrainer24. Click the button below to confirm your new email address:',
+    buttonText: '📧 Confirm Email',
+    linkText: 'If the button doesn\'t work, copy this link:',
+    infoTitle: 'ℹ️ Note:',
+    infoPoints: [
+      'Your old email address remains active until you confirm this change',
+      'If you didn\'t request this change, please ignore this email',
+      'After confirmation, you will receive all future emails at this new address'
+    ],
+    footerText: `This email was sent to <strong>${data.user.email}</strong>.`,
+    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+  } : {
     subject: '📧 TierTrainer24 - E-Mail-Adresse bestätigen',
+    title: 'E-Mail-Adresse ändern 📧',
+    subtitle: `Hallo ${userName}, bestätigen Sie Ihre neue E-Mail`,
+    description: 'Sie haben eine Änderung Ihrer E-Mail-Adresse bei TierTrainer24 angefordert. Klicken Sie auf den Button unten, um Ihre neue E-Mail-Adresse zu bestätigen:',
+    buttonText: '📧 E-Mail bestätigen',
+    linkText: 'Falls der Button nicht funktioniert, kopieren Sie diesen Link:',
+    infoTitle: 'ℹ️ Hinweis:',
+    infoPoints: [
+      'Ihre alte E-Mail-Adresse bleibt aktiv, bis Sie diese Änderung bestätigen',
+      'Falls Sie diese Änderung nicht angefordert haben, ignorieren Sie diese E-Mail',
+      'Nach der Bestätigung erhalten Sie alle zukünftigen E-Mails an diese neue Adresse'
+    ],
+    footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.`,
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+  };
+  
+  return {
+    subject: content.subject,
     html: `
       <!DOCTYPE html>
       <html>
@@ -362,48 +448,45 @@ const generateEmailChangeEmail = (data: AuthEmailData, language: string = 'de') 
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">Professionelles Hundetraining</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
-            <h2 style="margin: 0 0 15px 0;">E-Mail-Adresse ändern 📧</h2>
-            <p style="margin: 0; font-size: 16px;">Hallo ${userName}, bestätigen Sie Ihre neue E-Mail</p>
+            <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
+            <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>
           
           <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 25px 0;">
             <p style="margin: 0 0 20px 0; font-size: 16px;">
-              Sie haben eine Änderung Ihrer E-Mail-Adresse bei TierTrainer24 angefordert. 
-              Klicken Sie auf den Button unten, um Ihre neue E-Mail-Adresse zu bestätigen:
+              ${content.description}
             </p>
             
             <div style="text-align: center; margin: 25px 0;">
               <a href="${confirmUrl}" 
                  style="display: inline-block; background: #059669; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
-                📧 E-Mail bestätigen
+                ${content.buttonText}
               </a>
             </div>
             
             <p style="margin: 20px 0 0 0; font-size: 14px; color: #666;">
-              Falls der Button nicht funktioniert, kopieren Sie diesen Link:<br>
+              ${content.linkText}<br>
               <a href="${confirmUrl}" style="color: #2563eb; word-break: break-all;">${confirmUrl}</a>
             </p>
           </div>
           
           <div style="background: #ecfdf5; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #059669;">
             <p style="margin: 0; color: #065f46; font-size: 14px;">
-              ℹ️ <strong>Hinweis:</strong><br>
-              • Ihre alte E-Mail-Adresse bleibt aktiv, bis Sie diese Änderung bestätigen<br>
-              • Falls Sie diese Änderung nicht angefordert haben, ignorieren Sie diese E-Mail<br>
-              • Nach der Bestätigung erhalten Sie alle zukünftigen E-Mails an diese neue Adresse
+              ${content.infoTitle}<br>
+              ${content.infoPoints.map(point => `• ${point}`).join('<br>')}
             </p>
           </div>
           
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 14px;">
             <p style="margin: 0;">
-              Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.
+              ${content.footerText}
             </p>
             <p style="margin: 15px 0 0 0;">
-              © 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining
+              ${content.copyright}
             </p>
           </div>
         </body>
@@ -415,8 +498,44 @@ const generateEmailChangeEmail = (data: AuthEmailData, language: string = 'de') 
 const generateInviteEmail = (data: AuthEmailData, language: string = 'de') => {
   const inviteUrl = `${data.email_data.site_url}/verify?token=${data.email_data.token_hash}&type=${data.email_data.email_action_type}&redirect_to=${data.email_data.redirect_to}&apikey=${Deno.env.get('SUPABASE_ANON_KEY')}`;
   
-  return {
+  const content = language === 'en' ? {
+    subject: '🎉 Invitation to TierTrainer24 - Start Free Now!',
+    title: 'You\'re Invited! 🎉',
+    subtitle: 'Become part of the TierTrainer24 Community',
+    description: 'You have been invited to TierTrainer24! Discover professional training methods for your dog and become part of our community.',
+    buttonText: '🎉 Accept Invitation',
+    linkText: 'If the button doesn\'t work, copy this link:',
+    benefitsTitle: '🚀 What awaits you at TierTrainer24:',
+    benefits: [
+      '7 days free trial',
+      'Professional training methods',
+      'Step-by-step instructions',
+      'Community with other dog owners',
+      'Personal AI trainer for individual questions'
+    ],
+    footerText: `This invitation was sent to <strong>${data.user.email}</strong>.`,
+    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+  } : {
     subject: '🎉 Einladung zu TierTrainer24 - Jetzt kostenfrei starten!',
+    title: 'Sie wurden eingeladen! 🎉',
+    subtitle: 'Werden Sie Teil der TierTrainer24 Community',
+    description: 'Sie wurden zu TierTrainer24 eingeladen! Entdecken Sie professionelle Trainingsmethoden für Ihren Hund und werden Sie Teil unserer Community.',
+    buttonText: '🎉 Einladung annehmen',
+    linkText: 'Falls der Button nicht funktioniert, kopieren Sie diesen Link:',
+    benefitsTitle: '🚀 Was Sie bei TierTrainer24 erwartet:',
+    benefits: [
+      '7 Tage kostenfreie Testphase',
+      'Professionelle Trainingsmethoden',
+      'Schritt-für-Schritt Anleitungen',
+      'Community mit anderen Hundebesitzern',
+      'Persönlicher KI-Trainer für individuelle Fragen'
+    ],
+    footerText: `Diese Einladung wurde an <strong>${data.user.email}</strong> gesendet.`,
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+  };
+  
+  return {
+    subject: content.subject,
     html: `
       <!DOCTYPE html>
       <html>
@@ -427,50 +546,45 @@ const generateInviteEmail = (data: AuthEmailData, language: string = 'de') => {
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">Professionelles Hundetraining</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
-            <h2 style="margin: 0 0 15px 0;">Sie wurden eingeladen! 🎉</h2>
-            <p style="margin: 0; font-size: 16px;">Werden Sie Teil der TierTrainer24 Community</p>
+            <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
+            <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>
           
           <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 25px 0;">
             <p style="margin: 0 0 20px 0; font-size: 16px;">
-              Sie wurden zu TierTrainer24 eingeladen! Entdecken Sie professionelle Trainingsmethoden 
-              für Ihren Hund und werden Sie Teil unserer Community.
+              ${content.description}
             </p>
             
             <div style="text-align: center; margin: 25px 0;">
               <a href="${inviteUrl}" 
                  style="display: inline-block; background: #8b5cf6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
-                🎉 Einladung annehmen
+                ${content.buttonText}
               </a>
             </div>
             
             <p style="margin: 20px 0 0 0; font-size: 14px; color: #666;">
-              Falls der Button nicht funktioniert, kopieren Sie diesen Link:<br>
+              ${content.linkText}<br>
               <a href="${inviteUrl}" style="color: #2563eb; word-break: break-all;">${inviteUrl}</a>
             </p>
           </div>
           
           <div style="background: #dbeafe; padding: 20px; border-radius: 8px; margin: 25px 0;">
-            <h3 style="margin: 0 0 15px 0; color: #1e40af;">🚀 Was Sie bei TierTrainer24 erwartet:</h3>
+            <h3 style="margin: 0 0 15px 0; color: #1e40af;">${content.benefitsTitle}</h3>
             <ul style="margin: 0; padding-left: 20px; color: #1e40af;">
-              <li>7 Tage kostenfreie Testphase</li>
-              <li>Professionelle Trainingsmethoden</li>
-              <li>Schritt-für-Schritt Anleitungen</li>
-              <li>Community mit anderen Hundebesitzern</li>
-              <li>Persönlicher KI-Trainer für individuelle Fragen</li>
+              ${content.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
             </ul>
           </div>
           
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 14px;">
             <p style="margin: 0;">
-              Diese Einladung wurde an <strong>${data.user.email}</strong> gesendet.
+              ${content.footerText}
             </p>
             <p style="margin: 15px 0 0 0;">
-              © 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining
+              ${content.copyright}
             </p>
           </div>
         </body>
@@ -482,12 +596,36 @@ const generateInviteEmail = (data: AuthEmailData, language: string = 'de') => {
 const generateReauthEmail = (data: AuthEmailData, language: string = 'de') => {
   const userName = data.user.user_metadata?.first_name || 
                    data.user.user_metadata?.full_name || 
-                   'Tierfreund';
+                   (language === 'en' ? 'Pet Friend' : 'Tierfreund');
   
   const reauthUrl = `${data.email_data.site_url}/verify?token=${data.email_data.token_hash}&type=${data.email_data.email_action_type}&redirect_to=${data.email_data.redirect_to}&apikey=${Deno.env.get('SUPABASE_ANON_KEY')}`;
   
-  return {
+  const content = language === 'en' ? {
+    subject: '🔐 TierTrainer24 - Security Confirmation Required',
+    title: 'Security Confirmation 🔐',
+    subtitle: `Hello ${userName}, confirm your identity`,
+    description: 'For security reasons, you must confirm your identity before you can continue. Click the button below to authenticate:',
+    buttonText: '🔐 Confirm Identity',
+    linkText: 'If the button doesn\'t work, copy this link:',
+    securityTitle: '🛡️ Why is this necessary?',
+    securityText: 'This additional security confirmation protects your account from unauthorized access. It was triggered because you want to perform a security-critical action.',
+    footerText: `This email was sent to <strong>${data.user.email}</strong>.`,
+    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+  } : {
     subject: '🔐 TierTrainer24 - Sicherheitsbestätigung erforderlich',
+    title: 'Sicherheitsbestätigung 🔐',
+    subtitle: `Hallo ${userName}, bestätigen Sie Ihre Identität`,
+    description: 'Aus Sicherheitsgründen müssen Sie Ihre Identität bestätigen, bevor Sie fortfahren können. Klicken Sie auf den Button unten, um sich zu authentifizieren:',
+    buttonText: '🔐 Identität bestätigen',
+    linkText: 'Falls der Button nicht funktioniert, kopieren Sie diesen Link:',
+    securityTitle: '🛡️ Warum ist das notwendig?',
+    securityText: 'Diese zusätzliche Sicherheitsbestätigung schützt Ihr Konto vor unbefugten Zugriffen. Sie wurde ausgelöst, weil Sie eine sicherheitskritische Aktion durchführen möchten.',
+    footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.`,
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+  };
+  
+  return {
+    subject: content.subject,
     html: `
       <!DOCTYPE html>
       <html>
@@ -498,47 +636,45 @@ const generateReauthEmail = (data: AuthEmailData, language: string = 'de') => {
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">Professionelles Hundetraining</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
-            <h2 style="margin: 0 0 15px 0;">Sicherheitsbestätigung 🔐</h2>
-            <p style="margin: 0; font-size: 16px;">Hallo ${userName}, bestätigen Sie Ihre Identität</p>
+            <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
+            <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>
           
           <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 25px 0;">
             <p style="margin: 0 0 20px 0; font-size: 16px;">
-              Aus Sicherheitsgründen müssen Sie Ihre Identität bestätigen, bevor Sie fortfahren können. 
-              Klicken Sie auf den Button unten, um sich zu authentifizieren:
+              ${content.description}
             </p>
             
             <div style="text-align: center; margin: 25px 0;">
               <a href="${reauthUrl}" 
                  style="display: inline-block; background: #f59e0b; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
-                🔐 Identität bestätigen
+                ${content.buttonText}
               </a>
             </div>
             
             <p style="margin: 20px 0 0 0; font-size: 14px; color: #666;">
-              Falls der Button nicht funktioniert, kopieren Sie diesen Link:<br>
+              ${content.linkText}<br>
               <a href="${reauthUrl}" style="color: #2563eb; word-break: break-all;">${reauthUrl}</a>
             </p>
           </div>
           
           <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #f59e0b;">
             <p style="margin: 0; color: #92400e; font-size: 14px;">
-              🛡️ <strong>Warum ist das notwendig?</strong><br>
-              Diese zusätzliche Sicherheitsbestätigung schützt Ihr Konto vor unbefugten Zugriffen. 
-              Sie wurde ausgelöst, weil Sie eine sicherheitskritische Aktion durchführen möchten.
+              ${content.securityTitle}<br>
+              ${content.securityText}
             </p>
           </div>
           
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 14px;">
             <p style="margin: 0;">
-              Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.
+              ${content.footerText}
             </p>
             <p style="margin: 15px 0 0 0;">
-              © 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining
+              ${content.copyright}
             </p>
           </div>
         </body>

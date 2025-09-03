@@ -98,58 +98,88 @@ serve(async (req) => {
       details: [
         `Sender Domain: ${EMAIL_FROM}`,
         `Test Recipient: ${recipientEmail}`,
-        `Date: ${new Date().toLocaleString('en-US')}`,
-        `Edge Function: send-test-email`
+        `Language: ${userLanguage}`,
+        `Timestamp: ${new Date().toLocaleString('en-US')}`,
+        `Test Type: Configuration Verification`
       ],
-      successMessage: "If you receive this email, the basic configuration is working correctly.",
-      footer: "TierTrainer24 - System Test"
+      successMessage: "🎉 If you received this email, your email configuration is working correctly!",
+      footerText: "This is a test email. Please do not reply to this message.",
+      copyright: "© 2024 TierTrainer24 - Professional Dog Training Platform"
     } : {
       subject: "🧪 Test E-Mail - TierTrainer24 Konfiguration",
       title: "🐾 E-Mail-Konfiguration Test",
       greeting: "Hallo!",
       description: "Dies ist eine Test-E-Mail zur Überprüfung der E-Mail-Konfiguration von TierTrainer24.",
-      detailsTitle: "✅ Test Details:",
+      detailsTitle: "✅ Test-Details:",
       details: [
-        `Sender-Domain: ${EMAIL_FROM}`,
+        `Absender-Domain: ${EMAIL_FROM}`,
         `Test-Empfänger: ${recipientEmail}`,
-        `Datum: ${new Date().toLocaleString('de-DE')}`,
-        `Edge Function: send-test-email`
+        `Sprache: ${userLanguage}`,
+        `Zeitstempel: ${new Date().toLocaleString('de-DE')}`,
+        `Test-Typ: Konfigurationsüberprüfung`
       ],
-      successMessage: "Wenn Sie diese E-Mail erhalten, funktioniert die Grundkonfiguration korrekt.",
-      footer: "TierTrainer24 - System Test"
+      successMessage: "🎉 Falls Sie diese E-Mail erhalten haben, funktioniert Ihre E-Mail-Konfiguration korrekt!",
+      footerText: "Dies ist eine Test-E-Mail. Bitte antworten Sie nicht auf diese Nachricht.",
+      copyright: "© 2024 TierTrainer24 - Professionelle Hundetraining-Plattform"
+    };
+
+    const emailTemplate = {
+      subject: content.subject,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+          </head>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
+              <p style="color: #666; margin: 5px 0;">${userLanguage === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
+            </div>
+            
+            <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+              <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
+              <p style="margin: 0; font-size: 16px;">${content.greeting}</p>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 25px 0;">
+              <p style="margin: 0 0 20px 0; font-size: 16px;">
+                ${content.description}
+              </p>
+              
+              <h3 style="margin: 0 0 15px 0; color: #1e40af;">${content.detailsTitle}</h3>
+              <ul style="margin: 0; padding-left: 20px; color: #1e40af;">
+                ${content.details.map(detail => `<li>${detail}</li>`).join('')}
+              </ul>
+            </div>
+            
+            <div style="background: #dbeafe; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #3b82f6;">
+              <p style="margin: 0; color: #1e40af; font-size: 16px; font-weight: bold;">
+                ${content.successMessage}
+              </p>
+            </div>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 14px;">
+              <p style="margin: 0;">
+                ${content.footerText}
+              </p>
+              <p style="margin: 15px 0 0 0;">
+                ${content.copyright}
+              </p>
+            </div>
+          </body>
+        </html>
+      `
     };
 
     logStep("Sending test email", { recipientEmail, fromAddress: EMAIL_FROM, language: userLanguage });
-
-    const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #22c55e;">${content.title}</h1>
-        <p>${content.greeting}</p>
-        <p>${content.description}</p>
-        
-        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
-          <h3 style="margin: 0 0 10px 0; color: #333;">${content.detailsTitle}</h3>
-          <ul style="color: #666; margin: 0;">
-            ${content.details.map(detail => `<li>${detail}</li>`).join('')}
-          </ul>
-        </div>
-        
-        <p style="color: #666; font-size: 14px;">
-          ${content.successMessage}
-        </p>
-        
-        <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="color: #898989; font-size: 12px; text-align: center;">
-          ${content.footer}
-        </p>
-      </div>
-    `;
 
     const { data, error } = await resend.emails.send({
       from: EMAIL_FROM,
       to: [recipientEmail],
       subject: content.subject,
-      html,
+      html: emailTemplate.html,
     });
 
     if (error) {

@@ -96,7 +96,8 @@ serve(async (req) => {
         amount,
         currency: currency || 'EUR',
         nextRetry,
-        failureReason
+        failureReason,
+        language: userLanguage
       })
     );
 

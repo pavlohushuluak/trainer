@@ -20,6 +20,7 @@ interface SupportTicketEmailProps {
   ticketSubject: string
   adminMessage?: string
   ticketStatus?: string
+  language?: string
 }
 
 export const SupportTicketEmail = ({
@@ -29,47 +30,110 @@ export const SupportTicketEmail = ({
   ticketSubject,
   adminMessage,
   ticketStatus,
+  language = 'de',
 }: SupportTicketEmailProps) => {
   const shortTicketId = ticketId.slice(-8);
+  
+  const content = language === 'en' ? {
+    ticketCreated: `Support ticket #${shortTicketId} was created`,
+    ticketResponse: `New response to your support ticket #${shortTicketId}`,
+    ticketResolved: `Support ticket #${shortTicketId} was resolved`,
+    ticketCreatedTitle: '🎫 Support Ticket Created',
+    ticketResponseTitle: '💬 New Response Received',
+    ticketResolvedTitle: '✅ Ticket Resolved',
+    greeting: `Hello ${userName},`,
+    createdDescription: 'Your support ticket has been successfully created. Our team will address your concern as quickly as possible.',
+    ticketDetails: '📋 Ticket Details',
+    ticketNumber: 'Ticket No.:',
+    subject: 'Subject:',
+    status: 'Status:',
+    responseTime: 'Response Time:',
+    openStatus: 'Open',
+    responseTimeValue: 'Usually within 24 hours',
+    statusCheck: 'You can check the status of your ticket at any time in your support area.',
+    teamResponse: 'Our support team has responded to your ticket:',
+    ticket: 'Ticket',
+    inProgress: 'In Progress',
+    teamResponseTitle: '💬 Response from our team:',
+    furtherQuestions: 'If you have further questions, you can reply directly to this email or manage your ticket through the support area.',
+    ticketResolvedDescription: 'Your support ticket has been successfully resolved. Thank you for your patience.',
+    resolvedStatus: 'Resolved',
+    resolvedDate: 'Resolution Date:',
+    feedback: 'We hope we were able to help you. If you have any feedback about our support service, please let us know.',
+    viewTicket: 'View Ticket',
+    contactSupport: 'Contact Support',
+    footer: 'This is an automated message. Please do not reply to this email.',
+    copyright: '© 2024 TierTrainer24 - Professional Dog Training Platform'
+  } : {
+    ticketCreated: `Support-Ticket #${shortTicketId} wurde erstellt`,
+    ticketResponse: `Neue Antwort auf Ihr Support-Ticket #${shortTicketId}`,
+    ticketResolved: `Support-Ticket #${shortTicketId} wurde gelöst`,
+    ticketCreatedTitle: '🎫 Support-Ticket erstellt',
+    ticketResponseTitle: '💬 Neue Antwort erhalten',
+    ticketResolvedTitle: '✅ Ticket gelöst',
+    greeting: `Hallo ${userName},`,
+    createdDescription: 'Ihr Support-Ticket wurde erfolgreich erstellt. Unser Team wird sich schnellstmöglich um Ihr Anliegen kümmern.',
+    ticketDetails: '📋 Ticket-Details',
+    ticketNumber: 'Ticket-Nr.:',
+    subject: 'Betreff:',
+    status: 'Status:',
+    responseTime: 'Antwortzeit:',
+    openStatus: 'Offen',
+    responseTimeValue: 'Normalerweise innerhalb von 24 Stunden',
+    statusCheck: 'Sie können den Status Ihres Tickets jederzeit in Ihrem Support-Bereich einsehen.',
+    teamResponse: 'Unser Support-Team hat auf Ihr Ticket geantwortet:',
+    ticket: 'Ticket',
+    inProgress: 'In Bearbeitung',
+    teamResponseTitle: '💬 Antwort unseres Teams:',
+    furtherQuestions: 'Falls Sie weitere Fragen haben, können Sie direkt auf diese E-Mail antworten oder Ihr Ticket über den Support-Bereich verwalten.',
+    ticketResolvedDescription: 'Ihr Support-Ticket wurde erfolgreich gelöst. Vielen Dank für Ihre Geduld.',
+    resolvedStatus: 'Gelöst',
+    resolvedDate: 'Lösungsdatum:',
+    feedback: 'Wir hoffen, dass wir Ihnen helfen konnten. Falls Sie Feedback zu unserem Support-Service haben, lassen Sie es uns gerne wissen.',
+    viewTicket: 'Ticket anzeigen',
+    contactSupport: 'Support kontaktieren',
+    footer: 'Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail.',
+    copyright: '© 2024 TierTrainer24 - Professionelle Hundetraining-Plattform'
+  };
   
   return (
     <Html>
       <Head />
       <Preview>
-        {emailType === 'ticket_created' && `Support-Ticket #${shortTicketId} wurde erstellt`}
-        {emailType === 'ticket_response' && `Neue Antwort auf Ihr Support-Ticket #${shortTicketId}`}
-        {emailType === 'ticket_resolved' && `Support-Ticket #${shortTicketId} wurde gelöst`}
+        {emailType === 'ticket_created' && content.ticketCreated}
+        {emailType === 'ticket_response' && content.ticketResponse}
+        {emailType === 'ticket_resolved' && content.ticketResolved}
       </Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>
-            {emailType === 'ticket_created' && '🎫 Support-Ticket erstellt'}
-            {emailType === 'ticket_response' && '💬 Neue Antwort erhalten'}
-            {emailType === 'ticket_resolved' && '✅ Ticket gelöst'}
+            {emailType === 'ticket_created' && content.ticketCreatedTitle}
+            {emailType === 'ticket_response' && content.ticketResponseTitle}
+            {emailType === 'ticket_resolved' && content.ticketResolvedTitle}
           </Heading>
           
           <Text style={text}>
-            Hallo {userName},
+            {content.greeting}
           </Text>
           
           {emailType === 'ticket_created' && (
             <>
               <Text style={text}>
-                Ihr Support-Ticket wurde erfolgreich erstellt. Unser Team wird sich schnellstmöglich um Ihr Anliegen kümmern.
+                {content.createdDescription}
               </Text>
               
               <Section style={ticketBox}>
-                <Text style={ticketTitle}>📋 Ticket-Details</Text>
+                <Text style={ticketTitle}>{content.ticketDetails}</Text>
                 <Text style={ticketDetails}>
-                  <strong>Ticket-Nr.:</strong> #{shortTicketId}<br/>
-                  <strong>Betreff:</strong> {ticketSubject}<br/>
-                  <strong>Status:</strong> Offen<br/>
-                  <strong>Antwortzeit:</strong> Normalerweise innerhalb von 24 Stunden
+                  <strong>{content.ticketNumber}</strong> #{shortTicketId}<br/>
+                  <strong>{content.subject}</strong> {ticketSubject}<br/>
+                  <strong>{content.status}</strong> {content.openStatus}<br/>
+                  <strong>{content.responseTime}</strong> {content.responseTimeValue}
                 </Text>
               </Section>
               
               <Text style={text}>
-                Sie können den Status Ihres Tickets jederzeit in Ihrem Support-Bereich einsehen.
+                {content.statusCheck}
               </Text>
             </>
           )}
@@ -77,24 +141,24 @@ export const SupportTicketEmail = ({
           {emailType === 'ticket_response' && adminMessage && (
             <>
               <Text style={text}>
-                Unser Support-Team hat auf Ihr Ticket geantwortet:
+                {content.teamResponse}
               </Text>
               
               <Section style={ticketBox}>
-                <Text style={ticketTitle}>📋 Ticket #{shortTicketId}</Text>
+                <Text style={ticketTitle}>{content.ticket} #{shortTicketId}</Text>
                 <Text style={ticketDetails}>
-                  <strong>Betreff:</strong> {ticketSubject}<br/>
-                  <strong>Status:</strong> {ticketStatus || 'In Bearbeitung'}
+                  <strong>{content.subject}</strong> {ticketSubject}<br/>
+                  <strong>{content.status}</strong> {ticketStatus || content.inProgress}
                 </Text>
               </Section>
 
               <Section style={responseBox}>
-                <Text style={responseTitle}>💬 Antwort unseres Teams:</Text>
+                <Text style={responseTitle}>{content.teamResponseTitle}</Text>
                 <Text style={responseText}>{adminMessage}</Text>
               </Section>
               
               <Text style={text}>
-                Falls Sie weitere Fragen haben, können Sie direkt auf diese E-Mail antworten oder Ihr Ticket über den Support-Bereich verwalten.
+                {content.furtherQuestions}
               </Text>
             </>
           )}
@@ -102,54 +166,50 @@ export const SupportTicketEmail = ({
           {emailType === 'ticket_resolved' && (
             <>
               <Text style={text}>
-                Großartig! Ihr Support-Ticket wurde erfolgreich gelöst.
+                {content.ticketResolvedDescription}
               </Text>
               
-              <Section style={resolvedBox}>
-                <Text style={resolvedTitle}>✅ Gelöstes Ticket</Text>
-                <Text style={resolvedDetails}>
-                  <strong>Ticket-Nr.:</strong> #{shortTicketId}<br/>
-                  <strong>Betreff:</strong> {ticketSubject}<br/>
-                  <strong>Status:</strong> Gelöst<br/>
-                  <strong>Gelöst am:</strong> {new Date().toLocaleDateString('de-DE')}
+              <Section style={ticketBox}>
+                <Text style={ticketTitle}>{content.ticket} #{shortTicketId}</Text>
+                <Text style={ticketDetails}>
+                  <strong>{content.subject}</strong> {ticketSubject}<br/>
+                  <strong>{content.status}</strong> {content.resolvedStatus}<br/>
+                  <strong>{content.resolvedDate}</strong> {new Date().toLocaleDateString(language === 'en' ? 'en-US' : 'de-DE')}
                 </Text>
               </Section>
               
               <Text style={text}>
-                <strong>Sind Sie zufrieden mit unserem Support?</strong><br/>
-                Ihre Bewertung hilft uns, unseren Service zu verbessern.
+                {content.feedback}
               </Text>
-              
-              <Section style={buttonContainer}>
-                <Button style={button} href={`https://tiertrainer24.com/support?feedback=${ticketId}`}>
-                  💖 Bewertung abgeben
-                </Button>
-              </Section>
             </>
           )}
 
-          <Section style={buttonContainer}>
-            <Button style={button} href="https://tiertrainer24.com/support">
-              🎫 Support-Bereich öffnen
-            </Button>
-          </Section>
+          <div style={buttonContainer}>
+            <Link href="https://tiertrainer24.com/support" style={button}>
+              {content.viewTicket}
+            </Link>
+          </div>
 
-          <Text style={text}>
-            Bei weiteren Fragen sind wir gerne für Sie da!<br/>
-            Ihr TierTrainer-Support-Team 🐾
-          </Text>
+          <div style={helpBox}>
+            <Text style={text}>
+              <strong>{language === 'en' ? 'Need help?' : 'Brauchen Sie Hilfe?'}</strong><br/>
+              {language === 'en' ? 'Contact our support team for assistance.' : 'Kontaktieren Sie unser Support-Team für Hilfe.'}
+            </Text>
+          </div>
 
-          <Text style={footer}>
-            TierTrainer24 - Für das beste Miteinander mit Ihrem Tier<br/>
-            <Link href="https://tiertrainer24.com/impressum" style={footerLink}>Impressum</Link> | 
-            <Link href="https://tiertrainer24.com/datenschutz" style={footerLink}>Datenschutz</Link> | 
-            <Link href="https://tiertrainer24.com/support" style={footerLink}>Support</Link>
-          </Text>
+          <div style={footer}>
+            <Text style={footer}>
+              {content.footer}
+            </Text>
+            <Text style={footer}>
+              {content.copyright}
+            </Text>
+          </div>
         </Container>
       </Body>
     </Html>
-  )
-}
+  );
+};
 
 const main = {
   backgroundColor: '#f6f9fc',
