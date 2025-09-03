@@ -13,6 +13,7 @@ interface EmailChangeRequest {
   newEmail: string;
   userName: string;
   language: string;
+  confirmationToken: string;
 }
 
 const logStep = (step: string, details?: any) => {
@@ -50,9 +51,8 @@ const getUserLanguage = async (email: string): Promise<string> => {
 const generateEmailChangeConfirmationEmail = (data: EmailChangeRequest, language: string = 'de') => {
   const userName = data.userName || (language === 'en' ? 'Pet Friend' : 'Tierfreund');
   
-  // Generate a unique confirmation token
-  const confirmationToken = crypto.randomUUID();
-  const confirmUrl = `${Deno.env.get('SITE_URL') || 'https://tiertrainer24.com'}/confirm-email-change?token=${confirmationToken}&userId=${data.userId}&newEmail=${encodeURIComponent(data.newEmail)}`;
+  // Use the passed confirmation token
+  const confirmUrl = `${Deno.env.get('SITE_URL') || 'https://tiertrainer24.com'}/confirm-email-change?token=${data.confirmationToken}&userId=${data.userId}&newEmail=${encodeURIComponent(data.newEmail)}`;
   
   const content = language === 'en' ? {
     subject: '📧 TierTrainer24 - Confirm Email Address Change',
@@ -183,10 +183,10 @@ serve(async (req) => {
     });
 
     // Validate required fields
-    if (!requestBody.userId || !requestBody.currentEmail || !requestBody.newEmail) {
+    if (!requestBody.userId || !requestBody.currentEmail || !requestBody.newEmail || !requestBody.confirmationToken) {
       return new Response(
         JSON.stringify({ 
-          error: 'Missing required fields: userId, currentEmail, newEmail',
+          error: 'Missing required fields: userId, currentEmail, newEmail, confirmationToken',
           success: false 
         }),
         { 

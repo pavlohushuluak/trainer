@@ -31,38 +31,23 @@ export const ConfirmEmailChangePage = () => {
 
   const confirmEmailChange = async () => {
     try {
-      // Update the user's email in Supabase Auth
-      const { error: updateError } = await supabase.auth.updateUser({
-        email: newEmail
+      // Call our edge function to confirm the email change
+      const { error: confirmError } = await supabase.functions.invoke('confirm-email-change', {
+        body: {
+          token: token,
+          userId: userId,
+          newEmail: newEmail
+        }
       });
 
-      if (updateError) {
-        console.error('Email update error:', updateError);
-        setError('Failed to update email. Please try again.');
+      if (confirmError) {
+        console.error('Email change confirmation error:', confirmError);
+        setError('Failed to confirm email change. Please try again.');
         setIsLoading(false);
         return;
       }
 
-      // Update the email in the profiles table
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({
-          email: newEmail,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', userId);
-
-      if (profileError) {
-        console.error('Profile update error:', profileError);
-        // Even if profile update fails, the auth email was updated
-        // We'll show a warning but still consider it successful
-        toast({
-          title: 'Warning',
-          description: 'Email updated in authentication but there was an issue updating your profile. Please contact support.',
-          variant: 'destructive'
-        });
-      }
-
+      // Success - email has been updated in both Auth and profiles table
       setIsSuccess(true);
       setIsLoading(false);
 

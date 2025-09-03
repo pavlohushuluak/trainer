@@ -183,6 +183,28 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
       // Note: Supabase will automatically check if the email is already registered
       // and return an appropriate error if it is
 
+      // Generate a unique confirmation token
+      const confirmationToken = crypto.randomUUID();
+      
+      // Store the token in the profiles table
+      const { error: tokenError } = await supabase
+        .from('profiles')
+        .update({
+          email_change_token: confirmationToken,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+
+      if (tokenError) {
+        console.error('Token storage error:', tokenError);
+        toast({
+          title: t('settings.profile.error.profileUpdateTitle'),
+          description: t('settings.profile.error.profileUpdateDescription'),
+          variant: 'destructive'
+        });
+        return;
+      }
+
       // Send confirmation email to the new email address using our custom function
       console.log('Requesting email change to:', emailChangeData.newEmail);
       const { error: emailError } = await supabase.functions.invoke('send-email-change-confirmation', {
@@ -191,7 +213,8 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
           currentEmail: user.email,
           newEmail: emailChangeData.newEmail,
           userName: profileData.first_name || profileData.last_name || 'Pet Friend',
-          language: 'de' // TODO: Get from user preferences
+          language: 'de', // TODO: Get from user preferences
+          confirmationToken: confirmationToken
         }
       });
 
