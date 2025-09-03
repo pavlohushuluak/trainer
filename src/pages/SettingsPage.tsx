@@ -10,7 +10,8 @@ import { useLanguagePersistence } from '@/hooks/useLanguagePersistence';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProfileEditModal } from '@/components/settings/ProfileEditModal';
 import { PasswordChangeModal } from '@/components/settings/PasswordChangeModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 const SettingsPage = () => {
   const { user } = useAuth();
@@ -19,6 +20,28 @@ const SettingsPage = () => {
   const { changeLanguage, currentLanguage } = useLanguagePersistence();
   const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
   const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] = useState(false);
+
+  // Refresh user data when component mounts to ensure we have the latest email
+  useEffect(() => {
+    const refreshUserData = async () => {
+      try {
+        const { data: { user: currentUser }, error } = await supabase.auth.getUser();
+        if (error) {
+          console.error('Error refreshing user data:', error);
+          return;
+        }
+        if (currentUser && currentUser.email !== user?.email) {
+          console.log('Email updated detected, refreshing page...');
+          // Force a page refresh to get the latest user data
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error('Error in refreshUserData:', error);
+      }
+    };
+
+    refreshUserData();
+  }, [user?.email]);
 
   if (!user) {
     return (
@@ -74,14 +97,24 @@ const SettingsPage = () => {
                   <label className="text-sm font-medium text-blue-800 dark:text-blue-200">{t('settings.profile.email')}</label>
                   <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">{user.email}</p>
                 </div>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setIsProfileEditModalOpen(true)}
-                  className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 dark:hover:text-blue-200"
-                >
-                  {t('settings.profile.editProfile')}
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setIsProfileEditModalOpen(true)}
+                    className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 dark:hover:text-blue-200"
+                  >
+                    {t('settings.profile.editProfile')}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => window.location.reload()}
+                    className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 dark:hover:text-blue-200"
+                  >
+                    🔄 Refresh
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>

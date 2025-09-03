@@ -51,6 +51,18 @@ export const ConfirmEmailChangePage = () => {
       setIsSuccess(true);
       setIsLoading(false);
 
+      // Refresh the auth user data to get the updated email
+      try {
+        const { data: { user: updatedUser }, error: refreshError } = await supabase.auth.getUser();
+        if (refreshError) {
+          console.warn('Could not refresh auth user data:', refreshError);
+        } else if (updatedUser) {
+          console.log('Auth user data refreshed:', updatedUser.email);
+        }
+      } catch (refreshError) {
+        console.warn('Error refreshing auth user data:', refreshError);
+      }
+
       // Show success message
       toast({
         title: 'Email Updated Successfully',
@@ -60,7 +72,7 @@ export const ConfirmEmailChangePage = () => {
 
       // Redirect to settings page after a delay
       setTimeout(() => {
-        navigate('/settings');
+        navigate('/settings', { replace: true });
       }, 3000);
 
     } catch (error) {
