@@ -231,6 +231,67 @@ serve(async (req) => {
       logStep('Profile email updated successfully');
     }
 
+    // Update the email in the subscribers table
+    try {
+      const { error: subscriberUpdateError } = await supabase
+        .from('subscribers')
+        .update({
+          email: requestBody.newEmail,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', requestBody.userId);
+
+      if (subscriberUpdateError) {
+        logStep('Warning: Could not update subscribers table', { error: subscriberUpdateError });
+      } else {
+        logStep('Subscribers table email updated successfully');
+      }
+    } catch (subscriberError) {
+      logStep('Warning: Exception while updating subscribers table', { error: subscriberError });
+    }
+
+    // Update the email in the admin_users table if user is an admin
+    try {
+      const { error: adminUpdateError } = await supabase
+        .from('admin_users')
+        .update({
+          email: requestBody.newEmail,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', requestBody.userId);
+
+      if (adminUpdateError) {
+        logStep('Warning: Could not update admin_users table', { error: adminUpdateError });
+      } else {
+        logStep('Admin_users table email updated successfully');
+      }
+    } catch (adminError) {
+      logStep('Warning: Exception while updating admin_users table', { error: adminError });
+    }
+
+    // Update any other tables that might reference the user's email
+    // This is a catch-all for any future tables that might be added
+    try {
+      // Update language_support table if it exists and has user_email field
+      const { error: languageUpdateError } = await supabase
+        .from('language_support')
+        .update({
+          user_email: requestBody.newEmail,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_email', user.email);
+
+      if (languageUpdateError) {
+        // This is expected if the table doesn't exist or the field doesn't exist
+        logStep('Info: language_support table update not needed or not possible', { error: languageUpdateError });
+      } else {
+        logStep('Language_support table email updated successfully');
+      }
+    } catch (languageError) {
+      // This is expected if the table doesn't exist
+      logStep('Info: language_support table update not needed', { error: languageError });
+    }
+
     // Clear any pending email change data if it exists
     try {
       await supabase
