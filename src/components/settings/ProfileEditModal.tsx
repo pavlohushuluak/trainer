@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslations } from '@/hooks/useTranslations';
-import { Loader2, User, Mail } from 'lucide-react';
+import { Loader2, User, Mail, Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 interface ProfileEditModalProps {
@@ -31,6 +31,8 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailChangeLoading, setIsEmailChangeLoading] = useState(false);
   const [isEmailChangeOpen, setIsEmailChangeOpen] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [hasPendingEmailChange, setHasPendingEmailChange] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({
     first_name: '',
     last_name: '',
@@ -45,6 +47,7 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
   useEffect(() => {
     if (isOpen && user) {
       loadProfileData();
+      checkPendingEmailChange();
     }
   }, [isOpen, user]);
 
@@ -138,6 +141,27 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
     e.preventDefault();
     if (!user) return;
 
+    // Validate that new email is different from current email
+    if (emailChangeData.newEmail.toLowerCase() === user.email?.toLowerCase()) {
+      toast({
+        title: t('settings.profile.error.sameEmailTitle'),
+        description: t('settings.profile.error.sameEmailDescription'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailChangeData.newEmail)) {
+      toast({
+        title: t('settings.profile.error.invalidEmailTitle'),
+        description: t('settings.profile.error.invalidEmailDescription'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setIsEmailChangeLoading(true);
 
     try {
@@ -156,39 +180,44 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
         return;
       }
 
-      // Update the email
-      const { error: updateError } = await supabase.auth.updateUser({
-        email: emailChangeData.newEmail
+      // Note: Supabase will automatically check if the email is already registered
+      // and return an appropriate error if it is
+
+      // Send confirmation email to the new email address using our custom function
+      console.log('Requesting email change to:', emailChangeData.newEmail);
+      const { error: emailError } = await supabase.functions.invoke('send-email-change-confirmation', {
+        body: {
+          userId: user.id,
+          currentEmail: user.email,
+          newEmail: emailChangeData.newEmail,
+          userName: profileData.first_name || profileData.last_name || 'Pet Friend',
+          language: 'de' // TODO: Get from user preferences
+        }
       });
 
-      if (updateError) {
+      if (emailError) {
+        console.error('Email sending error:', emailError);
         toast({
-          title: t('settings.profile.error.emailUpdateTitle'),
-          description: t('settings.profile.error.emailUpdateDescription'),
+          title: t('settings.profile.error.emailSendTitle'),
+          description: t('settings.profile.error.emailSendDescription'),
           variant: 'destructive'
         });
         return;
       }
 
+      // Success - email update request sent
       toast({
-        title: t('settings.profile.success.emailUpdateTitle'),
-        description: t('settings.profile.success.emailUpdateDescription')
+        title: t('settings.profile.success.emailUpdateRequestTitle'),
+        description: t('settings.profile.success.emailUpdateRequestDescription'),
+        variant: 'default'
       });
 
-      // Store the new email before resetting the form
-      const newEmail = emailChangeData.newEmail;
-
-      // Close the email change modal (this will also reset the form)
+      // Close the email change modal
       handleEmailModalClose();
       
-      // Update the profile data to show new email
-      setProfileData(prev => ({
-        ...prev,
-        email: newEmail
-      }));
-
-      // Reload profile data to ensure consistency
-      await loadProfileData();
+      // Refresh the pending email change status
+      await checkPendingEmailChange();
+      
     } catch (error) {
       console.error('Error updating email:', error);
       toast({
@@ -197,7 +226,7 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
         variant: 'destructive'
       });
     } finally {
-      setIsLoading(false);
+      setIsEmailChangeLoading(false);
     }
   };
 
@@ -214,6 +243,64 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
       currentPassword: '',
       newEmail: ''
     });
+    setShowCurrentPassword(false);
+  };
+
+  // Check if user has a pending email change
+  const checkPendingEmailChange = async () => {
+    if (!user) return;
+
+    try {
+      // Check if the user has a pending email change by looking at the auth user
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      
+      // If email_confirmed_at is null and the email is different from the original,
+      // it means there's a pending email change
+      if (currentUser?.email_confirmed_at === null && currentUser?.email !== user.email) {
+        setHasPendingEmailChange(true);
+      } else {
+        setHasPendingEmailChange(false);
+      }
+    } catch (error) {
+      console.error('Error checking pending email change:', error);
+    }
+  };
+
+  // Cancel pending email change
+  const cancelPendingEmailChange = async () => {
+    if (!user) return;
+
+    try {
+      // Revert to the original email
+      const { error } = await supabase.auth.updateUser({
+        email: user.email
+      });
+
+      if (error) {
+        toast({
+          title: t('settings.profile.error.cancelEmailChangeTitle'),
+          description: t('settings.profile.error.cancelEmailChangeDescription'),
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      toast({
+        title: t('settings.profile.success.emailChangeCancelledTitle'),
+        description: t('settings.profile.success.emailChangeCancelledDescription')
+      });
+
+      // Refresh the status
+      await checkPendingEmailChange();
+      await loadProfileData();
+    } catch (error) {
+      console.error('Error canceling email change:', error);
+      toast({
+        title: t('settings.profile.error.cancelEmailChangeTitle'),
+        description: t('settings.profile.error.cancelEmailChangeDescription'),
+        variant: 'destructive'
+      });
+    }
   };
 
   return (
@@ -252,7 +339,7 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
             />
           </div>
 
-                            <div className="space-y-2">
+                  <div className="space-y-2">
                     <Label htmlFor="email" className="flex items-center gap-2">
                       <Mail className="h-4 w-4" />
                       {t('settings.profile.email')}
@@ -269,15 +356,42 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
                         variant="outline"
                         size="sm"
                         onClick={() => setIsEmailChangeOpen(true)}
-                        disabled={isLoading}
+                        disabled={isLoading || hasPendingEmailChange}
                         className="whitespace-nowrap"
                       >
-                        {t('settings.profile.changeEmail')}
+                        {hasPendingEmailChange ? t('settings.profile.pendingEmailChange') : t('settings.profile.changeEmail')}
                       </Button>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      {t('settings.profile.emailNote')}
-                    </p>
+                    {hasPendingEmailChange ? (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2">
+                        <p className="text-xs text-yellow-800">
+                          <strong>{t('settings.profile.pendingEmailChangeTitle')}</strong><br/>
+                          {t('settings.profile.pendingEmailChangeDescription')}
+                        </p>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={checkPendingEmailChange}
+                          className="mt-2 text-xs h-6 px-2"
+                        >
+                          {t('settings.profile.refreshStatus')}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={cancelPendingEmailChange}
+                          className="mt-2 text-xs h-6 px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          {t('settings.profile.cancelEmailChange')}
+                        </Button>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        {t('settings.profile.emailNote')}
+                      </p>
+                    )}
                   </div>
 
           <DialogFooter>
@@ -321,15 +435,43 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
 
           <form onSubmit={handleEmailChange} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="currentPassword">{t('settings.profile.currentPassword')}</Label>
+              <Label htmlFor="currentEmail">{t('settings.profile.currentEmail')}</Label>
               <Input
-                id="currentPassword"
-                type="password"
-                value={emailChangeData.currentPassword}
-                onChange={(e) => handleEmailInputChange('currentPassword', e.target.value)}
-                placeholder={t('settings.profile.currentPasswordPlaceholder')}
-                disabled={isEmailChangeLoading}
+                id="currentEmail"
+                type="email"
+                value={user?.email || ''}
+                disabled
+                className="bg-muted cursor-not-allowed"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="currentPassword">{t('settings.profile.currentPassword')}</Label>
+              <div className="relative">
+                <Input
+                  id="currentPassword"
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  value={emailChangeData.currentPassword}
+                  onChange={(e) => handleEmailInputChange('currentPassword', e.target.value)}
+                  placeholder={t('settings.profile.currentPasswordPlaceholder')}
+                  disabled={isEmailChangeLoading}
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  disabled={isEmailChangeLoading}
+                >
+                  {showCurrentPassword ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -342,6 +484,13 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
                 placeholder={t('settings.profile.newEmailPlaceholder')}
                 disabled={isEmailChangeLoading}
               />
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <p className="text-sm text-blue-800">
+                <strong>{t('settings.profile.emailChangeNote')}</strong><br/>
+                {t('settings.profile.emailChangeDescription')}
+              </p>
             </div>
 
             <DialogFooter>
@@ -361,10 +510,10 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
                 {isEmailChangeLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('settings.profile.updating')}
+                    {t('settings.profile.sending')}
                   </>
                 ) : (
-                  t('settings.profile.updateEmail')
+                  t('settings.profile.sendEmailChange')
                 )}
               </Button>
             </DialogFooter>

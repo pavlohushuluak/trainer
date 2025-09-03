@@ -28,6 +28,11 @@ interface AuthEmailData {
     token_new?: string;
     token_hash_new?: string;
   };
+  // For email changes, Supabase might provide the new email in different fields
+  new_email?: string;
+  email_change?: {
+    new_email?: string;
+  };
 }
 
 const logStep = (step: string, details?: any) => {
@@ -402,6 +407,15 @@ const generateEmailChangeEmail = (data: AuthEmailData, language: string = 'de') 
                    data.user.user_metadata?.full_name || 
                    (language === 'en' ? 'Pet Friend' : 'Tierfreund');
   
+  // For email changes, we need to use the new email address
+  // Check multiple possible locations for the new email
+  let newEmail = data.user.email;
+  if (data.new_email) {
+    newEmail = data.new_email;
+  } else if (data.email_change?.new_email) {
+    newEmail = data.email_change.new_email;
+  }
+  
   const confirmUrl = `${data.email_data.site_url}/verify?token=${data.email_data.token_hash}&type=${data.email_data.email_action_type}&redirect_to=${data.email_data.redirect_to}&apikey=${Deno.env.get('SUPABASE_ANON_KEY')}`;
   
   const content = language === 'en' ? {
@@ -417,7 +431,7 @@ const generateEmailChangeEmail = (data: AuthEmailData, language: string = 'de') 
       'If you didn\'t request this change, please ignore this email',
       'After confirmation, you will receive all future emails at this new address'
     ],
-    footerText: `This email was sent to <strong>${data.user.email}</strong>.`,
+    footerText: `This email was sent to <strong>${newEmail}</strong>.`,
     copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
   } : {
     subject: '📧 TierTrainer24 - E-Mail-Adresse bestätigen',
@@ -432,7 +446,7 @@ const generateEmailChangeEmail = (data: AuthEmailData, language: string = 'de') 
       'Falls Sie diese Änderung nicht angefordert haben, ignorieren Sie diese E-Mail',
       'Nach der Bestätigung erhalten Sie alle zukünftigen E-Mails an diese neue Adresse'
     ],
-    footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.`,
+    footerText: `Diese E-Mail wurde an <strong>${newEmail}</strong> gesendet.`,
     copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
   };
   
@@ -703,7 +717,8 @@ serve(async (req) => {
     
     logStep('Received auth webhook', { 
       payloadSize: payload.length,
-      hasHeaders: Object.keys(headers).length > 0
+      hasHeaders: Object.keys(headers).length > 0,
+      rawPayload: payload.substring(0, 500) // Log first 500 chars of payload for debugging
     });
     
     let data: AuthEmailData;
@@ -729,6 +744,8 @@ serve(async (req) => {
       emailType: data.email_data.email_action_type,
       userEmail: data.user.email,
       userMetadata: data.user.user_metadata,
+      newEmail: data.new_email,
+      fullPayload: JSON.stringify(data),
       headers: {
         'accept-language': headers['accept-language'],
         'cf-ipcountry': headers['cf-ipcountry']
@@ -869,6 +886,12 @@ serve(async (req) => {
         emailTemplate = generatePasswordResetEmail(data, userLanguage);
         break;
       case 'email_change':
+        logStep('Processing email change request', {
+          userEmail: data.user.email,
+          newEmail: data.new_email,
+          emailChangeData: data.email_change,
+          availableFields: Object.keys(data)
+        });
         emailTemplate = generateEmailChangeEmail(data, userLanguage);
         break;
       case 'invite':
@@ -881,16 +904,34 @@ serve(async (req) => {
         throw new Error(`Unsupported email action type: ${data.email_data.email_action_type}`);
     }
 
+    // For email changes, send to the new email address
+    // Check multiple possible locations for the new email
+    let recipientEmail = data.user.email;
+    if (data.email_data.email_action_type === 'email_change') {
+      if (data.new_email) {
+        recipientEmail = data.new_email;
+      } else if (data.email_change?.new_email) {
+        recipientEmail = data.email_change.new_email;
+      } else {
+        // If we can't find the new email, log an error but still try to send to the user's current email
+        logStep('Warning: Could not find new email address for email change', {
+          userEmail: data.user.email,
+          availableFields: Object.keys(data)
+        });
+      }
+    }
+    
     logStep('Sending email via Resend', { 
       type: data.email_data.email_action_type,
-      to: data.user.email,
+      to: recipientEmail,
+      originalUserEmail: data.user.email,
       subject: emailTemplate.subject 
     });
 
     // Send email via Resend
     const { data: emailData, error } = await resend.emails.send({
       from: 'TierTrainer24 <noreply@mail.tiertrainer24.com>',
-      to: [data.user.email],
+      to: [recipientEmail],
       subject: emailTemplate.subject,
       html: emailTemplate.html,
     });

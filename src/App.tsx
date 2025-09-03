@@ -34,6 +34,7 @@ import TestEmailAuth from "./pages/TestEmailAuth";
 import ChatDiagnosticsPage from "./pages/ChatDiagnosticsPage";
 import { ChatPage } from "./pages/ChatPage";
 import SettingsPage from "./pages/SettingsPage";
+import { ConfirmEmailChangePage } from "./pages/ConfirmEmailChangePage";
 import ImageAnalysisPage from "./pages/ImageAnalysisPage";
 import LoginPage from "./pages/LoginPage";
 import SubscriptionPage from "./pages/SubscriptionPage";
@@ -153,6 +154,7 @@ const App = () => {
                     <Route path="test-email-auth" element={<TestEmailAuth />} />
                     <Route path="chat-diagnostics" element={<ChatDiagnosticsPage />} /> */}
                     <Route path="settings" element={<SettingsPage />} />
+                    <Route path="confirm-email-change" element={<ConfirmEmailChangePage />} />
                     {/* <Route path="image-analysis" element={<ImageAnalysisPage />} /> */}
                     <Route path="login" element={<LoginPage />} />
                     <Route path="subscription" element={<SubscriptionPage />} />
