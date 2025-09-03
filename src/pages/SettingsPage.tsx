@@ -21,9 +21,13 @@ const SettingsPage = () => {
   const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
   const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] = useState(false);
 
-  // Refresh user data when component mounts to ensure we have the latest email
+  // Refresh user data only once when component mounts to check for email updates
   useEffect(() => {
+    let hasRefreshed = false;
+    
     const refreshUserData = async () => {
+      if (hasRefreshed) return; // Prevent multiple refreshes
+      
       try {
         const { data: { user: currentUser }, error } = await supabase.auth.getUser();
         if (error) {
@@ -31,7 +35,8 @@ const SettingsPage = () => {
           return;
         }
         if (currentUser && currentUser.email !== user?.email) {
-          console.log('Email updated detected, refreshing page...');
+          console.log('Email update detected, refreshing page once...');
+          hasRefreshed = true;
           // Force a page refresh to get the latest user data
           window.location.reload();
         }
@@ -41,7 +46,7 @@ const SettingsPage = () => {
     };
 
     refreshUserData();
-  }, [user?.email]);
+  }, []); // Only run once when component mounts
 
   if (!user) {
     return (
