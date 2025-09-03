@@ -29,10 +29,33 @@ interface ChatSession {
   subscription_status: string | null;
 }
 
+interface UserStats {
+  totalUsers: number;
+  freeUsers: number;
+  plan1Users: number;
+  plan2Users: number;
+  plan3Users: number;
+  plan4Users: number;
+  plan5Users: number;
+  activeUsers: number;
+  totalChats: number;
+}
+
 export const ChatManagement = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
+  const [userStats, setUserStats] = useState<UserStats>({
+    totalUsers: 0,
+    freeUsers: 0,
+    plan1Users: 0,
+    plan2Users: 0,
+    plan3Users: 0,
+    plan4Users: 0,
+    plan5Users: 0,
+    activeUsers: 0,
+    totalChats: 0
+  });
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -40,16 +63,17 @@ export const ChatManagement = () => {
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
-  
+
   const LIMIT = 20;
 
   useEffect(() => {
     loadChatSessions(true);
+    loadUserStats();
   }, []);
 
   const loadChatSessions = async (reset = false) => {
     const currentOffset = reset ? 0 : offset;
-    
+
     if (reset) {
       setLoading(true);
       setOffset(0);
@@ -57,11 +81,11 @@ export const ChatManagement = () => {
     } else {
       setLoadingMore(true);
     }
-    
+
     setError(null);
-    
+
     try {
-      
+
       // Step 1: Load basic chat sessions first
       const { data: sessions, error: sessionsError } = await supabase
         .from('chat_sessions')
@@ -165,6 +189,120 @@ export const ChatManagement = () => {
     }
   };
 
+  const loadUserStats = async () => {
+    try {
+      // Load total chat sessions count
+      const { count: totalChats } = await supabase
+        .from('chat_sessions')
+        .select('*', { count: 'exact', head: true });
+
+      // Load all users with their subscription information
+      const { data: users, error: usersError } = await supabase
+        .from('profiles')
+        .select('id, email');
+
+      if (usersError) {
+        console.error('Error loading users:', usersError);
+        return;
+      }
+
+      // Load all subscribers
+      const { data: subscribers, error: subscribersError } = await supabase
+        .from('subscribers')
+        .select('user_id, subscription_tier, subscription_status');
+
+      if (subscribersError) {
+        console.error('Error loading subscribers:', subscribersError);
+        return;
+      }
+
+      // Create subscriber lookup map
+      const subscriberMap = new Map(subscribers.map(s => [s.user_id, s]));
+
+      // Calculate statistics
+      let freeUsers = 0;
+      let plan1Users = 0;
+      let plan2Users = 0;
+      let plan3Users = 0;
+      let plan4Users = 0;
+      let plan5Users = 0;
+      let activeUsers = 0;
+      let unknownTiers = 0;
+
+      // Debug: Log what we're working with
+      console.log('Total users:', users.length);
+      console.log('Total subscribers:', subscribers.length);
+      console.log('Sample subscribers:', subscribers);
+
+      users.forEach(user => {
+        const subscriber = subscriberMap.get(user.id);
+
+        if (!subscriber || subscriber.subscription_status !== 'active') {
+          freeUsers++;
+        } else {
+          const tier = subscriber.subscription_tier;
+          console.log(`User ${user.email}: tier="${tier}", status="${subscriber.subscription_status}"`);
+
+          switch (tier) {
+            case 'plan1':
+              plan1Users++;
+              activeUsers++;
+              break;
+            case 'plan2':
+              plan2Users++;
+              activeUsers++;
+              break;
+            case 'plan3':
+              plan3Users++;
+              activeUsers++;
+              break;
+            case 'plan4':
+              plan4Users++;
+              activeUsers++;
+              break;
+            case 'plan5':
+              plan5Users++;
+              activeUsers++;
+              break;
+            default:
+              console.log(`Unknown tier for user ${user.email}: "${tier}"`);
+              unknownTiers++;
+              freeUsers++;
+              // Don't count unknown tiers as free users - they're still active subscribers
+              break;
+          }
+        }
+      });
+
+      console.log('Final counts:', {
+        totalUsers: users.length,
+        freeUsers,
+        plan1Users,
+        plan2Users,
+        plan3Users,
+        plan4Users,
+        plan5Users,
+        activeUsers,
+        unknownTiers
+      });
+
+      setUserStats({
+        totalUsers: users.length,
+        freeUsers,
+        plan1Users,
+        plan2Users,
+        plan3Users,
+        plan4Users,
+        plan5Users,
+        activeUsers,
+        totalChats: totalChats || 0
+      });
+
+    } catch (error) {
+      console.error('Error loading user stats:', error);
+    }
+  };
+
   const loadMore = () => {
     if (!loadingMore && hasMore) {
       loadChatSessions(false);
@@ -173,7 +311,7 @@ export const ChatManagement = () => {
 
   const filteredSessions = chatSessions.filter(session => {
     if (!searchTerm.trim()) return true;
-    
+
     const searchLower = searchTerm.toLowerCase();
     return (
       session.profile_email?.toLowerCase().includes(searchLower) ||
@@ -183,20 +321,17 @@ export const ChatManagement = () => {
   });
 
   const getSubscriptionBadge = (session: ChatSession) => {
-    if (!session.subscription_status) {
+    if (!session.subscription_status || session.subscription_status !== 'active') {
       return <Badge variant="secondary">{t('adminChats.subscriptionBadges.free')}</Badge>;
     }
 
-    switch (session.subscription_status) {
-      case 'active':
-        return <Badge variant="default">{t('adminChats.subscriptionBadges.premium')}</Badge>;
-      case 'trialing':
-        return <Badge variant="outline">{t('adminChats.subscriptionBadges.trial')}</Badge>;
-      case 'canceled':
-        return <Badge variant="destructive">{t('adminChats.subscriptionBadges.canceled')}</Badge>;
-      default:
-        return <Badge variant="secondary">{t('adminChats.subscriptionBadges.unknown')}</Badge>;
+    // Show the actual plan tier
+    if (session.subscription_tier) {
+      const planName = session.subscription_tier.charAt(0).toUpperCase() + session.subscription_tier.slice(1);
+      return <Badge variant="default">{planName}</Badge>;
     }
+
+    return <Badge variant="default">{t('adminChats.subscriptionBadges.premium')}</Badge>;
   };
 
   if (loading) {
@@ -235,10 +370,15 @@ export const ChatManagement = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">{t('adminChats.title')}</h1>
-        <Button onClick={() => loadChatSessions(true)} variant="outline" disabled={loading}>
-          {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-          {t('adminUsers.header.refresh')}
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => loadUserStats()} variant="outline" disabled={loading}>
+            {t('adminChats.stats.refreshStats')}
+          </Button>
+          <Button onClick={() => loadChatSessions(true)} variant="outline" disabled={loading}>
+            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            {t('adminUsers.header.refresh')}
+          </Button>
+        </div>
       </div>
 
       {/* Search */}
@@ -253,38 +393,97 @@ export const ChatManagement = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('adminChats.stats.totalChats')}</CardTitle>
             <MessageCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{chatSessions.length}{hasMore ? '+' : ''}</div>
+            <div className="text-2xl font-bold">{userStats.totalChats}</div>
           </CardContent>
         </Card>
-        
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{t('adminChats.stats.totalUsers')}</CardTitle>
+            <User className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{userStats.totalUsers}</div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('adminChats.stats.activeUsers')}</CardTitle>
             <User className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {new Set(chatSessions.map(s => s.user_id)).size}
-            </div>
+            <div className="text-2xl font-bold">{userStats.activeUsers}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('adminChats.stats.premiumUsers')}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('adminChats.stats.freeUsers')}</CardTitle>
             <User className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {chatSessions.filter(s => s.subscription_status === 'active').length}
-            </div>
+            <div className="text-2xl font-bold">{userStats.freeUsers}</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Plan Breakdown Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Plan 1</CardTitle>
+            <User className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{userStats.plan1Users}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Plan 2</CardTitle>
+            <User className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{userStats.plan2Users}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Plan 3</CardTitle>
+            <User className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{userStats.plan3Users}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Plan 4</CardTitle>
+            <User className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{userStats.plan4Users}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Plan 5</CardTitle>
+            <User className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl font-bold">{userStats.plan5Users}</div>
           </CardContent>
         </Card>
       </div>
@@ -303,32 +502,32 @@ export const ChatManagement = () => {
                     </span>
                     {getSubscriptionBadge(session)}
                   </div>
-                  
+
                   <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
                     <div className="flex items-center gap-1">
                       <User className="h-3 w-3" />
                       {session.profile_email || t('adminChats.chatList.unknown')}
                     </div>
-                    
+
                     {session.pet_profiles && (
                       <div className="flex items-center gap-1">
                         <PawPrint className="h-3 w-3" />
                         {session.pet_profiles.name} ({session.pet_profiles.species})
                       </div>
                     )}
-                    
+
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
                       {format(new Date(session.updated_at), 'dd.MM.yyyy HH:mm', { locale: de })}
                     </div>
-                    
+
                     <div className="flex items-center gap-1">
                       <MessageCircle className="h-3 w-3" />
                       {session.message_count} {t('adminChats.chatList.messages')}
                     </div>
                   </div>
                 </div>
-                
+
                 <Button
                   variant="outline"
                   size="sm"
@@ -344,9 +543,9 @@ export const ChatManagement = () => {
         {/* Load More Button */}
         {hasMore && !searchTerm && (
           <div className="flex justify-center py-4">
-            <Button 
-              onClick={loadMore} 
-              variant="outline" 
+            <Button
+              onClick={loadMore}
+              variant="outline"
               disabled={loadingMore}
               className="flex items-center gap-2"
             >

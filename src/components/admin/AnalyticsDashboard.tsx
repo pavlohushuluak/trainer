@@ -68,7 +68,7 @@ export const AnalyticsDashboard = () => {
       // Extract results with fallbacks
       const totalUsers = totalUsersResult.status === 'fulfilled' ? totalUsersResult.value.count || 0 : 0;
       const activeSubscribers = activeSubscribersResult.status === 'fulfilled' ? activeSubscribersResult.value.count || 0 : 0;
-      const freeUsers = freeUsersResult.status === 'fulfilled' ? freeUsersResult.value.count || 0 : 0;
+      const freeUsers = totalUsers - activeSubscribers;
       const newSignups = newSignupsResult.status === 'fulfilled' ? newSignupsResult.value.count || 0 : 0;
       const conversions = conversionsResult.status === 'fulfilled' ? conversionsResult.value.count || 0 : 0;
 

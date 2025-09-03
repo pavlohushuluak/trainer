@@ -1856,8 +1856,10 @@
     },
     "stats": {
       "totalChats": "Total Chats",
+      "totalUsers": "Total Users",
       "activeUsers": "Active Users",
-      "premiumUsers": "Premium Users"
+      "freeUsers": "Free Users",
+      "refreshStats": "Refresh Stats"
     },
     "chatList": {
       "unnamedChat": "Unnamed Chat",

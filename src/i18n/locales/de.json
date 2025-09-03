@@ -1858,8 +1858,10 @@
     },
     "stats": {
       "totalChats": "Gesamte Chats",
+      "totalUsers": "Gesamte Benutzer",
       "activeUsers": "Aktive Benutzer",
-      "premiumUsers": "Premium-Benutzer"
+      "freeUsers": "Kostenlose Benutzer",
+      "refreshStats": "Statistiken aktualisieren"
     },
     "chatList": {
       "unnamedChat": "Unbenannter Chat",
