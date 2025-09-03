@@ -1458,15 +1458,29 @@
       "firstNamePlaceholder": "Enter your first name",
       "lastNamePlaceholder": "Enter your last name",
       "emailNote": "Email address cannot be changed",
+      "changeEmail": "Change Email",
+      "changeEmailDescription": "Update your email address. You'll need to verify the new email.",
+      "currentPassword": "Current Password",
+      "newEmail": "New Email",
+      "currentPasswordPlaceholder": "Enter your current password",
+      "newEmailPlaceholder": "Enter your new email address",
+      "updating": "Updating...",
+      "updateEmail": "Update Email",
       "error": {
         "loadingTitle": "Error Loading Profile",
         "loadingDescription": "Could not load your profile information. Please try again.",
         "updatingTitle": "Error Updating Profile",
-        "updatingDescription": "Could not update your profile. Please try again."
+        "updatingDescription": "Could not update your profile. Please try again.",
+        "currentPasswordTitle": "Incorrect Password",
+        "currentPasswordDescription": "The current password you entered is incorrect. Please try again.",
+        "emailUpdateTitle": "Error Updating Email",
+        "emailUpdateDescription": "Could not update your email. Please try again."
       },
       "success": {
         "title": "Profile Updated",
-        "description": "Your profile has been updated successfully."
+        "description": "Your profile has been updated successfully.",
+        "emailUpdateTitle": "Email Update Requested",
+        "emailUpdateDescription": "Your email update request has been sent. Please check your new email for verification."
       }
     },
     "notifications": {
@@ -1479,7 +1493,40 @@
       "title": "Security",
       "description": "Manage your security settings",
       "comingSoon": "Password management and additional security options will be available in a future version.",
-      "changePassword": "Change Password"
+      "changePassword": "Change Password",
+      "changePasswordDescription": "Update your password to keep your account secure",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "currentPasswordPlaceholder": "Enter your current password",
+      "newPasswordPlaceholder": "Enter your new password",
+      "confirmPasswordPlaceholder": "Confirm your new password",
+      "passwordHints": "Password Hints",
+      "passwordHintsDescription": "These are suggestions to make your password more secure",
+      "requirement": {
+        "length": "At least 8 characters",
+        "uppercase": "One uppercase letter",
+        "lowercase": "One lowercase letter",
+        "number": "One number",
+        "special": "One special character",
+        "match": "Passwords match"
+      },
+      "updating": "Updating...",
+      "updatePassword": "Update Password",
+      "error": {
+        "currentPasswordTitle": "Incorrect Password",
+        "currentPasswordDescription": "The current password you entered is incorrect. Please try again.",
+        "updatingTitle": "Error Updating Password",
+        "updatingDescription": "Could not update your password. Please try again."
+      },
+      "success": {
+        "title": "Password Updated",
+        "description": "Your password has been updated successfully."
+      },
+      "passwordSecurity": "Password Security",
+      "passwordSecurityDescription": "Keep your password strong and unique",
+      "accountProtection": "Account Protection",
+      "accountProtectionDescription": "Secure your account with regular password updates"
     },
     "appearance": {
       "title": "Appearance",

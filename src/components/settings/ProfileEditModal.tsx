@@ -20,14 +20,25 @@ interface ProfileData {
   email: string;
 }
 
+interface EmailChangeData {
+  currentPassword: string;
+  newEmail: string;
+}
+
 export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => {
   const { user } = useAuth();
   const { t } = useTranslations();
   const [isLoading, setIsLoading] = useState(false);
+  const [isEmailChangeLoading, setIsEmailChangeLoading] = useState(false);
+  const [isEmailChangeOpen, setIsEmailChangeOpen] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({
     first_name: '',
     last_name: '',
     email: ''
+  });
+  const [emailChangeData, setEmailChangeData] = useState<EmailChangeData>({
+    currentPassword: '',
+    newEmail: ''
   });
 
   // Load current profile data when modal opens
@@ -123,6 +134,88 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
     }));
   };
 
+  const handleEmailChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+
+    setIsEmailChangeLoading(true);
+
+    try {
+      // First, verify the current password
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email!,
+        password: emailChangeData.currentPassword
+      });
+
+      if (signInError) {
+        toast({
+          title: t('settings.profile.error.currentPasswordTitle'),
+          description: t('settings.profile.error.currentPasswordDescription'),
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // Update the email
+      const { error: updateError } = await supabase.auth.updateUser({
+        email: emailChangeData.newEmail
+      });
+
+      if (updateError) {
+        toast({
+          title: t('settings.profile.error.emailUpdateTitle'),
+          description: t('settings.profile.error.emailUpdateDescription'),
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      toast({
+        title: t('settings.profile.success.emailUpdateTitle'),
+        description: t('settings.profile.success.emailUpdateDescription')
+      });
+
+      // Store the new email before resetting the form
+      const newEmail = emailChangeData.newEmail;
+
+      // Close the email change modal (this will also reset the form)
+      handleEmailModalClose();
+      
+      // Update the profile data to show new email
+      setProfileData(prev => ({
+        ...prev,
+        email: newEmail
+      }));
+
+      // Reload profile data to ensure consistency
+      await loadProfileData();
+    } catch (error) {
+      console.error('Error updating email:', error);
+      toast({
+        title: t('settings.profile.error.emailUpdateTitle'),
+        description: t('settings.profile.error.emailUpdateDescription'),
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEmailInputChange = (field: keyof EmailChangeData, value: string) => {
+    setEmailChangeData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleEmailModalClose = () => {
+    setIsEmailChangeOpen(false);
+    setEmailChangeData({
+      currentPassword: '',
+      newEmail: ''
+    });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -159,21 +252,33 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email" className="flex items-center gap-2">
-              <Mail className="h-4 w-4" />
-              {t('settings.profile.email')}
-            </Label>
-            <Input
-              id="email"
-              value={profileData.email}
-              disabled
-              className="bg-muted cursor-not-allowed"
-            />
-            <p className="text-xs text-muted-foreground">
-              {t('settings.profile.emailNote')}
-            </p>
-          </div>
+                            <div className="space-y-2">
+                    <Label htmlFor="email" className="flex items-center gap-2">
+                      <Mail className="h-4 w-4" />
+                      {t('settings.profile.email')}
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="email"
+                        value={profileData.email}
+                        disabled
+                        className="bg-muted cursor-not-allowed flex-1"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsEmailChangeOpen(true)}
+                        disabled={isLoading}
+                        className="whitespace-nowrap"
+                      >
+                        {t('settings.profile.changeEmail')}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {t('settings.profile.emailNote')}
+                    </p>
+                  </div>
 
           <DialogFooter>
             <Button
@@ -200,6 +305,72 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
           </DialogFooter>
         </form>
       </DialogContent>
+
+      {/* Email Change Modal */}
+      <Dialog open={isEmailChangeOpen} onOpenChange={handleEmailModalClose}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5" />
+              {t('settings.profile.changeEmail')}
+            </DialogTitle>
+            <DialogDescription>
+              {t('settings.profile.changeEmailDescription')}
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleEmailChange} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="currentPassword">{t('settings.profile.currentPassword')}</Label>
+              <Input
+                id="currentPassword"
+                type="password"
+                value={emailChangeData.currentPassword}
+                onChange={(e) => handleEmailInputChange('currentPassword', e.target.value)}
+                placeholder={t('settings.profile.currentPasswordPlaceholder')}
+                disabled={isEmailChangeLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="newEmail">{t('settings.profile.newEmail')}</Label>
+              <Input
+                id="newEmail"
+                type="email"
+                value={emailChangeData.newEmail}
+                onChange={(e) => handleEmailInputChange('newEmail', e.target.value)}
+                placeholder={t('settings.profile.newEmailPlaceholder')}
+                disabled={isEmailChangeLoading}
+              />
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleEmailModalClose}
+                disabled={isEmailChangeLoading}
+              >
+                {t('common.cancel')}
+              </Button>
+              <Button
+                type="submit"
+                disabled={isEmailChangeLoading || !emailChangeData.currentPassword || !emailChangeData.newEmail}
+                className="min-w-[100px]"
+              >
+                {isEmailChangeLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t('settings.profile.updating')}
+                  </>
+                ) : (
+                  t('settings.profile.updateEmail')
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 };

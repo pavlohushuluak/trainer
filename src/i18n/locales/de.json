@@ -1461,15 +1461,29 @@
       "firstNamePlaceholder": "Geben Sie Ihren Vornamen ein",
       "lastNamePlaceholder": "Geben Sie Ihren Nachnamen ein",
       "emailNote": "E-Mail-Adresse kann nicht geändert werden",
+      "changeEmail": "E-Mail ändern",
+      "changeEmailDescription": "Aktualisieren Sie Ihre E-Mail-Adresse. Sie müssen die neue E-Mail verifizieren.",
+      "currentPassword": "Aktuelles Passwort",
+      "newEmail": "Neue E-Mail",
+      "currentPasswordPlaceholder": "Geben Sie Ihr aktuelles Passwort ein",
+      "newEmailPlaceholder": "Geben Sie Ihre neue E-Mail-Adresse ein",
+      "updating": "Aktualisiere...",
+      "updateEmail": "E-Mail aktualisieren",
       "error": {
         "loadingTitle": "Fehler beim Laden des Profils",
         "loadingDescription": "Ihre Profilinformationen konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
         "updatingTitle": "Fehler beim Aktualisieren des Profils",
-        "updatingDescription": "Ihr Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+        "updatingDescription": "Ihr Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+        "currentPasswordTitle": "Falsches Passwort",
+        "currentPasswordDescription": "Das aktuelle Passwort, das Sie eingegeben haben, ist falsch. Bitte versuchen Sie es erneut.",
+        "emailUpdateTitle": "Fehler beim Aktualisieren der E-Mail",
+        "emailUpdateDescription": "Ihre E-Mail konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
       },
       "success": {
         "title": "Profil aktualisiert",
-        "description": "Ihr Profil wurde erfolgreich aktualisiert."
+        "description": "Ihr Profil wurde erfolgreich aktualisiert.",
+        "emailUpdateTitle": "E-Mail-Update angefordert",
+        "emailUpdateDescription": "Ihre E-Mail-Update-Anfrage wurde gesendet. Bitte überprüfen Sie Ihre neue E-Mail zur Verifizierung."
       }
     },
     "notifications": {
@@ -1482,7 +1496,40 @@
       "title": "Sicherheit",
       "description": "Verwalten Sie Ihre Sicherheitseinstellungen",
       "comingSoon": "Passwortverwaltung und zusätzliche Sicherheitsoptionen werden in einer zukünftigen Version verfügbar sein.",
-      "changePassword": "Passwort ändern"
+      "changePassword": "Passwort ändern",
+      "changePasswordDescription": "Aktualisieren Sie Ihr Passwort, um Ihr Konto sicher zu halten",
+      "currentPassword": "Aktuelles Passwort",
+      "newPassword": "Neues Passwort",
+      "confirmPassword": "Neues Passwort bestätigen",
+      "currentPasswordPlaceholder": "Geben Sie Ihr aktuelles Passwort ein",
+      "newPasswordPlaceholder": "Geben Sie Ihr neues Passwort ein",
+      "confirmPasswordPlaceholder": "Bestätigen Sie Ihr neues Passwort",
+      "passwordHints": "Passwort-Hinweise",
+      "passwordHintsDescription": "Dies sind Vorschläge, um Ihr Passwort sicherer zu machen",
+      "requirement": {
+        "length": "Mindestens 8 Zeichen",
+        "uppercase": "Ein Großbuchstabe",
+        "lowercase": "Ein Kleinbuchstabe",
+        "number": "Eine Zahl",
+        "special": "Ein Sonderzeichen",
+        "match": "Passwörter stimmen überein"
+      },
+      "updating": "Aktualisiere...",
+      "updatePassword": "Passwort aktualisieren",
+      "error": {
+        "currentPasswordTitle": "Falsches Passwort",
+        "currentPasswordDescription": "Das aktuelle Passwort, das Sie eingegeben haben, ist falsch. Bitte versuchen Sie es erneut.",
+        "updatingTitle": "Fehler beim Aktualisieren des Passworts",
+        "updatingDescription": "Ihr Passwort konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+      },
+      "success": {
+        "title": "Passwort aktualisiert",
+        "description": "Ihr Passwort wurde erfolgreich aktualisiert."
+      },
+      "passwordSecurity": "Passwort-Sicherheit",
+      "passwordSecurityDescription": "Halten Sie Ihr Passwort stark und einzigartig",
+      "accountProtection": "Kontoschutz",
+      "accountProtectionDescription": "Sichern Sie Ihr Konto mit regelmäßigen Passwort-Updates"
     },
     "appearance": {
       "title": "Erscheinungsbild",
