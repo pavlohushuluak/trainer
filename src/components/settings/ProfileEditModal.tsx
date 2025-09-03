@@ -186,10 +186,12 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
       // Generate a unique confirmation token
       const confirmationToken = crypto.randomUUID();
       
-      // Store the token in the profiles table
+      // Store the token and pending email in the profiles table
       const { error: tokenError } = await supabase
         .from('profiles')
         .update({
+          pending_email: emailChangeData.newEmail,
+          email_change_requested_at: new Date().toISOString(),
           email_change_token: confirmationToken,
           updated_at: new Date().toISOString()
         })
