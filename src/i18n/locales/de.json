@@ -1454,7 +1454,23 @@
       "title": "Profileinstellungen",
       "description": "Verwalten Sie Ihre persönlichen Informationen",
       "email": "E-Mail",
-      "editProfile": "Profil bearbeiten"
+      "editProfile": "Profil bearbeiten",
+      "editDescription": "Aktualisieren Sie Ihre persönlichen Informationen unten",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "firstNamePlaceholder": "Geben Sie Ihren Vornamen ein",
+      "lastNamePlaceholder": "Geben Sie Ihren Nachnamen ein",
+      "emailNote": "E-Mail-Adresse kann nicht geändert werden",
+      "error": {
+        "loadingTitle": "Fehler beim Laden des Profils",
+        "loadingDescription": "Ihre Profilinformationen konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
+        "updatingTitle": "Fehler beim Aktualisieren des Profils",
+        "updatingDescription": "Ihr Profil konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+      },
+      "success": {
+        "title": "Profil aktualisiert",
+        "description": "Ihr Profil wurde erfolgreich aktualisiert."
+      }
     },
     "notifications": {
       "title": "Benachrichtigungen",

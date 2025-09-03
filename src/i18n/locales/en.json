@@ -31,7 +31,8 @@
     "created": "Created",
     "of": "of",
     "language": "Language",
-    "upgrade": "Upgrade"
+    "upgrade": "Upgrade",
+    "saving": "Saving..."
   },
   "support": {
     "title": "Help & Support 🐾",
@@ -1450,7 +1451,23 @@
       "title": "Profile Settings",
       "description": "Manage your personal information",
       "email": "Email",
-      "editProfile": "Edit Profile"
+      "editProfile": "Edit Profile",
+      "editDescription": "Update your personal information below",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastNamePlaceholder": "Enter your last name",
+      "emailNote": "Email address cannot be changed",
+      "error": {
+        "loadingTitle": "Error Loading Profile",
+        "loadingDescription": "Could not load your profile information. Please try again.",
+        "updatingTitle": "Error Updating Profile",
+        "updatingDescription": "Could not update your profile. Please try again."
+      },
+      "success": {
+        "title": "Profile Updated",
+        "description": "Your profile has been updated successfully."
+      }
     },
     "notifications": {
       "title": "Notifications",

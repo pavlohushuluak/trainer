@@ -8,12 +8,15 @@ import { useThemeContext } from '@/hooks/ThemeProvider';
 import { useTranslations } from '@/hooks/useTranslations';
 import { useLanguagePersistence } from '@/hooks/useLanguagePersistence';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ProfileEditModal } from '@/components/settings/ProfileEditModal';
+import { useState } from 'react';
 
 const SettingsPage = () => {
   const { user } = useAuth();
   const { theme, setTheme } = useThemeContext();
   const { t } = useTranslations();
   const { changeLanguage, currentLanguage } = useLanguagePersistence();
+  const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
 
   if (!user) {
     return (
@@ -67,7 +70,11 @@ const SettingsPage = () => {
                   <label className="text-sm font-medium">{t('settings.profile.email')}</label>
                   <p className="text-sm text-muted-foreground">{user.email}</p>
                 </div>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setIsProfileEditModalOpen(true)}
+                >
                   {t('settings.profile.editProfile')}
                 </Button>
               </div>
@@ -198,6 +205,12 @@ const SettingsPage = () => {
           </Card>
         </div>
       </div>
+
+      {/* Profile Edit Modal */}
+      <ProfileEditModal
+        isOpen={isProfileEditModalOpen}
+        onClose={() => setIsProfileEditModalOpen(false)}
+      />
     </div>
   );
 };
