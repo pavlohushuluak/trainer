@@ -20,8 +20,6 @@ const SettingsPage = () => {
   const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
   const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] = useState(false);
 
-  // No auto-refresh needed - the manual refresh button is sufficient
-
   if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -76,32 +74,14 @@ const SettingsPage = () => {
                   <label className="text-sm font-medium text-blue-800 dark:text-blue-200">{t('settings.profile.email')}</label>
                   <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">{user.email}</p>
                 </div>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => setIsProfileEditModalOpen(true)}
-                    className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 dark:hover:text-blue-200"
-                  >
-                    {t('settings.profile.editProfile')}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => {
-                      // Show a brief loading state before refresh
-                      const button = event?.target as HTMLButtonElement;
-                      if (button) {
-                        button.disabled = true;
-                        button.innerHTML = '🔄 Refreshing...';
-                      }
-                      setTimeout(() => window.location.reload(), 500);
-                    }}
-                    className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 dark:hover:text-blue-200"
-                  >
-                    🔄 Refresh
-                  </Button>
-                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setIsProfileEditModalOpen(true)}
+                  className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 dark:hover:text-blue-200"
+                >
+                  {t('settings.profile.editProfile')}
+                </Button>
               </div>
             </CardContent>
           </Card>

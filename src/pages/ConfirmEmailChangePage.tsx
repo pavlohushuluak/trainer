@@ -51,28 +51,24 @@ export const ConfirmEmailChangePage = () => {
       setIsSuccess(true);
       setIsLoading(false);
 
-      // Refresh the auth user data to get the updated email
-      try {
-        const { data: { user: updatedUser }, error: refreshError } = await supabase.auth.getUser();
-        if (refreshError) {
-          console.warn('Could not refresh auth user data:', refreshError);
-        } else if (updatedUser) {
-          console.log('Auth user data refreshed:', updatedUser.email);
-        }
-      } catch (refreshError) {
-        console.warn('Error refreshing auth user data:', refreshError);
-      }
-
       // Show success message
       toast({
         title: 'Email Updated Successfully',
-        description: `Your email has been updated to ${newEmail}. You will now receive all communications at this address.`,
+        description: `Your email has been updated to ${newEmail}. You will now receive all communications at this address. You will be redirected to login to sign in with your new email.`,
         variant: 'default'
       });
 
-      // Redirect to settings page after a delay
+      // Force logout the current user session
+      try {
+        await supabase.auth.signOut();
+        console.log('User session signed out successfully');
+      } catch (signOutError) {
+        console.error('Error signing out user:', signOutError);
+      }
+
+      // Redirect to login page after a delay (user will need to login with new email)
       setTimeout(() => {
-        navigate('/settings', { replace: true });
+        navigate('/login');
       }, 3000);
 
     } catch (error) {
@@ -152,14 +148,22 @@ export const ConfirmEmailChangePage = () => {
                 </p>
               </div>
             </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center space-x-2">
+                <div className="h-5 w-5 text-blue-600">🔐</div>
+                <p className="text-sm text-blue-800">
+                  For security reasons, you have been logged out. Please sign in again with your new email address.
+                </p>
+              </div>
+            </div>
             <Button 
-              onClick={() => navigate('/settings')} 
+              onClick={() => navigate('/login')} 
               className="w-full"
             >
-              Go to Settings
+              Go to Login
             </Button>
             <p className="text-xs text-gray-500 text-center">
-              Redirecting to settings page in a few seconds...
+              Redirecting to login page in a few seconds...
             </p>
           </CardContent>
         </Card>

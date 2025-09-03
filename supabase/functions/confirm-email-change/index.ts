@@ -248,6 +248,19 @@ serve(async (req) => {
       logStep('Warning: Could not clear pending email change data', { error: clearError });
     }
 
+    // Force logout all user sessions by invalidating refresh tokens
+    try {
+      const { error: logoutError } = await supabase.auth.admin.invalidateUserSessions(requestBody.userId);
+      
+      if (logoutError) {
+        logStep('Warning: Could not invalidate user sessions', { error: logoutError });
+      } else {
+        logStep('Successfully invalidated all user sessions - user will need to login again');
+      }
+    } catch (logoutError) {
+      logStep('Warning: Exception while invalidating user sessions', { error: logoutError });
+    }
+
     logStep('Email change confirmation completed successfully', {
       userId: requestBody.userId,
       oldEmail: user.email,
