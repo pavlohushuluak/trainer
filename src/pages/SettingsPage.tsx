@@ -10,8 +10,7 @@ import { useLanguagePersistence } from '@/hooks/useLanguagePersistence';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProfileEditModal } from '@/components/settings/ProfileEditModal';
 import { PasswordChangeModal } from '@/components/settings/PasswordChangeModal';
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useState } from 'react';
 
 const SettingsPage = () => {
   const { user } = useAuth();
@@ -21,32 +20,7 @@ const SettingsPage = () => {
   const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
   const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] = useState(false);
 
-  // Refresh user data only once when component mounts to check for email updates
-  useEffect(() => {
-    let hasRefreshed = false;
-    
-    const refreshUserData = async () => {
-      if (hasRefreshed) return; // Prevent multiple refreshes
-      
-      try {
-        const { data: { user: currentUser }, error } = await supabase.auth.getUser();
-        if (error) {
-          console.error('Error refreshing user data:', error);
-          return;
-        }
-        if (currentUser && currentUser.email !== user?.email) {
-          console.log('Email update detected, refreshing page once...');
-          hasRefreshed = true;
-          // Force a page refresh to get the latest user data
-          window.location.reload();
-        }
-      } catch (error) {
-        console.error('Error in refreshUserData:', error);
-      }
-    };
-
-    refreshUserData();
-  }, []); // Only run once when component mounts
+  // No auto-refresh needed - the manual refresh button is sufficient
 
   if (!user) {
     return (
@@ -114,7 +88,15 @@ const SettingsPage = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => window.location.reload()}
+                    onClick={() => {
+                      // Show a brief loading state before refresh
+                      const button = event?.target as HTMLButtonElement;
+                      if (button) {
+                        button.disabled = true;
+                        button.innerHTML = '🔄 Refreshing...';
+                      }
+                      setTimeout(() => window.location.reload(), 500);
+                    }}
                     className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 dark:hover:text-blue-200"
                   >
                     🔄 Refresh
