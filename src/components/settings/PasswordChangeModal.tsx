@@ -43,7 +43,10 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
     newPassword: '',
     confirmPassword: ''
   });
-  const [step, setStep] = useState<'newPassword' | 'currentPassword'>('newPassword');
+  const [step, setStep] = useState<'newPassword' | 'currentPassword' | 'emailVerification'>('newPassword');
+  const [emailVerificationSent, setEmailVerificationSent] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [generatedCode, setGeneratedCode] = useState<string>('');
 
   // Password validation rules
   const validatePassword = (password: string): PasswordValidation => ({
@@ -64,7 +67,11 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
   
   const isCurrentPasswordValid = passwordData.currentPassword.length > 0;
   
-  const isFormValid = step === 'newPassword' ? isNewPasswordValid : isCurrentPasswordValid;
+  const isEmailVerificationValid = verificationCode.trim().length > 0;
+  
+  const isFormValid = step === 'newPassword' ? isNewPasswordValid : 
+                     step === 'currentPassword' ? isCurrentPasswordValid : 
+                     isEmailVerificationValid;
 
   const handleInputChange = (field: keyof PasswordData, value: string) => {
     setPasswordData(prev => ({
@@ -91,6 +98,141 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
     setPasswordData(prev => ({ ...prev, currentPassword: '' }));
   };
 
+  const generateVerificationCode = (): string => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
+  const handleForgotPassword = async () => {
+    if (!user?.email) return;
+    
+    setIsLoading(true);
+    try {
+      // Generate a 6-digit verification code
+      const code = generateVerificationCode();
+      setGeneratedCode(code);
+      
+      // Send verification code via email using Supabase Edge Function
+      const { error } = await supabase.functions.invoke('send-verification-code', {
+        body: {
+          email: user.email,
+          code: code,
+          type: 'password-change'
+        }
+      });
+
+      if (error) {
+        console.error('Error sending verification code:', error);
+        
+        // Fallback: Show the code directly to the user (for development/testing)
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Development mode: Showing verification code directly');
+          toast({
+            title: 'Development Mode',
+            description: `Verification code: ${code}`,
+          });
+          setEmailVerificationSent(true);
+          setStep('emailVerification');
+          return;
+        }
+        
+        toast({
+          title: t('settings.security.error.emailSendTitle'),
+          description: t('settings.security.error.emailSendDescription'),
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      setEmailVerificationSent(true);
+      setStep('emailVerification');
+      toast({
+        title: t('settings.security.success.emailSentTitle'),
+        description: t('settings.security.success.emailSentDescription'),
+      });
+    } catch (error) {
+      console.error('Error sending verification code:', error);
+      
+      // Fallback: Show the code directly to the user (for development/testing)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Development mode: Showing verification code directly');
+        const code = generateVerificationCode();
+        setGeneratedCode(code);
+        toast({
+          title: 'Development Mode',
+          description: `Verification code: ${code}`,
+        });
+        setEmailVerificationSent(true);
+        setStep('emailVerification');
+        return;
+      }
+      
+      toast({
+        title: t('settings.security.error.emailSendTitle'),
+        description: t('settings.security.error.emailSendDescription'),
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEmailVerification = async () => {
+    if (!verificationCode.trim()) return;
+    
+    setIsLoading(true);
+    try {
+      // Compare the entered code with the generated code
+      if (verificationCode.trim() !== generatedCode) {
+        toast({
+          title: t('settings.security.error.verificationTitle'),
+          description: t('settings.security.error.verificationDescription'),
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // Update password using the new password from step 1
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: passwordData.newPassword
+      });
+
+      if (updateError) {
+        toast({
+          title: t('settings.security.error.updatingTitle'),
+          description: t('settings.security.error.updatingDescription'),
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      toast({
+        title: t('settings.security.success.title'),
+        description: t('settings.security.success.description')
+      });
+
+      // Reset form and close modal
+      setPasswordData({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+      setVerificationCode('');
+      setGeneratedCode('');
+      setEmailVerificationSent(false);
+      setStep('newPassword');
+      onClose();
+    } catch (error) {
+      console.error('Error updating password:', error);
+      toast({
+        title: t('settings.security.error.updatingTitle'),
+        description: t('settings.security.error.updatingDescription'),
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !isFormValid) return;
@@ -98,6 +240,12 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
     if (step === 'newPassword') {
       // Move to current password step
       handleNextStep();
+      return;
+    }
+
+    if (step === 'emailVerification') {
+      // Handle email verification
+      handleEmailVerification();
       return;
     }
 
@@ -170,6 +318,9 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
           newPassword: '',
           confirmPassword: ''
         });
+        setVerificationCode('');
+        setGeneratedCode('');
+        setEmailVerificationSent(false);
         onClose();
       }
     }}>
@@ -182,7 +333,9 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
           <DialogDescription>
             {step === 'newPassword' 
               ? t('settings.security.changePasswordDescription')
-              : t('settings.security.enterCurrentPassword')
+              : step === 'currentPassword'
+              ? t('settings.security.enterCurrentPassword')
+              : t('settings.security.enterVerificationCode')
             }
           </DialogDescription>
         </DialogHeader>
@@ -250,39 +403,99 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
                 </div>
               </div>
             </>
-          ) : (
-            <>
-              {/* Step 2: Current Password */}
-              <div className="space-y-2">
-                <Label htmlFor="currentPassword">{t('settings.security.currentPassword')}</Label>
-                <div className="relative">
-                  <Input
-                    id="currentPassword"
-                    type={showPasswords.current ? 'text' : 'password'}
-                    value={passwordData.currentPassword}
-                    onChange={(e) => handleInputChange('currentPassword', e.target.value)}
-                    placeholder={t('settings.security.currentPasswordPlaceholder')}
-                    disabled={isLoading}
-                    className="pr-10"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                    onClick={() => togglePasswordVisibility('current')}
-                    disabled={isLoading}
-                  >
-                    {showPasswords.current ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </>
-          )}
+                     ) : step === 'currentPassword' ? (
+             <>
+               {/* Step 2: Current Password */}
+               <div className="space-y-2">
+                 <Label htmlFor="currentPassword">{t('settings.security.currentPassword')}</Label>
+                 <div className="relative">
+                   <Input
+                     id="currentPassword"
+                     type={showPasswords.current ? 'text' : 'password'}
+                     value={passwordData.currentPassword}
+                     onChange={(e) => handleInputChange('currentPassword', e.target.value)}
+                     placeholder={t('settings.security.currentPasswordPlaceholder')}
+                     disabled={isLoading}
+                     className="pr-10"
+                   />
+                   <Button
+                     type="button"
+                     variant="ghost"
+                     size="sm"
+                     className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                     onClick={() => togglePasswordVisibility('current')}
+                     disabled={isLoading}
+                   >
+                     {showPasswords.current ? (
+                       <EyeOff className="h-4 w-4" />
+                     ) : (
+                       <Eye className="h-4 w-4" />
+                     )}
+                   </Button>
+                 </div>
+               </div>
+               
+               {/* Forgot Password Link */}
+               <div className="text-center">
+                 <Button
+                   type="button"
+                   variant="link"
+                   onClick={handleForgotPassword}
+                   disabled={isLoading}
+                   className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                 >
+                   {t('settings.security.forgotPassword')}
+                 </Button>
+               </div>
+             </>
+           ) : (
+             <>
+               {/* Step 3: Email Verification */}
+               <div className="space-y-4">
+                 <div className="text-center space-y-2">
+                   <div className="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                     <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                     </svg>
+                   </div>
+                   <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                     {t('settings.security.verificationEmailSent')}
+                   </h3>
+                   <p className="text-sm text-gray-600 dark:text-gray-400">
+                     {user?.email 
+                       ? t('settings.security.verificationEmailDescription', { email: user.email })
+                       : t('settings.security.verificationEmailDescription', { email: 'your email' })
+                     }
+                   </p>
+                 </div>
+                 
+                 <div className="space-y-2">
+                   <Label htmlFor="verificationCode">{t('settings.security.verificationCode')}</Label>
+                   <Input
+                     id="verificationCode"
+                     type="text"
+                     value={verificationCode}
+                     onChange={(e) => setVerificationCode(e.target.value)}
+                     placeholder={t('settings.security.verificationCodePlaceholder')}
+                     disabled={isLoading}
+                     className="text-center text-lg tracking-widest"
+                   />
+                 </div>
+                 
+                 <div className="text-center">
+                   <Button
+                     type="button"
+                     variant="link"
+                     onClick={handleForgotPassword}
+                     disabled={isLoading}
+                     className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                   >
+                     {t('settings.security.resendEmail')}
+                   </Button>
+                 </div>
+               </div>
+             </>
+           )}
 
           {/* Password Hints */}
           <div className="space-y-3 p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border border-blue-200/50 dark:border-blue-800/30">
@@ -340,7 +553,7 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
                   {t('common.next')}
                 </Button>
               </>
-            ) : (
+            ) : step === 'currentPassword' ? (
               <>
                 <Button
                   type="button"
@@ -362,6 +575,31 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
                     </>
                   ) : (
                     t('settings.security.updatePassword')
+                  )}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setStep('currentPassword')}
+                  disabled={isLoading}
+                >
+                  {t('common.back')}
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading || !isFormValid}
+                  className="min-w-[100px]"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t('settings.security.verifying')}
+                    </>
+                  ) : (
+                    t('settings.security.verifyCode')
                   )}
                 </Button>
               </>

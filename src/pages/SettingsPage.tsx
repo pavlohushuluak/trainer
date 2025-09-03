@@ -77,7 +77,7 @@ const SettingsPage = () => {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  onClick={() => setIsProfileEditModalOpen(true)}
+                  // onClick={() => setIsProfileEditModalOpen(true)}
                   className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/20 dark:hover:text-blue-200"
                 >
                   {t('settings.profile.editProfile')}
@@ -221,25 +221,6 @@ const SettingsPage = () => {
                     </div>
                     <ThemeToggle variant="outline" size="sm" showLabel={true} />
                   </div>
-                </div>
-                
-                <div className="flex gap-2">
-                  <Button 
-                    variant={theme === 'light' ? 'default' : 'outline'} 
-                    size="sm"
-                    onClick={() => setTheme('light')}
-                    className={theme === 'light' ? 'bg-purple-600 hover:bg-purple-700' : 'border-purple-200 text-purple-700 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-300 dark:hover:bg-purple-900/20'}
-                  >
-                    {t('settings.appearance.light')}
-                  </Button>
-                  <Button 
-                    variant={theme === 'dark' ? 'default' : 'outline'} 
-                    size="sm"
-                    onClick={() => setTheme('dark')}
-                    className={theme === 'dark' ? 'bg-purple-600 hover:bg-purple-700' : 'border-purple-200 text-purple-700 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-300 dark:hover:bg-purple-900/20'}
-                  >
-                    {t('settings.appearance.dark')}
-                  </Button>
                 </div>
               </div>
             </CardContent>

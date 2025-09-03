@@ -1499,6 +1499,15 @@
       "changePassword": "Passwort ändern",
       "changePasswordDescription": "Aktualisieren Sie Ihr Passwort, um Ihr Konto sicher zu halten",
     "enterCurrentPassword": "Bitte geben Sie Ihr aktuelles Passwort ein, um die Änderung zu bestätigen.",
+    "forgotPassword": "Passwort vergessen?",
+    "enterVerificationCode": "Geben Sie den an Ihre E-Mail gesendeten Bestätigungscode ein.",
+    "verificationEmailSent": "Bestätigungs-E-Mail gesendet",
+    "verificationEmailDescription": "Wir haben einen Bestätigungscode an {{email}} gesendet. Bitte überprüfen Sie Ihre E-Mail und geben Sie den Code unten ein.",
+    "verificationCode": "Bestätigungscode",
+    "verificationCodePlaceholder": "Code eingeben",
+    "resendEmail": "E-Mail erneut senden",
+    "verifying": "Wird überprüft...",
+    "verifyCode": "Code überprüfen",
       "currentPassword": "Aktuelles Passwort",
       "newPassword": "Neues Passwort",
       "confirmPassword": "Neues Passwort bestätigen",
@@ -1521,11 +1530,17 @@
         "currentPasswordTitle": "Falsches Passwort",
         "currentPasswordDescription": "Das aktuelle Passwort, das Sie eingegeben haben, ist falsch. Bitte versuchen Sie es erneut.",
         "updatingTitle": "Fehler beim Aktualisieren des Passworts",
-        "updatingDescription": "Ihr Passwort konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+        "updatingDescription": "Ihr Passwort konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+        "emailSendTitle": "E-Mail-Versand fehlgeschlagen",
+        "emailSendDescription": "Bestätigungs-E-Mail konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+        "verificationTitle": "Überprüfung fehlgeschlagen",
+        "verificationDescription": "Der Bestätigungscode ist ungültig oder abgelaufen. Bitte versuchen Sie es erneut."
       },
       "success": {
         "title": "Passwort aktualisiert",
-        "description": "Ihr Passwort wurde erfolgreich aktualisiert."
+        "description": "Ihr Passwort wurde erfolgreich aktualisiert.",
+        "emailSentTitle": "Bestätigungs-E-Mail gesendet",
+        "emailSentDescription": "Wir haben einen Bestätigungscode an Ihre E-Mail gesendet. Bitte überprüfen Sie Ihren Posteingang."
       },
       "passwordSecurity": "Passwort-Sicherheit",
       "passwordSecurityDescription": "Halten Sie Ihr Passwort stark und einzigartig",

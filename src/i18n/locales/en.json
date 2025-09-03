@@ -1496,6 +1496,15 @@
       "changePassword": "Change Password",
       "changePasswordDescription": "Update your password to keep your account secure",
     "enterCurrentPassword": "Please enter your current password to confirm the change.",
+    "forgotPassword": "Forgot Password?",
+    "enterVerificationCode": "Enter the verification code sent to your email.",
+    "verificationEmailSent": "Verification Email Sent",
+    "verificationEmailDescription": "We've sent a verification code to {{email}}. Please check your email and enter the code below.",
+    "verificationCode": "Verification Code",
+    "verificationCodePlaceholder": "Enter code",
+    "resendEmail": "Resend Email",
+    "verifying": "Verifying...",
+    "verifyCode": "Verify Code",
       "currentPassword": "Current Password",
       "newPassword": "New Password",
       "confirmPassword": "Confirm New Password",
@@ -1518,11 +1527,17 @@
         "currentPasswordTitle": "Incorrect Password",
         "currentPasswordDescription": "The current password you entered is incorrect. Please try again.",
         "updatingTitle": "Error Updating Password",
-        "updatingDescription": "Could not update your password. Please try again."
+        "updatingDescription": "Could not update your password. Please try again.",
+        "emailSendTitle": "Email Send Failed",
+        "emailSendDescription": "Failed to send verification email. Please try again.",
+        "verificationTitle": "Verification Failed",
+        "verificationDescription": "The verification code is invalid or expired. Please try again."
       },
       "success": {
         "title": "Password Updated",
-        "description": "Your password has been updated successfully."
+        "description": "Your password has been updated successfully.",
+        "emailSentTitle": "Verification Email Sent",
+        "emailSentDescription": "We've sent a verification code to your email. Please check your inbox."
       },
       "passwordSecurity": "Password Security",
       "passwordSecurityDescription": "Keep your password strong and unique",
