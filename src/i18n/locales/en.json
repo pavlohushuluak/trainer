@@ -1495,6 +1495,7 @@
       "comingSoon": "Password management and additional security options will be available in a future version.",
       "changePassword": "Change Password",
       "changePasswordDescription": "Update your password to keep your account secure",
+    "enterCurrentPassword": "Please enter your current password to confirm the change.",
       "currentPassword": "Current Password",
       "newPassword": "New Password",
       "confirmPassword": "Confirm New Password",

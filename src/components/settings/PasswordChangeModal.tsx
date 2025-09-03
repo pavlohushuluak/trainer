@@ -43,6 +43,7 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
     newPassword: '',
     confirmPassword: ''
   });
+  const [step, setStep] = useState<'newPassword' | 'currentPassword'>('newPassword');
 
   // Password validation rules
   const validatePassword = (password: string): PasswordValidation => ({
@@ -55,10 +56,15 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
   });
 
   const validation = validatePassword(passwordData.newPassword);
-  const isFormValid = passwordData.currentPassword.length > 0 &&
-                     passwordData.newPassword.length > 0 &&
-                     passwordData.confirmPassword.length > 0 &&
-                     passwordData.newPassword === passwordData.confirmPassword;
+  
+  // Form validation based on current step
+  const isNewPasswordValid = passwordData.newPassword.length > 0 &&
+                            passwordData.confirmPassword.length > 0 &&
+                            passwordData.newPassword === passwordData.confirmPassword;
+  
+  const isCurrentPasswordValid = passwordData.currentPassword.length > 0;
+  
+  const isFormValid = step === 'newPassword' ? isNewPasswordValid : isCurrentPasswordValid;
 
   const handleInputChange = (field: keyof PasswordData, value: string) => {
     setPasswordData(prev => ({
@@ -74,10 +80,28 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
     }));
   };
 
+  const handleNextStep = () => {
+    if (isNewPasswordValid) {
+      setStep('currentPassword');
+    }
+  };
+
+  const handleBackStep = () => {
+    setStep('newPassword');
+    setPasswordData(prev => ({ ...prev, currentPassword: '' }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !isFormValid) return;
 
+    if (step === 'newPassword') {
+      // Move to current password step
+      handleNextStep();
+      return;
+    }
+
+    // Step 2: Verify current password and update
     setIsLoading(true);
 
     try {
@@ -121,6 +145,7 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
         newPassword: '',
         confirmPassword: ''
       });
+      setStep('newPassword');
       onClose();
     } catch (error) {
       console.error('Error changing password:', error);
@@ -137,7 +162,17 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
 
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) {
+        setStep('newPassword');
+        setPasswordData({
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: ''
+        });
+        onClose();
+      }
+    }}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -145,100 +180,109 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
             {t('settings.security.changePassword')}
           </DialogTitle>
           <DialogDescription>
-            {t('settings.security.changePasswordDescription')}
+            {step === 'newPassword' 
+              ? t('settings.security.changePasswordDescription')
+              : t('settings.security.enterCurrentPassword')
+            }
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Current Password */}
-          <div className="space-y-2">
-            <Label htmlFor="currentPassword">{t('settings.security.currentPassword')}</Label>
-            <div className="relative">
-              <Input
-                id="currentPassword"
-                type={showPasswords.current ? 'text' : 'password'}
-                value={passwordData.currentPassword}
-                onChange={(e) => handleInputChange('currentPassword', e.target.value)}
-                placeholder={t('settings.security.currentPasswordPlaceholder')}
-                disabled={isLoading}
-                className="pr-10"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                onClick={() => togglePasswordVisibility('current')}
-                disabled={isLoading}
-              >
-                {showPasswords.current ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </div>
+          {step === 'newPassword' ? (
+            <>
+              {/* Step 1: New Password */}
+              <div className="space-y-2">
+                <Label htmlFor="newPassword">{t('settings.security.newPassword')}</Label>
+                <div className="relative">
+                  <Input
+                    id="newPassword"
+                    type={showPasswords.new ? 'text' : 'password'}
+                    value={passwordData.newPassword}
+                    onChange={(e) => handleInputChange('newPassword', e.target.value)}
+                    placeholder={t('settings.security.newPasswordPlaceholder')}
+                    disabled={isLoading}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                    onClick={() => togglePasswordVisibility('new')}
+                    disabled={isLoading}
+                  >
+                    {showPasswords.new ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
 
-          {/* New Password */}
-          <div className="space-y-2">
-            <Label htmlFor="newPassword">{t('settings.security.newPassword')}</Label>
-            <div className="relative">
-              <Input
-                id="newPassword"
-                type={showPasswords.new ? 'text' : 'password'}
-                value={passwordData.newPassword}
-                onChange={(e) => handleInputChange('newPassword', e.target.value)}
-                placeholder={t('settings.security.newPasswordPlaceholder')}
-                disabled={isLoading}
-                className="pr-10"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                onClick={() => togglePasswordVisibility('new')}
-                disabled={isLoading}
-              >
-                {showPasswords.new ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </div>
-
-          {/* Confirm New Password */}
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">{t('settings.security.confirmPassword')}</Label>
-            <div className="relative">
-              <Input
-                id="confirmPassword"
-                type={showPasswords.confirm ? 'text' : 'password'}
-                value={passwordData.confirmPassword}
-                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                placeholder={t('settings.security.confirmPasswordPlaceholder')}
-                disabled={isLoading}
-                className="pr-10"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                onClick={() => togglePasswordVisibility('confirm')}
-                disabled={isLoading}
-              >
-                {showPasswords.confirm ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </div>
+              {/* Confirm New Password */}
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">{t('settings.security.confirmPassword')}</Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showPasswords.confirm ? 'text' : 'password'}
+                    value={passwordData.confirmPassword}
+                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                    placeholder={t('settings.security.confirmPasswordPlaceholder')}
+                    disabled={isLoading}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                    onClick={() => togglePasswordVisibility('confirm')}
+                    disabled={isLoading}
+                  >
+                    {showPasswords.confirm ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Step 2: Current Password */}
+              <div className="space-y-2">
+                <Label htmlFor="currentPassword">{t('settings.security.currentPassword')}</Label>
+                <div className="relative">
+                  <Input
+                    id="currentPassword"
+                    type={showPasswords.current ? 'text' : 'password'}
+                    value={passwordData.currentPassword}
+                    onChange={(e) => handleInputChange('currentPassword', e.target.value)}
+                    placeholder={t('settings.security.currentPasswordPlaceholder')}
+                    disabled={isLoading}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                    onClick={() => togglePasswordVisibility('current')}
+                    disabled={isLoading}
+                  >
+                    {showPasswords.current ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Password Hints */}
           <div className="space-y-3 p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border border-blue-200/50 dark:border-blue-800/30">
@@ -278,28 +322,50 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
           </div>
 
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={isLoading}
-            >
-              {t('common.cancel')}
-            </Button>
-            <Button
-              type="submit"
-              disabled={isLoading || !isFormValid}
-              className="min-w-[100px]"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t('settings.security.updating')}
-                </>
-              ) : (
-                t('settings.security.updatePassword')
-              )}
-            </Button>
+            {step === 'newPassword' ? (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onClose}
+                  disabled={isLoading}
+                >
+                  {t('common.cancel')}
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading || !isFormValid}
+                  className="min-w-[100px]"
+                >
+                  {t('common.next')}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleBackStep}
+                  disabled={isLoading}
+                >
+                  {t('common.back')}
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading || !isFormValid}
+                  className="min-w-[100px]"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t('settings.security.updating')}
+                    </>
+                  ) : (
+                    t('settings.security.updatePassword')
+                  )}
+                </Button>
+              </>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>

@@ -1498,6 +1498,7 @@
       "comingSoon": "Passwortverwaltung und zusätzliche Sicherheitsoptionen werden in einer zukünftigen Version verfügbar sein.",
       "changePassword": "Passwort ändern",
       "changePasswordDescription": "Aktualisieren Sie Ihr Passwort, um Ihr Konto sicher zu halten",
+    "enterCurrentPassword": "Bitte geben Sie Ihr aktuelles Passwort ein, um die Änderung zu bestätigen.",
       "currentPassword": "Aktuelles Passwort",
       "newPassword": "Neues Passwort",
       "confirmPassword": "Neues Passwort bestätigen",
