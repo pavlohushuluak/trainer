@@ -24,13 +24,13 @@ BEGIN
   WHERE user_id = NEW.user_id;
   
   -- Calculate pet limit based on subscription
-  IF NOT FOUND OR NOT user_subscription.subscribed OR NOT user_subscription.subscription_tier THEN
+  IF NOT FOUND OR NOT user_subscription.subscribed THEN
     -- Free tier gets 1 pet
     max_pets_allowed := 1;
   ELSIF user_subscription.tier_limit IS NOT NULL AND user_subscription.tier_limit > 0 THEN
     -- Use tier_limit from database if available
     max_pets_allowed := user_subscription.tier_limit;
-  ELSE
+  ELSIF user_subscription.subscription_tier THEN
     -- Fallback to subscription tier mapping
     CASE user_subscription.subscription_tier
       WHEN 'plan1' THEN max_pets_allowed := 1;
@@ -44,9 +44,12 @@ BEGIN
       WHEN '5-8-tier' THEN max_pets_allowed := 8;
       WHEN 'unlimited-tier' THEN max_pets_allowed := 999; -- Unlimited
       ELSE
-        -- For any legacy tiers, default to 2 for active subscribers
-        max_pets_allowed := 2;
+        -- For any legacy tiers, default to 1 for free users
+        max_pets_allowed := 1;
     END CASE;
+  ELSE
+    -- No subscription tier specified, default to 1 pet
+    max_pets_allowed := 1;
   END IF;
   
   -- Check if adding this pet would exceed the limit

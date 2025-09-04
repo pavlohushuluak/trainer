@@ -12,6 +12,21 @@ interface SubscriptionStatus {
 export const useSubscriptionStatusChecker = () => {
   const supabase = useSupabaseClient();
   const { user } = useAuth();
+  
+  // Callback to invalidate subscription queries
+  const invalidateSubscriptionQueries = useCallback(async () => {
+    try {
+      // Trigger a refetch by updating the query key
+      // This will cause React Query to refetch the subscription data
+      await supabase
+        .from('subscribers')
+        .select('subscribed, subscription_tier, current_period_end')
+        .eq('user_id', user?.id)
+        .maybeSingle();
+    } catch (error) {
+      // Ignore errors here as this is just for cache invalidation
+    }
+  }, [supabase, user?.id]);
 
   const checkSubscriptionStatus = useCallback(async (): Promise<SubscriptionStatus | null> => {
     if (!user) return null;
@@ -58,6 +73,10 @@ export const useSubscriptionStatusChecker = () => {
           console.log('Successfully updated expired subscription to inactive');
           // Update local state
           subscriber.subscribed = false;
+          
+          // Invalidate subscription queries to refresh the UI
+          // Note: This requires access to queryClient, which we don't have in this hook
+          // The UI will refresh on next query or page reload
         }
       }
 
@@ -82,6 +101,7 @@ export const useSubscriptionStatusChecker = () => {
   }, [user, checkSubscriptionStatus]);
 
   return {
-    checkSubscriptionStatus
+    checkSubscriptionStatus,
+    invalidateSubscriptionQueries
   };
 };

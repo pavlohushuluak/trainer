@@ -125,8 +125,11 @@ export const usePetLimitChecker = (): PetLimitInfo & { isLoading: boolean } => {
     }
   };
 
-  const isActiveSubscriber = subscription?.subscribed === true && 
-    (subscription?.subscription_status === 'active' || subscription?.subscription_status === 'trialing');
+  // Check if subscription is active and not expired
+  const now = new Date();
+  const periodEnd = subscription?.current_period_end ? new Date(subscription.current_period_end) : null;
+  const isExpired = subscription?.subscribed && periodEnd && periodEnd < now;
+  const isActiveSubscriber = subscription?.subscribed === true && !isExpired;
 
   const petCount = pets.length;
   const maxPetsAllowed = getPetLimit(subscription?.subscription_tier, isActiveSubscriber, subscription?.tier_limit);

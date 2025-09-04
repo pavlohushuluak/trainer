@@ -68,19 +68,7 @@ export const useAuthCallback = () => {
       return;
     }
 
-    // Check if this is a new user who just confirmed their signup
-    // If successMessage exists, it means this is an email confirmation
-    if (successMessage) {
-      console.log('🔐 OAuth callback: New user email confirmation detected, redirecting to pricing page');
-      
-      // Redirect new users to the pricing page to encourage subscription
-      setTimeout(() => {
-        window.location.href = '/#pricing';
-      }, 100);
-      return;
-    }
-
-    // Normal role-based redirect (only if no pending checkout and not a new user)
+    // Normal role-based redirect (only if no pending checkout)
     const isAdmin = await checkAdminStatus(userId);
     const targetUrl = isAdmin ? '/admin/users' : '/mein-tiertraining';
     

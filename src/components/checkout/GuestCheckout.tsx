@@ -43,7 +43,7 @@ export const GuestCheckout = ({ onClose }: GuestCheckoutProps) => {
         email,
         password: tempPassword,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/mein-tiertraining`,
           data: {
             full_name: name,
             guest_checkout: true,

@@ -60,15 +60,11 @@ export const useSubscriptionStatus = () => {
     if (isLoading) return 'loading';
     if (!subscription) return 'free';
     
-    const isActiveSubscription = subscription?.subscribed === true && 
-      (subscription?.subscription_status === 'active' || subscription?.subscription_status === 'trialing');
-    
-    const isExpired = subscription?.subscription_end ? 
-      new Date(subscription.subscription_end) < new Date() : false;
-    
-    if (subscription.subscription_status === 'trialing') {
-      return isExpired ? 'trial_expired' : 'trial';
-    }
+    // Check if subscription is active and not expired using current_period_end
+    const now = new Date();
+    const periodEnd = subscription?.current_period_end ? new Date(subscription.current_period_end) : null;
+    const isExpired = subscription?.subscribed && periodEnd && periodEnd < now;
+    const isActiveSubscription = subscription?.subscribed === true && !isExpired;
     
     if (isActiveSubscription && !isExpired) {
       return 'premium';
@@ -82,9 +78,9 @@ export const useSubscriptionStatus = () => {
     isLoading,
     subscription,
     isActiveSubscription: subscription?.subscribed === true && 
-      (subscription?.subscription_status === 'active' || subscription?.subscription_status === 'trialing'),
-    isExpired: subscription?.subscription_end ? 
-      new Date(subscription.subscription_end) < new Date() : false,
+      !(subscription?.current_period_end ? new Date(subscription.current_period_end) < new Date() : false),
+    isExpired: subscription?.current_period_end ? 
+      new Date(subscription.current_period_end) < new Date() : false,
     mode: getSubscriptionMode()
   });
 
@@ -93,7 +89,8 @@ export const useSubscriptionStatus = () => {
   const hasActiveSubscription = subscriptionMode === 'premium' || subscriptionMode === 'trial';
   const isTrialing = subscriptionMode === 'trial';
   const isPremium = subscriptionMode === 'premium';
-  const isExpired = subscription?.subscribed ? new Date(subscription.subscription_end) < new Date() : false;
+  const isExpired = subscription?.subscribed && subscription?.current_period_end ? 
+    new Date(subscription.current_period_end) < new Date() : false;
 
   // Debug logging
   console.log('🔍 useSubscriptionStatus Debug:', {
