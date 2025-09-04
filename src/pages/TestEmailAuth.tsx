@@ -43,7 +43,7 @@ export default function TestEmailAuth() {
         email: email.trim(),
         password: 'TestPassword123!',
         options: {
-          emailRedirectTo: `${window.location.origin}/mein-tiertraining`,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: metadata
         }
       });

@@ -65,7 +65,7 @@ export const EmailSignUpTab = ({ onClose }: EmailSignUpTabProps) => {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/mein-tiertraining`,
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
             data: {
               full_name: name,
               preferred_language: detectedLanguage

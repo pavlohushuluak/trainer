@@ -44,7 +44,7 @@ export const EmailAuthForm = ({ onSuccess, onPasswordResetClick }: EmailAuthForm
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/mein-tiertraining`,
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
             data: {
               full_name: name,
               preferred_language: detectedLanguage
