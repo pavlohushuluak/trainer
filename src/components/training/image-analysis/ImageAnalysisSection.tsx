@@ -19,10 +19,11 @@ interface Pet {
 
 interface ImageAnalysisSectionProps {
   selectedPet?: Pet;
+  subscriptionMode?: String;
   onPlanCreated?: () => void;
 }
 
-export const ImageAnalysisSection = ({ selectedPet, onPlanCreated }: ImageAnalysisSectionProps) => {
+export const ImageAnalysisSection = ({ selectedPet, onPlanCreated, subscriptionMode }: ImageAnalysisSectionProps) => {
   const { currentLanguage } = useTranslations();
   const { t } = useTranslation();
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
@@ -87,6 +88,7 @@ export const ImageAnalysisSection = ({ selectedPet, onPlanCreated }: ImageAnalys
           onCreatePlan={handleCreatePlan}
           onSaveAnalysis={handleSaveAnalysis}
           onStartOver={handleStartOver}
+          subscriptionMode={subscriptionMode}
         />
       )}
 

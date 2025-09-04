@@ -14,6 +14,7 @@ interface AnalysisDisplaySectionProps {
   selectedPet?: Pet;
   analysisResult: any;
   isCreatingPlan?: boolean;
+  subscriptionMode?: String;
   onCreatePlan: () => void;
   onSaveAnalysis: () => void;
   onStartOver: () => void;
@@ -27,7 +28,8 @@ export const AnalysisDisplaySection = ({
   onCreatePlan,
   onSaveAnalysis,
   onStartOver,
-  onPlanCreated
+  onPlanCreated,
+  subscriptionMode
 }: AnalysisDisplaySectionProps) => {
   const { currentLanguage } = useTranslations();
 
@@ -63,6 +65,7 @@ export const AnalysisDisplaySection = ({
         onCreatePlan={onCreatePlan}
         onSaveAnalysis={onSaveAnalysis}
         onPlanCreated={onPlanCreated}
+        subscriptionMode={subscriptionMode}
       />
     </div>
   );

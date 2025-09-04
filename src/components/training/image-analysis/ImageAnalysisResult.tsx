@@ -19,12 +19,13 @@ interface AnalysisResult {
 interface ImageAnalysisResultProps {
   result: AnalysisResult;
   isCreatingPlan?: boolean;
+  subscriptionMode?: String;
   onCreatePlan?: () => void;
   onSaveAnalysis?: () => void;
   onPlanCreated?: (plan: any) => void;
 }
 
-export const ImageAnalysisResult = ({ result, isCreatingPlan, onCreatePlan, onSaveAnalysis, onPlanCreated }: ImageAnalysisResultProps) => {
+export const ImageAnalysisResult = ({ result, isCreatingPlan, onCreatePlan, onSaveAnalysis, onPlanCreated, subscriptionMode }: ImageAnalysisResultProps) => {
   const { currentLanguage } = useTranslations();
 
   // Language-specific translations
@@ -222,7 +223,7 @@ export const ImageAnalysisResult = ({ result, isCreatingPlan, onCreatePlan, onSa
                 {onCreatePlan && (
                   <Button 
                     onClick={onCreatePlan} 
-                    disabled={isCreatingPlan}
+                    disabled={isCreatingPlan || (subscriptionMode === 'free')}
                     className="bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white text-sm sm:text-base min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isCreatingPlan ? (

@@ -58,6 +58,7 @@ export const ImageAnalysisCard = ({ primaryPet }: ImageAnalysisCardProps) => {
               <div className="animate-fade-in-up">
                 <ImageAnalysisSection 
                   selectedPet={primaryPet} 
+                  subscriptionMode={subscriptionMode}
                   onPlanCreated={() => {
                     // Invalidate training plans query to refresh the list
                     queryClient.invalidateQueries({ queryKey: ['training-plans-with-steps'] });
