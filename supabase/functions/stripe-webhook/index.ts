@@ -149,9 +149,9 @@ serve(async (req)=>{
     // Verarbeite verschiedene Event-Typen
     switch(event.type){
       case 'customer.subscription.created':
+      case 'customer.subscription.updated':
       case 'customer.subscription.deleted':
         await handleSubscriptionEvent(event, supabaseClient, stripe);
-      // Note: customer.subscription.updated is intentionally disabled to prevent downgrades
         break;
       case 'invoice.payment_succeeded':
       case 'invoice.payment_failed':
@@ -239,7 +239,7 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
   const metadata = subscription.metadata || {};
   let subscriptionTier;
   if (flag === 0 && amount !== 0) {
-    subscriptionTier = subscription.status === 'canceled' ? 'free' : getSubscriptionTier(amount, interval, metadata);
+    subscriptionTier = subscription.status === 'canceled' ? null : getSubscriptionTier(amount, interval, metadata);
     flag = 1;
   }
   const tierLimit = subscriptionTier ? getTierLimit(subscriptionTier) : null;
@@ -254,6 +254,7 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
     ].includes(subscription.status),
     subscription_tier: subscriptionTier,
     tier_limit: tierLimit,
+    subscription_status: subscription.status,
     subscription_end: new Date(Date.now() + secondsToAdd * 1000).toISOString(),
     current_period_start: subscription.current_period_start ? new Date(subscription.current_period_start * 1000).toISOString() : null,
     current_period_end: subscription.current_period_end ? new Date((subscription.current_period_end + secondsToAdd) * 1000).toISOString() : null,
@@ -408,9 +409,8 @@ async function handleSubscriptionStatusChange(eventType, subscription, email, su
       case 'customer.subscription.created':
         statusNote = `Subscription created on ${new Date().toISOString()}`;
         break;
-      // Subscription updates are disabled to prevent downgrades
-      // case 'customer.subscription.updated':
-      //   statusNote = `Subscription updated on ${new Date().toISOString()}`;
+      case 'customer.subscription.updated':
+        statusNote = `Subscription updated on ${new Date().toISOString()}`;
         break;
       case 'customer.subscription.deleted':
         statusNote = `Subscription cancelled on ${new Date().toISOString()}`;
