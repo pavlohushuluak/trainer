@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { useAuth } from './auth/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 interface SubscriptionStatus {
   subscribed: boolean;
@@ -10,7 +10,6 @@ interface SubscriptionStatus {
 }
 
 export const useSubscriptionStatusChecker = () => {
-  const supabase = useSupabaseClient();
   const { user } = useAuth();
   
   // Callback to invalidate subscription queries
