@@ -194,7 +194,12 @@ const PetProfileForm = ({ editingPet, onPetSaved, onClose }: PetProfileFormProps
       onPetSaved();
       
     } catch (error: any) {
-      setError(t('pets.form.errors.unexpected'));
+      // Handle specific validation errors
+      if (error.message && error.message.includes('Pet limit exceeded')) {
+        setError(t('pets.form.errors.petLimitExceeded') || 'Pet limit exceeded for your current plan');
+      } else {
+        setError(t('pets.form.errors.unexpected'));
+      }
     } finally {
       setLoading(false);
     }

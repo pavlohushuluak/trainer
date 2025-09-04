@@ -5534,6 +5534,7 @@
         "nameRequired": "Name is a required field",
         "speciesRequired": "Species is a required field",
         "mustBeLoggedIn": "You must be logged in to save a pet profile.",
+        "petLimitExceeded": "Pet limit exceeded for your current plan. Please upgrade to add more pets.",
         "unexpected": "An unexpected error occurred"
       }
     },

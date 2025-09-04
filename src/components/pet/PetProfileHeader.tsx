@@ -7,6 +7,7 @@ import PetProfileForm from "./PetProfileForm";
 import { SubscriptionRequiredWarning } from "../subscription/SubscriptionRequiredWarning";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 import { useTranslations } from "@/hooks/useTranslations";
+import { usePetLimitChecker } from "@/components/subscription/PetLimitChecker";
 
 interface PetProfile {
   id: string;
@@ -62,6 +63,7 @@ export const PetProfileHeader = ({
 }: PetProfileHeaderProps) => {
   const { t } = useTranslations();
   const { hasActiveSubscription, subscriptionTierName } = useSubscriptionStatus();
+  const { validatePetCreation } = usePetLimitChecker();
   
   // Check if user has a valid plan (plan1-plan5) OR is a free user who can create their first pet
   const hasValidPlan = hasActiveSubscription && subscriptionTierName && 
@@ -70,15 +72,32 @@ export const PetProfileHeader = ({
   // Free users can create their first pet profile (maxPetsAllowed = 1 for free users)
   const canCreatePet = hasValidPlan || (maxPetsAllowed > 0 && canAddMore);
 
-  const handleCreateNew = () => {
+  const handleCreateNew = async () => {
     if (!canCreatePet) {
       // Show subscription warning instead of redirecting
       return;
     }
+    
+    // Real-time validation before opening the form
+    try {
+      const canCreate = await validatePetCreation();
+      if (!canCreate) {
+        // If validation fails, redirect to subscription management
+        scrollToSubscriptionManagement();
+        return;
+      }
+    } catch (error) {
+      console.error('Error validating pet creation:', error);
+      // On error, redirect to subscription management for safety
+      scrollToSubscriptionManagement();
+      return;
+    }
+    
     if (!canAddMore) {
       scrollToSubscriptionManagement();
       return;
     }
+    
     setIsDialogOpen(true);
   };
 

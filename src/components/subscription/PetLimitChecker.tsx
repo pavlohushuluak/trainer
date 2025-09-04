@@ -1,5 +1,6 @@
 
 import { useQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -8,6 +9,7 @@ interface PetLimitInfo {
   maxPetsAllowed: number;
   canAddMore: boolean;
   subscriptionTier: string;
+  validatePetCreation: () => Promise<boolean>;
 }
 
 export const usePetLimitChecker = (): PetLimitInfo & { isLoading: boolean } => {
@@ -33,6 +35,30 @@ export const usePetLimitChecker = (): PetLimitInfo & { isLoading: boolean } => {
     retry: 1, // Reduced retries
     retryDelay: 500, // Faster retry
   });
+
+  // Add a function to validate pet creation in real-time
+  const validatePetCreation = useCallback(async (): Promise<boolean> => {
+    if (!user) return false;
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('validate-pet-creation', {
+        body: {
+          userId: user.id,
+          petData: { name: 'validation', species: 'validation' }
+        }
+      });
+      
+      if (error) {
+        console.error('Pet validation error:', error);
+        return false;
+      }
+      
+      return data?.validation?.canCreate || false;
+    } catch (error) {
+      console.error('Error validating pet creation:', error);
+      return false;
+    }
+  }, [user, supabase]);
 
   const { data: subscription, isLoading: subscriptionLoading } = useQuery({
     queryKey: ['subscription-status', user?.id],
@@ -129,6 +155,7 @@ export const usePetLimitChecker = (): PetLimitInfo & { isLoading: boolean } => {
     maxPetsAllowed,
     canAddMore,
     subscriptionTier: getDisplayTier(),
-    isLoading
+    isLoading,
+    validatePetCreation
   };
 };
