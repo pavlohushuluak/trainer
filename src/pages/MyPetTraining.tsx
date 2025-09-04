@@ -5,7 +5,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { usePetProfiles } from '@/hooks/usePetProfiles';
 import { useTranslations } from '@/hooks/useTranslations';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
-import { useSubscriptionStatusChecker } from '@/hooks/useSubscriptionStatusChecker';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
@@ -124,9 +123,6 @@ const MyPetTraining = () => {
 
   // Use subscription status for checkout success handling
   const { refetch: refetchSubscription, subscription, subscriptionTierName, tierLimit } = useSubscriptionStatus();
-  
-  // Check and update subscription status based on current_period_end
-  const { checkSubscriptionStatus, invalidateSubscriptionQueries } = useSubscriptionStatusChecker();
 
   // Check if we should open the pet modal from URL parameter
   const shouldOpenPetModal = new URLSearchParams(location.search).get('openPetModal') === 'true';
@@ -193,16 +189,6 @@ const MyPetTraining = () => {
         ];
     }
   };
-
-  // Check subscription status when page loads
-  useEffect(() => {
-    if (user && !loading) {
-      checkSubscriptionStatus().then(() => {
-        // Invalidate subscription queries to refresh the UI
-        invalidateSubscriptionQueries();
-      });
-    }
-  }, [user, loading, checkSubscriptionStatus, invalidateSubscriptionQueries]);
 
   // Inject custom CSS for animations
   useEffect(() => {

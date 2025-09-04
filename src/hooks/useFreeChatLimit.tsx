@@ -18,9 +18,6 @@ interface SubscriberData {
   questions_num?: number;
   subscribed: boolean;
   subscription_status: string;
-  subscription_tier?: string;
-  tier_limit?: number;
-  image_analysis_num?: number;
 }
 
 export const useFreeChatLimit = () => {
@@ -117,10 +114,7 @@ export const useFreeChatLimit = () => {
             user_id: user.id,
             email: user.email || '',
             subscribed: false,
-            subscription_status: 'inactive',
-            subscription_tier: 'free',
-            tier_limit: 1,
-            image_analysis_num: 0
+            subscription_status: 'inactive'
           };
 
           // Only add questions_num if the column exists

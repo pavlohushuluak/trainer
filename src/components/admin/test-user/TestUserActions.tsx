@@ -215,8 +215,6 @@ export const useTestUserActions = () => {
                 trial_used: false,
                 is_manually_activated: true,
                 tier_limit: 1,
-                image_analysis_num: 0,
-                questions_num: 0,
                 admin_notes: t('adminTestUser.actions.adminNotes.testAccessCreated', { date: new Date().toLocaleDateString() }),
                 country: 'DE'
               });

@@ -1374,9 +1374,7 @@
       "active": {
         "title": "Free chat: questions used",
         "remaining": "free questions remaining",
-        "button": "Become Premium",
-        "used": "used",
-        "total": "total"
+        "button": "Become Premium"
       }
     },
     "messages": {
@@ -5536,7 +5534,6 @@
         "nameRequired": "Name is a required field",
         "speciesRequired": "Species is a required field",
         "mustBeLoggedIn": "You must be logged in to save a pet profile.",
-        "petLimitExceeded": "Pet limit exceeded for your current plan. Please upgrade to add more pets.",
         "unexpected": "An unexpected error occurred"
       }
     },

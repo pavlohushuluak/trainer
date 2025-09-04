@@ -69,33 +69,6 @@ export const createPetProfile = createAsyncThunk(
   'petProfiles/createPet',
   async (petData: Omit<PetProfile, 'id' | 'created_at' | 'updated_at'>, { rejectWithValue }) => {
     try {
-      // First validate pet creation against subscription limits
-      const { data: validationData, error: validationError } = await supabase.functions.invoke('validate-pet-creation', {
-        body: {
-          userId: petData.user_id,
-          petData: {
-            name: petData.name,
-            species: petData.species,
-            breed: petData.breed,
-            age: petData.age,
-            birth_date: petData.birth_date,
-            behavior_focus: petData.behavior_focus,
-            notes: petData.notes
-          }
-        }
-      });
-
-      if (validationError) {
-        console.error('Pet validation error:', validationError);
-        return rejectWithValue('Failed to validate pet creation');
-      }
-
-      if (!validationData?.validation?.canCreate) {
-        const reason = validationData?.validation?.reason || 'Pet limit exceeded';
-        return rejectWithValue(reason);
-      }
-
-      // If validation passes, create the pet
       const { data, error } = await supabase
         .from('pet_profiles')
         .insert([petData])

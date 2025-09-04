@@ -1377,9 +1377,7 @@
       "active": {
         "title": "Kostenloser Chat: Fragen verwendet",
         "remaining": "kostenlose Fragen verbleibend",
-        "button": "Premium werden",
-        "used": "verwendet",
-        "total": "gesamt"
+        "button": "Premium werden"
       }
     },
     "messages": {
@@ -5534,7 +5532,6 @@
         "nameRequired": "Name ist ein Pflichtfeld",
         "speciesRequired": "Art ist ein Pflichtfeld",
         "mustBeLoggedIn": "Sie müssen angemeldet sein, um ein Haustierprofil zu speichern.",
-        "petLimitExceeded": "Tierlimit für Ihren aktuellen Plan überschritten. Bitte upgraden Sie, um weitere Tiere hinzuzufügen.",
         "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
       }
     },

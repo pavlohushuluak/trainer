@@ -994,6 +994,17 @@ export const ChatPage = () => {
                     </div>
                   ) : filteredSessions.length === 0 ? (
                     <div className="text-center p-6 sm:p-8 text-muted-foreground">
+                      {/* Show free chat limit display for free users */}
+                      {!hasActiveSubscription && (
+                        <div className="mb-4">
+                          <FreeChatLimitDisplay
+                            questionsUsed={usage.questionsUsed}
+                            maxQuestions={usage.maxQuestions}
+                            hasReachedLimit={usage.hasReachedLimit}
+                            onUpgrade={() => navigate('/#pricing')}
+                          />
+                        </div>
+                      )}
                       <MessageSquare className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
                       <p className="text-sm sm:text-base">
                         {t('chat.page.history.empty')}
