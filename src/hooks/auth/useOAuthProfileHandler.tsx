@@ -126,8 +126,10 @@ export const useOAuthProfileHandler = () => {
                 stripe_customer_id: null,
                 subscribed: false,
                 subscription_status: 'inactive',
-                subscription_tier: null,
-                tier_limit: null,
+                subscription_tier: 'free',
+                tier_limit: 1,
+                image_analysis_num: 0,
+                questions_num: 0,
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
               }, { onConflict: 'email' });

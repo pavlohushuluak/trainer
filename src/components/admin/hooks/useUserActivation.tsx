@@ -35,7 +35,11 @@ export const useUserActivation = () => {
             email: profile.email,
             subscribed: true,
             is_manually_activated: true,
-            subscription_status: 'active'
+            subscription_status: 'active',
+            subscription_tier: 'plan1',
+            tier_limit: 1,
+            image_analysis_num: 0,
+            questions_num: 0
           });
 
         if (insertError) throw insertError;
