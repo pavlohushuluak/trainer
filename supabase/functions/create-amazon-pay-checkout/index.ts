@@ -79,7 +79,6 @@ serve(async (req) => {
         email: user.email,
         user_id: user.id,
         subscribed: false,
-        subscription_status: 'pending_amazon_pay',
         billing_cycle: priceType,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()

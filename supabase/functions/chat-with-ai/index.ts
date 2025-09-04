@@ -504,12 +504,17 @@ serve(async (req) => {
         // Check if user has active subscription
         const { data: subscriberData } = await supabaseClient
           .from('subscribers')
-          .select('subscribed, subscription_status')
+          .select('subscribed, current_period_end')
           .eq('user_id', userData.user.id)
           .maybeSingle();
 
-        // Only increment usage for free users
-        if (!subscriberData?.subscribed && subscriberData?.subscription_status !== 'active') {
+        // Check if subscription is expired
+        const now = new Date();
+        const periodEnd = subscriberData?.current_period_end ? new Date(subscriberData.current_period_end) : null;
+        const isExpired = subscriberData?.subscribed && periodEnd && periodEnd < now;
+
+        // Only increment usage for free users or expired subscriptions
+        if (!subscriberData?.subscribed || isExpired) {
           // Get current usage first, then increment
           const { data: currentUsage } = await supabaseClient
             .from('subscribers')

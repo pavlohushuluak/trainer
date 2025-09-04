@@ -7,12 +7,14 @@ import SubscriptionManager from '@/components/SubscriptionManager';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { BreadcrumbNavigation } from '@/components/subscription/BreadcrumbNavigation';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useSubscriptionStatusChecker } from '@/hooks/useSubscriptionStatusChecker';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslations();
+  const { checkSubscriptionStatus } = useSubscriptionStatusChecker();
 
   useEffect(() => {
     // Only redirect if we're sure the user is not authenticated
@@ -25,6 +27,13 @@ const Dashboard = () => {
       });
     }
   }, [user, loading, navigate, toast, t]);
+
+  // Check subscription status when user accesses dashboard
+  useEffect(() => {
+    if (user && !loading) {
+      checkSubscriptionStatus();
+    }
+  }, [user, loading, checkSubscriptionStatus]);
 
   useEffect(() => {
     // Handle success/cancel URL parameters from Stripe checkout - only once

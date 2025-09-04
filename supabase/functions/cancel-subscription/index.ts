@@ -143,7 +143,6 @@ serve(async (req) => {
     await supabaseClient
       .from('subscribers')
       .update({
-        subscription_status: immediateRefund ? 'canceled' : 'active',
         cancel_at_period_end: !immediateRefund,
         subscribed: immediateRefund ? false : true,
         updated_at: new Date().toISOString(),

@@ -109,8 +109,7 @@ serve(async (req) => {
           user_id: `stripe_${customer.id}`,
           stripe_customer_id: customer.id,
           subscribed: !!activeSubscription,
-          subscription_tier: activeSubscription ? "premium" : null,
-          subscription_status: activeSubscription?.status || 'inactive',
+          subscription_tier: activeSubscription ? "premium" : "free", // Set to 'free' for users without subscriptions
           subscription_end: activeSubscription ? new Date(activeSubscription.current_period_end * 1000).toISOString() : null,
           current_period_start: activeSubscription ? new Date(activeSubscription.current_period_start * 1000).toISOString() : null,
           current_period_end: activeSubscription ? new Date(activeSubscription.current_period_end * 1000).toISOString() : null,

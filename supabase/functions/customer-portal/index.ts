@@ -107,9 +107,9 @@ async function getPortalConfiguration(stripe: any) {
         },
         subscription_pause: { enabled: false },
         subscription_update: {
-          enabled: true,
-          default_allowed_updates: ['price', 'quantity'],
-          proration_behavior: 'create_prorations'
+          enabled: false, // Disabled to prevent subscription downgrades
+          default_allowed_updates: [],
+          proration_behavior: 'none'
         }
       }
     });

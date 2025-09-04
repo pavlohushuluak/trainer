@@ -6,6 +6,7 @@ import { useTranslations } from '@/hooks/useTranslations';
 import { useTranslation } from 'react-i18next';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { useFreeChatLimit } from '@/hooks/useFreeChatLimit';
+import { useSubscriptionStatusChecker } from '@/hooks/useSubscriptionStatusChecker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -97,6 +98,7 @@ export const ChatPage = () => {
   const { i18n } = useI18n();
   const { hasActiveSubscription } = useSubscriptionStatus();
   const { usage, incrementUsage } = useFreeChatLimit();
+  const { checkSubscriptionStatus } = useSubscriptionStatusChecker();
 
   // Debug: Log whenever usage changes in ChatPage
   useEffect(() => {
@@ -135,12 +137,14 @@ export const ChatPage = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Load chat sessions on component mount
+  // Load chat sessions on component mount and check subscription status
   useEffect(() => {
     if (user) {
       loadChatSessions();
+      // Check subscription status when user accesses chat
+      checkSubscriptionStatus();
     }
-  }, [user]);
+  }, [user, checkSubscriptionStatus]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
