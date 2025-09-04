@@ -1166,7 +1166,7 @@ export const ChatPage = () => {
                             onClick={() => setCreatePlanModalOpen(true)}
                             variant="outline"
                             size="sm"
-                            disabled={isSending || isCreatingPlan || (!hasActiveSubscription && usage.hasReachedLimit)}
+                            disabled={isSending || isCreatingPlan || !hasActiveSubscription || (!hasActiveSubscription && usage.hasReachedLimit)}
                             className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/40 dark:hover:to-emerald-900/40 text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <FileText className="h-4 w-4 mr-2" />
@@ -1666,94 +1666,165 @@ export const ChatPage = () => {
               <div className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 p-2 rounded-lg">
                 <FileText className="h-6 w-6 text-green-600 dark:text-green-400" />
               </div>
-              {t('chat.createPlan.modal.title')}
+              {hasActiveSubscription ? t('chat.createPlan.modal.title') : 'Premium Feature'}
             </DialogTitle>
             <DialogDescription className="text-base leading-relaxed text-muted-foreground">
-              {t('chat.createPlan.modal.description')}
+              {hasActiveSubscription ? t('chat.createPlan.modal.description') : 'Unlock professional training plan creation with a premium subscription'}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6">
-            {/* Show free chat limit display for free users */}
-            {!hasActiveSubscription && (
-              <div className="mb-4">
-                <FreeChatLimitDisplay
-                  questionsUsed={usage.questionsUsed}
-                  maxQuestions={usage.maxQuestions}
-                  hasReachedLimit={usage.hasReachedLimit}
-                  onUpgrade={() => navigate('/#pricing')}
+          {hasActiveSubscription ? (
+            <div className="space-y-6">
+              {/* Professional description with icons */}
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg flex-shrink-0">
+                    <PawPrint className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-blue-900 dark:text-blue-100">
+                      Professional Training Plan Creation
+                    </h4>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      Our expert trainers will create a personalized training plan tailored to your pet's specific needs, behavior, and learning style. Be as detailed as possible to get the best results.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Input field */}
+              <div className="space-y-3">
+                <Label htmlFor="plan-reason" className="text-sm font-medium">
+                  What would you like to train your pet for?
+                </Label>
+                <textarea
+                  id="plan-reason"
+                  value={planReason}
+                  onChange={(e) => setPlanReason(e.target.value)}
+                  placeholder={t('chat.createPlan.modal.placeholder')}
+                  className="w-full min-h-[120px] p-4 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none transition-all duration-200"
+                  disabled={isCreatingPlan || isSending}
                 />
+                <p className="text-xs text-muted-foreground">
+                  Be specific about the behavior, skill, or goal you want to achieve. The more details you provide, the better your training plan will be.
+                </p>
               </div>
-            )}
-            {/* Professional description with icons */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-              <div className="flex items-start space-x-3">
-                <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg flex-shrink-0">
-                  <PawPrint className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-blue-900 dark:text-blue-100">
-                    Professional Training Plan Creation
-                  </h4>
-                  <p className="text-sm text-blue-700 dark:text-blue-300">
-                    Our expert trainers will create a personalized training plan tailored to your pet's specific needs, behavior, and learning style. Be as detailed as possible to get the best results.
-                  </p>
-                </div>
-              </div>
-            </div>
 
-            {/* Input field */}
-            <div className="space-y-3">
-              <Label htmlFor="plan-reason" className="text-sm font-medium">
-                What would you like to train your pet for?
-              </Label>
-              <textarea
-                id="plan-reason"
-                value={planReason}
-                onChange={(e) => setPlanReason(e.target.value)}
-                placeholder={t('chat.createPlan.modal.placeholder')}
-                className="w-full min-h-[120px] p-4 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none transition-all duration-200"
-                disabled={isCreatingPlan || isSending}
-              />
-              <p className="text-xs text-muted-foreground">
-                Be specific about the behavior, skill, or goal you want to achieve. The more details you provide, the better your training plan will be.
-              </p>
-            </div>
-
-            {/* Example suggestions */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-              <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center gap-2">
-                <Check className="h-4 w-4" />
-                Example Training Goals
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-green-700 dark:text-green-300">Basic obedience commands</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-green-700 dark:text-green-300">Leash training</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-green-700 dark:text-green-300">Behavior modification</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-green-700 dark:text-green-300">Socialization skills</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-green-700 dark:text-green-300">Trick training</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-green-700 dark:text-green-300">Problem solving</span>
+              {/* Example suggestions */}
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center gap-2">
+                  <Check className="h-4 w-4" />
+                  Example Training Goals
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-700 dark:text-green-300">Basic obedience commands</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-700 dark:text-green-300">Leash training</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-700 dark:text-green-300">Behavior modification</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-700 dark:text-green-300">Socialization skills</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-700 dark:text-green-300">Trick training</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-700 dark:text-green-300">Problem solving</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            /* Premium Upgrade Warning for Free Users */
+            <div className="space-y-6">
+              {/* Premium Feature Lock */}
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-6 text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="bg-amber-100 dark:bg-amber-900/40 p-4 rounded-full">
+                    <Shield className="h-8 w-8 text-amber-600 dark:text-amber-400" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-semibold text-amber-900 dark:text-amber-100 mb-2">
+                  Premium Feature
+                </h3>
+                <p className="text-amber-700 dark:text-amber-300 mb-4">
+                  Professional training plan creation is available with a premium subscription
+                </p>
+              </div>
+
+              {/* Benefits of Premium */}
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center gap-2">
+                  <Check className="h-4 w-4" />
+                  What You Get with Premium
+                </h4>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="font-medium text-green-800 dark:text-green-200">Personalized Training Plans</p>
+                      <p className="text-sm text-green-600 dark:text-green-400">Custom plans tailored to your pet's specific needs and behavior</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="font-medium text-green-800 dark:text-green-200">Expert Trainer Guidance</p>
+                      <p className="text-sm text-green-600 dark:text-green-400">Professional advice from certified pet trainers</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="font-medium text-green-800 dark:text-green-200">Step-by-Step Instructions</p>
+                      <p className="text-sm text-green-600 dark:text-green-400">Detailed training steps with progress tracking</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div>
+                      <p className="font-medium text-green-800 dark:text-green-200">Unlimited Chat Access</p>
+                      <p className="text-sm text-green-600 dark:text-green-400">No daily limits on training questions and advice</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Current Usage Display */}
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-blue-900 dark:text-blue-100">Current Usage</h4>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      {usage.questionsUsed} of {usage.maxQuestions} questions used today
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {usage.questionsRemaining}
+                    </div>
+                    <p className="text-xs text-blue-600 dark:text-blue-400">remaining</p>
+                  </div>
+                </div>
+                <div className="mt-3 bg-blue-200 dark:bg-blue-800 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 dark:bg-blue-400 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${(usage.questionsUsed / usage.maxQuestions) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="flex justify-end gap-3 pt-4 border-t">
             <Button
@@ -1765,25 +1836,38 @@ export const ChatPage = () => {
               disabled={isCreatingPlan}
               className="border-muted-foreground/20 hover:bg-muted/50"
             >
-              {t('chat.createPlan.modal.cancelButton')}
+              {hasActiveSubscription ? t('chat.createPlan.modal.cancelButton') : 'Close'}
             </Button>
-            <Button
-              onClick={handleCreatePlan}
-              disabled={!planReason.trim() || isCreatingPlan || isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isCreatingPlan ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  <AnimatedDots text={t('chat.createPlan.modal.loading')} />
-                </>
-              ) : (
-                <>
-                  <FileText className="h-4 w-4 mr-2" />
-                  {t('chat.createPlan.modal.createButton')}
-                </>
-              )}
-            </Button>
+            {hasActiveSubscription ? (
+              <Button
+                onClick={handleCreatePlan}
+                disabled={!planReason.trim() || isCreatingPlan || isSending}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isCreatingPlan ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <AnimatedDots text={t('chat.createPlan.modal.loading')} />
+                  </>
+                ) : (
+                  <>
+                    <FileText className="h-4 w-4 mr-2" />
+                    {t('chat.createPlan.modal.createButton')}
+                  </>
+                )}
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  setCreatePlanModalOpen(false);
+                  navigate('/#pricing');
+                }}
+                className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Upgrade to Premium
+              </Button>
+            )}
           </div>
         </DialogContent>
       </Dialog>
