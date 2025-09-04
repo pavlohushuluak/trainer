@@ -97,7 +97,7 @@ export const ChatPage = () => {
   const { pets } = usePetProfiles();
   const { i18n } = useI18n();
   const { hasActiveSubscription } = useSubscriptionStatus();
-  const { usage, incrementUsage } = useFreeChatLimit();
+  const { usage, incrementUsage, refetch: refetchUsage } = useFreeChatLimit();
   const { checkSubscriptionStatus } = useSubscriptionStatusChecker();
 
   // Debug: Log whenever usage changes in ChatPage
@@ -344,16 +344,19 @@ export const ChatPage = () => {
           description: t('chat.page.continueChat.success.description'),
         });
 
-        // Increment usage for free users only
-        if (!hasActiveSubscription) {
-          incrementUsage();
-        }
+        // Note: Usage tracking is handled by the backend edge function
+        // No need to increment here to avoid double counting
 
         // Update session timestamp
         await supabase
           .from('chat_sessions')
           .update({ updated_at: new Date().toISOString() })
           .eq('id', selectedSession.id);
+
+        // Refresh usage data for free users to show updated question count
+        if (!hasActiveSubscription) {
+          refetchUsage();
+        }
 
         // Refresh sessions list to update order
         loadChatSessions();
@@ -415,16 +418,19 @@ export const ChatPage = () => {
           description: t('chat.page.continueChat.success.description'),
         });
 
-        // Increment usage for free users only
-        if (!hasActiveSubscription) {
-          incrementUsage();
-        }
+        // Note: Usage tracking is handled by the backend edge function
+        // No need to increment here to avoid double counting
 
         // Update session timestamp
         await supabase
           .from('chat_sessions')
           .update({ updated_at: new Date().toISOString() })
           .eq('id', selectedSession.id);
+
+        // Refresh usage data for free users to show updated question count
+        if (!hasActiveSubscription) {
+          refetchUsage();
+        }
 
         // Refresh sessions list to update order
         loadChatSessions();
@@ -570,9 +576,12 @@ export const ChatPage = () => {
         .update({ updated_at: new Date().toISOString() })
         .eq('id', selectedSession.id);
 
-      // Increment usage for free users only
+      // Note: Usage tracking is handled by the backend edge function
+      // No need to increment here to avoid double counting
+
+      // Refresh usage data for free users to show updated question count
       if (!hasActiveSubscription) {
-        incrementUsage();
+        refetchUsage();
       }
 
       // Refresh sessions list to update order
@@ -704,9 +713,12 @@ export const ChatPage = () => {
         .update({ updated_at: new Date().toISOString() })
         .eq('id', selectedSession.id);
 
-      // Increment usage for free users only
+      // Note: Usage tracking is handled by the backend edge function
+      // No need to increment here to avoid double counting
+
+      // Refresh usage data for free users to show updated question count
       if (!hasActiveSubscription) {
-        incrementUsage();
+        refetchUsage();
       }
 
       // Refresh sessions list to update order
