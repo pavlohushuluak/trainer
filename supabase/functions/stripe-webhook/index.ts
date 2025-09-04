@@ -9,7 +9,6 @@ const logStep = (step, details)=>{
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
   console.log(`[STRIPE-WEBHOOK] ${step}${detailsStr}`);
 };
-
 // Function to determine subscription tier based on amount and metadata
 const getSubscriptionTier = (amount, interval, metadata)=>{
   // Convert yearly amounts to monthly equivalent for comparison
@@ -37,7 +36,6 @@ const getSubscriptionTier = (amount, interval, metadata)=>{
   // Default to plan1 for any paid subscription
   return 'plan1';
 };
-
 // Function to get tier limit based on subscription tier
 const getTierLimit = (subscriptionTier)=>{
   switch(subscriptionTier){
@@ -55,19 +53,19 @@ const getTierLimit = (subscriptionTier)=>{
       return 1;
   }
 };
-
 // Function to check if payment is successful
-const isPaymentSuccessful = (subscription, invoice = null) => {
+const isPaymentSuccessful = (subscription, invoice = null)=>{
   // Check subscription status
-  const validSubscriptionStatuses = ['active', 'trialing'];
+  const validSubscriptionStatuses = [
+    'active',
+    'trialing'
+  ];
   const isSubscriptionValid = validSubscriptionStatuses.includes(subscription.status);
-  
   // If we have invoice data, also check invoice status
   if (invoice) {
     const isInvoicePaid = invoice.status === 'paid';
     const isInvoiceActive = invoice.status === 'active';
     const isInvoiceTrialing = invoice.status === 'trialing';
-    
     logStep("Payment success check", {
       subscriptionStatus: subscription.status,
       invoiceStatus: invoice.status,
@@ -76,20 +74,16 @@ const isPaymentSuccessful = (subscription, invoice = null) => {
       isInvoiceActive,
       isInvoiceTrialing
     });
-    
     // For invoice events, require both subscription and invoice to be valid
     return isSubscriptionValid && (isInvoicePaid || isInvoiceActive || isInvoiceTrialing);
   }
-  
   // For subscription events, only check subscription status
   logStep("Payment success check (subscription only)", {
     subscriptionStatus: subscription.status,
     isSubscriptionValid
   });
-  
   return isSubscriptionValid;
 };
-
 serve(async (req)=>{
   if (req.method === "OPTIONS") {
     return new Response(null, {
@@ -188,7 +182,6 @@ serve(async (req)=>{
     });
   }
 });
-
 // Subscription Events verarbeiten
 async function handleSubscriptionEvent(event, supabaseClient, stripe) {
   const subscription = event.data.object;
@@ -197,7 +190,6 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
     subscriptionId: subscription.id,
     status: subscription.status
   });
-  
   // Check if payment is successful before proceeding
   if (!isPaymentSuccessful(subscription)) {
     logStep("Payment not successful - skipping subscriber update", {
@@ -206,7 +198,6 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
     });
     return;
   }
-  
   const customer = await stripe.customers.retrieve(customerId);
   if (!customer.email) {
     logStep("No email found for customer", {
@@ -214,7 +205,6 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
     });
     return;
   }
-  
   const { data: existingProfile } = await supabaseClient.from('profiles').select('id').eq('email', customer.email).single();
   if (!existingProfile) {
     const placeholderUserId = `stripe_${customerId}`;
@@ -229,7 +219,6 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
       onConflict: 'email'
     });
   }
-  
   let flag = 0;
   const priceData = subscription.items?.data?.[0]?.price;
   const amount = priceData?.unit_amount || 0;
@@ -265,7 +254,6 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
     admin_notes: `Webhook updated: ${event.type} at ${new Date().toISOString()}. Status: ${subscription.status}. Tier: ${subscriptionTier}. Amount: ${amount}`
   };
   console.log(subscriptionData);
-  
   // Only update subscribers table for successful payments
   const { error, data } = await supabaseClient.from("subscribers").update(subscriptionData).eq("email", subscriptionData.email);
   if (error) {
@@ -279,25 +267,21 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
     tier: subscriptionTier,
     tierLimit: tierLimit
   });
-  
   if (subscription.status === 'trialing' && subscription.trial_end) {
     await updateTrialUsage(customer.email, supabaseClient);
   }
   await handleSubscriptionStatusChange(event.type, subscription, customer.email, supabaseClient);
 }
-
 // Invoice Events verarbeiten  
 async function handleInvoiceEvent(event, supabaseClient, stripe) {
   console.log("!important: ", event);
   const invoice = event.data.object;
   const customerId = invoice.customer;
-  
   logStep("Processing invoice event", {
     invoiceId: invoice.id,
     status: invoice.status,
     eventType: event.type
   });
-  
   // Get subscription data to check payment success
   let subscription = null;
   if (invoice.subscription) {
@@ -310,32 +294,14 @@ async function handleInvoiceEvent(event, supabaseClient, stripe) {
       });
     }
   }
-  
-  // Check if payment is successful
-  if (!isPaymentSuccessful(subscription || { status: invoice.status }, invoice)) {
-    logStep("Payment not successful - skipping subscriber update", {
-      invoiceId: invoice.id,
-      invoiceStatus: invoice.status,
-      subscriptionStatus: subscription?.status
-    });
-    
-    // Only log payment failure, don't update subscriber data
-    if (event.type === 'invoice.payment_failed') {
-      await logPaymentFailure(invoice, supabaseClient);
-    }
-    return;
-  }
-  
   const customer = await stripe.customers.retrieve(customerId);
   if (!customer.email) return;
-  
   const { data: subscriber } = await supabaseClient.from("subscribers").select("user_id").eq("email", customer.email).single();
   if (!subscriber?.user_id) {
     logStep("No user_id found for subscriber, using email as reference", {
       email: customer.email
     });
   }
-  
   const invoiceData = {
     user_id: subscriber?.user_id || `stripe_${customerId}`,
     stripe_invoice_id: invoice.id,
@@ -349,9 +315,7 @@ async function handleInvoiceEvent(event, supabaseClient, stripe) {
     due_date: invoice.due_date ? new Date(invoice.due_date * 1000).toISOString() : null,
     paid_at: invoice.status_transitions?.paid_at ? new Date(invoice.status_transitions.paid_at * 1000).toISOString() : null
   };
-  
   console.log(invoice.amount_paid);
-  
   // Only insert/update invoice data for successful payments
   if (invoice.amount_paid > 0) {
     await supabaseClient.from("invoices").upsert(invoiceData, {
@@ -364,7 +328,6 @@ async function handleInvoiceEvent(event, supabaseClient, stripe) {
     });
   }
 }
-
 // Trial ending notification
 async function handleTrialEndingEvent(event, supabaseClient) {
   const subscription = event.data.object;
@@ -372,10 +335,9 @@ async function handleTrialEndingEvent(event, supabaseClient) {
     subscriptionId: subscription.id,
     trialEnd: subscription.trial_end
   });
-  // Hier könnte man E-Mail-Benachrichtigungen senden
-  // Für jetzt nur loggen
+// Hier könnte man E-Mail-Benachrichtigungen senden
+// Für jetzt nur loggen
 }
-
 // Update trial usage for subscriber
 async function updateTrialUsage(email, supabaseClient) {
   try {
@@ -400,7 +362,6 @@ async function updateTrialUsage(email, supabaseClient) {
     });
   }
 }
-
 // Handle subscription status changes
 async function handleSubscriptionStatusChange(eventType, subscription, email, supabaseClient) {
   try {
@@ -443,22 +404,18 @@ async function handleSubscriptionStatusChange(eventType, subscription, email, su
     });
   }
 }
-
 // Log payment failure without updating subscriber data
 async function logPaymentFailure(invoice, supabaseClient) {
   try {
     const failureNote = `Payment failed on ${new Date().toISOString()}. Invoice: ${invoice.id}. Amount: ${invoice.amount_due} ${invoice.currency}`;
-    
     // Only log the failure, don't update subscriber data
     logStep("Payment failure logged", {
       invoiceId: invoice.id,
       amount: invoice.amount_due,
       currency: invoice.currency
     });
-    
-    // Optionally, you could create a separate payment_failures table to track these
-    // For now, we just log them without affecting subscriber data
-    
+  // Optionally, you could create a separate payment_failures table to track these
+  // For now, we just log them without affecting subscriber data
   } catch (error) {
     logStep("Error in logPaymentFailure", {
       error: error.message,

@@ -40,13 +40,19 @@ export const EmailAuthForm = ({ onSuccess, onPasswordResetClick }: EmailAuthForm
         const detectedLanguage = detectBrowserLanguage() || 'de';
         console.log('🔐 EmailAuthForm - detected language:', detectedLanguage);
         
+        // Split name into first and last name
+        const nameParts = name.trim().split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/mein-tiertraining`,
             data: {
-              full_name: name,
+              first_name: firstName,
+              last_name: lastName,
               preferred_language: detectedLanguage
             }
           }
