@@ -93,11 +93,6 @@ export const PetProfileHeader = ({
       return;
     }
     
-    if (!canAddMore) {
-      scrollToSubscriptionManagement();
-      return;
-    }
-    
     setIsDialogOpen(true);
   };
 

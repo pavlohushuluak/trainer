@@ -1374,7 +1374,9 @@
       "active": {
         "title": "Free chat: questions used",
         "remaining": "free questions remaining",
-        "button": "Become Premium"
+        "button": "Become Premium",
+        "used": "used",
+        "total": "total"
       }
     },
     "messages": {

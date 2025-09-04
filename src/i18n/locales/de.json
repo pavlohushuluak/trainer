@@ -1377,7 +1377,9 @@
       "active": {
         "title": "Kostenloser Chat: Fragen verwendet",
         "remaining": "kostenlose Fragen verbleibend",
-        "button": "Premium werden"
+        "button": "Premium werden",
+        "used": "verwendet",
+        "total": "gesamt"
       }
     },
     "messages": {
