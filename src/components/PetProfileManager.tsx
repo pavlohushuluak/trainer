@@ -105,12 +105,16 @@ const PetProfileManager = React.memo(({ shouldOpenPetModal = false }: PetProfile
     }
   };
 
-  // Optimized callback function - no full invalidation needed
+  // Optimized callback function - reload page after pet creation
   const handlePetSaved = () => {
-    devLog('🚀 PetProfileManager: Pet saved - closing dialog immediately (no refresh needed)');
+    devLog('🚀 PetProfileManager: Pet saved - closing dialog and reloading page');
     setIsDialogOpen(false);
     setEditingPet(null);
-    // No query invalidation needed - Redux handles the state updates
+    
+    // Reload the page after a short delay to ensure the pet is saved
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
   return (
