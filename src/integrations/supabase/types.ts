@@ -76,31 +76,34 @@ export type Database = {
       }
       analytics_events: {
         Row: {
+          id: number
+          date: string
+          mainpage_view: number
+          homepage_view: number
+          page_view: number
+          view_user: string[]
           created_at: string
-          event_type: string
-          id: string
-          metadata: Json | null
-          page_path: string | null
-          session_id: string | null
-          user_id: string | null
+          updated_at: string
         }
         Insert: {
+          id?: number
+          date?: string
+          mainpage_view?: number
+          homepage_view?: number
+          page_view?: number
+          view_user?: string[]
           created_at?: string
-          event_type: string
-          id?: string
-          metadata?: Json | null
-          page_path?: string | null
-          session_id?: string | null
-          user_id?: string | null
+          updated_at?: string
         }
         Update: {
+          id?: number
+          date?: string
+          mainpage_view?: number
+          homepage_view?: number
+          page_view?: number
+          view_user?: string[]
           created_at?: string
-          event_type?: string
-          id?: string
-          metadata?: Json | null
-          page_path?: string | null
-          session_id?: string | null
-          user_id?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1205,6 +1208,10 @@ export type Database = {
       validate_session_target: {
         Args: { target_value: number }
         Returns: number
+      }
+      track_page_view: {
+        Args: { p_page_path: string; p_user_email: string | null }
+        Returns: undefined
       }
     }
     Enums: {

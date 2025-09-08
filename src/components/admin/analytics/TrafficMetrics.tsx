@@ -22,12 +22,12 @@ export const TrafficMetrics = ({ timeRange }: TrafficMetricsProps) => {
       const now = new Date();
       const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
 
-      // Get analytics events grouped by day
+      // Get analytics events from new table structure
       const { data: events, error } = await supabase
         .from('analytics_events')
-        .select('event_type, created_at, user_id')
-        .gte('created_at', startDate.toISOString())
-        .order('created_at', { ascending: true });
+        .select('date, mainpage_view, homepage_view, page_view, view_user')
+        .gte('date', startDate.toISOString().split('T')[0])
+        .order('date', { ascending: true });
 
       if (error) {
         console.warn('Error fetching analytics events:', error);
@@ -42,57 +42,35 @@ export const TrafficMetrics = ({ timeRange }: TrafficMetricsProps) => {
         };
       }
 
-      // Group by date and calculate metrics
-      const dailyStats: { [date: string]: any } = {};
-      
-      events?.forEach(event => {
-        const date = new Date(event.created_at).toISOString().split('T')[0];
-        if (!dailyStats[date]) {
-          dailyStats[date] = {
-            date,
-            mainPageViews: 0,
-            homePageViews: 0,
-            otherPageViews: 0,
-            uniqueUsers: new Set()
-          };
-        }
-
-        if (event.event_type === 'mainpage_view') {
-          dailyStats[date].mainPageViews++;
-        }
-        if (event.event_type === 'homepage_view') {
-          dailyStats[date].homePageViews++;
-        }
-        if (event.event_type === 'page_view') {
-          dailyStats[date].otherPageViews++;
-        }
-        
-        if (event.user_id) {
-          dailyStats[date].uniqueUsers.add(event.user_id);
-        }
-      });
-
       // Convert to array and format
-      const chartData = Object.values(dailyStats).map(day => {
+      const chartData = events?.map(event => {
         // Create date in local timezone to avoid UTC conversion issues
-        const [year, month, dayOfMonth] = day.date.split('-').map(Number);
+        const [year, month, dayOfMonth] = event.date.split('-').map(Number);
         const localDate = new Date(year, month - 1, dayOfMonth); // month is 0-indexed
         const formattedDate = localDate.toLocaleDateString('de-DE', { month: 'short', day: 'numeric' });
         
         return {
           date: formattedDate,
-          mainPageViews: day.mainPageViews,
-          homePageViews: day.homePageViews,
-          otherPageViews: day.otherPageViews,
-          uniqueUsers: day.uniqueUsers.size
+          mainPageViews: event.mainpage_view || 0,
+          homePageViews: event.homepage_view || 0,
+          otherPageViews: event.page_view || 0,
+          uniqueUsers: event.view_user?.length || 0
         };
-      });
+      }) || [];
 
       // Calculate totals
-      const totalMainPageViews = events?.filter(e => e.event_type === 'mainpage_view').length || 0;
-      const totalHomePageViews = events?.filter(e => e.event_type === 'homepage_view').length || 0;
-      const totalOtherPageViews = events?.filter(e => e.event_type === 'page_view').length || 0;
-      const uniqueUsersCount = new Set(events?.map(e => e.user_id).filter(Boolean)).size;
+      const totalMainPageViews = events?.reduce((sum, e) => sum + (e.mainpage_view || 0), 0) || 0;
+      const totalHomePageViews = events?.reduce((sum, e) => sum + (e.homepage_view || 0), 0) || 0;
+      const totalOtherPageViews = events?.reduce((sum, e) => sum + (e.page_view || 0), 0) || 0;
+      
+      // Calculate unique users across all days
+      const allUniqueUsers = new Set();
+      events?.forEach(event => {
+        if (event.view_user) {
+          event.view_user.forEach((email: string) => allUniqueUsers.add(email));
+        }
+      });
+      const uniqueUsersCount = allUniqueUsers.size;
 
       return {
         chartData,

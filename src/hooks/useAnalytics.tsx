@@ -19,36 +19,55 @@ export const useAnalytics = () => {
       // CRITICAL: Completely disable analytics on admin pages to prevent database flooding
       const currentPath = window.location.pathname;
       if (currentPath.includes('/admin')) {
+        console.log('🚫 Analytics disabled on admin page:', currentPath);
         return; // Exit immediately, no logging needed
-      }
-
-      // Skip if no user or in development
-      if (!user || window.location.hostname === 'localhost') {
-        return;
       }
 
       // Skip if analytics connection has previously failed to prevent repeated errors
       if (analyticsConnectionFailed) {
+        console.log('🚫 Analytics connection failed, skipping tracking');
         return;
       }
 
-      // Only track on production with valid user
-      const { error } = await supabase.from('analytics_events').insert({
-        user_id: user.id,
-        event_type: eventType,
-        page_path: currentPath,
-        metadata: metadata || {}
+      // Get user email for tracking
+      const userEmail = user?.email || null;
+      const isDevelopment = window.location.hostname === 'localhost';
+
+      console.log('📊 Analytics tracking:', {
+        eventType,
+        currentPath,
+        userEmail,
+        isDevelopment,
+        metadata
       });
 
-      // Log error but don't throw to prevent app crashes
-      if (error) {
-        console.warn('Analytics tracking error:', error);
-        analyticsConnectionFailed = true; // Mark as failed to prevent repeated attempts
-        return;
+      // Use the new track_page_view function for page view events
+      if (['page_view', 'homepage_view', 'mainpage_view'].includes(eventType)) {
+        const { data, error } = await supabase.rpc('track_page_view', {
+          p_page_path: currentPath,
+          p_user_email: userEmail
+        });
+
+        if (error) {
+          console.error('❌ Analytics tracking error:', error);
+          analyticsConnectionFailed = true;
+          return;
+        }
+
+        console.log('✅ Analytics tracking successful:', {
+          eventType,
+          currentPath,
+          userEmail,
+          result: data
+        });
+      } else {
+        // For non-page-view events, we can still use the old system or create a separate table
+        // For now, we'll skip these events since the new system focuses on page views
+        console.log('📝 Non-page-view event tracked:', eventType, metadata);
       }
     } catch (error) {
-      // Silently ignore all analytics errors to prevent app crashes
-      console.warn('Analytics tracking failed:', error);
+      // Log analytics errors for debugging
+      console.error('❌ Analytics tracking failed:', error);
       analyticsConnectionFailed = true; // Mark as failed to prevent repeated attempts
       return;
     }
