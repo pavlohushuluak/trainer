@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { useTranslations } from '@/hooks/useTranslations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const AnalyticsDebug = () => {
   const { user } = useAuth();
   const { trackPageView, trackEvent } = useAnalytics();
+  const { t } = useTranslations();
   const [testResults, setTestResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -131,33 +133,33 @@ export const AnalyticsDebug = () => {
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle>Analytics System Debug</CardTitle>
+        <CardTitle>{t('analyticsDebug.title')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-wrap gap-2">
           <Button onClick={testDatabaseConnection} disabled={isLoading}>
-            Test DB Connection
+            {t('analyticsDebug.buttons.testDbConnection')}
           </Button>
           <Button onClick={testTrackPageViewFunction} disabled={isLoading}>
-            Test track_page_view Function
+            {t('analyticsDebug.buttons.testTrackPageViewFunction')}
           </Button>
           <Button onClick={testAnalyticsEventsTable} disabled={isLoading}>
-            Test Direct Insert
+            {t('analyticsDebug.buttons.testDirectInsert')}
           </Button>
           <Button onClick={testCurrentAnalyticsData} disabled={isLoading}>
-            View Current Data
+            {t('analyticsDebug.buttons.viewCurrentData')}
           </Button>
           <Button onClick={testAnalyticsHook} disabled={isLoading}>
-            Test Analytics Hook
+            {t('analyticsDebug.buttons.testAnalyticsHook')}
           </Button>
           <Button onClick={testHomepageView} disabled={isLoading}>
-            Test Homepage View
+            {t('analyticsDebug.buttons.testHomepageView')}
           </Button>
           <Button onClick={testMainpageView} disabled={isLoading}>
-            Test Mainpage View
+            {t('analyticsDebug.buttons.testMainpageView')}
           </Button>
           <Button onClick={clearResults} variant="outline">
-            Clear Results
+            {t('analyticsDebug.buttons.clearResults')}
           </Button>
         </div>
 
@@ -170,11 +172,11 @@ export const AnalyticsDebug = () => {
               </div>
               {result.error ? (
                 <div className="text-red-600 text-sm">
-                  <strong>Error:</strong> {JSON.stringify(result.error, null, 2)}
+                  <strong>{t('analyticsDebug.testResults.error')}</strong> {JSON.stringify(result.error, null, 2)}
                 </div>
               ) : (
                 <div className="text-green-600 text-sm">
-                  <strong>Success:</strong> {JSON.stringify(result.result, null, 2)}
+                  <strong>{t('analyticsDebug.testResults.success')}</strong> {JSON.stringify(result.result, null, 2)}
                 </div>
               )}
             </div>
@@ -182,9 +184,9 @@ export const AnalyticsDebug = () => {
         </div>
 
         <div className="text-sm text-muted-foreground">
-          <p><strong>Current User:</strong> {user?.email || 'Not logged in'}</p>
-          <p><strong>Current Path:</strong> {window.location.pathname}</p>
-          <p><strong>Environment:</strong> {window.location.hostname === 'localhost' ? 'Development' : 'Production'}</p>
+          <p><strong>{t('analyticsDebug.status.currentUser')}</strong> {user?.email || t('analyticsDebug.status.notLoggedIn')}</p>
+          <p><strong>{t('analyticsDebug.status.currentPath')}</strong> {window.location.pathname}</p>
+          <p><strong>{t('analyticsDebug.status.environment')}</strong> {window.location.hostname === 'localhost' ? t('analyticsDebug.status.development') : t('analyticsDebug.status.production')}</p>
         </div>
       </CardContent>
     </Card>

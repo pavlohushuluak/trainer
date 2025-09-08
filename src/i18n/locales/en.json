@@ -1649,7 +1649,8 @@
       "traffic": "Traffic & Engagement",
       "conversion": "Free & Conversion",
       "subscribers": "Subscribers",
-      "support": "Customer Support"
+      "support": "Customer Support",
+      "testTraffic": "Test Traffic"
     },
     "traffic": {
       "pageViews": "Page Views",
@@ -2846,6 +2847,31 @@
   },
   "adminDebug": {
     "debugInfo": "Debug: {{count}} admin users found"
+  },
+  "analyticsDebug": {
+    "title": "Test Traffic",
+    "buttons": {
+      "testDbConnection": "Test DB Connection",
+      "testTrackPageViewFunction": "Test track_page_view Function",
+      "testDirectInsert": "Test Direct Insert",
+      "viewCurrentData": "View Current Data",
+      "testAnalyticsHook": "Test Analytics Hook",
+      "testHomepageView": "Test Homepage View",
+      "testMainpageView": "Test Mainpage View",
+      "clearResults": "Clear Results"
+    },
+    "testResults": {
+      "error": "Error:",
+      "success": "Success:"
+    },
+    "status": {
+      "currentUser": "Current User:",
+      "currentPath": "Current Path:",
+      "environment": "Environment:",
+      "notLoggedIn": "Not logged in",
+      "development": "Development",
+      "production": "Production"
+    }
   },
   "adminEmailManagement": {
     "title": "📧 Email Management",
