@@ -143,9 +143,9 @@ export const useAuthStateHandler = () => {
         }
       }
 
-      // Skip other redirects if skipAutoRedirect is true or if already on target page
-      if (skipAutoRedirect || currentPath !== '/login') {
-        console.log('🔐 Skipping redirect - skipAutoRedirect or already on target page');
+      // Skip redirects on callback page or if explicitly skipping
+      if (skipAutoRedirect || currentPath.includes('/auth/callback')) {
+        console.log('🔐 Skipping redirect on callback or due to skipAutoRedirect');
         return;
       }
 
