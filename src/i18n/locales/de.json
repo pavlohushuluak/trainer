@@ -1652,7 +1652,27 @@
       "traffic": "Verkehr & Engagement",
       "conversion": "Kostenlos & Konversion",
       "subscribers": "Abonnenten",
-      "support": "Kundensupport"
+      "support": "Kundensupport",
+      "debug": "Verkehr testen"
+    },
+    "debug": {
+      "title": "Verkehr testen & Analytics Debug",
+      "testDbConnection": "DB-Verbindung testen",
+      "testTrackPageViewFunction": "track_page_view Funktion testen",
+      "testDirectInsert": "Direktes Einfügen testen",
+      "viewCurrentData": "Aktuelle Daten anzeigen",
+      "testAnalyticsHook": "Verkehr-Tracking testen",
+      "testHomepageView": "Startseiten-Verkehr testen",
+      "testMainpageView": "Hauptseiten-Verkehr testen",
+      "clearResults": "Ergebnisse löschen",
+      "error": "Fehler",
+      "success": "Erfolg",
+      "currentUser": "Aktueller Benutzer",
+      "currentPath": "Aktueller Pfad",
+      "environment": "Umgebung",
+      "development": "Entwicklung",
+      "production": "Produktion",
+      "notLoggedIn": "Nicht angemeldet"
     },
     "traffic": {
       "pageViews": "Seitenaufrufe",

@@ -1,4 +1,5 @@
 
+import { useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 
@@ -10,8 +11,15 @@ let analyticsConnectionFailed = false;
 
 export const useAnalytics = () => {
   const { user } = useAuth();
+  
+  // Debug: Log when useAnalytics is called
+  console.log('🔍 useAnalytics hook called:', {
+    hasUser: !!user,
+    userEmail: user?.email,
+    timestamp: new Date().toISOString()
+  });
 
-  const trackEvent = async (
+  const trackEvent = useCallback(async (
     eventType: 'page_view' | 'homepage_view' | 'mainpage_view' | 'chat_started' | 'subscription_created' | 'trial_started' | 'auth_required_for_chat' | 'performance_lcp' | 'performance_cls' | 'performance_fid' | 'performance_ttfb' | 'performance_load_time',
     metadata?: Record<string, any>
   ) => {
@@ -71,10 +79,10 @@ export const useAnalytics = () => {
       analyticsConnectionFailed = true; // Mark as failed to prevent repeated attempts
       return;
     }
-  };
+  }, [user]);
 
   // Specialized function for tracking page views based on current path
-  const trackPageView = async (metadata?: Record<string, any>) => {
+  const trackPageView = useCallback(async (metadata?: Record<string, any>) => {
     const currentPath = window.location.pathname;
     
     if (currentPath === '/') {
@@ -87,7 +95,7 @@ export const useAnalytics = () => {
       // Generic page view for other pages
       await trackEvent('page_view', metadata);
     }
-  };
+  }, [trackEvent]);
 
   return { trackEvent, trackPageView };
 };

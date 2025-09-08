@@ -182,7 +182,7 @@ export const AnalyticsDashboard = () => {
           <TabsTrigger value="conversion" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.conversion')}</TabsTrigger>
           <TabsTrigger value="subscribers" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.subscribers')}</TabsTrigger>
           <TabsTrigger value="support" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.support')}</TabsTrigger>
-          <TabsTrigger value="debug" className="text-xs sm:text-sm">Debug</TabsTrigger>
+          <TabsTrigger value="debug" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.debug')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="traffic">
