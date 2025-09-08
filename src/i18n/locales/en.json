@@ -1649,27 +1649,7 @@
       "traffic": "Traffic & Engagement",
       "conversion": "Free & Conversion",
       "subscribers": "Subscribers",
-      "support": "Customer Support",
-      "debug": "Test Traffic"
-    },
-    "debug": {
-      "title": "Traffic Testing & Analytics Debug",
-      "testDbConnection": "Test DB Connection",
-      "testTrackPageViewFunction": "Test track_page_view Function",
-      "testDirectInsert": "Test Direct Insert",
-      "viewCurrentData": "View Current Data",
-      "testAnalyticsHook": "Test Traffic Tracking",
-      "testHomepageView": "Test Homepage Traffic",
-      "testMainpageView": "Test Main Page Traffic",
-      "clearResults": "Clear Results",
-      "error": "Error",
-      "success": "Success",
-      "currentUser": "Current User",
-      "currentPath": "Current Path",
-      "environment": "Environment",
-      "development": "Development",
-      "production": "Production",
-      "notLoggedIn": "Not logged in"
+      "support": "Customer Support"
     },
     "traffic": {
       "pageViews": "Page Views",

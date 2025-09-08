@@ -143,9 +143,10 @@ export const useAuthStateHandler = () => {
         }
       }
 
-      // Skip redirects on callback page or if explicitly skipping
+      // Skip other redirects if skipAutoRedirect is true or if already on target page
       if (skipAutoRedirect || currentPath !== '/login') {
         console.log('🔐 Skipping redirect - skipAutoRedirect or already on target page');
+        return;
       }
 
       // PRIORITY 2: Admin redirect (only if no pending checkout)

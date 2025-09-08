@@ -25,7 +25,7 @@ export const useSubscriptionStatusChecker = () => {
     } catch (error) {
       // Ignore errors here as this is just for cache invalidation
     }
-  }, [user?.id]);
+  }, [supabase, user?.id]);
 
   const checkSubscriptionStatus = useCallback(async (): Promise<SubscriptionStatus | null> => {
     if (!user) return null;
@@ -90,18 +90,11 @@ export const useSubscriptionStatusChecker = () => {
       console.error('Error in subscription status check:', error);
       return null;
     }
-  }, [user]);
+  }, [supabase, user]);
 
   // Check subscription status when user changes
   useEffect(() => {
-    console.log('🔍 useSubscriptionStatusChecker: useEffect triggered', {
-      hasUser: !!user,
-      userId: user?.id,
-      timestamp: new Date().toISOString()
-    });
-    
     if (user) {
-      console.log('🔍 useSubscriptionStatusChecker: Calling checkSubscriptionStatus');
       checkSubscriptionStatus();
     }
   }, [user, checkSubscriptionStatus]);

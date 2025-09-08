@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const AnalyticsDebug = () => {
   const { user } = useAuth();
   const { trackPageView, trackEvent } = useAnalytics();
-  const { t } = useTranslation();
   const [testResults, setTestResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,9 +28,9 @@ export const AnalyticsDebug = () => {
         .select('*')
         .limit(1);
       
-      addResult(t('adminAnalytics.debug.testDbConnection'), data, error);
+      addResult('Database Connection', data, error);
     } catch (err) {
-      addResult(t('adminAnalytics.debug.testDbConnection'), null, err);
+      addResult('Database Connection', null, err);
     }
     setIsLoading(false);
   };
@@ -45,9 +43,9 @@ export const AnalyticsDebug = () => {
         p_user_email: user?.email || 'test@example.com'
       });
       
-      addResult(t('adminAnalytics.debug.testTrackPageViewFunction'), data, error);
+      addResult('track_page_view Function', data, error);
     } catch (err) {
-      addResult(t('adminAnalytics.debug.testTrackPageViewFunction'), null, err);
+      addResult('track_page_view Function', null, err);
     }
     setIsLoading(false);
   };
@@ -67,9 +65,9 @@ export const AnalyticsDebug = () => {
         })
         .select();
       
-      addResult(t('adminAnalytics.debug.testDirectInsert'), data, error);
+      addResult('Direct Insert to analytics_events', data, error);
     } catch (err) {
-      addResult(t('adminAnalytics.debug.testDirectInsert'), null, err);
+      addResult('Direct Insert to analytics_events', null, err);
     }
     setIsLoading(false);
   };
@@ -83,9 +81,9 @@ export const AnalyticsDebug = () => {
         .order('date', { ascending: false })
         .limit(10);
       
-      addResult(t('adminAnalytics.debug.viewCurrentData'), data, error);
+      addResult('Current Analytics Data', data, error);
     } catch (err) {
-      addResult(t('adminAnalytics.debug.viewCurrentData'), null, err);
+      addResult('Current Analytics Data', null, err);
     }
     setIsLoading(false);
   };
@@ -95,9 +93,9 @@ export const AnalyticsDebug = () => {
     try {
       console.log('🧪 Testing analytics hook...');
       await trackPageView({ test: true, timestamp: new Date().toISOString() });
-      addResult(t('adminAnalytics.debug.testAnalyticsHook'), 'Page view tracked successfully');
+      addResult('Analytics Hook Test', 'Page view tracked successfully');
     } catch (err) {
-      addResult(t('adminAnalytics.debug.testAnalyticsHook'), null, err);
+      addResult('Analytics Hook Test', null, err);
     }
     setIsLoading(false);
   };
@@ -107,9 +105,9 @@ export const AnalyticsDebug = () => {
     try {
       console.log('🧪 Testing homepage view...');
       await trackEvent('homepage_view', { test: true, timestamp: new Date().toISOString() });
-      addResult(t('adminAnalytics.debug.testHomepageView'), 'Homepage view tracked successfully');
+      addResult('Homepage View Test', 'Homepage view tracked successfully');
     } catch (err) {
-      addResult(t('adminAnalytics.debug.testHomepageView'), null, err);
+      addResult('Homepage View Test', null, err);
     }
     setIsLoading(false);
   };
@@ -119,9 +117,9 @@ export const AnalyticsDebug = () => {
     try {
       console.log('🧪 Testing mainpage view...');
       await trackEvent('mainpage_view', { test: true, timestamp: new Date().toISOString() });
-      addResult(t('adminAnalytics.debug.testMainpageView'), 'Mainpage view tracked successfully');
+      addResult('Mainpage View Test', 'Mainpage view tracked successfully');
     } catch (err) {
-      addResult(t('adminAnalytics.debug.testMainpageView'), null, err);
+      addResult('Mainpage View Test', null, err);
     }
     setIsLoading(false);
   };
@@ -133,33 +131,33 @@ export const AnalyticsDebug = () => {
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle>{t('adminAnalytics.debug.title')}</CardTitle>
+        <CardTitle>Analytics System Debug</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-wrap gap-2">
           <Button onClick={testDatabaseConnection} disabled={isLoading}>
-            {t('adminAnalytics.debug.testDbConnection')}
+            Test DB Connection
           </Button>
           <Button onClick={testTrackPageViewFunction} disabled={isLoading}>
-            {t('adminAnalytics.debug.testTrackPageViewFunction')}
+            Test track_page_view Function
           </Button>
           <Button onClick={testAnalyticsEventsTable} disabled={isLoading}>
-            {t('adminAnalytics.debug.testDirectInsert')}
+            Test Direct Insert
           </Button>
           <Button onClick={testCurrentAnalyticsData} disabled={isLoading}>
-            {t('adminAnalytics.debug.viewCurrentData')}
+            View Current Data
           </Button>
           <Button onClick={testAnalyticsHook} disabled={isLoading}>
-            {t('adminAnalytics.debug.testAnalyticsHook')}
+            Test Analytics Hook
           </Button>
           <Button onClick={testHomepageView} disabled={isLoading}>
-            {t('adminAnalytics.debug.testHomepageView')}
+            Test Homepage View
           </Button>
           <Button onClick={testMainpageView} disabled={isLoading}>
-            {t('adminAnalytics.debug.testMainpageView')}
+            Test Mainpage View
           </Button>
           <Button onClick={clearResults} variant="outline">
-            {t('adminAnalytics.debug.clearResults')}
+            Clear Results
           </Button>
         </div>
 
@@ -172,11 +170,11 @@ export const AnalyticsDebug = () => {
               </div>
               {result.error ? (
                 <div className="text-red-600 text-sm">
-                  <strong>{t('adminAnalytics.debug.error')}:</strong> {JSON.stringify(result.error, null, 2)}
+                  <strong>Error:</strong> {JSON.stringify(result.error, null, 2)}
                 </div>
               ) : (
                 <div className="text-green-600 text-sm">
-                  <strong>{t('adminAnalytics.debug.success')}:</strong> {JSON.stringify(result.result, null, 2)}
+                  <strong>Success:</strong> {JSON.stringify(result.result, null, 2)}
                 </div>
               )}
             </div>
@@ -184,9 +182,9 @@ export const AnalyticsDebug = () => {
         </div>
 
         <div className="text-sm text-muted-foreground">
-          <p><strong>{t('adminAnalytics.debug.currentUser')}:</strong> {user?.email || t('adminAnalytics.debug.notLoggedIn')}</p>
-          <p><strong>{t('adminAnalytics.debug.currentPath')}:</strong> {window.location.pathname}</p>
-          <p><strong>{t('adminAnalytics.debug.environment')}:</strong> {window.location.hostname === 'localhost' ? t('adminAnalytics.debug.development') : t('adminAnalytics.debug.production')}</p>
+          <p><strong>Current User:</strong> {user?.email || 'Not logged in'}</p>
+          <p><strong>Current Path:</strong> {window.location.pathname}</p>
+          <p><strong>Environment:</strong> {window.location.hostname === 'localhost' ? 'Development' : 'Production'}</p>
         </div>
       </CardContent>
     </Card>

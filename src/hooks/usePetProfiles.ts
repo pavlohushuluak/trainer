@@ -81,12 +81,9 @@ export const usePetProfiles = () => {
     
     if (user?.id && (!isInitialized || cacheStatus.isStale)) {
       console.log('🔐 usePetProfiles: Triggering fetchPets');
-      if (user.id) {
-        console.log('🔐 usePetProfiles: Dispatching fetchPetProfiles for user', user.id);
-        dispatch(fetchPetProfiles(user.id));
-      }
+      fetchPets();
     }
-  }, [user?.id, isInitialized, cacheStatus.isStale, dispatch]);
+  }, [user?.id, isInitialized, cacheStatus.isStale, fetchPets]);
 
   // Clear pets when user logs out
   useEffect(() => {
