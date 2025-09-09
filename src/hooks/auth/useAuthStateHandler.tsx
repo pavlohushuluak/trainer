@@ -133,28 +133,42 @@ export const useAuthStateHandler = () => {
         return;
       }
 
-      // PRIORITY 2: Check for pricing_click_data in sessionStorage
-      try {
-        const pricingClickData = sessionStorage.getItem('pricing_click_data');
-        if (pricingClickData) {
-          const parsedData = JSON.parse(pricingClickData);
-          console.log('For darkhorse: Found pricing_click_data, executing checkout:', parsedData);
-          
-          // Remove the data from sessionStorage
+      // PRIORITY 2: Check for pricing_click_data in sessionStorage (only if no pending checkout)
+      if (!hasPendingCheckout) {
+        try {
+          const pricingClickData = sessionStorage.getItem('pricing_click_data');
+          if (pricingClickData) {
+            const parsedData = JSON.parse(pricingClickData);
+            console.log('For darkhorse: Found pricing_click_data, executing checkout:', parsedData);
+            
+            // Remove the data from sessionStorage
+            sessionStorage.removeItem('pricing_click_data');
+            
+            // Execute checkout with the stored priceType
+            setTimeout(() => {
+              executeCheckoutRedirect(parsedData.priceType, user.email);
+            }, 100);
+            
+            // CRITICAL: STOP HERE - no other redirects when pricing click is pending
+            return;
+          }
+        } catch (error) {
+          console.error('For darkhorse: Error processing pricing_click_data:', error);
+          // Remove corrupted data
           sessionStorage.removeItem('pricing_click_data');
-          
-          // Execute checkout with the stored priceType
-          setTimeout(() => {
-            executeCheckoutRedirect(parsedData.priceType, user.email);
-          }, 100);
-          
-          // CRITICAL: STOP HERE - no other redirects when pricing click is pending
-          return;
         }
-      } catch (error) {
-        console.error('For darkhorse: Error processing pricing_click_data:', error);
-        // Remove corrupted data
-        sessionStorage.removeItem('pricing_click_data');
+      } else {
+        // If there's a pending checkout, clean up any pricing_click_data to avoid confusion
+        try {
+          const pricingClickData = sessionStorage.getItem('pricing_click_data');
+          if (pricingClickData) {
+            console.log('For darkhorse: Found pricing_click_data but pending checkout exists, cleaning up pricing_click_data');
+            sessionStorage.removeItem('pricing_click_data');
+          }
+        } catch (error) {
+          console.error('For darkhorse: Error cleaning up pricing_click_data:', error);
+          sessionStorage.removeItem('pricing_click_data');
+        }
       }
 
       // Handle OAuth profile updates first (before redirects)
