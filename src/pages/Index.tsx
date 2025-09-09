@@ -10,6 +10,7 @@ import { useAuthOperations } from "@/hooks/auth/useAuthOperations";
 import { useSmartLogin } from "@/hooks/useSmartLogin";
 import { usePetDataPrefetch } from "@/hooks/usePetDataPrefetch";
 import { usePetProfiles } from "@/hooks/usePetProfiles";
+import { supabase } from "@/integrations/supabase/client";
 
 // Lazy load heavy components with proper default export handling
 const Benefits = lazy(() => import("@/components/Benefits").then(module => ({ default: module.Benefits })));
@@ -47,27 +48,63 @@ const Index = () => {
     loginContext: 'checkout'
   });
 
-  // Check for pricing_click_data in sessionStorage
+  // Check for pricing_click_data in sessionStorage and call create-checkout directly
   useEffect(() => {
-    const checkPricingClickData = () => {
+    const checkPricingClickData = async () => {
       try {
         const pricingClickData = sessionStorage.getItem('pricing_click_data');
-        if (pricingClickData) {
+        if (pricingClickData && user && session) {
+          const parsedData = JSON.parse(pricingClickData);
+          console.log('For darkhorse: Found pricing_click_data with logged in user, calling create-checkout directly:', parsedData);
+          
+          // Remove the data from sessionStorage immediately
+          sessionStorage.removeItem('pricing_click_data');
+          setIsProcessingCheckout(false);
+          
+          // Call create-checkout directly
+          const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+          
+          const { data, error } = await supabase.functions.invoke('create-checkout', {
+            body: {
+              priceType: parsedData.priceType,
+              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
+              cancelUrl: `${window.location.origin}/?canceled=true`,
+              language: currentLanguage,
+              customerInfo: {
+                name: user?.user_metadata?.full_name || user?.email?.split('@')[0]
+              }
+            }
+          });
+
+          if (error) {
+            console.error('For darkhorse: Error creating checkout:', error);
+            // Redirect to pricing section on error
+            window.location.href = '/#pricing';
+          } else if (data?.url) {
+            console.log('For darkhorse: Checkout created successfully, redirecting to:', data.url);
+            // Redirect to Stripe checkout
+            window.location.href = data.url;
+          } else {
+            console.error('For darkhorse: No checkout URL returned');
+            window.location.href = '/#pricing';
+          }
+        } else if (pricingClickData) {
           console.log('For darkhorse: Found pricing_click_data on homepage, showing processing state');
           setIsProcessingCheckout(true);
-          sessionStorage.removeItem('pricing_click_data');
         } else {
           setIsProcessingCheckout(false);
         }
       } catch (error) {
         console.error('For darkhorse: Error checking pricing_click_data:', error);
         setIsProcessingCheckout(false);
+        // Remove corrupted data
+        sessionStorage.removeItem('pricing_click_data');
       }
     };
 
     // Check immediately
     checkPricingClickData();
-  }, []);
+  }, [user, session]);
 
   useEffect(() => {
     // Page view tracking is now handled by PageViewTracker component
