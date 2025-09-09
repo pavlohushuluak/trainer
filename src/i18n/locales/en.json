@@ -2873,6 +2873,51 @@
       "production": "Production"
     }
   },
+  "petFilter": {
+    "title": "Plan Filter",
+    "description": "Organize and filter your training plans by type",
+    "plansCount": {
+      "plan": "Plan",
+      "plans": "Plans"
+    },
+    "planTypes": {
+      "label": "Plan Types:",
+      "all": {
+        "label": "Show All Plans",
+        "description": "Display all training plans regardless of type or pet assignment"
+      },
+      "supported": {
+        "label": "Supported Plans",
+        "description": "Show plans created with trainer support and guidance"
+      },
+      "manual": {
+        "label": "Manual Plans",
+        "description": "Display manually created training plans"
+      }
+    },
+    "petSpecific": {
+      "label": "Pet-Specific Plans:",
+      "toggle": {
+        "show": "Show Pet Selection",
+        "hide": "Hide Pet Selection"
+      },
+      "search": {
+        "placeholder": "Search pets...",
+        "noResults": "No pets found matching \"{{searchTerm}}\""
+      },
+      "showAll": {
+        "label": "Show All Pets",
+        "description": "Display plans for all pets"
+      },
+      "petSpecificPlans": "Pet-specific plans"
+    },
+    "descriptions": {
+      "allPlans": "Showing all training plans regardless of type or pet assignment",
+      "supportedPlans": "Displaying plans created with trainer support and guidance",
+      "manualPlans": "Showing manually created training plans",
+      "petSpecific": "Showing plans for {{petName}}{{planType}}"
+    }
+  },
   "adminEmailManagement": {
     "title": "📧 Email Management",
     "description": "Manage email settings, test functions and monitor all email activities",

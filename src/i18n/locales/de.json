@@ -2875,6 +2875,51 @@
       "production": "Produktion"
     }
   },
+  "petFilter": {
+    "title": "Plan-Filter",
+    "description": "Organisiere und filtere deine Trainingspläne nach Typ",
+    "plansCount": {
+      "plan": "Plan",
+      "plans": "Pläne"
+    },
+    "planTypes": {
+      "label": "Plan-Typen:",
+      "all": {
+        "label": "Alle Pläne anzeigen",
+        "description": "Zeige alle Trainingspläne unabhängig von Typ oder Tierzuweisung"
+      },
+      "supported": {
+        "label": "Unterstützte Pläne",
+        "description": "Zeige Pläne, die mit Trainer-Unterstützung und Anleitung erstellt wurden"
+      },
+      "manual": {
+        "label": "Manuelle Pläne",
+        "description": "Zeige manuell erstellte Trainingspläne"
+      }
+    },
+    "petSpecific": {
+      "label": "Tier-spezifische Pläne:",
+      "toggle": {
+        "show": "Tierauswahl anzeigen",
+        "hide": "Tierauswahl ausblenden"
+      },
+      "search": {
+        "placeholder": "Tiere suchen...",
+        "noResults": "Keine Tiere gefunden für \"{{searchTerm}}\""
+      },
+      "showAll": {
+        "label": "Alle Tiere anzeigen",
+        "description": "Zeige Pläne für alle Tiere"
+      },
+      "petSpecificPlans": "Tier-spezifische Pläne"
+    },
+    "descriptions": {
+      "allPlans": "Zeige alle Trainingspläne unabhängig von Typ oder Tierzuweisung",
+      "supportedPlans": "Zeige Pläne, die mit Trainer-Unterstützung und Anleitung erstellt wurden",
+      "manualPlans": "Zeige manuell erstellte Trainingspläne",
+      "petSpecific": "Zeige Pläne für {{petName}}{{planType}}"
+    }
+  },
   "adminEmailManagement": {
     "title": "📧 Email Management",
     "description": "Manage email settings, test functions and monitor all email activities",

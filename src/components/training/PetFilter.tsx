@@ -51,7 +51,7 @@ const getPetIcon = (species: string) => {
 };
 
 const getFilterDisplayName = (selectedPetId: string, pets: Pet[], t: any) => {
-  if (selectedPetId === "all") return "Show All Pets";
+  if (selectedPetId === "all") return t('petFilter.petSpecific.showAll.label');
   
   const pet = pets.find(p => p.id === selectedPetId);
   if (pet) {
@@ -149,24 +149,24 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
   const planFilters = [
     { 
       value: "all", 
-      label: "Show All Plans", 
+      label: t('petFilter.planTypes.all.label'), 
       icon: Users, 
       color: "blue",
-      description: "Display all training plans regardless of type or pet assignment"
+      description: t('petFilter.planTypes.all.description')
     },
     { 
       value: "supported", 
-      label: "Supported Plans", 
+      label: t('petFilter.planTypes.supported.label'), 
       icon: Crown, 
       color: "purple",
-      description: "Show plans created with trainer support and guidance"
+      description: t('petFilter.planTypes.supported.description')
     },
     { 
       value: "manual", 
-      label: "Manual Plans", 
+      label: t('petFilter.planTypes.manual.label'), 
       icon: BookOpen, 
       color: "green",
-      description: "Display manually created training plans"
+      description: t('petFilter.planTypes.manual.description')
     },
   ];
 
@@ -187,11 +187,11 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
               </div>
               <div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                  Plan Filter
+                  {t('petFilter.title')}
                   <Sparkles className="h-5 w-5 text-yellow-500 animate-pulse" />
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Organize and filter your training plans by type
+                  {t('petFilter.description')}
                 </p>
               </div>
             </div>
@@ -200,7 +200,7 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
             {plansCount > 0 && (
               <Badge variant="outline" className={`${getFilterBadgeColor(selectedPlanType)} px-4 py-2 text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200`}>
                 <Target className="h-4 w-4 mr-2" />
-                {plansCount} {plansCount === 1 ? 'Plan' : 'Plans'}
+                {plansCount} {plansCount === 1 ? t('petFilter.plansCount.plan') : t('petFilter.plansCount.plans')}
               </Badge>
             )}
           </div>
@@ -209,7 +209,7 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Zap className="h-4 w-4 text-yellow-500" />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Plan Types:</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('petFilter.planTypes.label')}</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {planFilters.map((filter) => {
@@ -246,7 +246,7 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <HandHeart className="h-4 w-4 text-purple-500" />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Pet-Specific Plans:</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('petFilter.petSpecific.label')}</span>
               </div>
               <Button
                 variant="ghost"
@@ -254,7 +254,7 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
                 onClick={() => setShowAdvanced(!showAdvanced)}
                 className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
               >
-                {showAdvanced ? "Hide" : "Show"} Pet Selection
+                {showAdvanced ? t('petFilter.petSpecific.toggle.hide') : t('petFilter.petSpecific.toggle.show')}
               </Button>
             </div>
 
@@ -264,7 +264,7 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
-                    placeholder="Search pets..."
+                    placeholder={t('petFilter.petSpecific.search.placeholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10 bg-white/80 dark:bg-gray-800/80 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400"
@@ -298,8 +298,8 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
                         <Users className="h-4 w-4" />
                       </div>
                       <div className="flex flex-col items-start flex-1">
-                        <span className="font-medium">Show All Pets</span>
-                        <span className="text-xs opacity-75">Display plans for all pets</span>
+                        <span className="font-medium">{t('petFilter.petSpecific.showAll.label')}</span>
+                        <span className="text-xs opacity-75">{t('petFilter.petSpecific.showAll.description')}</span>
                       </div>
                       {selectedPetId === "all" && <CheckCircle className="h-4 w-4 ml-2" />}
                     </div>
@@ -335,7 +335,7 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
                     ) : (
                     <div className="text-center py-4 text-gray-500 dark:text-gray-400">
                       <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">No pets found matching "{searchTerm}"</p>
+                      <p className="text-sm">{t('petFilter.petSpecific.search.noResults', { searchTerm })}</p>
                     </div>
                   )}
                 </div>
@@ -366,10 +366,10 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
                       </div>
                       <div className="flex flex-col">
                         <span className="font-medium truncate text-gray-900 dark:text-gray-100">
-                          Show All Pets
+                          {t('petFilter.petSpecific.showAll.label')}
                         </span>
                         <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                          Display plans for all pets
+                          {t('petFilter.petSpecific.showAll.description')}
                         </span>
                       </div>
                     </div>
@@ -385,7 +385,7 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
                             {pet.name}
                           </span>
                           <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                            {pet.species} • Pet-specific plans
+                            {pet.species} • {t('petFilter.petSpecific.petSpecificPlans')}
                           </span>
                         </div>
                       </div>
@@ -401,11 +401,14 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
             <div className="flex items-start gap-2">
               <Clock className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
               <span>
-                {selectedPlanType === "all" && selectedPetId === "all" && "Showing all training plans regardless of type or pet assignment"}
-                {selectedPlanType === "supported" && selectedPetId === "all" && "Displaying plans created with trainer support and guidance"}
-                {selectedPlanType === "manual" && selectedPetId === "all" && "Showing manually created training plans"}
+                {selectedPlanType === "all" && selectedPetId === "all" && t('petFilter.descriptions.allPlans')}
+                {selectedPlanType === "supported" && selectedPetId === "all" && t('petFilter.descriptions.supportedPlans')}
+                {selectedPlanType === "manual" && selectedPetId === "all" && t('petFilter.descriptions.manualPlans')}
                 {selectedPetId !== "all" && (
-                  `Showing plans for ${validPets.find(p => p.id === selectedPetId)?.name || 'selected pet'}${selectedPlanType !== "all" ? ` (${selectedPlanType === "supported" ? "trainer-supported" : "manual"} only)` : ""}`
+                  t('petFilter.descriptions.petSpecific', {
+                    petName: validPets.find(p => p.id === selectedPetId)?.name || 'selected pet',
+                    planType: selectedPlanType !== "all" ? ` (${selectedPlanType === "supported" ? "trainer-supported" : "manual"} only)` : ""
+                  })
                 )}
               </span>
             </div>
