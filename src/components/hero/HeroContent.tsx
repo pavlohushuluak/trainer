@@ -30,7 +30,7 @@ export const HeroContent = ({ isDevelopment }: HeroContentProps) => {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/3 to-transparent blur-xl opacity-20"></div>
 
         {/* Animated accent line with beautiful gradient */}
-        <div className="mt-4 h-1 bg-beautiful-gradient rounded-full opacity-70 animate-width-expand"></div>
+        <div className="mt-4 h-1 bg-beautiful-gradient rounded-full opacity-70 animate-width-expand z-10"></div>
       </div>
 
       {/* Subtitle with enhanced styling */}
