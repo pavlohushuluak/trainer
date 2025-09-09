@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MessageCircle, User, Crown } from "lucide-react";
+import { MessageCircle, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,27 +12,6 @@ interface HeroStorySectionProps {
   onChatOpen: () => void;
 }
 
-const scrollToSubscriptionManagement = () => {
-  // Use requestAnimationFrame for better performance
-  requestAnimationFrame(() => {
-    const subscriptionSection = document.querySelector('.subscription-management-section');
-    if (subscriptionSection) {
-      subscriptionSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start',
-        inline: 'nearest'
-      });
-      
-      // Nach dem Scrollen den "Pakete" Tab aktivieren
-      setTimeout(() => {
-        const paketeTab = document.querySelector('[data-value="plans"]') as HTMLElement;
-        if (paketeTab) {
-          paketeTab.click();
-        }
-      }, 500);
-    }
-  });
-};
 
 export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
   const { user } = useAuth();
@@ -65,7 +44,7 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
   };
 
   return (
-    <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 via-secondary to-accent/5 mb-6 sm:mb-8">
+    <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 via-secondary to-accent/5">
       <CardContent className="p-4 sm:p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-6">
           <div className="min-w-0 flex-1">
@@ -127,32 +106,6 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
           </div>
         </div>
 
-        {/* Upgrade-Hinweis für Nutzer ohne aktives Paket */}
-        {user && !hasActiveSubscription && (
-          <div className="mt-4 sm:mt-6 p-3 sm:p-4 border border-primary/20 bg-primary/5 rounded-lg">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div className="flex items-start sm:items-center gap-2 sm:gap-3">
-                <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-primary mt-0.5 sm:mt-0 flex-shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium text-foreground text-sm sm:text-base">
-                    {t('training.heroStory.premium.title')}
-                  </p>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
-                    {t('training.heroStory.premium.description')}
-                  </p>
-                </div>
-              </div>
-              <Button 
-                onClick={scrollToSubscriptionManagement}
-                variant="outline"
-                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground w-full sm:w-auto text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-4 flex-shrink-0"
-                size="sm"
-              >
-                <span className="truncate">{t('training.heroStory.premium.button')}</span>
-              </Button>
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

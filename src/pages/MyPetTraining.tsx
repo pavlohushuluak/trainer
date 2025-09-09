@@ -372,7 +372,7 @@ const MyPetTraining = () => {
               {/* Auth Error Display */}
               <AuthErrorDisplay />
               
-              <div className="mb-8">
+              <div>
                 <LazyComponentErrorBoundary>
                   <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg" />}>
                     <HeroStorySection onChatOpen={() => navigate('/chat')} />

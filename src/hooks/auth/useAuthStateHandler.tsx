@@ -9,6 +9,7 @@ export const useAuthStateHandler = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [checkoutInProgress, setCheckoutInProgress] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const { handleOAuthProfile } = useOAuthProfileHandler();
 
@@ -39,6 +40,14 @@ export const useAuthStateHandler = () => {
   }, []);
 
   const executeCheckoutRedirect = useCallback(async (priceType: string, userEmail: string) => {
+    // Prevent duplicate checkout generation
+    if (checkoutInProgress) {
+      console.log('For darkhorse: Checkout already in progress, skipping duplicate request');
+      return;
+    }
+
+    setCheckoutInProgress(true);
+    console.log('For darkhorse: Starting checkout generation for:', priceType);
 
     try {
       // Get current language from localStorage or default to 'de'
@@ -54,7 +63,9 @@ export const useAuthStateHandler = () => {
       });
 
       if (error) {
+        console.error('For darkhorse: Checkout generation failed:', error);
         clearCheckoutFlags();
+        setCheckoutInProgress(false);
 
         const { toast } = await import('@/hooks/use-toast');
         toast({
@@ -65,19 +76,25 @@ export const useAuthStateHandler = () => {
 
         window.location.href = '/#pricing';
       } else if (data?.url) {
+        console.log('For darkhorse: Checkout generated successfully, redirecting to:', data.url);
         clearCheckoutFlags();
+        setCheckoutInProgress(false);
 
         // IMMEDIATE redirect to Stripe
         window.location.href = data.url;
       } else {
+        console.error('For darkhorse: No checkout URL received');
         clearCheckoutFlags();
+        setCheckoutInProgress(false);
         window.location.href = '/#pricing';
       }
     } catch (error) {
+      console.error('For darkhorse: Checkout generation exception:', error);
       clearCheckoutFlags();
+      setCheckoutInProgress(false);
       window.location.href = '/#pricing';
     }
-  }, []);
+  }, [checkoutInProgress]);
 
   const handleSignedIn = useCallback(async (session: Session, skipAutoRedirect = false) => {
     const user = session.user;
@@ -136,12 +153,20 @@ export const useAuthStateHandler = () => {
       // PRIORITY 2: Check for pricing_click_data in sessionStorage
       try {
         const pricingClickData = sessionStorage.getItem('pricing_click_data');
-        if (pricingClickData) {
+        if (pricingClickData && !checkoutInProgress) {
           const parsedData = JSON.parse(pricingClickData);
           console.log('For darkhorse: Found pricing_click_data, executing checkout:', parsedData);
           
-          // Remove the data from sessionStorage
+          // Remove the data from sessionStorage immediately to prevent duplicate processing
           sessionStorage.removeItem('pricing_click_data');
+          
+          // Show professional loading state
+          const { toast } = await import('@/hooks/use-toast');
+          toast({
+            title: 'Professional - Generating Checkout',
+            description: 'Preparing your payment checkout session...',
+            duration: 3000
+          });
           
           // Execute checkout with the stored priceType
           setTimeout(() => {
@@ -150,6 +175,9 @@ export const useAuthStateHandler = () => {
           
           // CRITICAL: STOP HERE - no other redirects when pricing click is pending
           return;
+        } else if (pricingClickData && checkoutInProgress) {
+          console.log('For darkhorse: Checkout already in progress, removing stale pricing_click_data');
+          sessionStorage.removeItem('pricing_click_data');
         }
       } catch (error) {
         console.error('For darkhorse: Error processing pricing_click_data:', error);
