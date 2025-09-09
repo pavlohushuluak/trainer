@@ -68,17 +68,16 @@ export const PetProfileHeader = ({
     ['1 Tier', '2 Tiere', '3-4 Tiere', '5-8 Tiere', 'Unbegrenzt'].includes(subscriptionTierName);
   
   // Free users can create their first pet profile (maxPetsAllowed = 1 for free users)
-  const canCreatePet = hasValidPlan || (maxPetsAllowed > 0 && canAddMore);
+  // Button should be enabled if user can add more pets OR if they need to upgrade
+  const canCreatePet = hasValidPlan || (maxPetsAllowed > 0 && canAddMore) || !canAddMore;
 
   const handleCreateNew = () => {
-    if (!canCreatePet) {
-      // Show subscription warning instead of redirecting
-      return;
-    }
     if (!canAddMore) {
+      // User has reached their pet limit, scroll to subscription management for upgrade
       scrollToSubscriptionManagement();
       return;
     }
+    // User can add more pets, open the pet creation dialog
     setIsDialogOpen(true);
   };
 
