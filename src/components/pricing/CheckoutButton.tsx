@@ -54,7 +54,7 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
       const [planId, billingCycle] = priceType.split('-');
       const isHalfYearly = billingCycle === 'halfyearly';
       const amount = getPrice(planId, isHalfYearly);
-      trackAddToCart(amount);
+      trackAddToCart(amount, priceType);
 
       // If not logged in, show login modal
       if (!user || !session) {

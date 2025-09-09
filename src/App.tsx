@@ -15,6 +15,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { store } from "@/store";
 import { usePetProfiles } from "@/hooks/usePetProfiles";
 import { LanguageInitializer } from "@/components/LanguageInitializer";
+import { GTMProvider } from "@/components/analytics/GTMProvider";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import MyPetTraining from "./pages/MyPetTraining";
@@ -124,15 +125,16 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <AuthProvider>
-            <TooltipProvider>
-              <BrowserRouter>
-                <LanguageInitializer />
-                <PerformanceMonitor />
-                <ResourcePreloader resources={criticalResources} />
-                <PageViewTracker />
-                
-                {/* Centralized pet profiles data manager */}
-                <PetProfilesDataManager />
+            <GTMProvider>
+              <TooltipProvider>
+                <BrowserRouter>
+                  <LanguageInitializer />
+                  <PerformanceMonitor />
+                  <ResourcePreloader resources={criticalResources} />
+                  <PageViewTracker />
+                  
+                  {/* Centralized pet profiles data manager */}
+                  <PetProfilesDataManager />
                 
                 <Routes>
                   <Route path="/admin/login" element={<AdminLogin />} />
@@ -166,6 +168,7 @@ const App = () => {
                 <Sonner />
               </BrowserRouter>
             </TooltipProvider>
+            </GTMProvider>
           </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>

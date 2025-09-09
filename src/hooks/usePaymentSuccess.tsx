@@ -14,7 +14,7 @@ export const usePaymentSuccess = () => {
     if (success === 'true' && sessionId) {
       // Track payment success - default amount, could be enhanced to get actual amount
       const amount = 9.99; // This could be improved to get the actual amount from the session
-      trackPaymentSuccess(amount);
+      trackPaymentSuccess(amount, sessionId);
       
       // Clean up URL parameters
       const newUrl = window.location.pathname;

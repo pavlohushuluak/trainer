@@ -54,18 +54,30 @@ export const hasConsent = (): boolean => {
   return getStoredConsent() !== null;
 };
 
-// Initialize analytics (Google Analytics, etc.)
+// Initialize analytics (Google Tag Manager)
 const initializeAnalytics = () => {
-  // Analytics tracking initialized
-  // Hier würde Google Analytics oder Matomo initialisiert werden
-  // Beispiel für Google Analytics:
-  // gtag('config', 'GA_MEASUREMENT_ID');
+  // Enable GTM dataLayer tracking
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'consent_update',
+      analytics_consent: true,
+      marketing_consent: false
+    });
+    console.log('GTM Analytics consent granted');
+  }
 };
 
 // Initialize marketing tools
 const initializeMarketing = () => {
-  // Marketing tracking initialized
-  // Hier würden Marketing-Tools initialisiert werden
+  // Enable GTM marketing tracking
+  if (window.dataLayer) {
+    window.dataLayer.push({
+      event: 'consent_update',
+      analytics_consent: true,
+      marketing_consent: true
+    });
+    console.log('GTM Marketing consent granted');
+  }
 };
 
 // Load tracking scripts based on consent

@@ -1,97 +1,96 @@
 
 import { useEffect } from 'react';
+import type { GTMEvent, GTMPageViewEvent, GTMEcommerceEvent, GTMAuthEvent } from '@/types/gtm';
+import { getStoredConsent } from '@/utils/cookieConsent';
 
 export const useGTM = () => {
   useEffect(() => {
-    // Check if GTM is already loaded
-    if (window.dataLayer) {
-      return;
+    // Ensure dataLayer exists (GTM is already initialized in HTML)
+    if (!window.dataLayer) {
+      window.dataLayer = [];
     }
 
-    // Only load GTM in production or if explicitly enabled
+    // In development, create a mock dataLayer if GTM is disabled
     if (import.meta.env.DEV && !import.meta.env.VITE_ENABLE_GTM) {
-      // Create a mock dataLayer for development
-      window.dataLayer = [];
+      console.log('GTM disabled in development mode');
       return;
-    }
-
-    try {
-      // Initialize dataLayer
-      window.dataLayer = window.dataLayer || [];
-      
-      // Use the correct GTM ID from the HTML
-      const gtmId = 'GTM-TVRLCS6X';
-      
-      // GTM script injection with error handling and timeout
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = `https://www.googletagmanager.com/gtm.js?id=${gtmId}`;
-      
-      // Add timeout to prevent hanging
-      const timeoutId = setTimeout(() => {
-        console.warn('GTM script loading timeout - continuing without analytics');
-        window.dataLayer = window.dataLayer || [];
-      }, 5000); // 5 second timeout
-      
-      // Add error handling for script loading
-      script.onerror = () => {
-        clearTimeout(timeoutId);
-        console.warn('GTM script failed to load - continuing without analytics');
-        window.dataLayer = window.dataLayer || [];
-      };
-      
-      script.onload = () => {
-        clearTimeout(timeoutId);
-        // Initialize GTM only after successful load
-        try {
-          window.dataLayer.push({
-            'gtm.start': new Date().getTime(),
-            event: 'gtm.js'
-          });
-        } catch (error) {
-          console.warn('GTM initialization failed:', error);
-        }
-      };
-      
-      document.head.appendChild(script);
-    } catch (error) {
-      console.warn('GTM initialization failed:', error);
-      // Create a mock dataLayer to prevent errors
-      window.dataLayer = [];
     }
   }, []);
 
-  const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
+  // Helper function to check if analytics consent is given
+  const hasAnalyticsConsent = (): boolean => {
+    const consent = getStoredConsent();
+    return consent?.analytics === true;
+  };
+
+  const trackEvent = (event: GTMEvent) => {
     try {
+      // Check if analytics consent is given before tracking
+      if (!hasAnalyticsConsent()) {
+        console.log('GTM tracking skipped - no analytics consent');
+        return;
+      }
+
       if (window.dataLayer) {
-        window.dataLayer.push({
-          event: eventName,
-          ...parameters
-        });
+        window.dataLayer.push(event);
+        console.log('GTM Event tracked:', event);
       }
     } catch (error) {
       console.warn('GTM trackEvent failed:', error);
     }
   };
 
-  // Specific tracking functions for backward compatibility
+  // Specific tracking functions with proper types
   const trackChatStart = () => {
-    trackEvent('start_chat');
-  };
-
-  const trackPaymentSuccess = (amount: number) => {
-    trackEvent('payment_success', {
-      value: amount,
+    trackEvent({
+      event: 'start_chat',
+      event_category: 'engagement',
+      event_label: 'chat_started'
     });
   };
 
-  const trackSignUp = () => {
-    trackEvent('sign_up');
+  const trackPaymentSuccess = (amount: number, transactionId?: string) => {
+    trackEvent({
+      event: 'purchase',
+      value: amount,
+      currency: 'EUR',
+      transaction_id: transactionId,
+      event_category: 'ecommerce'
+    });
   };
 
-  const trackAddToCart = (amount: number) => {
-    trackEvent('add_to_cart', {
+  const trackSignUp = (method?: string) => {
+    trackEvent({
+      event: 'sign_up',
+      method: method || 'email',
+      event_category: 'auth'
+    });
+  };
+
+  const trackAddToCart = (amount: number, planType?: string) => {
+    trackEvent({
+      event: 'add_to_cart',
       value: amount,
+      currency: 'EUR',
+      event_category: 'ecommerce',
+      event_label: planType || 'subscription_plan'
+    });
+  };
+
+  const trackPageView = (pagePath: string, pageTitle?: string) => {
+    trackEvent({
+      event: 'page_view',
+      page_path: pagePath,
+      page_title: pageTitle || document.title,
+      page_location: window.location.href
+    });
+  };
+
+  const trackLogin = (method?: string) => {
+    trackEvent({
+      event: 'login',
+      method: method || 'email',
+      event_category: 'auth'
     });
   };
 
@@ -101,5 +100,7 @@ export const useGTM = () => {
     trackPaymentSuccess,
     trackSignUp,
     trackAddToCart,
+    trackPageView,
+    trackLogin,
   };
 };

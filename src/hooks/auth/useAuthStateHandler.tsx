@@ -17,7 +17,11 @@ export const useAuthStateHandler = () => {
   const trackSignUp = useCallback(() => {
     // Track sign up with GTM
     if (typeof window !== 'undefined' && window.dataLayer) {
-      window.dataLayer.push({ event: 'sign_up' });
+      window.dataLayer.push({ 
+        event: 'sign_up',
+        method: 'email',
+        event_category: 'auth'
+      });
     }
   }, []);
 

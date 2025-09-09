@@ -116,28 +116,6 @@ export const useOAuthProfileHandler = () => {
             // Set localStorage to indicate user has signed up (new OAuth user)
             localStorage.setItem('alreadySignedUp', 'true');
           }
-
-          try {
-            const { error: subscriberError } = await supabase
-              .from('subscribers')
-              .upsert({
-                email: user.email || '',
-                user_id: user.id,
-                stripe_customer_id: null,
-                subscribed: false,
-                subscription_status: 'inactive',
-                subscription_tier: null,
-                tier_limit: null,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
-              }, { onConflict: 'email' });
-
-            if (subscriberError) {
-              console.warn('Error upserting subscriber for OAuth user:', subscriberError);
-            }
-          } catch (subscriberError) {
-            console.warn('Error handling subscriber record for OAuth user:', subscriberError);
-          }
         }
 
       } catch (error) {
