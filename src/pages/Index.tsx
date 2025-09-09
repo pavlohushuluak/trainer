@@ -26,6 +26,7 @@ const SectionLoader = ({ height = "h-32" }: { height?: string }) => (
 );
 
 const Index = () => {
+  const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
 
   const { trackEvent } = useAnalytics();
   const { user, session } = useAuth();
@@ -45,6 +46,32 @@ const Index = () => {
     redirectToCheckout: true,
     loginContext: 'checkout'
   });
+
+  // Check for pricing_click_data in sessionStorage
+  useEffect(() => {
+    const checkPricingClickData = () => {
+      try {
+        const pricingClickData = sessionStorage.getItem('pricing_click_data');
+        if (pricingClickData) {
+          console.log('For darkhorse: Found pricing_click_data on homepage, showing processing state');
+          setIsProcessingCheckout(true);
+        } else {
+          setIsProcessingCheckout(false);
+        }
+      } catch (error) {
+        console.error('For darkhorse: Error checking pricing_click_data:', error);
+        setIsProcessingCheckout(false);
+      }
+    };
+
+    // Check immediately
+    checkPricingClickData();
+
+    // Check periodically in case data is added/removed
+    const interval = setInterval(checkPricingClickData, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     // Page view tracking is now handled by PageViewTracker component
@@ -206,6 +233,42 @@ const Index = () => {
       />
 
       <StickyPremiumButton />
+
+      {/* Professional Checkout Processing Overlay */}
+      {isProcessingCheckout && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md mx-4 text-center">
+            <div className="flex flex-col items-center space-y-4">
+              {/* Professional loading spinner */}
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 rounded-full animate-spin border-t-primary"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-8 h-8 bg-primary rounded-full animate-pulse"></div>
+                </div>
+              </div>
+              
+              {/* Professional message */}
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                  Processing Your Request
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  Generating checkout for payment...
+                </p>
+              </div>
+              
+              {/* Professional progress indicator */}
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div className="bg-primary h-2 rounded-full animate-pulse" style={{width: '60%'}}></div>
+              </div>
+              
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Please wait while we prepare your secure checkout
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
