@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useOAuthProfileHandler } from './useOAuthProfileHandler';
-import { getCheckoutFlags, clearCheckoutFlags, debugCheckoutState } from '@/utils/checkoutStorage';
 
 export const useAuthStateHandler = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -38,46 +37,6 @@ export const useAuthStateHandler = () => {
     }
   }, []);
 
-  const executeCheckoutRedirect = useCallback(async (priceType: string, userEmail: string) => {
-
-    try {
-      // Get current language from localStorage or default to 'de'
-      const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
-      
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: {
-          priceType: priceType,
-          successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
-          cancelUrl: `${window.location.origin}/?canceled=true`,
-          language: currentLanguage
-        }
-      });
-
-      if (error) {
-        clearCheckoutFlags();
-
-        const { toast } = await import('@/hooks/use-toast');
-        toast({
-          title: 'Checkout Error',
-          description: 'There was an error processing your checkout. Please try again.',
-          variant: "destructive",
-        });
-
-        window.location.href = '/#pricing';
-      } else if (data?.url) {
-        clearCheckoutFlags();
-
-        // IMMEDIATE redirect to Stripe
-        window.location.href = data.url;
-      } else {
-        clearCheckoutFlags();
-        window.location.href = '/#pricing';
-      }
-    } catch (error) {
-      clearCheckoutFlags();
-      window.location.href = '/#pricing';
-    }
-  }, []);
 
   const handleSignedIn = useCallback(async (session: Session, skipAutoRedirect = false) => {
     const user = session.user;
@@ -90,11 +49,6 @@ export const useAuthStateHandler = () => {
     });
 
     try {
-      // Debug checkout state
-      debugCheckoutState();
-
-      // PRIORITY 1: Check for pending checkout FIRST - highest priority
-      const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
 
       // Track sign up for new users
       const userCreatedAt = new Date(user.created_at);
@@ -121,17 +75,6 @@ export const useAuthStateHandler = () => {
         return;
       }
 
-      // PRIORITY 1: Pending checkout - IMMEDIATE execution, BLOCK all other redirects
-      if (hasPendingCheckout && checkoutData) {
-
-        // Add small delay to ensure session is fully established
-        setTimeout(() => {
-          executeCheckoutRedirect(checkoutData.priceType, user.email);
-        }, 100);
-
-        // CRITICAL: STOP HERE - absolutely no other redirects when checkout is pending
-        return;
-      }
 
 
       // Handle OAuth profile updates first (before redirects)
@@ -150,7 +93,7 @@ export const useAuthStateHandler = () => {
         return;
       }
 
-      // PRIORITY 2: Admin redirect (only if no pending checkout)
+      // Admin redirect
       const isAdmin = await checkIfUserIsAdmin(user.id);
 
       console.log('🔐 Redirect decision:', {
@@ -177,7 +120,7 @@ export const useAuthStateHandler = () => {
         window.location.href = '/mein-tiertraining';
       }
     }
-  }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin, executeCheckoutRedirect]);
+  }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin]);
 
   useEffect(() => {
     mountedRef.current = true;
