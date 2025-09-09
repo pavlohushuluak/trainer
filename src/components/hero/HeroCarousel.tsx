@@ -66,16 +66,6 @@ export const HeroCarousel = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  // Update carousel images when mobile state changes
-  useEffect(() => {
-    console.log('📱 HeroCarousel: Mobile state changed:', { 
-      isMobile, 
-      currentImage: carouselImages[currentIndex]?.src,
-      allImages: carouselImages.map(img => img.src),
-      timestamp: new Date().toISOString() 
-    });
-  }, [isMobile, currentIndex, carouselImages]);
-
   // Auto-advance carousel with pause on hover
   useEffect(() => {
     if (!isAutoPlaying || isPaused || isHovered) return;
@@ -101,15 +91,8 @@ export const HeroCarousel = () => {
   // Test mobile image loading in development
   useEffect(() => {
     if (process.env.NODE_ENV === 'development' && isMobile) {
-      console.log('📱 HeroCarousel: Testing mobile image loading...');
       carouselImages.forEach((image, index) => {
         const img = new Image();
-        img.onload = () => {
-          console.log(`📱 HeroCarousel: Mobile image ${index + 1} loaded successfully:`, image.src);
-        };
-        img.onerror = () => {
-          console.error(`📱 HeroCarousel: Mobile image ${index + 1} failed to load:`, image.src);
-        };
         img.src = image.src;
       });
     }
@@ -286,10 +269,8 @@ export const HeroCarousel = () => {
                   className="w-full h-full object-cover"
                   loading={index === 0 ? "eager" : "lazy"}
                   onError={(e) => {
-                    console.error('📱 HeroCarousel: Image failed to load:', image.src);
                     if (image.src.includes('/mobile/')) {
                       const fallbackSrc = image.src.replace('/mobile/', '/');
-                      console.log('📱 HeroCarousel: Falling back to:', fallbackSrc);
                       e.currentTarget.src = fallbackSrc;
                     }
                   }}

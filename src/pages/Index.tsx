@@ -55,6 +55,7 @@ const Index = () => {
         if (pricingClickData) {
           console.log('For darkhorse: Found pricing_click_data on homepage, showing processing state');
           setIsProcessingCheckout(true);
+          sessionStorage.removeItem('pricing_click_data');
         } else {
           setIsProcessingCheckout(false);
         }
@@ -66,11 +67,6 @@ const Index = () => {
 
     // Check immediately
     checkPricingClickData();
-
-    // Check periodically in case data is added/removed
-    const interval = setInterval(checkPricingClickData, 1000);
-
-    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
