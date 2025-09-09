@@ -58,6 +58,23 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
 
       // If not logged in, show login modal
       if (!user || !session) {
+        // For darkhorse: Save pricing click data to sessionStorage
+        const pricingClickData = {
+          timestamp: new Date().toISOString(),
+          priceType: priceType,
+          source: 'pricing_section',
+          userAgent: navigator.userAgent,
+          url: window.location.href,
+          referrer: document.referrer || 'direct'
+        };
+        
+        try {
+          sessionStorage.setItem('pricing_click_data', JSON.stringify(pricingClickData));
+          console.log('For darkhorse: Pricing click saved to sessionStorage:', pricingClickData);
+        } catch (error) {
+          console.error('For darkhorse: Failed to save pricing click data to sessionStorage:', error);
+        }
+        
         setLoading(false);
         setIsLoginModalOpen(true);
         return;

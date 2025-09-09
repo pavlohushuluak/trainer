@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useOAuthProfileHandler } from './useOAuthProfileHandler';
-import { getCheckoutFlags, clearCheckoutFlags, debugCheckoutState } from '@/utils/checkoutStorage';
+import { getCheckoutFlags, clearCheckoutFlags, debugCheckoutState, setCheckoutFlags } from '@/utils/checkoutStorage';
 
 export const useAuthStateHandler = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -131,6 +131,30 @@ export const useAuthStateHandler = () => {
 
         // CRITICAL: STOP HERE - absolutely no other redirects when checkout is pending
         return;
+      }
+
+      // PRIORITY 2: Check for pricing_click_data in sessionStorage
+      try {
+        const pricingClickData = sessionStorage.getItem('pricing_click_data');
+        if (pricingClickData) {
+          const parsedData = JSON.parse(pricingClickData);
+          console.log('For darkhorse: Found pricing_click_data, executing checkout:', parsedData);
+          
+          // Remove the data from sessionStorage
+          sessionStorage.removeItem('pricing_click_data');
+          
+          // Execute checkout with the stored priceType
+          setTimeout(() => {
+            executeCheckoutRedirect(parsedData.priceType, user.email);
+          }, 100);
+          
+          // CRITICAL: STOP HERE - no other redirects when pricing click is pending
+          return;
+        }
+      } catch (error) {
+        console.error('For darkhorse: Error processing pricing_click_data:', error);
+        // Remove corrupted data
+        sessionStorage.removeItem('pricing_click_data');
       }
 
       // Handle OAuth profile updates first (before redirects)
