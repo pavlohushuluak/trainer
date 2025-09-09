@@ -23,7 +23,7 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
     queryKey: ['pets-count', user?.id],
     queryFn: async () => {
       if (!user) return [];
-      
+
       const { data, error } = await supabase
         .from('pet_profiles')
         .select('id, name')
@@ -52,35 +52,15 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
               {t('training.heroStory.title')}
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 leading-relaxed">
-              {primaryPetName 
+              {primaryPetName
                 ? `${t('training.heroStory.description.withPet')} ${primaryPetName}`
                 : t('training.heroStory.description.withoutPet')
               }
             </p>
-            <div className="flex flex-wrap gap-1.5 sm:gap-2 lg:gap-3 text-xs sm:text-sm text-muted-foreground">
-              <span className="inline-flex items-center">
-                <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
-                {t('training.heroStory.features.instantAnswers')}
-              </span>
-              <span className="inline-flex items-center">
-                <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
-                {t('training.heroStory.features.individualTraining')}
-              </span>
-              <span className="inline-flex items-center">
-                <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
-                {t('training.heroStory.features.behaviorAnalysis')}
-              </span>
-              {!hasActiveSubscription && (
-                <span className="inline-flex items-center">
-                  <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
-                  {t('training.heroStory.features.detailedPlans')}
-                </span>
-              )}
-            </div>
           </div>
-          
+
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-shrink-0">
-            <Button 
+            <Button
               onClick={handleChatClick}
               className="bg-primary hover:bg-primary/90 text-white w-full sm:w-auto text-sm sm:text-base py-2.5 sm:py-3 px-4 sm:px-6"
               size="lg"
@@ -93,8 +73,8 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
                 </span>
               )}
             </Button>
-            
-            <Button 
+
+            <Button
               variant="outline"
               onClick={() => document.getElementById('pet-section')?.scrollIntoView({ behavior: 'smooth' })}
               size="lg"
@@ -105,7 +85,26 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
             </Button>
           </div>
         </div>
-
+        <div className="flex flex-wrap gap-1.5 sm:gap-3 lg:gap-6 text-xs sm:text-sm text-muted-foreground">
+          <span className="inline-flex items-center">
+            <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
+            {t('training.heroStory.features.instantAnswers')}
+          </span>
+          <span className="inline-flex items-center">
+            <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
+            {t('training.heroStory.features.individualTraining')}
+          </span>
+          <span className="inline-flex items-center">
+            <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
+            {t('training.heroStory.features.behaviorAnalysis')}
+          </span>
+          {!hasActiveSubscription && (
+            <span className="inline-flex items-center">
+              <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
+              {t('training.heroStory.features.detailedPlans')}
+            </span>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
