@@ -46,7 +46,7 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
   return (
     <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 via-secondary to-accent/5">
       <CardContent className="p-4 sm:p-6">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0 flex-1">
             <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-foreground mb-2 sm:mb-3">
               {t('training.heroStory.title')}
@@ -85,7 +85,7 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
             </Button>
           </div>
         </div>
-        <div className="flex flex-wrap gap-1.5 sm:gap-3 lg:gap-6 text-xs sm:text-sm text-muted-foreground">
+        <div className="flex flex-wrap gap-1.5 sm:gap-3 lg:gap-6 text-xs sm:text-sm text-muted-foreground mt-3 lg:mt-0">
           <span className="inline-flex items-center">
             <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
             {t('training.heroStory.features.instantAnswers')}
