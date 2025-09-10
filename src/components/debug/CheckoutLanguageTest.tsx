@@ -46,7 +46,7 @@ export const CheckoutLanguageTest = () => {
       const requestBody = {
         priceType: 'plan1-monthly',
         successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
-        cancelUrl: `${window.location.origin}/?canceled=true`,
+        cancelUrl: `${window.location.origin}/`,
         language: currentLanguage
       };
       

@@ -52,18 +52,10 @@ const Dashboard = () => {
       });
       // Clean up URL parameters
       window.history.replaceState({}, document.title, '/mein-tiertraining');
-    } else if (canceled === 'true') {
+    } else {
       // Clear checkout flags on canceled payment
       sessionStorage.removeItem('pendingCheckout');
       sessionStorage.removeItem('pendingCheckoutPriceType');
-      
-      toast({
-        title: t('dashboard.paymentCanceled'),
-        description: t('dashboard.checkoutCanceled'),
-        variant: "destructive"
-      });
-      // Clean up URL parameters
-      window.history.replaceState({}, document.title, '/');
     }
   }, [toast, t]);
 

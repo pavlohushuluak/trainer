@@ -92,7 +92,7 @@ serve(async (req) => {
     const langParam = finalLanguage === 'en' ? '&lang=en' : '&lang=de';
     const defaultOrigin = req.headers.get("origin") || "https://tiertrainer24.com";
     const finalSuccessUrl = successUrl || `${defaultOrigin}/mein-tiertraining?success=true&payment=amazon${langParam}`;
-    const finalCancelUrl = cancelUrl || `${defaultOrigin}/?canceled=true${langParam}`;
+    const finalCancelUrl = cancelUrl || `${defaultOrigin}/`;
 
     // Return Amazon Pay configuration
     return new Response(JSON.stringify({

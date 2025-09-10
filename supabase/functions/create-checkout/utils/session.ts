@@ -37,7 +37,7 @@ export const createSessionConfig = (
     allow_promotion_codes: true,
     payment_method_types: ["card", "paypal"],
     success_url: successUrl || `${origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: cancelUrl || `${origin}/?canceled=true`,
+    cancel_url: cancelUrl || `${origin}/`,
     metadata: {
       user_id: userId,
       email: userEmail,
@@ -101,7 +101,7 @@ export const createFallbackSessionConfig = (
     mode: "subscription",
     payment_method_types: ["card"],
     success_url: successUrl || `${origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: cancelUrl || `${origin}/?canceled=true`,
+    cancel_url: cancelUrl || `${origin}/`,
     metadata: {
       user_id: userId,
       email: userEmail,

@@ -123,7 +123,7 @@ export const useSubscriptionManager = () => {
         body: {
           priceType,
           successUrl: `${window.location.origin}/mein-tiertraining?success=true`,
-          cancelUrl: `${window.location.origin}/?canceled=true`,
+          cancelUrl: `${window.location.origin}/`,
           language: currentLanguage,
           customerInfo: {
             name: user?.user_metadata?.full_name || user?.email?.split('@')[0]

@@ -46,7 +46,7 @@ export const AmazonPayButton = ({ priceType, className = "" }: AmazonPayButtonPr
         body: { 
           priceType,
           successUrl: `${window.location.origin}/mein-tiertraining?success=true&payment=amazon`,
-          cancelUrl: `${window.location.origin}/?canceled=true`,
+          cancelUrl: `${window.location.origin}/`,
           language: currentLanguage
         }
       });

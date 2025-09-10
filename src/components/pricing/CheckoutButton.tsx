@@ -100,7 +100,7 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
       const requestBody = { 
         priceType,
         successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
-        cancelUrl: `${window.location.origin}/?canceled=true`,
+        cancelUrl: `${window.location.origin}/`,
         language: currentLanguage
       };
       

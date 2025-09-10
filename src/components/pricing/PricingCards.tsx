@@ -39,7 +39,7 @@ export const PricingCards = ({ isYearly }: PricingCardsProps) => {
         body: {
           priceType,
           successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
-          cancelUrl: `${window.location.origin}/?canceled=true`,
+          cancelUrl: `${window.location.origin}/`,
           language: currentLanguage,
           customerInfo: {
             name: user?.user_metadata?.full_name || user?.email?.split('@')[0]

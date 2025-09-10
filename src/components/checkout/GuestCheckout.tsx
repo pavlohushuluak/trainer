@@ -59,7 +59,7 @@ export const GuestCheckout = ({ onClose }: GuestCheckoutProps) => {
         body: {
           priceType,
           successUrl: `${window.location.origin}/mein-tiertraining?success=true&guest=true&session_id={CHECKOUT_SESSION_ID}`,
-          cancelUrl: `${window.location.origin}/?canceled=true`,
+          cancelUrl: `${window.location.origin}/`,
           language: detectedLanguage,
           customerInfo: {
             name,

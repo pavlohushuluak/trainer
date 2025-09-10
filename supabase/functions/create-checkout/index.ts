@@ -65,7 +65,7 @@ function createSessionConfig(customerId, priceConfig, priceType, userId, userEma
   // Add language parameter to URLs
   const langParam = language === 'en' ? '&lang=en' : '&lang=de';
   const finalSuccessUrl = successUrl || `${defaultOrigin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}${langParam}`;
-  const finalCancelUrl = cancelUrl || `${defaultOrigin}/?canceled=true${langParam}`;
+  const finalCancelUrl = cancelUrl || `${defaultOrigin}/`;
   
   // Map language to Stripe locale
   const stripeLocale = language === 'en' ? 'en' : 'de';
