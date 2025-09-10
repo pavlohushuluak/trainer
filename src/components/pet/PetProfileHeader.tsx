@@ -111,7 +111,7 @@ export const PetProfileHeader = ({
               </span>
             </Button>
           </DialogTrigger>
-          {canAddMore && (
+          {(canAddMore || editingPet) && (
             <PetProfileForm
               editingPet={editingPet}
               onPetSaved={onPetSaved}
