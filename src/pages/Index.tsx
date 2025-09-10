@@ -89,8 +89,10 @@ const Index = () => {
             window.location.href = '/#pricing';
           }
         } else if (pricingClickData) {
-          console.log('For darkhorse: Found pricing_click_data on homepage, showing processing state');
-          setIsProcessingCheckout(true);
+          console.log('For darkhorse: Found pricing_click_data on homepage, but user is not logged in - removing data');
+          // Remove pricing_click_data when user is not logged in
+          sessionStorage.removeItem('pricing_click_data');
+          setIsProcessingCheckout(false);
         } else {
           setIsProcessingCheckout(false);
         }
