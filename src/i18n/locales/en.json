@@ -1241,6 +1241,51 @@
     "messageError": "Error sending message",
     "freeLimitReached": "Free limit reached",
     "upgradeToPremium": "Upgrade to Premium",
+    "usage": {
+      "limitReached": "• Limit reached",
+      "questionsRemaining": "• Questions remaining",
+      "questionsUsedToday": "questions used today",
+      "remaining": "remaining"
+    },
+    "premium": {
+      "feature": "Premium Feature",
+      "unlockDescription": "Unlock professional training plan creation with a premium subscription",
+      "upgradeButton": "Upgrade to Premium",
+      "closeButton": "Close",
+      "professionalTrainingPlan": "Professional Training Plan Creation",
+      "professionalDescription": "Our expert trainers will create a personalized training plan tailored to your pet's specific needs, behavior, and learning style. Be as detailed as possible to get the best results.",
+      "whatToTrain": "What would you like to train your pet for?",
+      "beSpecific": "Be specific about the behavior, skill, or goal you want to achieve. The more details you provide, the better your training plan will be.",
+      "exampleGoals": "Example Training Goals",
+      "trainingGoals": {
+        "basicObedience": "Basic obedience commands",
+        "leashTraining": "Leash training",
+        "behaviorModification": "Behavior modification",
+        "socialization": "Socialization skills",
+        "trickTraining": "Trick training",
+        "problemSolving": "Problem solving"
+      },
+      "whatYouGet": "What You Get with Premium",
+      "benefits": {
+        "personalizedPlans": {
+          "title": "Personalized Training Plans",
+          "description": "Custom plans tailored to your pet's specific needs and behavior"
+        },
+        "expertGuidance": {
+          "title": "Expert Trainer Guidance",
+          "description": "Professional advice from certified pet trainers"
+        },
+        "stepByStep": {
+          "title": "Step-by-Step Instructions",
+          "description": "Detailed training steps with progress tracking"
+        },
+        "unlimitedChat": {
+          "title": "Unlimited Chat Access",
+          "description": "No daily limits on training questions and advice"
+        }
+      },
+      "currentUsage": "Current Usage"
+    },
     "page": {
       "back": "Back",
       "settings": "Settings",

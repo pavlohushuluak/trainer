@@ -1244,6 +1244,51 @@
     "messageError": "Fehler beim Senden der Nachricht",
     "freeLimitReached": "Kostenloses Limit erreicht",
     "upgradeToPremium": "Zu Premium upgraden",
+    "usage": {
+      "limitReached": "• Limit erreicht",
+      "questionsRemaining": "• Fragen verbleibend",
+      "questionsUsedToday": "Fragen heute verwendet",
+      "remaining": "verbleibend"
+    },
+    "premium": {
+      "feature": "Premium-Funktion",
+      "unlockDescription": "Schalte die professionelle Trainingsplan-Erstellung mit einem Premium-Abo frei",
+      "upgradeButton": "Zu Premium upgraden",
+      "closeButton": "Schließen",
+      "professionalTrainingPlan": "Professionelle Trainingsplan-Erstellung",
+      "professionalDescription": "Unsere Expertentrainer erstellen einen personalisierten Trainingsplan, der auf die spezifischen Bedürfnisse, das Verhalten und den Lernstil Ihres Haustieres zugeschnitten ist. Seien Sie so detailliert wie möglich, um die besten Ergebnisse zu erzielen.",
+      "whatToTrain": "Wofür möchten Sie Ihr Haustier trainieren?",
+      "beSpecific": "Seien Sie spezifisch bezüglich des Verhaltens, der Fähigkeit oder des Ziels, das Sie erreichen möchten. Je mehr Details Sie angeben, desto besser wird Ihr Trainingsplan.",
+      "exampleGoals": "Beispiel-Trainingsziele",
+      "trainingGoals": {
+        "basicObedience": "Grundlegende Gehorsamkeitsbefehle",
+        "leashTraining": "Leinentraining",
+        "behaviorModification": "Verhaltensänderung",
+        "socialization": "Sozialisierungsfähigkeiten",
+        "trickTraining": "Trick-Training",
+        "problemSolving": "Problemlösung"
+      },
+      "whatYouGet": "Was Sie mit Premium erhalten",
+      "benefits": {
+        "personalizedPlans": {
+          "title": "Personalisierte Trainingspläne",
+          "description": "Maßgeschneiderte Pläne für die spezifischen Bedürfnisse und das Verhalten Ihres Haustieres"
+        },
+        "expertGuidance": {
+          "title": "Experten-Trainer-Beratung",
+          "description": "Professionelle Beratung von zertifizierten Haustier-Trainern"
+        },
+        "stepByStep": {
+          "title": "Schritt-für-Schritt-Anleitungen",
+          "description": "Detaillierte Trainingsschritte mit Fortschrittsverfolgung"
+        },
+        "unlimitedChat": {
+          "title": "Unbegrenzter Chat-Zugang",
+          "description": "Keine täglichen Limits für Trainingsfragen und Beratung"
+        }
+      },
+      "currentUsage": "Aktuelle Nutzung"
+    },
     "page": {
       "back": "Zurück",
       "settings": "Einstellungen",

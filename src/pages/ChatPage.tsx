@@ -1139,7 +1139,7 @@ export const ChatPage = () => {
                                   {usage.questionsUsed}/{usage.maxQuestions}
                                 </span>
                                 <span className="text-orange-600 dark:text-orange-400 ml-1">
-                                  {usage.hasReachedLimit ? ' • Limit reached' : ' • Questions remaining'}
+                                  {usage.hasReachedLimit ? t('chat.usage.limitReached') : t('chat.usage.questionsRemaining')}
                                 </span>
                               </div>
                             </div>
@@ -1666,10 +1666,10 @@ export const ChatPage = () => {
               <div className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 p-2 rounded-lg">
                 <FileText className="h-6 w-6 text-green-600 dark:text-green-400" />
               </div>
-              {hasActiveSubscription ? t('chat.createPlan.modal.title') : 'Premium Feature'}
+              {hasActiveSubscription ? t('chat.createPlan.modal.title') : t('chat.premium.feature')}
             </DialogTitle>
             <DialogDescription className="text-base leading-relaxed text-muted-foreground">
-              {hasActiveSubscription ? t('chat.createPlan.modal.description') : 'Unlock professional training plan creation with a premium subscription'}
+              {hasActiveSubscription ? t('chat.createPlan.modal.description') : t('chat.premium.unlockDescription')}
             </DialogDescription>
           </DialogHeader>
 
@@ -1683,10 +1683,10 @@ export const ChatPage = () => {
                   </div>
                   <div className="space-y-2">
                     <h4 className="font-semibold text-blue-900 dark:text-blue-100">
-                      Professional Training Plan Creation
+                      {t('chat.premium.professionalTrainingPlan')}
                     </h4>
                     <p className="text-sm text-blue-700 dark:text-blue-300">
-                      Our expert trainers will create a personalized training plan tailored to your pet's specific needs, behavior, and learning style. Be as detailed as possible to get the best results.
+                      {t('chat.premium.professionalDescription')}
                     </p>
                   </div>
                 </div>
@@ -1695,7 +1695,7 @@ export const ChatPage = () => {
               {/* Input field */}
               <div className="space-y-3">
                 <Label htmlFor="plan-reason" className="text-sm font-medium">
-                  What would you like to train your pet for?
+                  {t('chat.premium.whatToTrain')}
                 </Label>
                 <textarea
                   id="plan-reason"
@@ -1706,7 +1706,7 @@ export const ChatPage = () => {
                   disabled={isCreatingPlan || isSending}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Be specific about the behavior, skill, or goal you want to achieve. The more details you provide, the better your training plan will be.
+                  {t('chat.premium.beSpecific')}
                 </p>
               </div>
 
@@ -1714,32 +1714,32 @@ export const ChatPage = () => {
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
                 <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center gap-2">
                   <Check className="h-4 w-4" />
-                  Example Training Goals
+                  {t('chat.premium.exampleGoals')}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 dark:text-green-300">Basic obedience commands</span>
+                    <span className="text-green-700 dark:text-green-300">{t('chat.premium.trainingGoals.basicObedience')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 dark:text-green-300">Leash training</span>
+                    <span className="text-green-700 dark:text-green-300">{t('chat.premium.trainingGoals.leashTraining')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 dark:text-green-300">Behavior modification</span>
+                    <span className="text-green-700 dark:text-green-300">{t('chat.premium.trainingGoals.behaviorModification')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 dark:text-green-300">Socialization skills</span>
+                    <span className="text-green-700 dark:text-green-300">{t('chat.premium.trainingGoals.socialization')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 dark:text-green-300">Trick training</span>
+                    <span className="text-green-700 dark:text-green-300">{t('chat.premium.trainingGoals.trickTraining')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-green-700 dark:text-green-300">Problem solving</span>
+                    <span className="text-green-700 dark:text-green-300">{t('chat.premium.trainingGoals.problemSolving')}</span>
                   </div>
                 </div>
               </div>
@@ -1755,10 +1755,10 @@ export const ChatPage = () => {
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold text-amber-900 dark:text-amber-100 mb-2">
-                  Premium Feature
+                  {t('chat.premium.feature')}
                 </h3>
                 <p className="text-amber-700 dark:text-amber-300 mb-4">
-                  Professional training plan creation is available with a premium subscription
+                  {t('chat.premium.unlockDescription')}
                 </p>
               </div>
 
@@ -1766,35 +1766,35 @@ export const ChatPage = () => {
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
                 <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center gap-2">
                   <Check className="h-4 w-4" />
-                  What You Get with Premium
+                  {t('chat.premium.whatYouGet')}
                 </h4>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
                     <div>
-                      <p className="font-medium text-green-800 dark:text-green-200">Personalized Training Plans</p>
-                      <p className="text-sm text-green-600 dark:text-green-400">Custom plans tailored to your pet's specific needs and behavior</p>
+                      <p className="font-medium text-green-800 dark:text-green-200">{t('chat.premium.benefits.personalizedPlans.title')}</p>
+                      <p className="text-sm text-green-600 dark:text-green-400">{t('chat.premium.benefits.personalizedPlans.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
                     <div>
-                      <p className="font-medium text-green-800 dark:text-green-200">Expert Trainer Guidance</p>
-                      <p className="text-sm text-green-600 dark:text-green-400">Professional advice from certified pet trainers</p>
+                      <p className="font-medium text-green-800 dark:text-green-200">{t('chat.premium.benefits.expertGuidance.title')}</p>
+                      <p className="text-sm text-green-600 dark:text-green-400">{t('chat.premium.benefits.expertGuidance.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
                     <div>
-                      <p className="font-medium text-green-800 dark:text-green-200">Step-by-Step Instructions</p>
-                      <p className="text-sm text-green-600 dark:text-green-400">Detailed training steps with progress tracking</p>
+                      <p className="font-medium text-green-800 dark:text-green-200">{t('chat.premium.benefits.stepByStep.title')}</p>
+                      <p className="text-sm text-green-600 dark:text-green-400">{t('chat.premium.benefits.stepByStep.description')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
                     <div>
-                      <p className="font-medium text-green-800 dark:text-green-200">Unlimited Chat Access</p>
-                      <p className="text-sm text-green-600 dark:text-green-400">No daily limits on training questions and advice</p>
+                      <p className="font-medium text-green-800 dark:text-green-200">{t('chat.premium.benefits.unlimitedChat.title')}</p>
+                      <p className="text-sm text-green-600 dark:text-green-400">{t('chat.premium.benefits.unlimitedChat.description')}</p>
                     </div>
                   </div>
                 </div>
@@ -1804,16 +1804,16 @@ export const ChatPage = () => {
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-semibold text-blue-900 dark:text-blue-100">Current Usage</h4>
+                    <h4 className="font-semibold text-blue-900 dark:text-blue-100">{t('chat.premium.currentUsage')}</h4>
                     <p className="text-sm text-blue-700 dark:text-blue-300">
-                      {usage.questionsUsed} of {usage.maxQuestions} questions used today
+                      {usage.questionsUsed} of {usage.maxQuestions} {t('chat.usage.questionsUsedToday')}
                     </p>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                       {usage.questionsRemaining}
                     </div>
-                    <p className="text-xs text-blue-600 dark:text-blue-400">remaining</p>
+                    <p className="text-xs text-blue-600 dark:text-blue-400">{t('chat.usage.remaining')}</p>
                   </div>
                 </div>
                 <div className="mt-3 bg-blue-200 dark:bg-blue-800 rounded-full h-2">
@@ -1836,7 +1836,7 @@ export const ChatPage = () => {
               disabled={isCreatingPlan}
               className="border-muted-foreground/20 hover:bg-muted/50"
             >
-              {hasActiveSubscription ? t('chat.createPlan.modal.cancelButton') : 'Close'}
+              {hasActiveSubscription ? t('chat.createPlan.modal.cancelButton') : t('chat.premium.closeButton')}
             </Button>
             {hasActiveSubscription ? (
               <Button
@@ -1865,7 +1865,7 @@ export const ChatPage = () => {
                 className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 <Shield className="h-4 w-4 mr-2" />
-                Upgrade to Premium
+{t('chat.premium.upgradeButton')}
               </Button>
             )}
           </div>
