@@ -141,7 +141,7 @@ serve(async (req) => {
               <p style="color: #666; margin: 5px 0;">Professional Pet Training</p>
             </div>
             
-            <div style="background: ${isRefund ? '#10b981' : '#f59e0b'}; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+            <div style="background: ${isRefund ? '#10b981' : '#f59e0b'}; background-color: ${isRefund ? '#10b981' : '#f59e0b'}; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
               <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
             </div>
             

@@ -101,7 +101,7 @@ const generateEmailChangeConfirmationEmail = (data: EmailChangeRequest, language
             <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
-          <div style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+          <div style="background: linear-gradient(135deg, #059669, #047857); background-color: #059669; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
             <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
             <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>

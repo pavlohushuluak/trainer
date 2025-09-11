@@ -138,7 +138,7 @@ serve(async (req) => {
               <p style="color: #666; margin: 5px 0;">${userLanguage === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
             </div>
             
-            <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+            <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); background-color: #8b5cf6; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
               <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
               <p style="margin: 0; font-size: 16px;">${content.greeting}</p>
             </div>

@@ -165,7 +165,7 @@ const generateSignupConfirmationEmail = (data: AuthEmailData, language: string =
             <p style="color: #666; margin: 5px 0;">Professional Pet Training</p>
           </div>
           
-          <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: black; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+          <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); background-color: #2563eb; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
             <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
             <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>
@@ -257,7 +257,7 @@ const generateMagicLinkEmail = (data: AuthEmailData, language: string = 'de') =>
             <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
-          <div style="background: linear-gradient(135deg, #7c3aed, #5b21b6); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+          <div style="background: linear-gradient(135deg, #7c3aed, #5b21b6); background-color: #7c3aed; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
             <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
             <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>
@@ -358,7 +358,7 @@ const generatePasswordResetEmail = (data: AuthEmailData, language: string = 'de'
             <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
-          <div style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+          <div style="background: linear-gradient(135deg, #dc2626, #b91c1c); background-color: #dc2626; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
             <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
             <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>
@@ -465,7 +465,7 @@ const generateEmailChangeEmail = (data: AuthEmailData, language: string = 'de') 
             <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
-          <div style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+          <div style="background: linear-gradient(135deg, #059669, #047857); background-color: #059669; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
             <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
             <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>
@@ -563,7 +563,7 @@ const generateInviteEmail = (data: AuthEmailData, language: string = 'de') => {
             <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
-          <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+          <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); background-color: #8b5cf6; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
             <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
             <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>
@@ -653,7 +653,7 @@ const generateReauthEmail = (data: AuthEmailData, language: string = 'de') => {
             <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
-          <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+          <div style="background: linear-gradient(135deg, #f59e0b, #d97706); background-color: #f59e0b; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
             <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
             <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
           </div>

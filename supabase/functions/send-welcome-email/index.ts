@@ -231,7 +231,7 @@ serve(async (req) => {
               <p style="color: #666; margin: 5px 0;">Professional Pet Training</p>
             </div>
             
-            <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+            <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); background-color: #2563eb; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
               <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
               <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
             </div>
