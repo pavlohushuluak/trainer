@@ -104,7 +104,7 @@ serve(async (req) => {
       ],
       successMessage: "🎉 If you received this email, your email configuration is working correctly!",
       footerText: "This is a test email. Please do not reply to this message.",
-      copyright: "© 2024 TierTrainer24 - Professional Dog Training Platform"
+      copyright: "© 2024 TierTrainer24 - Professional Pet Training Platform"
     } : {
       subject: "🧪 Test E-Mail - TierTrainer24 Konfiguration",
       title: "🐾 E-Mail-Konfiguration Test",
@@ -120,7 +120,7 @@ serve(async (req) => {
       ],
       successMessage: "🎉 Falls Sie diese E-Mail erhalten haben, funktioniert Ihre E-Mail-Konfiguration korrekt!",
       footerText: "Dies ist eine Test-E-Mail. Bitte antworten Sie nicht auf diese Nachricht.",
-      copyright: "© 2024 TierTrainer24 - Professionelle Hundetraining-Plattform"
+      copyright: "© 2024 TierTrainer24 - Professionelle Haustiertraining-Plattform"
     };
 
     const emailTemplate = {
@@ -135,7 +135,7 @@ serve(async (req) => {
           <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
               <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-              <p style="color: #666; margin: 5px 0;">${userLanguage === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
+              <p style="color: #666; margin: 5px 0;">${userLanguage === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
             </div>
             
             <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">

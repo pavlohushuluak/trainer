@@ -63,7 +63,7 @@ export const SupportTicketEmail = ({
     viewTicket: 'View Ticket',
     contactSupport: 'Contact Support',
     footer: 'This is an automated message. Please do not reply to this email.',
-    copyright: '© 2024 TierTrainer24 - Professional Dog Training Platform'
+    copyright: '© 2024 TierTrainer24 - Professional Pet Training Platform'
   } : {
     ticketCreated: `Support-Ticket #${shortTicketId} wurde erstellt`,
     ticketResponse: `Neue Antwort auf Ihr Support-Ticket #${shortTicketId}`,
@@ -93,7 +93,7 @@ export const SupportTicketEmail = ({
     viewTicket: 'Ticket anzeigen',
     contactSupport: 'Support kontaktieren',
     footer: 'Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail.',
-    copyright: '© 2024 TierTrainer24 - Professionelle Hundetraining-Plattform'
+    copyright: '© 2024 TierTrainer24 - Professionelle Haustiertraining-Plattform'
   };
   
   return (

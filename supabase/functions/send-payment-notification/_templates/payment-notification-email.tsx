@@ -67,7 +67,7 @@ export const PaymentNotificationEmail = ({
     updateNow: 'Update Now',
     contactSupport: 'Contact Support',
     footer: 'This is an automated message. Please do not reply to this email.',
-    copyright: '© 2024 TierTrainer24 - Professional Dog Training Platform'
+    copyright: '© 2024 TierTrainer24 - Professional Pet Training Platform'
   } : {
     paymentFailed: 'Zahlungsproblem bei Ihrem TierTrainer-Abo',
     paymentRetry: 'Zahlung wird erneut versucht',
@@ -103,7 +103,7 @@ export const PaymentNotificationEmail = ({
     updateNow: 'Jetzt aktualisieren',
     contactSupport: 'Support kontaktieren',
     footer: 'Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail.',
-    copyright: '© 2024 TierTrainer24 - Professionelle Hundetraining-Plattform'
+    copyright: '© 2024 TierTrainer24 - Professionelle Haustiertraining-Plattform'
   };
 
   return (

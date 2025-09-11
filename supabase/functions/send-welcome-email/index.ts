@@ -197,7 +197,7 @@ serve(async (req) => {
     const content = userLanguage === 'en' ? {
       subject: `🐾 Welcome to TierTrainer24, ${finalUserName}!`,
       title: `Welcome, ${finalUserName}! 🎉`,
-      subtitle: 'Your professional dog training journey starts now',
+      subtitle: 'Your professional pet training journey starts now',
       mainText: `Thank you for joining TierTrainer24! We're excited to help you and your four-legged friend build a strong and happy relationship.`,
       planInfo: `Your plan: ${planName || 'TierTrainer'} - €${amount || '19.99'}/${interval || 'month'}`,
       trialInfo: trialEndDate ? `Your trial period ends: ${trialEndDate}` : '',
@@ -207,7 +207,7 @@ serve(async (req) => {
     } : {
       subject: `🐾 Willkommen bei TierTrainer24, ${finalUserName}!`,
       title: `Willkommen, ${finalUserName}! 🎉`,
-      subtitle: 'Ihre professionelle Hundeerziehung beginnt jetzt',
+      subtitle: 'Ihre professionelle Haustiererziehung beginnt jetzt',
       mainText: `Vielen Dank, dass Sie sich für TierTrainer24 entschieden haben! Wir freuen uns darauf, Ihnen und Ihrem Vierbeiner zu einer starken und glücklichen Beziehung zu verhelfen.`,
       planInfo: `Ihr Plan: ${planName || 'TierTrainer'} - €${amount || '19.99'}/${interval || 'Monat'}`,
       trialInfo: trialEndDate ? `Ihre Testphase endet: ${trialEndDate}` : '',
@@ -228,7 +228,7 @@ serve(async (req) => {
           <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
               <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-              <p style="color: #666; margin: 5px 0;">Professional Dog Training</p>
+              <p style="color: #666; margin: 5px 0;">Professional Pet Training</p>
             </div>
             
             <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">

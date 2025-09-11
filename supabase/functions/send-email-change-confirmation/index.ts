@@ -68,7 +68,7 @@ const generateEmailChangeConfirmationEmail = (data: EmailChangeRequest, language
       'After confirmation, you will receive all future emails at this new address'
     ],
     footerText: `This email was sent to <strong>${data.newEmail}</strong>.`,
-    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+    copyright: '© 2024 TierTrainer24 - Your partner for professional pet training'
   } : {
     subject: '📧 TierTrainer24 - E-Mail-Adressänderung bestätigen',
     title: 'E-Mail-Adresse ändern 📧',
@@ -83,7 +83,7 @@ const generateEmailChangeConfirmationEmail = (data: EmailChangeRequest, language
       'Nach der Bestätigung erhalten Sie alle zukünftigen E-Mails an diese neue Adresse'
     ],
     footerText: `Diese E-Mail wurde an <strong>${data.newEmail}</strong> gesendet.`,
-    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Haustiertraining'
   };
   
   return {
@@ -98,7 +98,7 @@ const generateEmailChangeConfirmationEmail = (data: EmailChangeRequest, language
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">

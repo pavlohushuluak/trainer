@@ -1359,7 +1359,7 @@
         }
       },
       "title": "Trainer-Chat",
-      "subtitle": "Chatten Sie mit unserem KI-Hundetrainer und erhalten Sie personalisiert Trainingsempfehlungen.",
+      "subtitle": "Chatten Sie mit unserem KI-Haustiertrainer und erhalten Sie personalisiert Trainingsempfehlungen.",
       "loginRequired": {
         "title": "Anmeldung erforderlich",
         "description": "Sie müssen angemeldet sein, um den Trainer-Chat zu nutzen."
@@ -1372,7 +1372,7 @@
           "Erstellung individueller Trainingspläne",
           "Analyse von Verhaltensproblemen",
           "Bereitstellung von Trainingstipps",
-          "Beantwortung von Hundetraining-Fragen"
+          "Beantwortung von Haustiertraining-Fragen"
         ]
       },
       "continueChat": {

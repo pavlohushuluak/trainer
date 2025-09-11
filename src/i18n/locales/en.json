@@ -1356,7 +1356,7 @@
         }
       },
       "title": "Trainer Chat",
-      "subtitle": "Chat with our AI dog trainer and receive personalized training recommendations.",
+      "subtitle": "Chat with our AI pet trainer and receive personalized training recommendations.",
       "loginRequired": {
         "title": "Login Required",
         "description": "You must be logged in to use the trainer chat."
@@ -1369,7 +1369,7 @@
           "Create individual training plans",
           "Analyze behavior problems",
           "Provide training tips",
-          "Answer dog training questions"
+          "Answer pet training questions"
         ]
       },
       "continueChat": {

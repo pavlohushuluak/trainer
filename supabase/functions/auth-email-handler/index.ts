@@ -125,13 +125,13 @@ const generateSignupConfirmationEmail = (data: AuthEmailData, language: string =
     linkText: 'If the button doesn\'t work, copy this link into your browser:',
     benefitsTitle: '🚀 What awaits you at TierTrainer24?',
     benefits: [
-      'Professional training methods for your dog',
+      'Professional training methods for your pet',
       'Step-by-step instructions',
-      'Community with other dog owners',
+      'Community with other pet owners',
       'Personal AI trainer for individual questions'
     ],
     footerText: `This email was sent to <strong>${data.user.email}</strong>.<br>If you didn't sign up for TierTrainer24, please ignore this email.`,
-    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+    copyright: '© 2024 TierTrainer24 - Your partner for professional pet training'
   } : {
     subject: '🐾 Willkommen bei TierTrainer24 - E-Mail bestätigen',
     title: `Willkommen, ${userName}! 🎉`,
@@ -141,13 +141,13 @@ const generateSignupConfirmationEmail = (data: AuthEmailData, language: string =
     linkText: 'Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:',
     benefitsTitle: '🚀 Was erwartet Sie bei TierTrainer24?',
     benefits: [
-      'Professionelle Trainingsmethoden für Ihren Hund',
+      'Professionelle Trainingsmethoden für Ihr Haustier',
       'Schritt-für-Schritt Anleitungen',
-      'Community mit anderen Hundebesitzern',
+      'Community mit anderen Haustierbesitzern',
       'Persönlicher KI-Trainer für individuelle Fragen'
     ],
     footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.<br>Falls Sie sich nicht bei TierTrainer24 angemeldet haben, ignorieren Sie diese E-Mail.`,
-    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Haustiertraining'
   };
   
   return {
@@ -162,7 +162,7 @@ const generateSignupConfirmationEmail = (data: AuthEmailData, language: string =
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">Professional Dog Training</p>
+            <p style="color: #666; margin: 5px 0;">Professional Pet Training</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: black; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
@@ -227,7 +227,7 @@ const generateMagicLinkEmail = (data: AuthEmailData, language: string = 'de') =>
     securityTitle: '⚠️ Security Notice:',
     securityText: 'This login link is only valid for 15 minutes. If you didn\'t want to log in, please ignore this email.',
     footerText: `This email was sent to <strong>${data.user.email}</strong>.`,
-    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+    copyright: '© 2024 TierTrainer24 - Your partner for professional pet training'
   } : {
     subject: '🔐 Ihr TierTrainer24 Login-Link',
     title: `Hallo ${userName}! 🔐`,
@@ -239,7 +239,7 @@ const generateMagicLinkEmail = (data: AuthEmailData, language: string = 'de') =>
     securityTitle: '⚠️ Sicherheitshinweis:',
     securityText: 'Dieser Login-Link ist nur 15 Minuten gültig. Falls Sie sich nicht einloggen wollten, ignorieren Sie diese E-Mail.',
     footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.`,
-    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Haustiertraining'
   };
   
   return {
@@ -254,7 +254,7 @@ const generateMagicLinkEmail = (data: AuthEmailData, language: string = 'de') =>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #7c3aed, #5b21b6); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
@@ -325,7 +325,7 @@ const generatePasswordResetEmail = (data: AuthEmailData, language: string = 'de'
       'Your current password remains active until you create a new one'
     ],
     footerText: `This email was sent to <strong>${data.user.email}</strong>.`,
-    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+    copyright: '© 2024 TierTrainer24 - Your partner for professional pet training'
   } : {
     subject: '🔒 TierTrainer24 - Passwort zurücksetzen',
     title: 'Passwort zurücksetzen 🔒',
@@ -340,7 +340,7 @@ const generatePasswordResetEmail = (data: AuthEmailData, language: string = 'de'
       'Ihr aktuelles Passwort bleibt solange aktiv, bis Sie ein neues erstellen'
     ],
     footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.`,
-    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Haustiertraining'
   };
   
   return {
@@ -355,7 +355,7 @@ const generatePasswordResetEmail = (data: AuthEmailData, language: string = 'de'
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
@@ -432,7 +432,7 @@ const generateEmailChangeEmail = (data: AuthEmailData, language: string = 'de') 
       'After confirmation, you will receive all future emails at this new address'
     ],
     footerText: `This email was sent to <strong>${newEmail}</strong>.`,
-    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+    copyright: '© 2024 TierTrainer24 - Your partner for professional pet training'
   } : {
     subject: '📧 TierTrainer24 - E-Mail-Adresse bestätigen',
     title: 'E-Mail-Adresse ändern 📧',
@@ -447,7 +447,7 @@ const generateEmailChangeEmail = (data: AuthEmailData, language: string = 'de') 
       'Nach der Bestätigung erhalten Sie alle zukünftigen E-Mails an diese neue Adresse'
     ],
     footerText: `Diese E-Mail wurde an <strong>${newEmail}</strong> gesendet.`,
-    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Haustiertraining'
   };
   
   return {
@@ -462,7 +462,7 @@ const generateEmailChangeEmail = (data: AuthEmailData, language: string = 'de') 
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
@@ -516,7 +516,7 @@ const generateInviteEmail = (data: AuthEmailData, language: string = 'de') => {
     subject: '🎉 Invitation to TierTrainer24 - Start Free Now!',
     title: 'You\'re Invited! 🎉',
     subtitle: 'Become part of the TierTrainer24 Community',
-    description: 'You have been invited to TierTrainer24! Discover professional training methods for your dog and become part of our community.',
+    description: 'You have been invited to TierTrainer24! Discover professional training methods for your pet and become part of our community.',
     buttonText: '🎉 Accept Invitation',
     linkText: 'If the button doesn\'t work, copy this link:',
     benefitsTitle: '🚀 What awaits you at TierTrainer24:',
@@ -524,16 +524,16 @@ const generateInviteEmail = (data: AuthEmailData, language: string = 'de') => {
       '7 days free trial',
       'Professional training methods',
       'Step-by-step instructions',
-      'Community with other dog owners',
+      'Community with other pet owners',
       'Personal AI trainer for individual questions'
     ],
     footerText: `This invitation was sent to <strong>${data.user.email}</strong>.`,
-    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+    copyright: '© 2024 TierTrainer24 - Your partner for professional pet training'
   } : {
     subject: '🎉 Einladung zu TierTrainer24 - Jetzt kostenfrei starten!',
     title: 'Sie wurden eingeladen! 🎉',
     subtitle: 'Werden Sie Teil der TierTrainer24 Community',
-    description: 'Sie wurden zu TierTrainer24 eingeladen! Entdecken Sie professionelle Trainingsmethoden für Ihren Hund und werden Sie Teil unserer Community.',
+    description: 'Sie wurden zu TierTrainer24 eingeladen! Entdecken Sie professionelle Trainingsmethoden für Ihr Haustier und werden Sie Teil unserer Community.',
     buttonText: '🎉 Einladung annehmen',
     linkText: 'Falls der Button nicht funktioniert, kopieren Sie diesen Link:',
     benefitsTitle: '🚀 Was Sie bei TierTrainer24 erwartet:',
@@ -541,11 +541,11 @@ const generateInviteEmail = (data: AuthEmailData, language: string = 'de') => {
       '7 Tage kostenfreie Testphase',
       'Professionelle Trainingsmethoden',
       'Schritt-für-Schritt Anleitungen',
-      'Community mit anderen Hundebesitzern',
+      'Community mit anderen Haustierbesitzern',
       'Persönlicher KI-Trainer für individuelle Fragen'
     ],
     footerText: `Diese Einladung wurde an <strong>${data.user.email}</strong> gesendet.`,
-    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Haustiertraining'
   };
   
   return {
@@ -560,7 +560,7 @@ const generateInviteEmail = (data: AuthEmailData, language: string = 'de') => {
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
@@ -624,7 +624,7 @@ const generateReauthEmail = (data: AuthEmailData, language: string = 'de') => {
     securityTitle: '🛡️ Why is this necessary?',
     securityText: 'This additional security confirmation protects your account from unauthorized access. It was triggered because you want to perform a security-critical action.',
     footerText: `This email was sent to <strong>${data.user.email}</strong>.`,
-    copyright: '© 2024 TierTrainer24 - Your partner for professional dog training'
+    copyright: '© 2024 TierTrainer24 - Your partner for professional pet training'
   } : {
     subject: '🔐 TierTrainer24 - Sicherheitsbestätigung erforderlich',
     title: 'Sicherheitsbestätigung 🔐',
@@ -635,7 +635,7 @@ const generateReauthEmail = (data: AuthEmailData, language: string = 'de') => {
     securityTitle: '🛡️ Warum ist das notwendig?',
     securityText: 'Diese zusätzliche Sicherheitsbestätigung schützt Ihr Konto vor unbefugten Zugriffen. Sie wurde ausgelöst, weil Sie eine sicherheitskritische Aktion durchführen möchten.',
     footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.`,
-    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Hundetraining'
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Haustiertraining'
   };
   
   return {
@@ -650,7 +650,7 @@ const generateReauthEmail = (data: AuthEmailData, language: string = 'de') => {
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
-            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Dog Training' : 'Professionelles Hundetraining'}</p>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
           </div>
           
           <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
