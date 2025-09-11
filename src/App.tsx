@@ -39,6 +39,7 @@ import { ConfirmEmailChangePage } from "./pages/ConfirmEmailChangePage";
 import ImageAnalysisPage from "./pages/ImageAnalysisPage";
 import LoginPage from "./pages/LoginPage";
 import SubscriptionPage from "./pages/SubscriptionPage";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -135,6 +136,9 @@ const App = () => {
                   
                   {/* Centralized pet profiles data manager */}
                   <PetProfilesDataManager />
+                
+                {/* Cookie consent to enable GTM tracking after user choice */}
+                <CookieConsentBanner />
                 
                 <Routes>
                   <Route path="/admin/login" element={<AdminLogin />} />
