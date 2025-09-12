@@ -8,16 +8,16 @@ interface ThemeLogoProps {
   alt?: string;
 }
 
-export const ThemeLogo: React.FC<ThemeLogoProps> = ({
-  className,
-  onClick,
-  alt = "TierTrainer24"
+export const ThemeLogo: React.FC<ThemeLogoProps> = ({ 
+  className, 
+  onClick, 
+  alt = "TierTrainer24" 
 }) => {
   const { resolvedTheme } = useThemeContext();
-
-  const logoSrc = resolvedTheme === 'dark'
-    ? '/logos/logo_dark.avif'
-    : '/logos/logo_white.avif';
+  
+  const logoSrc = resolvedTheme === 'dark' 
+    ? '/logos/logo_dark_homepage.avif' 
+    : '/logos/logo_white_homepage.avif';
 
   return (
     <img

@@ -14,7 +14,7 @@ import { HeroButtons } from "./hero/HeroButtons";
 import { PricingLink } from "./hero/PricingLink";
 import { SocialProof } from "./hero/SocialProof";
 import { BottomWave } from "./hero/BottomWave";
-import { ThemeLogo } from "@/components/ui/theme-logo";
+import { ThemeLogo } from "@/components/ui/theme-logo-home";
 import { useTranslations } from "@/hooks/useTranslations";
 
 interface HeroProps {
