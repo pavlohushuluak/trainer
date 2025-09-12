@@ -124,7 +124,9 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="/src/index.css" />
+  <link rel="preload" as="style" href="/src/index.css">
+  <link rel="stylesheet" href="/src/index.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/src/index.css"></noscript>
 </head>
 
 <body>
