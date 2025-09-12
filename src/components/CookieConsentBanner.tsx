@@ -103,13 +103,13 @@ export const CookieConsentBanner = () => {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button onClick={handleAcceptAll} className="flex-1">
+                <Button onClick={handleAcceptAll} className="flex-1" aria-label="Accept all cookies">
                   {t('cookies.acceptAll')}
                 </Button>
-                <Button onClick={handleAcceptNecessary} variant="outline" className="flex-1">
+                <Button onClick={handleAcceptNecessary} variant="outline" className="flex-1" aria-label="Accept necessary cookies">
                   {t('cookies.acceptNecessary')}
                 </Button>
-                <Button onClick={openSettings} variant="outline" className="flex-1">
+                <Button onClick={openSettings} variant="outline" className="flex-1" aria-label="Manage cookie settings">
                   <Settings className="h-4 w-4 mr-2" />
                   {t('cookies.manageSettings')}
                 </Button>
@@ -174,10 +174,10 @@ export const CookieConsentBanner = () => {
             </div>
 
             <div className="flex gap-3 pt-4 border-t">
-              <Button onClick={handleSaveSettings} className="flex-1">
+              <Button onClick={handleSaveSettings} className="flex-1" aria-label="Save cookie settings">
                 {t('cookies.saveSettings')}
               </Button>
-              <Button onClick={() => setShowSettings(false)} variant="outline" className="flex-1">
+              <Button onClick={() => setShowSettings(false)} variant="outline" className="flex-1" aria-label="Cancel cookie settings">
                 {t('cookies.cancel')}
               </Button>
             </div>

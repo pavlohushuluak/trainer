@@ -172,6 +172,7 @@ export const TopNavigationBar = ({
                 size="sm"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2"
+                aria-label="Toggle mobile menu"
               >
                 {isMobileMenuOpen ? (
                   <X className="h-5 w-5" />
