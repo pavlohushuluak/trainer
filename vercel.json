@@ -6,13 +6,13 @@
     {
       "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600" }
+        { "key": "Cache-Control", "value": "public, max-age=7200" }
       ]
     },
     {
       "source": "/(.*)\\.(js|css|svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|otf)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600" }
+        { "key": "Cache-Control", "value": "public, max-age=7200" }
       ]
     },
     {
