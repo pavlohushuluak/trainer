@@ -65,6 +65,9 @@ export const HeroCarousel = () => {
   const [showSwipeHint, setShowSwipeHint] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const rectRef = useRef<DOMRect | null>(null);
+  const rafIdRef = useRef<number | null>(null);
+  const pendingEventRef = useRef<React.MouseEvent | null>(null);
 
   // Auto-advance carousel with pause on hover
   useEffect(() => {
@@ -171,23 +174,41 @@ export const HeroCarousel = () => {
   // Mouse movement for 3D effect
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!carouselRef.current) return;
-    
-    const rect = carouselRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    const rotateX = (y - centerY) / 20;
-    const rotateY = (centerX - x) / 20;
-    
-    setMousePosition({ x: rotateY, y: rotateX });
+    pendingEventRef.current = e;
+    if (rafIdRef.current != null) return;
+    rafIdRef.current = requestAnimationFrame(() => {
+      const evt = pendingEventRef.current;
+      const rect = rectRef.current;
+      rafIdRef.current = null;
+      if (!evt || !rect) return;
+      const x = evt.clientX - rect.left;
+      const y = evt.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / 20;
+      const rotateY = (centerX - x) / 20;
+      setMousePosition({ x: rotateY, y: rotateX });
+    });
   };
 
   const handleMouseLeave = () => {
     setMousePosition({ x: 0, y: 0 });
+    rectRef.current = null;
+    if (rafIdRef.current != null) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (carouselRef.current && isHovered) {
+        rectRef.current = carouselRef.current.getBoundingClientRect();
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isHovered]);
 
   return (
     <div className="relative w-full">
@@ -195,7 +216,12 @@ export const HeroCarousel = () => {
       <div
         ref={carouselRef}
         className="relative w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl"
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={() => {
+          setIsHovered(true);
+          if (carouselRef.current) {
+            rectRef.current = carouselRef.current.getBoundingClientRect();
+          }
+        }}
         onMouseLeave={() => {
           setIsHovered(false);
           handleMouseLeave();

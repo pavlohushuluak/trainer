@@ -16,6 +16,9 @@ export const Benefits = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const rectRef = useRef<DOMRect | null>(null);
+  const rafIdRef = useRef<number | null>(null);
+  const pendingEventRef = useRef<React.MouseEvent | null>(null);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
@@ -152,23 +155,41 @@ export const Benefits = () => {
   // Enhanced 3D mouse movement for desktop
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!carouselRef.current || isMobile) return;
-
-    const rect = carouselRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = (y - centerY) / 50;
-    const rotateY = (centerX - x) / 50;
-
-    setMousePosition({ x: rotateY, y: rotateX });
+    pendingEventRef.current = e;
+    if (rafIdRef.current != null) return;
+    rafIdRef.current = requestAnimationFrame(() => {
+      const evt = pendingEventRef.current;
+      const rect = rectRef.current;
+      rafIdRef.current = null;
+      if (!evt || !rect) return;
+      const x = evt.clientX - rect.left;
+      const y = evt.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / 50;
+      const rotateY = (centerX - x) / 50;
+      setMousePosition({ x: rotateY, y: rotateX });
+    });
   };
 
   const handleMouseLeave = () => {
     setMousePosition({ x: 0, y: 0 });
+    rectRef.current = null;
+    if (rafIdRef.current != null) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (carouselRef.current && isHovered && !isMobile) {
+        rectRef.current = carouselRef.current.getBoundingClientRect();
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isHovered, isMobile]);
 
   // Touch handlers for mobile swipe - both directions
   const onTouchStart = (e: React.TouchEvent) => {
@@ -323,9 +344,16 @@ export const Benefits = () => {
         <div
           ref={carouselRef}
           className="relative mx-auto perspective-[1500px]"
-          onMouseEnter={() => !isMobile && setIsHovered(true)}
+          onMouseEnter={() => {
+            if (isMobile) return;
+            setIsHovered(true);
+            if (carouselRef.current) {
+              rectRef.current = carouselRef.current.getBoundingClientRect();
+            }
+          }}
           onMouseLeave={() => {
-            !isMobile && setIsHovered(false);
+            if (isMobile) return;
+            setIsHovered(false);
             handleMouseLeave();
           }}
           onMouseMove={handleMouseMove}
