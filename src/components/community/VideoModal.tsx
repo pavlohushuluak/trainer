@@ -53,6 +53,7 @@ export const VideoModal = ({ isOpen, onClose, videoUrl, videoTitle, posterUrl }:
           size="icon"
           onClick={onClose}
           className="absolute top-4 right-4 z-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white border border-white border-opacity-20"
+          aria-label={t('community.videoModal.close')}
         >
           <X className="h-6 w-6" />
         </Button>

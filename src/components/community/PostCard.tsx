@@ -412,6 +412,7 @@ export const PostCard = ({ post }: PostCardProps) => {
                   size="icon"
                   onClick={handleFullWindowVideo}
                   className="absolute top-2 right-2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white border border-white border-opacity-20 z-10"
+                  aria-label={t('community.postCard.openFullScreen')}
                 >
                   <Maximize2 className="h-4 w-4" />
                 </Button>
@@ -443,6 +444,7 @@ export const PostCard = ({ post }: PostCardProps) => {
                 onClick={() => likeMutation.mutate()}
                 disabled={!user || likeMutation.isPending}
                 className={`flex items-center gap-1 sm:gap-2 text-xs sm:text-sm ${userLike ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'}`}
+                aria-label={userLike ? t('community.postCard.unlike') : t('community.postCard.like')}
               >
                 <Heart className={`h-3 w-3 sm:h-4 sm:w-4 ${userLike ? 'fill-current' : ''}`} />
                 <span className="hidden sm:inline">{post.likes_count || 0}</span>
@@ -454,6 +456,7 @@ export const PostCard = ({ post }: PostCardProps) => {
                 size="sm"
                 onClick={() => setShowComments(!showComments)}
                 className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground"
+                aria-label={t('community.postCard.toggleComments')}
               >
                 <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">{post.comments_count || 0}</span>

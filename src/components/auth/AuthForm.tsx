@@ -179,6 +179,7 @@ export const AuthForm = ({ onAuthSuccess }: AuthFormProps) => {
                       size="icon"
                       className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8"
                       onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? t('auth.form.hidePassword') : t('auth.form.showPassword')}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
@@ -250,6 +251,7 @@ export const AuthForm = ({ onAuthSuccess }: AuthFormProps) => {
                       size="icon"
                       className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8"
                       onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? t('auth.form.hidePassword') : t('auth.form.showPassword')}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>

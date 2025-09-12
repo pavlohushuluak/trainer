@@ -42,6 +42,7 @@ export const ChatInput = ({
           onClick={onSendMessage}
           disabled={isLoading || !newMessage.trim()}
           size="icon"
+          aria-label="Send message"
         >
           <Send className="h-4 w-4" />
         </Button>
