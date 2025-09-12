@@ -81,20 +81,7 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
-    // Enable minification and compression
-    minify: "terser",
-    terserOptions: {
-      compress: {
-        drop_console: mode === "production",
-        drop_debugger: mode === "production",
-      },
-    },
-    // Increase chunk size warning limit
-    chunkSizeWarningLimit: 1000,
-    // Enable source maps for production debugging (optional)
-    sourcemap: mode === "development",
-  },
+
   preview: {
     host: "0.0.0.0",
     port: 8080,
