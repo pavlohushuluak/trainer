@@ -16,8 +16,8 @@ export const ThemeLogo: React.FC<ThemeLogoProps> = ({
   const { resolvedTheme } = useThemeContext();
   
   const logoSrc = resolvedTheme === 'dark' 
-    ? '/logos/logo_dark.png' 
-    : '/logos/logo_white.png';
+    ? '/logos/logo_dark_homepage.png' 
+    : '/logos/logo_white_homepage.png';
 
   return (
     <img
