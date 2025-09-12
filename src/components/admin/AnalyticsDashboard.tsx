@@ -21,7 +21,7 @@ import { SubscriberMetrics } from './analytics/SubscriberMetrics';
 import { SupportMetrics } from './analytics/SupportMetrics';
 import { MetricCard } from './analytics/MetricCard';
 import { TimeRangeFilter } from './analytics/TimeRangeFilter';
-import { AnalyticsDebug } from '../debug/AnalyticsDebug';
+// import { AnalyticsDebug } from '../debug/AnalyticsDebug';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 
@@ -177,12 +177,12 @@ export const AnalyticsDashboard = () => {
       {/* Detailed Analytics Tabs */}
       <Tabs defaultValue="traffic" className="space-y-4">
 
-          <TabsList className="grid w-full h-full grid-cols-2 sm:grid-cols-5">
+          <TabsList className="grid w-full h-full grid-cols-2 sm:grid-cols-4">
             <TabsTrigger value="traffic" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.traffic')}</TabsTrigger>
             <TabsTrigger value="conversion" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.conversion')}</TabsTrigger>
             <TabsTrigger value="subscribers" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.subscribers')}</TabsTrigger>
             <TabsTrigger value="support" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.support')}</TabsTrigger>
-            <TabsTrigger value="debug" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.testTraffic')}</TabsTrigger>
+            {/* <TabsTrigger value="debug" className="text-xs sm:text-sm">{t('adminAnalytics.tabs.testTraffic')}</TabsTrigger> */}
           </TabsList>
 
           <TabsContent value="traffic">
@@ -201,9 +201,9 @@ export const AnalyticsDashboard = () => {
             <SupportMetrics timeRange={timeRange} />
           </TabsContent>
 
-          <TabsContent value="debug">
+          {/* <TabsContent value="debug">
             <AnalyticsDebug />
-          </TabsContent>
+          </TabsContent> */}
       </Tabs>
     </div>
   );
