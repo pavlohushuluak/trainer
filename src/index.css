@@ -15,14 +15,17 @@
     --popover-foreground: 0 0% 20%;
     --primary: 258 90% 66%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 39 50% 96%;
+    /* Secondary surface slightly darker; foreground remains readable */
+    --secondary: 39 35% 94%;
     --secondary-foreground: 0 0% 20%;
-    --accent: 146 52% 85%;
-    --accent-foreground: 0 0% 20%;
+    /* Accent surface slightly darker; maintain sufficient contrast */
+    --accent: 146 45% 82%;
+    --accent-foreground: 0 0% 18%;
     --cta: 266 83% 58%;
     --cta-foreground: 0 0% 100%;
     --muted: 39 50% 96%;
-    --muted-foreground: 0 0% 46%;
+    /* Increased contrast for better readability on light backgrounds */
+    --muted-foreground: 0 0% 38%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 146 52% 90%;
@@ -47,7 +50,8 @@
     --cta: 266 83% 58%;
     --cta-foreground: 0 0% 100%;
     --muted: 39 20% 15%;
-    --muted-foreground: 0 0% 65%;
+    /* Slightly brighter for readability on dark backgrounds */
+    --muted-foreground: 0 0% 72%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 146 30% 20%;
