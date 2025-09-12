@@ -13,42 +13,42 @@ export const HeroCarousel = () => {
   // Use useMemo to recreate carousel images when mobile state changes
   const carouselImages = useMemo(() => [
     { 
-      src: isMobile ? '/carousel/mobile/1.jpg' : '/carousel/1.jpg', 
+      src: isMobile ? '/carousel/mobile/1.avif' : '/carousel/1.avif', 
       alt: t('hero.carousel.trainingSuccess'),
       title: t('hero.carousel.trainingSuccess'),
       subtitle: t('hero.carousel.description'),
       gradient: 'from-blue-600/20 via-purple-600/20 to-pink-600/20'
     },
     { 
-      src: isMobile ? '/carousel/mobile/2.jpg' : '/carousel/2.jpg', 
+      src: isMobile ? '/carousel/mobile/2.avif' : '/carousel/2.avif', 
       alt: t('hero.carousel.happyDogs'),
       title: t('hero.carousel.happyDogs'),
       subtitle: t('hero.carousel.description'),
       gradient: 'from-green-600/20 via-emerald-600/20 to-teal-600/20'
     },
     { 
-      src: isMobile ? '/carousel/mobile/3.jpg' : '/carousel/3.jpg', 
+      src: isMobile ? '/carousel/mobile/3.avif' : '/carousel/3.avif', 
       alt: t('hero.carousel.parkTraining'),
       title: t('hero.carousel.parkTraining'),
       subtitle: t('hero.carousel.description'),
       gradient: 'from-orange-600/20 via-red-600/20 to-pink-600/20'
     },
     { 
-      src: isMobile ? '/carousel/mobile/4.jpg' : '/carousel/4.jpg', 
+      src: isMobile ? '/carousel/mobile/4.avif' : '/carousel/4.avif', 
       alt: t('hero.carousel.professionalTraining'),
       title: t('hero.carousel.professionalTraining'),
       subtitle: t('hero.carousel.description'),
       gradient: 'from-indigo-600/20 via-purple-600/20 to-blue-600/20'
     },
     { 
-      src: isMobile ? '/carousel/mobile/5.jpg' : '/carousel/5.jpg', 
+      src: isMobile ? '/carousel/mobile/5.avif' : '/carousel/5.avif', 
       alt: t('hero.carousel.humanAnimalBond'),
       title: t('hero.carousel.humanAnimalBond'),
       subtitle: t('hero.carousel.description'),
       gradient: 'from-yellow-600/20 via-orange-600/20 to-red-600/20'
     },
     { 
-      src: isMobile ? '/carousel/mobile/6.jpg' : '/carousel/6.jpg', 
+      src: isMobile ? '/carousel/mobile/6.avif' : '/carousel/6.avif', 
       alt: t('hero.carousel.trainingSuccesses'),
       title: t('hero.carousel.trainingSuccesses'),
       subtitle: t('hero.carousel.description'),
