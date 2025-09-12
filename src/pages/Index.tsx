@@ -172,7 +172,6 @@ const Index = () => {
   const handleStartChat = () => {
     requireAuth(() => {
       navigate('/chat');
-      trackEvent('chat_started');
     });
   };
 

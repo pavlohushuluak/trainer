@@ -69,6 +69,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useTranslation as useI18n } from 'react-i18next';
 import { AnimatedDots } from '@/components/ui/animated-dots';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface ChatSession {
   id: string;
@@ -99,6 +100,14 @@ export const ChatPage = () => {
   const { hasActiveSubscription } = useSubscriptionStatus();
   const { usage, incrementUsage, refetch: refetchUsage } = useFreeChatLimit();
   const { checkSubscriptionStatus } = useSubscriptionStatusChecker();
+  const { trackEvent } = useAnalytics();
+
+  useEffect(
+    () => {
+      trackEvent('chat_started');
+    },
+    [trackEvent]
+  );
 
   // Debug: Log whenever usage changes in ChatPage
   useEffect(() => {
