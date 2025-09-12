@@ -8,6 +8,9 @@ let hasLoggedAdminPageDisable = false;
 // Track analytics connection status to prevent repeated failed requests
 let analyticsConnectionFailed = false;
 
+// De-dup page view tracking per path and event type for this session
+const trackedPageEvents = new Set<string>();
+
 export const useAnalytics = () => {
   const { user } = useAuth();
 
@@ -17,7 +20,7 @@ export const useAnalytics = () => {
   ) => {
     try {
       // CRITICAL: Completely disable analytics on admin pages to prevent database flooding
-      const currentPath = window.location.pathname;
+      const currentPath = (metadata && typeof metadata.overridePath === 'string') ? metadata.overridePath : window.location.pathname;
       if (currentPath.includes('/admin')) {
         console.log('🚫 Analytics disabled on admin page:', currentPath);
         return; // Exit immediately, no logging needed
@@ -43,6 +46,11 @@ export const useAnalytics = () => {
 
       // Use the new track_page_view function for page view events
       if (['page_view', 'homepage_view', 'mainpage_view'].includes(eventType)) {
+        const dedupeKey = `${eventType}:${currentPath}`;
+        if (trackedPageEvents.has(dedupeKey)) {
+          console.log('🔁 Skipping duplicate page view tracking for', dedupeKey);
+          return;
+        }
         const { data, error } = await supabase.rpc('track_page_view', {
           p_page_path: currentPath,
           p_user_email: userEmail
@@ -54,6 +62,7 @@ export const useAnalytics = () => {
           return;
         }
 
+        trackedPageEvents.add(dedupeKey);
         console.log('✅ Analytics tracking successful:', {
           eventType,
           currentPath,

@@ -40,14 +40,10 @@ export const AnalyticsDebug = () => {
   const testTrackPageViewFunction = async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.rpc('track_page_view', {
-        p_page_path: '/test-page',
-        p_user_email: user?.email || 'test@example.com'
-      });
-      
-      addResult('track_page_view Function', data, error);
+      await trackEvent('page_view', { test: true, overridePath: '/test-page' });
+      addResult('track_page_view Function (via hook)', 'Tracked via useAnalytics');
     } catch (err) {
-      addResult('track_page_view Function', null, err);
+      addResult('track_page_view Function (via hook)', null, err);
     }
     setIsLoading(false);
   };
