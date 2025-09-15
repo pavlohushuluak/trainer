@@ -41,7 +41,7 @@ const LoginPage = () => {
   const [activeTab, setActiveTab] = useState('signin');
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [termsAgreed, setTermsAgreed] = useState(true);
 
   // Check localStorage for alreadySignedUp value on component mount
   useEffect(() => {
@@ -212,7 +212,7 @@ const LoginPage = () => {
     setLastName('');
     setError('');
     setMessage('');
-    setTermsAgreed(false);
+    setTermsAgreed(true);
   };
 
   return (

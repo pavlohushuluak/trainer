@@ -62,7 +62,7 @@ export const SmartLoginModal = ({
   const [activeTab, setActiveTab] = useState('signin');
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [termsAgreed, setTermsAgreed] = useState(true);
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
 
@@ -223,7 +223,7 @@ export const SmartLoginModal = ({
     setLastName('');
     setError('');
     setMessage('');
-    setTermsAgreed(false);
+    setTermsAgreed(true);
     setShowVerification(false);
     setVerificationCode('');
     clearError();
