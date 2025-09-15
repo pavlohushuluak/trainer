@@ -71,20 +71,29 @@ export const useVerificationCode = ({ email, onSuccess, onError }: UseVerificati
     setError('');
 
     try {
-      // Resend the signup email with verification code
-      const { error: resendError } = await supabase.auth.resend({
-        type: 'signup',
-        email
+      // Call our custom verification email endpoint
+      const { data, error: resendError } = await supabase.functions.invoke('send-verification-email', {
+        body: {
+          email
+        }
       });
 
       if (resendError) {
-        setError(resendError.message);
-        onError?.(resendError.message);
+        console.error('Resend error:', resendError);
+        setError('Failed to resend verification code');
+        onError?.('Failed to resend verification code');
+        return;
+      }
+
+      if (!data?.success) {
+        setError('Failed to resend verification code');
+        onError?.('Failed to resend verification code');
         return;
       }
 
       // Success - code resent
     } catch (err) {
+      console.error('Resend error:', err);
       const errorMessage = 'Failed to resend verification code';
       setError(errorMessage);
       onError?.(errorMessage);

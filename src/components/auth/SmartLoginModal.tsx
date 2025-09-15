@@ -187,35 +187,41 @@ export const SmartLoginModal = ({
           setError(error.message);
         }
       } else {
-        setMessage(t('auth.registrationSuccess'));
-        
-        // Send welcome email for new users
-        if (data?.user?.email) {
-          try {
-            await sendWelcomeEmail(
-              data.user.email,
-              data.user.user_metadata?.full_name || data.user.email.split('@')[0],
-              "TierTrainer"
-            );
-          } catch (error) {
-            console.error('Error sending welcome email:', error);
-          }
-        }
-        
         // Set localStorage to indicate user has signed up
         localStorage.setItem('alreadySignedUp', 'true');
         
-        // Show verification step instead of closing modal
-        setShowVerification(true);
-        setError('');
-        setMessage('');
-        
-        // Show signup success toast with verification message
-        toast({
-          title: t('auth.smartLogin.signupSuccess'),
-          description: t('auth.verificationCode.instructions'),
-          duration: 5000
-        });
+        // Send verification email
+        try {
+          const { error: emailError } = await supabase.functions.invoke('send-verification-email', {
+            body: {
+              email: data.user.email,
+              firstName: firstName.trim(),
+              lastName: lastName.trim(),
+              language: language
+            }
+          });
+
+          if (emailError) {
+            console.error('Error sending verification email:', emailError);
+            setError('Failed to send verification email. Please try again.');
+            return;
+          }
+
+          // Show verification step instead of closing modal
+          setShowVerification(true);
+          setError('');
+          setMessage('');
+          
+          // Show signup success toast with verification message
+          toast({
+            title: t('auth.smartLogin.signupSuccess'),
+            description: t('auth.verificationCode.instructions'),
+            duration: 5000
+          });
+        } catch (error) {
+          console.error('Error sending verification email:', error);
+          setError('Failed to send verification email. Please try again.');
+        }
       }
     } catch (err) {
       setError(t('auth.generalError'));

@@ -107,7 +107,8 @@ export const useAuthOperations = () => {
       email: email.trim(),
       password: password, // Make sure password is passed as-is
       options: {
-        emailRedirectTo: redirectUrl,
+        // Don't use emailRedirectTo for our custom verification flow
+        // emailRedirectTo: redirectUrl,
         data: metadata
       }
     });
