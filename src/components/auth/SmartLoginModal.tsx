@@ -19,6 +19,7 @@ import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
 import { useTranslations } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
 import { getCurrentLanguage } from '@/utils/languageSupport';
+import { getCheckoutFlags } from '@/utils/checkoutStorage';
 import { Checkbox } from '@/components/ui/checkbox';
 import { AGBModal } from '@/components/legal/AGBModal';
 import { ImpressumModal } from '@/components/legal/ImpressumModal';
@@ -176,6 +177,14 @@ export const SmartLoginModal = ({
         
         // Set localStorage to indicate user has signed up
         localStorage.setItem('alreadySignedUp', 'true');
+        
+        // Check if there's pending checkout data and save it for email+password signup
+        const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
+        if (hasPendingCheckout && checkoutData) {
+          console.log('🔐 Saving checkout data for email+password signup:', checkoutData);
+          sessionStorage.setItem('checkoutAfterSignup', JSON.stringify(checkoutData));
+        }
+        
         // Clear form after successful registration
         setEmail('');
         setPassword('');

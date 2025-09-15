@@ -15,6 +15,7 @@ import { AlertCircle, Trophy, Star, Sparkles, CheckCircle, Zap, Crown } from "lu
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from '@/integrations/supabase/client';
 import Confetti from 'react-confetti';
 
 // Add custom CSS for floating animation
@@ -259,6 +260,74 @@ const MyPetTraining = () => {
       return () => clearTimeout(refreshTimer);
     }
   }, [location.search, user, refetchSubscription, fetchPets]);
+
+  // Handle checkout after signup (email+password signup flow)
+  useEffect(() => {
+    const handleCheckoutAfterSignup = async () => {
+      try {
+        const checkoutAfterSignupData = sessionStorage.getItem('checkoutAfterSignup');
+        
+        if (checkoutAfterSignupData && user) {
+          console.log('🔐 Found checkoutAfterSignup data, processing checkout:', checkoutAfterSignupData);
+          
+          // Parse the checkout data
+          const checkoutData = JSON.parse(checkoutAfterSignupData);
+          
+          // Clear the data immediately to prevent duplicate processing
+          sessionStorage.removeItem('checkoutAfterSignup');
+          
+          // Call create-checkout directly
+          const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+          
+          const { data, error } = await supabase.functions.invoke('create-checkout', {
+            body: {
+              priceType: checkoutData.priceType,
+              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
+              cancelUrl: `${window.location.origin}/mein-tiertraining`,
+              language: currentLanguage,
+              customerInfo: {
+                name: user?.user_metadata?.full_name || user?.email?.split('@')[0]
+              }
+            }
+          });
+
+          if (error) {
+            console.error('🔐 Error creating checkout after signup:', error);
+            toast({
+              title: 'Checkout Error',
+              description: 'There was an error processing your checkout. Please try again.',
+              variant: "destructive",
+            });
+          } else if (data?.url) {
+            console.log('🔐 Checkout created successfully after signup, redirecting to:', data.url);
+            // Redirect to Stripe checkout
+            window.location.href = data.url;
+          } else {
+            console.error('🔐 No checkout URL returned after signup');
+            toast({
+              title: 'Checkout Error',
+              description: 'Unable to create checkout session. Please try again.',
+              variant: "destructive",
+            });
+          }
+        }
+      } catch (error) {
+        console.error('🔐 Error handling checkout after signup:', error);
+        // Clear any corrupted data
+        sessionStorage.removeItem('checkoutAfterSignup');
+        toast({
+          title: 'Checkout Error',
+          description: 'There was an error processing your checkout. Please try again.',
+          variant: "destructive",
+        });
+      }
+    };
+
+    // Only check if user is authenticated
+    if (user && !loading) {
+      handleCheckoutAfterSignup();
+    }
+  }, [user, loading, toast]);
 
   // Show loading only when absolutely necessary
   if (loading) {
