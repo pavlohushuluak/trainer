@@ -18,6 +18,7 @@ import { EmailInput } from '@/components/auth/EmailInput';
 import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
 import { VerificationCodeInput } from '@/components/auth/VerificationCodeInput';
 import { useVerificationCode } from '@/hooks/auth/useVerificationCode';
+import { getCheckoutFlags, clearCheckoutFlags } from '@/utils/checkoutStorage';
 import { useTranslations } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
 import { getCurrentLanguage } from '@/utils/languageSupport';
@@ -68,9 +69,12 @@ export const SmartLoginModal = ({
   // Verification code hook
   const { verifyCode, resendCode, loading: verifyLoading, resendLoading, error: verifyError, clearError } = useVerificationCode({
     email,
+    password, // Pass password for auto-login after verification
     onSuccess: () => {
       setShowVerification(false);
       setVerificationCode('');
+      
+      // Simple verification success - let the parent handle checkout logic
       onLoginSuccess();
       onClose();
     },
@@ -101,6 +105,7 @@ export const SmartLoginModal = ({
   }, [email, password]);
 
   const language = getCurrentLanguage();
+
 
   const upsertLanguageSupport = async (email: string, language: string) => {
     try {
@@ -151,6 +156,7 @@ export const SmartLoginModal = ({
           duration: 3000
         });
         
+        // Simple login success - let the parent handle checkout logic
         onLoginSuccess();
         onClose();
       }
@@ -190,38 +196,17 @@ export const SmartLoginModal = ({
         // Set localStorage to indicate user has signed up
         localStorage.setItem('alreadySignedUp', 'true');
         
-        // Send verification email
-        try {
-          const { error: emailError } = await supabase.functions.invoke('send-verification-email', {
-            body: {
-              email: data.user.email,
-              firstName: firstName.trim(),
-              lastName: lastName.trim(),
-              language: language
-            }
-          });
-
-          if (emailError) {
-            console.error('Error sending verification email:', emailError);
-            setError('Failed to send verification email. Please try again.');
-            return;
-          }
-
-          // Show verification step instead of closing modal
-          setShowVerification(true);
-          setError('');
-          setMessage('');
-          
-          // Show signup success toast with verification message
-          toast({
-            title: t('auth.smartLogin.signupSuccess'),
-            description: t('auth.verificationCode.instructions'),
-            duration: 5000
-          });
-        } catch (error) {
-          console.error('Error sending verification email:', error);
-          setError('Failed to send verification email. Please try again.');
-        }
+        // Show verification step - Supabase webhook will automatically send the verification email
+        setShowVerification(true);
+        setError('');
+        setMessage('');
+        
+        // Show signup success toast with verification message
+        toast({
+          title: t('auth.smartLogin.signupSuccess'),
+          description: t('auth.verificationCode.instructions'),
+          duration: 5000
+        });
       }
     } catch (err) {
       setError(t('auth.generalError'));
@@ -305,6 +290,7 @@ export const SmartLoginModal = ({
                           });
                         }
                         
+                        // Simple OAuth success - let the parent handle checkout logic
                         onLoginSuccess();
                         onClose();
                       }}
@@ -523,6 +509,7 @@ export const SmartLoginModal = ({
                               onChange={setVerificationCode}
                               onVerify={verifyCode}
                               onResend={resendCode}
+                              onClearError={clearError}
                               loading={verifyLoading}
                               resendLoading={resendLoading}
                               error={verifyError}

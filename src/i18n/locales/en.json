@@ -1576,17 +1576,6 @@
     "enterVerificationCode": "Enter the verification code sent to your email.",
     "verificationEmailSent": "Verification Email Sent",
     "verificationEmailDescription": "We've sent a verification code to {{email}}. Please check your email and enter the code below.",
-    "verificationCode": {
-      "title": "Enter verification code",
-      "instructions": "Enter the 6-digit code sent to your email",
-      "validating": "Verifying code...",
-      "resend": "Resend code",
-      "resending": "Resending...",
-      "sentTo": "Code sent to",
-      "invalid": "Invalid verification code",
-      "expired": "Verification code has expired",
-      "required": "Verification code is required"
-    },
     "verificationCodePlaceholder": "Enter code",
     "resendEmail": "Resend Email",
     "verifying": "Verifying...",
@@ -3994,6 +3983,17 @@
       },
       "signupSuccess": "Registration successful!",
       "signupSuccessDescription": "Please check your email inbox and confirm your email address. The confirmation link is valid for 1 hour."
+    },
+    "verificationCode": {
+      "title": "Enter verification code",
+      "instructions": "Enter the 6-digit code sent to your email",
+      "validating": "Verifying code...",
+      "resend": "Resend code",
+      "resending": "Resending...",
+      "sentTo": "Code sent to",
+      "invalid": "Invalid verification code",
+      "expired": "Verification code has expired",
+      "required": "Verification code is required"
     },
     "stateHandler": {
       "checkoutError": {

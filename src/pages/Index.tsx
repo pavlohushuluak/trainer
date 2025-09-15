@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSmartLogin } from "@/hooks/useSmartLogin";
 import { usePetDataPrefetch } from "@/hooks/usePetDataPrefetch";
 import { supabase } from "@/integrations/supabase/client";
-import { getCheckoutFlags, clearCheckoutFlags } from "@/utils/checkoutStorage";
+import { getCheckoutInformation, removeCheckoutInformation } from "@/utils/checkoutSessionStorage";
 
 // Lazy load heavy components with proper default export handling
 const Benefits = lazy(() => import("@/components/Benefits").then(module => ({ default: module.Benefits })));
@@ -43,8 +43,60 @@ const Index = () => {
   } = useSmartLogin({
     redirectToCheckout: true,
     loginContext: 'checkout',
-    skipWelcomeToast: true
+    skipWelcomeToast: true,
+    skipRedirect: true
   });
+
+  // Check for checkout information after authentication
+  useEffect(() => {
+    const processCheckoutInformation = async () => {
+      if (user && session) {
+        const checkoutInfo = getCheckoutInformation();
+        
+        if (checkoutInfo) {
+          console.log('Found checkout information, processing checkout:', checkoutInfo);
+          
+          // Remove checkout information immediately
+          removeCheckoutInformation();
+          setIsProcessingCheckout(true);
+          
+          try {
+            const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+            
+            const { data, error } = await supabase.functions.invoke('create-checkout', {
+              body: {
+                priceType: checkoutInfo.priceType,
+                successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
+                cancelUrl: `${window.location.origin}/`,
+                language: currentLanguage,
+                customerInfo: {
+                  name: user?.user_metadata?.full_name || user?.email?.split('@')[0]
+                }
+              }
+            });
+
+            if (error) {
+              console.error('Error creating checkout:', error);
+              window.location.href = '/#pricing';
+            } else if (data?.url) {
+              console.log('Checkout created successfully, redirecting to:', data.url);
+              window.location.href = data.url;
+            } else {
+              console.error('No checkout URL returned');
+              window.location.href = '/#pricing';
+            }
+          } catch (error) {
+            console.error('Error processing checkout:', error);
+            window.location.href = '/#pricing';
+          } finally {
+            setIsProcessingCheckout(false);
+          }
+        }
+      }
+    };
+
+    processCheckoutInformation();
+  }, [user, session]);
 
   // Check for pricing_click_data in sessionStorage and call create-checkout directly
   useEffect(() => {
@@ -106,83 +158,6 @@ const Index = () => {
     checkPricingClickData();
   }, [user, session]);
 
-  // Check for main checkout flags after authentication (for signup/login flow)
-  useEffect(() => {
-    const checkMainCheckoutFlags = async () => {
-      try {
-        const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
-        
-        if (hasPendingCheckout && checkoutData) {
-          console.log('🔐 Found pending checkout flags, checking authentication status:', {
-            hasUser: !!user,
-            hasSession: !!session,
-            checkoutData
-          });
-          
-          // If user is authenticated, process checkout immediately
-          if (user && session) {
-            console.log('🔐 User is authenticated, processing checkout immediately:', checkoutData);
-            
-            // Clear the checkout flags immediately to prevent duplicate processing
-            clearCheckoutFlags();
-            setIsProcessingCheckout(true);
-            
-            // Call create-checkout directly
-            const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
-            
-            const { data, error } = await supabase.functions.invoke('create-checkout', {
-              body: {
-                priceType: checkoutData.priceType,
-                successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
-                cancelUrl: `${window.location.origin}/`,
-                language: currentLanguage,
-                customerInfo: {
-                  name: user?.user_metadata?.full_name || user?.email?.split('@')[0]
-                }
-              }
-            });
-
-            if (error) {
-              console.error('🔐 Error creating checkout from flags:', error);
-              // Redirect to pricing section on error
-              window.location.href = '/#pricing';
-            } else if (data?.url) {
-              console.log('🔐 Checkout created successfully from flags, redirecting to:', data.url);
-              // Redirect to Stripe checkout
-              window.location.href = data.url;
-            } else {
-              console.error('🔐 No checkout URL returned from flags');
-              window.location.href = '/#pricing';
-            }
-          } else {
-            // User is not authenticated yet, wait for authentication
-            console.log('🔐 User not authenticated yet, waiting for authentication to process checkout');
-            
-            // Set a timeout to check again after a delay
-            const timeoutId = setTimeout(() => {
-              if (user && session) {
-                console.log('🔐 User authenticated after delay, processing checkout');
-                checkMainCheckoutFlags();
-              } else {
-                console.log('🔐 User still not authenticated after delay, clearing checkout flags');
-                clearCheckoutFlags();
-              }
-            }, 2000); // Wait 2 seconds for authentication
-            
-            return () => clearTimeout(timeoutId);
-          }
-        }
-      } catch (error) {
-        console.error('🔐 Error checking main checkout flags:', error);
-        setIsProcessingCheckout(false);
-        // Clear any corrupted flags
-        clearCheckoutFlags();
-      }
-    };
-
-    // Check immediately, regardless of authentication status
-    checkMainCheckoutFlags();
-  }, [user, session]);
 
   useEffect(() => {
     // Page view tracking is now handled by PageViewTracker component

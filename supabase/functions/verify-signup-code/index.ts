@@ -51,7 +51,19 @@ serve(async (req) => {
       .eq('used', false)
       .single();
 
+    console.log('Verification query result:', {
+      email,
+      code,
+      verificationData,
+      verificationError: verificationError?.message
+    });
+
     if (verificationError || !verificationData) {
+      console.log('Code not found or already used:', {
+        email,
+        code,
+        error: verificationError?.message
+      });
       return new Response(
         JSON.stringify({ success: false, message: 'Invalid verification code' }),
         { 
@@ -61,13 +73,25 @@ serve(async (req) => {
       );
     }
 
-    // Check if code has expired (1 hour = 3600000 ms)
+    // Check if code has expired using expires_at field
     const now = new Date();
-    const createdAt = new Date(verificationData.created_at);
-    const timeDiff = now.getTime() - createdAt.getTime();
-    const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+    const expiresAt = new Date(verificationData.expires_at);
 
-    if (timeDiff > oneHour) {
+    console.log('Expiration check:', {
+      now: now.toISOString(),
+      expiresAt: expiresAt.toISOString(),
+      isExpired: now > expiresAt,
+      timeDiff: now.getTime() - expiresAt.getTime()
+    });
+
+    if (now > expiresAt) {
+      console.log('Code has expired, marking as used');
+      // Mark as used even if expired to prevent reuse
+      await supabase
+        .from('signup_verification_codes')
+        .update({ used: true, used_at: now.toISOString() })
+        .eq('id', verificationData.id);
+
       return new Response(
         JSON.stringify({ success: false, message: 'Verification code has expired' }),
         { 
@@ -83,12 +107,11 @@ serve(async (req) => {
       .update({ used: true, used_at: new Date().toISOString() })
       .eq('id', verificationData.id);
 
-    // Get the user from auth.users
-    const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
-
-    if (userError || !userData.user) {
+    // Use the user_id from the verification code record
+    if (!verificationData.user_id) {
+      console.error('No user_id found in verification code record');
       return new Response(
-        JSON.stringify({ success: false, message: 'User not found' }),
+        JSON.stringify({ success: false, message: 'Invalid verification code' }),
         { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -96,9 +119,9 @@ serve(async (req) => {
       );
     }
 
-    // Confirm the user's email
+    // Confirm the user's email using the user_id from the verification code
     const { error: confirmError } = await supabase.auth.admin.updateUserById(
-      userData.user.id,
+      verificationData.user_id,
       { email_confirm: true }
     );
 
@@ -116,8 +139,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: 'Email verified successfully',
-        user: userData.user
+        message: 'Email verified successfully'
       }),
       { 
         status: 200, 

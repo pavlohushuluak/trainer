@@ -1,18 +1,21 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useAuth } from '@/hooks/useAuth';
 
 interface UseVerificationCodeProps {
   email: string;
+  password?: string; // Password needed for auto-login after verification
   onSuccess?: () => void;
   onError?: (error: string) => void;
 }
 
-export const useVerificationCode = ({ email, onSuccess, onError }: UseVerificationCodeProps) => {
+export const useVerificationCode = ({ email, password, onSuccess, onError }: UseVerificationCodeProps) => {
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [error, setError] = useState('');
   const { t } = useTranslations();
+  const { signIn } = useAuth();
 
   const verifyCode = useCallback(async (code: string) => {
     if (!code || code.length !== 6) {
@@ -43,6 +46,28 @@ export const useVerificationCode = ({ email, onSuccess, onError }: UseVerificati
       }
 
       if (data?.success) {
+        // Auto-login the user after successful verification
+        if (password) {
+          try {
+            console.log('Auto-logging in user after verification...');
+            const { error: signInError } = await signIn(email, password);
+            
+            if (signInError) {
+              console.error('Auto-login failed:', signInError);
+              setError('Verification successful, but login failed. Please try logging in manually.');
+              onError?.('Verification successful, but login failed. Please try logging in manually.');
+              return;
+            }
+            
+            console.log('Auto-login successful after verification');
+          } catch (loginError) {
+            console.error('Auto-login error:', loginError);
+            setError('Verification successful, but login failed. Please try logging in manually.');
+            onError?.('Verification successful, but login failed. Please try logging in manually.');
+            return;
+          }
+        }
+        
         onSuccess?.();
       } else {
         let errorMessage = t('auth.verificationCode.invalid');
@@ -71,21 +96,14 @@ export const useVerificationCode = ({ email, onSuccess, onError }: UseVerificati
     setError('');
 
     try {
-      // Call our custom verification email endpoint
-      const { data, error: resendError } = await supabase.functions.invoke('send-verification-email', {
-        body: {
-          email
-        }
+      // Use Supabase's built-in resend functionality
+      const { error: resendError } = await supabase.auth.resend({
+        type: 'signup',
+        email
       });
 
       if (resendError) {
         console.error('Resend error:', resendError);
-        setError('Failed to resend verification code');
-        onError?.('Failed to resend verification code');
-        return;
-      }
-
-      if (!data?.success) {
         setError('Failed to resend verification code');
         onError?.('Failed to resend verification code');
         return;

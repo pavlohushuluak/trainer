@@ -13,6 +13,7 @@ interface VerificationCodeInputProps {
   onChange: (value: string) => void;
   onVerify: (code: string) => Promise<void>;
   onResend: () => Promise<void>;
+  onClearError?: () => void;
   required?: boolean;
   className?: string;
   error?: string;
@@ -28,6 +29,7 @@ export const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({
   onChange,
   onVerify,
   onResend,
+  onClearError,
   required = false,
   className,
   error,
@@ -41,17 +43,22 @@ export const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({
 
   // Auto-verify when 6 digits are entered
   useEffect(() => {
-    if (value.length === 6 && !loading) {
+    if (value.length === 6 && !loading && !error) {
       setIsValid(true);
       onVerify(value);
     } else {
       setIsValid(false);
     }
-  }, [value, loading, onVerify]);
+  }, [value, loading, error, onVerify]);
 
   const handleInputChange = (index: number, inputValue: string) => {
     // Only allow digits
     if (!/^\d*$/.test(inputValue)) return;
+
+    // Clear error when user starts typing again
+    if (error && onClearError) {
+      onClearError();
+    }
 
     // Update the value
     const newValue = value.split('');
@@ -63,6 +70,11 @@ export const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({
     if (inputValue && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
+  };
+
+  const clearAllInputs = () => {
+    onChange('');
+    inputRefs.current[0]?.focus();
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
@@ -103,10 +115,10 @@ export const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({
             onKeyDown={(e) => handleKeyDown(index, e)}
             onPaste={handlePaste}
             className={cn(
-              "w-12 h-12 text-center text-lg font-semibold border-2",
-              error && "border-red-500 focus:border-red-500 focus:ring-red-500",
-              isValid && !error && "border-green-500 focus:border-green-500 focus:ring-green-500",
-              !error && !isValid && "border-border focus:border-primary focus:ring-primary"
+              "w-12 h-12 text-center text-lg font-semibold border-2 transition-colors",
+              error && "border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50",
+              isValid && !error && "border-green-500 focus:border-green-500 focus:ring-green-500 bg-green-50",
+              !error && !isValid && "border-border focus:border-primary focus:ring-primary hover:border-primary/50"
             )}
             disabled={loading}
           />
@@ -115,9 +127,20 @@ export const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({
 
       {/* Status messages */}
       {error && (
-        <div className="flex items-center gap-2 text-sm text-red-500">
-          <AlertCircle className="h-4 w-4" />
-          {error}
+        <div className="flex items-center justify-between text-sm text-red-500">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-4 w-4" />
+            {error}
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={clearAllInputs}
+            className="text-xs text-red-500 hover:text-red-700 hover:bg-red-50"
+          >
+            Clear & Retry
+          </Button>
         </div>
       )}
 

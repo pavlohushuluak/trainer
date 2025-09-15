@@ -8,7 +8,7 @@ import { Loader2, ShoppingCart } from 'lucide-react';
 import { SmartLoginModal } from '@/components/auth/SmartLoginModal';
 import { useSmartLogin } from '@/hooks/useSmartLogin';
 import { useGTM } from '@/hooks/useGTM';
-import { setCheckoutFlags, clearCheckoutFlags, debugCheckoutState } from '@/utils/checkoutStorage';
+import { saveCheckoutInformation } from '@/utils/checkoutSessionStorage';
 import { getPrice } from '@/config/pricing';
 import { useTranslation } from 'react-i18next';
 
@@ -38,53 +38,28 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
   });
 
   const handleCheckout = async () => {
-    
-    // Debug current state before setting flags
-    debugCheckoutState();
-    
-    // Set checkout flags IMMEDIATELY using centralized utility
-    const sessionId = setCheckoutFlags(priceType, window.location.href);
-    
-    
-    // Immediate loading feedback
     setLoading(true);
     
     try {
       // Track add to cart event
-      // Extract plan ID and billing cycle from priceType (e.g., "plan1-monthly" -> planId: "plan1", isHalfYearly: false)
       const [planId, billingCycle] = priceType.split('-');
       const isHalfYearly = billingCycle === 'halfyearly';
       const amount = getPrice(planId, isHalfYearly);
       trackAddToCart(amount, priceType);
 
-      // If not logged in, show login modal
+      // If not logged in, save checkout information and show login modal
       if (!user || !session) {
-        // For darkhorse: Save pricing click data to sessionStorage
-        const pricingClickData = {
-          timestamp: new Date().toISOString(),
-          priceType: priceType,
-          source: 'pricing_section',
-          userAgent: navigator.userAgent,
-          url: window.location.href,
-          referrer: document.referrer || 'direct'
-        };
-        
-        try {
-          sessionStorage.setItem('pricing_click_data', JSON.stringify(pricingClickData));
-          console.log('For darkhorse: Pricing click saved to sessionStorage:', pricingClickData);
-        } catch (error) {
-          console.error('For darkhorse: Failed to save pricing click data to sessionStorage:', error);
-        }
-        
+        console.log('User not logged in, saving checkout information:', priceType);
+        saveCheckoutInformation(priceType, 'pricing-card');
         setLoading(false);
         setIsLoginModalOpen(true);
         return;
       }
 
+      // User is logged in, proceed with checkout
       await executeDirectStripeCheckout();
     } catch (error) {
       setLoading(false);
-      clearCheckoutFlags();
       toast({
         title: t('training.checkoutButton.checkoutError'),
         description: t('training.checkoutButton.unknownError'),
@@ -115,9 +90,6 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
       }
 
       if (data?.url) {
-        // Clear flags before redirect
-        clearCheckoutFlags();
-        
         // SAME TAB redirect to Stripe
         window.location.href = data.url;
       } else {
@@ -130,18 +102,14 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
         variant: "destructive",
       });
       setLoading(false);
-      clearCheckoutFlags();
     }
   };
 
   const handleLoginSuccessForCheckout = async () => { 
-    
     try {
       await handleLoginSuccess();
-      // Don't clear loading here - let auth handler manage the checkout flow
     } catch (error) {
       setLoading(false);
-      clearCheckoutFlags();
     }
   };
 
@@ -170,12 +138,12 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
         onClose={() => {
           setIsLoginModalOpen(false);
           setLoading(false);
-          clearCheckoutFlags();
         }}
         onLoginSuccess={handleLoginSuccessForCheckout}
         title={t('training.checkoutButton.loginForPremium')}
         description={t('training.checkoutButton.loginDescription')}
       />
+
     </>
   );
 };

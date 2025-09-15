@@ -972,45 +972,129 @@ serve(async (req) => {
     }
 
     let emailTemplate;
+    let shouldSendEmail = true; // Default to sending email
     
     // Generate email based on action type with language support
     switch (data.email_data.email_action_type) {
-      case 'signup':
-        logStep('Generating signup verification code email with language', { 
-          language: userLanguage,
-          preferredLanguage: data.user.user_metadata?.preferred_language,
-          userEmail: data.user.email
-        });
-        // Generate a 6-digit verification code
-        const verificationCode = generateVerificationCode();
-        logStep('Generated verification code', { code: verificationCode });
-        
-        // Store the verification code in the database
-        try {
-          const supabase = createClient(
-            Deno.env.get('SUPABASE_URL') ?? '',
-            Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-          );
-          
-          const { error: dbError } = await supabase
-            .from('signup_verification_codes')
-            .insert({
-              email: data.user.email,
-              code: verificationCode,
-              expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 1 hour from now
-            });
-          
-          if (dbError) {
-            logStep('Error storing verification code', { error: dbError.message });
-          } else {
-            logStep('Verification code stored successfully', { email: data.user.email });
-          }
-        } catch (error) {
-          logStep('Error storing verification code', { error: error.message });
-        }
-        
-        emailTemplate = generateSignupVerificationEmail(data, verificationCode, userLanguage);
-        break;
+       case 'signup':
+         logStep('Generating signup verification code email with language', { 
+           language: userLanguage,
+           preferredLanguage: data.user.user_metadata?.preferred_language,
+           userEmail: data.user.email
+         });
+         
+         // Use upsert approach to prevent duplicates
+         const supabase = createClient(
+           Deno.env.get('SUPABASE_URL') ?? '',
+           Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+         );
+         
+         // First, try to get existing valid code
+         const { data: existingCode, error: existingCodeError } = await supabase
+           .from('signup_verification_codes')
+           .select('*')
+           .eq('email', data.user.email)
+           .eq('used', false)
+           .single();
+         
+         let verificationCode: string;
+         let shouldSendEmail = true;
+         
+         if (existingCode && !existingCodeError) {
+           // Check if existing code is still valid
+           const now = new Date();
+           const expiresAt = new Date(existingCode.expires_at);
+           
+           if (now < expiresAt) {
+             logStep('Using existing valid verification code, skipping email send', { 
+               email: data.user.email,
+               code: existingCode.code,
+               expiresAt: existingCode.expires_at,
+               createdAt: existingCode.created_at
+             });
+             verificationCode = existingCode.code;
+             shouldSendEmail = false; // Don't send duplicate email
+           } else {
+             // Generate new code if existing one is expired
+             verificationCode = generateVerificationCode();
+             logStep('Existing code expired, generated new verification code', { 
+               email: data.user.email,
+               oldCode: existingCode.code,
+               newCode: verificationCode
+             });
+             
+             // Update the expired code with new one
+             const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+             await supabase
+               .from('signup_verification_codes')
+               .update({
+                 code: verificationCode,
+                 expires_at: expiresAt,
+                 created_at: new Date().toISOString()
+               })
+               .eq('id', existingCode.id);
+           }
+         } else {
+           // No existing code, generate new one
+           verificationCode = generateVerificationCode();
+           logStep('Generated new verification code', { code: verificationCode });
+           
+           // Try to insert new code, handle potential race condition
+           try {
+             const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+             logStep('Storing verification code', { 
+               email: data.user.email, 
+               code: verificationCode,
+               expiresAt: expiresAt
+             });
+
+             const { error: dbError } = await supabase
+               .from('signup_verification_codes')
+               .insert({
+                 user_id: data.user.id,
+                 email: data.user.email,
+                 code: verificationCode,
+                 expires_at: expiresAt
+               });
+             
+             if (dbError) {
+               // If insert failed (likely due to race condition), try to get the existing code
+               logStep('Insert failed, checking for existing code due to race condition', { 
+                 error: dbError.message,
+                 email: data.user.email
+               });
+               
+               const { data: raceConditionCode, error: raceError } = await supabase
+                 .from('signup_verification_codes')
+                 .select('*')
+                 .eq('email', data.user.email)
+                 .eq('used', false)
+                 .single();
+               
+               if (raceConditionCode && !raceError) {
+                 logStep('Found existing code from race condition, using it', { 
+                   email: data.user.email,
+                   code: raceConditionCode.code
+                 });
+                 verificationCode = raceConditionCode.code;
+                 shouldSendEmail = false; // Don't send duplicate email
+               } else {
+                 logStep('Error in race condition handling', { error: raceError?.message });
+               }
+             } else {
+               logStep('Verification code stored successfully', { 
+                 email: data.user.email,
+                 code: verificationCode,
+                 expiresAt: expiresAt
+               });
+             }
+           } catch (error) {
+             logStep('Error storing verification code', { error: error.message });
+           }
+         }
+         
+         emailTemplate = generateSignupVerificationEmail(data, verificationCode, userLanguage);
+         break;
       case 'magiclink':
         emailTemplate = generateMagicLinkEmail(data, userLanguage);
         break;
@@ -1053,30 +1137,49 @@ serve(async (req) => {
       }
     }
     
-    logStep('Sending email via Resend', { 
-      type: data.email_data.email_action_type,
-      to: recipientEmail,
-      originalUserEmail: data.user.email,
-      subject: emailTemplate.subject 
-    });
+     // Only send email if shouldSendEmail is true (for signup deduplication)
+     if (data.email_data.email_action_type === 'signup' && !shouldSendEmail) {
+       logStep('Skipping email send - duplicate prevention', { 
+         type: data.email_data.email_action_type,
+         to: recipientEmail,
+         originalUserEmail: data.user.email
+       });
+       
+       return new Response(
+         JSON.stringify({ 
+           success: true, 
+           emailId: 'duplicate-prevented',
+           type: data.email_data.email_action_type,
+           message: 'Email send skipped due to recent duplicate'
+         }),
+         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+       );
+     }
 
-    // Send email via Resend
-    const { data: emailData, error } = await resend.emails.send({
-      from: 'TierTrainer24 <noreply@mail.tiertrainer24.com>',
-      to: [recipientEmail],
-      subject: emailTemplate.subject,
-      html: emailTemplate.html,
-    });
+     logStep('Sending email via Resend', { 
+       type: data.email_data.email_action_type,
+       to: recipientEmail,
+       originalUserEmail: data.user.email,
+       subject: emailTemplate.subject 
+     });
 
-    if (error) {
-      logStep('Resend error', { error });
-      throw new Error(`Failed to send email: ${error.message}`);
-    }
+     // Send email via Resend
+     const { data: emailData, error } = await resend.emails.send({
+       from: 'TierTrainer24 <noreply@mail.tiertrainer24.com>',
+       to: [recipientEmail],
+       subject: emailTemplate.subject,
+       html: emailTemplate.html,
+     });
 
-    logStep('Email sent successfully', { 
-      emailId: emailData?.id,
-      type: data.email_data.email_action_type 
-    });
+     if (error) {
+       logStep('Resend error', { error });
+       throw new Error(`Failed to send email: ${error.message}`);
+     }
+
+     logStep('Email sent successfully', { 
+       emailId: emailData?.id,
+       type: data.email_data.email_action_type 
+     });
 
     return new Response(
       JSON.stringify({ 
