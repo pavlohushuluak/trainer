@@ -79,8 +79,8 @@ export const SmartLoginModal = ({
   }, [email, password, confirmPassword, firstName, lastName, termsAgreed]);
 
   const isSignInValid = useMemo(() => {
-    return email && password && termsAgreed;
-  }, [email, password, termsAgreed]);
+    return email && password;
+  }, [email, password]);
 
   const language = getCurrentLanguage();
 
@@ -356,35 +356,6 @@ export const SmartLoginModal = ({
                             >
                               {t('auth.forgotPassword')}
                             </Link>
-                          </div>
-                          
-                          {/* Terms Agreement Checkbox */}
-                          <div className="flex items-start space-x-2 p-3 bg-muted/30 rounded-lg border border-border/50">
-                            <Checkbox
-                              id="terms-agreement-signin"
-                              checked={termsAgreed}
-                              onCheckedChange={(checked) => setTermsAgreed(checked as boolean)}
-                              className="mt-0.5"
-                            />
-                            <label htmlFor="terms-agreement-signin" className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                              {t('auth.termsAgreement')}{' '}
-                              <button 
-                                type="button"
-                                onClick={() => navigate('/agb')}
-                                className="min-h-0 text-primary hover:underline font-medium transition-colors"
-                              >
-                                {t('auth.legal.terms')}
-                              </button>
-                              {' '}{t('auth.legal.and')}{' '}
-                              <button 
-                                type="button"
-                                onClick={() => navigate('/datenschutz')}
-                                className="min-h-0 text-primary hover:underline font-medium transition-colors"
-                              >
-                                {t('auth.legal.privacy')}
-                              </button>
-                              .
-                            </label>
                           </div>
                           
                           <Button 

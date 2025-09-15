@@ -95,7 +95,6 @@ const LoginPage = () => {
     if (activeTab === 'signin') {
       errors.email = validateField('email', email);
       errors.password = validateField('password', password);
-      errors.terms = validateField('terms', '');
     } else {
       errors.firstName = validateField('firstName', firstName);
       errors.lastName = validateField('lastName', lastName);
@@ -346,48 +345,6 @@ const LoginPage = () => {
                         {t('auth.forgotPassword')}
                       </Link>
                     </div>
-                    
-                    {/* Terms Agreement Checkbox */}
-                    <div className={`flex items-start space-x-2 p-3 rounded-lg border transition-colors ${
-                      fieldErrors.terms 
-                        ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800' 
-                        : 'bg-muted/30 border-border/50'
-                    }`}>
-                      <Checkbox
-                        id="terms-agreement-signin"
-                        checked={termsAgreed}
-                        onCheckedChange={(checked) => {
-                          setTermsAgreed(checked as boolean);
-                          if (checked) handleFieldChange('terms', '');
-                        }}
-                        className="mt-0.5"
-                      />
-                      <label htmlFor="terms-agreement-signin" className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                        {t('auth.termsAgreement')}{' '}
-                        <button 
-                          type="button"
-                          onClick={() => navigate('/agb')}
-                          className="min-h-0 text-primary hover:underline font-medium transition-colors"
-                        >
-                          {t('auth.legal.terms')}
-                        </button>
-                        {' '}{t('auth.legal.and')}{' '}
-                        <button 
-                          type="button"
-                          onClick={() => navigate('/datenschutz')}
-                          className="min-h-0 text-primary hover:underline font-medium transition-colors"
-                        >
-                          {t('auth.legal.privacy')}
-                        </button>
-                        .
-                      </label>
-                    </div>
-                    {fieldErrors.terms && (
-                      <div className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
-                        <AlertCircle className="h-3 w-3" />
-                        {fieldErrors.terms}
-                      </div>
-                    )}
                     
                     <Button 
                       type="submit" 
