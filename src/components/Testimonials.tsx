@@ -306,7 +306,7 @@ export const Testimonials = () => {
             disabled={isTransitioning}
             variant="ghost"
             size="icon"
-            aria-label={t('testimonials.previous')}
+            aria-label={"previousButton"}
             className={cn(
               "absolute left-4 top-1/2 -translate-y-1/2 bg-background/90 backdrop-blur-xl border border-border/50 hover:bg-background/95 transition-all duration-1000 shadow-2xl hover:shadow-3xl z-30 h-12 w-12 md:h-14 md:w-14",
               isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-70 -translate-x-2 scale-90"
@@ -327,7 +327,7 @@ export const Testimonials = () => {
             disabled={isTransitioning}
             variant="ghost"
             size="icon"
-            aria-label={t('testimonials.next')}
+            aria-label={"nextButton"}
             className={cn(
               "absolute right-4 top-1/2 -translate-y-1/2 bg-background/90 backdrop-blur-xl border border-border/50 hover:bg-background/95 transition-all duration-1000 shadow-2xl hover:shadow-3xl z-30 h-12 w-12 md:h-14 md:w-14",
               isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-70 translate-x-2 scale-90"

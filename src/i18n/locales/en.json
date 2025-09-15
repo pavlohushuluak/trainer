@@ -438,21 +438,6 @@
       "swipeHint": "← Swipe to navigate →"
     },
     "developmentMode": "🧪 Test Mode: Full Access",
-    "smartLogin": {
-      "testAccessTitle": "Start Test Access",
-      "testAccessDescription": "Sign in to get full access to the test system.",
-      "trainingTitle": "Sign in for Pet Training",
-      "trainingDescription": "Sign in to access pet training and start training.",
-      "defaultTitle": "🐾 Start Free Training – Quick Sign Up",
-      "defaultDescription": "Sign up to start your free 7-day training. Your pet will thank you! 💛",
-      "welcomeToast": {
-        "title": "Welcome back!",
-        "description": "You have been successfully logged in."
-      },
-      "signupSuccess": "Registration successful!",
-      "signupSuccessDescription": "Please check your email for the verification code.",
-      "proceedingToCheckout": "Proceeding to checkout..."
-  },
   "checkout": {
     "autoLogin": {
       "title": "Setting up your account...",
@@ -4016,6 +4001,13 @@
       "pleaseWait": "Please wait a moment."
     },
     "smartLogin": {
+      "testAccessTitle": "Start Test Access",
+      "testAccessDescription": "Sign in to get full access to the test system.",
+      "trainingTitle": "Sign in for Pet Training",
+      "trainingDescription": "Sign in to access pet training and start training.",
+      "defaultTitle": "🐾 Start Free Training – Quick Sign Up",
+      "defaultDescription": "Sign up to start your free 7-day training. Your pet will thank you! 💛",
+      "proceedingToCheckout": "Proceeding to checkout...",
       "welcomeToast": {
         "title": "🐾 Welcome!",
         "description": "You have successfully logged in."

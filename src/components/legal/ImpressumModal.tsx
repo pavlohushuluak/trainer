@@ -42,10 +42,10 @@ export const ImpressumModal = ({ isOpen, onClose }: ImpressumModalProps) => {
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-full"
-              aria-label={t('legal.close')}
+              aria-label={'legal.close'}
             >
               <X className="h-4 w-4" />
-              <span className="sr-only">{t('legal.close')}</span>
+              <span className="sr-only">{'legal.close'}</span>
             </Button>
           </div>
         </DialogHeader>
@@ -219,7 +219,7 @@ export const ImpressumModal = ({ isOpen, onClose }: ImpressumModalProps) => {
             <Button 
               onClick={onClose} 
               variant="outline"
-              aria-label={t('legal.close')}
+              aria-label={'legal.close'}
             >
               {t('legal.close')}
             </Button>

@@ -48,7 +48,7 @@ export const SubscriptionLoadingState = ({
                 variant="outline"
                 size="sm"
                 className="flex items-center gap-2"
-                aria-label={t('subscription.loadingState.retryLoading')}
+                aria-label={'subscription.loadingState.retryLoading'}
               >
                 <RefreshCw className="h-4 w-4" />
                 {t('subscription.loadingState.retry')}

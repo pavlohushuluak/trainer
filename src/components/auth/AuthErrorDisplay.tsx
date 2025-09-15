@@ -30,7 +30,7 @@ export const AuthErrorDisplay: React.FC<AuthErrorDisplayProps> = ({ onDismiss })
         <button
           onClick={handleDismiss}
           className="ml-2 p-1 hover:bg-destructive/10 rounded-full transition-colors"
-          aria-label={t('auth.errorDisplay.closeError')}
+          aria-label={'auth.errorDisplay.closeError'}
         >
           <X className="h-4 w-4" />
         </button>

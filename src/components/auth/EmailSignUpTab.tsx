@@ -188,7 +188,7 @@ export const EmailSignUpTab = ({ onAuthSuccess }: EmailSignUpTabProps) => {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-            aria-label={showPassword ? t('auth.emailSignUpTab.form.hidePassword') : t('auth.emailSignUpTab.form.showPassword')}
+            aria-label={showPassword ? 'auth.emailSignUpTab.form.hidePassword' : 'auth.emailSignUpTab.form.showPassword'}
           >
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>

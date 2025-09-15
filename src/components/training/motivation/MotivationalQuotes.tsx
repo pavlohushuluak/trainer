@@ -47,7 +47,7 @@ export const MotivationalQuotes = () => {
             size="sm"
             onClick={getNewQuote}
             className="flex-shrink-0 h-8 w-8 p-0 hover:bg-primary/10"
-            aria-label={t('training.motivationalQuotes.newQuote')}
+            aria-label={'training.motivationalQuotes.newQuote'}
           >
             <RefreshCw className="h-3 w-3" />
           </Button>

@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { Hero } from "@/components/Hero";
 import { StickyPremiumButton } from "@/components/StickyPremiumButton";
 import { SmartLoginModal } from "@/components/auth/SmartLoginModal";
+import { VerificationCodeModal } from "@/components/auth/VerificationCodeModal";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useAuth } from "@/hooks/useAuth";
 import { useSmartLogin } from "@/hooks/useSmartLogin";
 import { usePetDataPrefetch } from "@/hooks/usePetDataPrefetch";
+import { useVerificationCode } from "@/hooks/auth/useVerificationCode";
 import { supabase } from "@/integrations/supabase/client";
 import { getCheckoutInformation, removeCheckoutInformation } from "@/utils/checkoutSessionStorage";
 
@@ -27,10 +29,31 @@ const SectionLoader = ({ height = "h-32" }: { height?: string }) => (
 
 const Index = () => {
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
+  const [showVerificationCode, setShowVerificationCode] = useState(false);
+  const [cancelledUserEmail, setCancelledUserEmail] = useState('');
+  const [cancelledUserPassword, setCancelledUserPassword] = useState('');
 
   const { trackEvent } = useAnalytics();
   const { user, session } = useAuth();
   const navigate = useNavigate();
+
+  // Verification code hook for cancelled checkout users
+  const { verifyCode, resendCode, loading: verificationLoading, error: verificationError } = useVerificationCode({
+    email: cancelledUserEmail,
+    password: cancelledUserPassword,
+    onSuccess: () => {
+      setShowVerificationCode(false);
+      setCancelledUserEmail('');
+      setCancelledUserPassword('');
+      // User will be automatically logged in by the verification code hook
+      setTimeout(() => {
+        navigate('/mein-tiertraining');
+      }, 1000);
+    },
+    onError: (error) => {
+      console.error('Verification failed:', error);
+    }
+  });
   
   // Prefetch pet data for logged-in users for faster navigation
   const { pets, isAdmin, hasPrefetchedData } = usePetDataPrefetch();
@@ -255,22 +278,49 @@ const Index = () => {
     };
   }, []); // Run once on mount
 
-  // Check for cancelled checkout and send verification email
+  // Check for cancelled checkout and handle verification code flow
   useEffect(() => {
     const handleCancelledCheckout = async () => {
-      if (user && session) {
-        // Check if user just signed up (unconfirmed) and checkout was cancelled
-        const urlParams = new URLSearchParams(window.location.search);
-        const checkoutCancelled = urlParams.get('checkout_cancelled') === 'true';
+      const urlParams = new URLSearchParams(window.location.search);
+      const checkoutCancelled = urlParams.get('checkout_cancelled') === 'true';
+      
+      if (checkoutCancelled) {
+        console.log('Checkout was cancelled, checking for unconfirmed user...');
         
-        // Check if user is unconfirmed (just signed up)
-        const isUnconfirmed = user && !user.email_confirmed_at;
+        // Check if we have temporary user data from signup
+        const tempUserData = sessionStorage.getItem('tempUserData');
         
-        if (checkoutCancelled && isUnconfirmed) {
-          console.log('Checkout was cancelled for unconfirmed user, sending verification email:', user.email);
+        if (tempUserData) {
+          try {
+            const tempUser = JSON.parse(tempUserData);
+            console.log('Found temp user data from cancelled checkout:', tempUser.email);
+            
+            // Send verification email to the user who cancelled checkout
+            const { error } = await supabase.functions.invoke('send-verification-after-cancellation', {
+              body: { email: tempUser.email }
+            });
+
+            if (error) {
+              console.error('Error sending verification email after cancellation:', error);
+            } else {
+              console.log('Verification email sent successfully after checkout cancellation');
+              
+              // Show verification code modal
+              setCancelledUserEmail(tempUser.email);
+              setCancelledUserPassword(''); // We don't have the password stored
+              setShowVerificationCode(true);
+              
+              // Clean up temp user data
+              sessionStorage.removeItem('tempUserData');
+            }
+          } catch (error) {
+            console.error('Error processing cancelled checkout:', error);
+          }
+        } else if (user && !user.email_confirmed_at) {
+          // Handle case where user is logged in but unconfirmed
+          console.log('Checkout was cancelled for unconfirmed logged-in user:', user.email);
           
           try {
-            // Call the new function to send verification email
             const { error } = await supabase.functions.invoke('send-verification-after-cancellation', {
               body: { email: user.email }
             });
@@ -279,15 +329,20 @@ const Index = () => {
               console.error('Error sending verification email after cancellation:', error);
             } else {
               console.log('Verification email sent successfully after checkout cancellation');
+              
+              // Show verification code modal
+              setCancelledUserEmail(user.email);
+              setCancelledUserPassword(''); // We don't have the password stored
+              setShowVerificationCode(true);
             }
           } catch (error) {
             console.error('Error calling send-verification-after-cancellation:', error);
           }
-
-          // Clean up URL parameters
-          const newUrl = window.location.pathname;
-          window.history.replaceState({}, '', newUrl);
         }
+
+        // Clean up URL parameters
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
       }
     };
 
@@ -544,6 +599,21 @@ const Index = () => {
           </div>
         </div>
       )}
+
+      {/* Verification Code Modal for cancelled checkout */}
+      <VerificationCodeModal
+        isOpen={showVerificationCode}
+        onClose={() => {
+          setShowVerificationCode(false);
+          setCancelledUserEmail('');
+          setCancelledUserPassword('');
+        }}
+        email={cancelledUserEmail}
+        onVerify={verifyCode}
+        onResend={resendCode}
+        loading={verificationLoading}
+        error={verificationError}
+      />
     </>
   );
 };

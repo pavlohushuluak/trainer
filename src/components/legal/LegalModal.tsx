@@ -92,7 +92,7 @@ export const LegalModal = ({
             <Button 
               onClick={handleClose} 
               variant="outline"
-              aria-label={t('legal.close')}
+              aria-label={'legal.close'}
             >
               {t('legal.close')}
             </Button>
