@@ -3891,6 +3891,30 @@
     "alreadyHaveAccountText": "Haben Sie bereits ein Konto?",
     "dontHaveAccountText": "Haben Sie noch kein Konto?",
     "loginNow": "Jetzt anmelden",
+    "verificationCode": {
+      "title": "E-Mail bestätigen",
+      "description": "Wir haben einen 6-stelligen Bestätigungscode gesendet an",
+      "success": "E-Mail erfolgreich bestätigt! Sie sind jetzt angemeldet.",
+      "backToLogin": "Zurück zur Anmeldung",
+      "didNotReceive": "Code nicht erhalten?",
+      "resend": "Code erneut senden",
+      "resendIn": "Erneut senden in",
+      "sending": "Wird gesendet...",
+      "resending": "Wird erneut gesendet...",
+      "close": "Schließen",
+      "validating": "Code wird überprüft...",
+      "instructions": "Geben Sie den 6-stelligen Code ein, der an Ihre E-Mail gesendet wurde",
+      "sentTo": "Code gesendet an",
+      "invalid": "Ungültiger Bestätigungscode",
+      "expired": "Bestätigungscode ist abgelaufen",
+      "required": "Bestätigungscode ist erforderlich",
+      "steps": {
+        "title": "So bestätigen Sie:",
+        "step1": "Überprüfen Sie Ihr E-Mail-Postfach",
+        "step2": "Geben Sie den 6-stelligen Code oben ein",
+        "step3": "Klicken Sie auf Bestätigen, um die Registrierung abzuschließen"
+      }
+    },
     "oauth": {
       "preparing": "Anmeldung wird vorbereitet",
       "redirecting": "Sie werden zu Google weitergeleitet...",
@@ -4000,17 +4024,6 @@
       },
       "signupSuccess": "Registrierung erfolgreich!",
       "signupSuccessDescription": "Bitte überprüfen Sie Ihren E-Mail-Posteingang und bestätigen Sie Ihre E-Mail-Adresse. Der Bestätigungslink ist 1 Stunde gültig."
-    },
-    "verificationCode": {
-      "title": "Bestätigungscode eingeben",
-      "instructions": "Geben Sie den 6-stelligen Code ein, der an Ihre E-Mail gesendet wurde",
-      "validating": "Code wird überprüft...",
-      "resend": "Code erneut senden",
-      "resending": "Wird erneut gesendet...",
-      "sentTo": "Code gesendet an",
-      "invalid": "Ungültiger Bestätigungscode",
-      "expired": "Bestätigungscode ist abgelaufen",
-      "required": "Bestätigungscode ist erforderlich"
     },
     "stateHandler": {
       "checkoutError": {

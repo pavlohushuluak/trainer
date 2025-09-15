@@ -71,13 +71,12 @@ export const useAuthOperations = () => {
     return result;
   };
 
-  const signUp = async (email: string, password: string, firstName?: string, lastName?: string, language?: string) => {
-    // NEW WORKFLOW: Skip email verification initially, proceed to checkout
-    
+  const signUp = async (email: string, password: string, firstName?: string, lastName?: string, language?: string, skipEmailVerification: boolean = false) => {
     // Detect preferred language using the unified detection function
     // Always default to German ('de') if no language is provided
     const detectedLanguage = language || detectBrowserLanguage() || 'de';
     console.log('🔐 Signup - detected language:', detectedLanguage);
+    console.log('🔐 Signup - skip email verification:', skipEmailVerification);
     
     // Always provide metadata, even if empty - this prevents "undefined values" error
     const metadata = {
@@ -92,9 +91,8 @@ export const useAuthOperations = () => {
       email: email.trim(),
       password: password, // Make sure password is passed as-is
       options: {
-        // NEW WORKFLOW: Don't send verification email initially
-        // Email verification will be sent only if payment is cancelled
-        emailRedirectTo: undefined, // Skip email verification
+        // Conditional email verification based on context
+        emailRedirectTo: skipEmailVerification ? undefined : `${window.location.origin}/auth/callback`,
         data: metadata
       }
     });

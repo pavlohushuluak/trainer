@@ -19,6 +19,7 @@ interface VerificationCodeInputProps {
   error?: string;
   loading?: boolean;
   resendLoading?: boolean;
+  resendCooldown?: number;
   email?: string;
 }
 
@@ -35,6 +36,7 @@ export const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({
   error,
   loading = false,
   resendLoading = false,
+  resendCooldown = 0,
   email
 }) => {
   const { t } = useTranslations();
@@ -163,7 +165,7 @@ export const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({
           variant="ghost"
           size="sm"
           onClick={onResend}
-          disabled={resendLoading}
+          disabled={resendLoading || resendCooldown > 0}
           className="text-xs text-primary hover:text-primary/80 hover:underline"
         >
           {resendLoading ? (
@@ -171,6 +173,8 @@ export const VerificationCodeInput: React.FC<VerificationCodeInputProps> = ({
               <div className="w-3 h-3 border border-primary border-t-transparent rounded-full animate-spin mr-1" />
               {t('auth.verificationCode.resending')}
             </>
+          ) : resendCooldown > 0 ? (
+            `${t('auth.verificationCode.resendIn')} ${resendCooldown}s`
           ) : (
             t('auth.verificationCode.resend')
           )}

@@ -22,6 +22,8 @@ import { getCurrentLanguage } from '@/utils/languageSupport';
 import { Checkbox } from '@/components/ui/checkbox';
 import { AGBModal } from '@/components/legal/AGBModal';
 import { ImpressumModal } from '@/components/legal/ImpressumModal';
+import { VerificationCodeModal } from '@/components/auth/VerificationCodeModal';
+import { useVerificationCode } from '@/hooks/auth/useVerificationCode';
 
 const LoginPage = () => {
   const { signIn, signUp, user } = useAuth();
@@ -43,6 +45,27 @@ const LoginPage = () => {
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(true);
+  const [showVerificationCode, setShowVerificationCode] = useState(false);
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPassword, setSignupPassword] = useState('');
+  
+  // Verification code hook
+  const { verifyCode, resendCode, loading: verificationLoading, error: verificationError } = useVerificationCode({
+    email: signupEmail,
+    password: signupPassword, // Use the stored password
+    onSuccess: () => {
+      setShowVerificationCode(false);
+      setSignupEmail('');
+      setMessage(t('auth.verificationCode.success'));
+      // User will be automatically logged in by the verification code hook
+      setTimeout(() => {
+        navigate('/mein-tiertraining');
+      }, 1000);
+    },
+    onError: (error) => {
+      setError(error);
+    }
+  });
 
   // Check localStorage for alreadySignedUp value on component mount and handle URL parameters
   useEffect(() => {
@@ -201,9 +224,11 @@ const LoginPage = () => {
           setError(error.message);
         }
       } else {
-        setMessage(t('auth.registrationSuccess'));
-        // Set localStorage to indicate user has signed up
-        localStorage.setItem('alreadySignedUp', 'true');
+        // Show verification code input instead of success message
+        setSignupEmail(email);
+        setSignupPassword(password); // Store password for auto-login after verification
+        setShowVerificationCode(true);
+        setActiveTab('signin'); // Switch to signin tab to show verification form
         // Clear form after successful registration
         setEmail('');
         setPassword('');
@@ -380,6 +405,7 @@ const LoginPage = () => {
                         )}
                       </Button>
                     </form>
+                    
                   </TabsContent>
 
                   {/* Sign Up Tab */}
@@ -595,6 +621,21 @@ const LoginPage = () => {
           {/* Legal Modals */}
           <AGBModal isOpen={showTermsModal} onClose={() => setShowTermsModal(false)} />
           <ImpressumModal isOpen={showPrivacyModal} onClose={() => setShowPrivacyModal(false)} />
+          
+          {/* Verification Code Modal */}
+          <VerificationCodeModal
+            isOpen={showVerificationCode}
+            onClose={() => {
+              setShowVerificationCode(false);
+              setSignupEmail('');
+              setSignupPassword('');
+            }}
+            email={signupEmail}
+            onVerify={verifyCode}
+            onResend={resendCode}
+            loading={verificationLoading}
+            error={verificationError}
+          />
         </div>
       </div>
     </div>

@@ -3889,6 +3889,30 @@
     "alreadyHaveAccountText": "Already have an account?",
     "dontHaveAccountText": "Don't have an account?",
     "loginNow": "Login now",
+    "verificationCode": {
+      "title": "Verify Your Email",
+      "description": "We sent a 6-digit verification code to",
+      "success": "Email verified successfully! You are now logged in.",
+      "backToLogin": "Back to Login",
+      "didNotReceive": "Didn't receive the code?",
+      "resend": "Resend Code",
+      "resendIn": "Resend in",
+      "sending": "Sending...",
+      "resending": "Resending...",
+      "close": "Close",
+      "validating": "Validating code...",
+      "instructions": "Enter the 6-digit code sent to your email",
+      "sentTo": "Code sent to",
+      "invalid": "Invalid verification code",
+      "expired": "Verification code has expired",
+      "required": "Verification code is required",
+      "steps": {
+        "title": "How to verify:",
+        "step1": "Check your email inbox",
+        "step2": "Enter the 6-digit code above",
+        "step3": "Click verify to complete registration"
+      }
+    },
     "oauth": {
       "preparing": "Preparing login",
       "redirecting": "You will be redirected to Google...",
@@ -3998,17 +4022,6 @@
       },
       "signupSuccess": "Registration successful!",
       "signupSuccessDescription": "Please check your email inbox and confirm your email address. The confirmation link is valid for 1 hour."
-    },
-    "verificationCode": {
-      "title": "Enter verification code",
-      "instructions": "Enter the 6-digit code sent to your email",
-      "validating": "Verifying code...",
-      "resend": "Resend code",
-      "resending": "Resending...",
-      "sentTo": "Code sent to",
-      "invalid": "Invalid verification code",
-      "expired": "Verification code has expired",
-      "required": "Verification code is required"
     },
     "stateHandler": {
       "checkoutError": {

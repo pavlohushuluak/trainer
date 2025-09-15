@@ -165,7 +165,7 @@ export const SmartLoginModal = ({
     setMessage('');
     
     try {
-      const { error, data } = await signUp(email, password, firstName.trim(), lastName.trim(), language);
+      const { error, data } = await signUp(email, password, firstName.trim(), lastName.trim(), language, true);
       if (error) {
         if (error.message.includes('already registered')) {
           setError(t('auth.emailAlreadyRegistered'));

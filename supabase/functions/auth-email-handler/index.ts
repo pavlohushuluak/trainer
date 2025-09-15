@@ -213,6 +213,150 @@ const generateSignupVerificationEmail = (data: AuthEmailData, verificationCode: 
   };
 };
 
+// Generate 6-digit verification code and create email template
+const generateSignupCodeEmail = async (data: AuthEmailData, language: string = 'de') => {
+  // Generate a random 6-digit code
+  const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+  
+  logStep('Generated 6-digit verification code', { 
+    email: data.user.email,
+    code: verificationCode,
+    userId: data.user.id
+  });
+  
+  // Store the verification code in the database
+  const supabaseAdmin = createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  );
+  
+  const { error: insertError } = await supabaseAdmin
+    .from('signup_verification_codes')
+    .insert({
+      email: data.user.email,
+      code: verificationCode,
+      user_id: data.user.id,
+      expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 1 hour from now
+    });
+  
+  if (insertError) {
+    logStep('Error storing verification code', { 
+      error: insertError.message,
+      errorCode: insertError.code,
+      errorDetails: insertError.details,
+      errorHint: insertError.hint,
+      email: data.user.email,
+      code: verificationCode,
+      userId: data.user.id
+    });
+    throw new Error(`Failed to store verification code: ${insertError.message}`);
+  }
+  
+  logStep('Verification code stored successfully', { 
+    email: data.user.email,
+    code: verificationCode,
+    userId: data.user.id
+  });
+  
+  const userName = data.user.user_metadata?.first_name || 
+                   data.user.user_metadata?.full_name || 
+                   (language === 'en' ? 'Pet Friend' : 'Tierfreund');
+  
+  const content = language === 'en' ? {
+    subject: '🐾 Welcome to TierTrainer24 - Verification Code',
+    title: `Welcome, ${userName}! 🎉`,
+    subtitle: 'Just one step left to your TierTrainer24 account',
+    description: `Please enter this 6-digit verification code to confirm your email address:`,
+    codeText: `Your verification code:`,
+    code: verificationCode,
+    codeInstructions: 'Enter this code in the verification form to activate your account.',
+    benefitsTitle: '🚀 What awaits you at TierTrainer24?',
+    benefits: [
+      'Professional training methods for your pet',
+      'Step-by-step instructions',
+      'Community with other pet owners',
+      'Personal AI trainer for individual questions'
+    ],
+    footerText: `This email was sent to <strong>${data.user.email}</strong>.<br>If you didn't sign up for TierTrainer24, please ignore this email.`,
+    copyright: '© 2024 TierTrainer24 - Your partner for professional pet training'
+  } : {
+    subject: '🐾 Willkommen bei TierTrainer24 - Bestätigungscode',
+    title: `Willkommen, ${userName}! 🎉`,
+    subtitle: 'Nur noch ein Schritt bis zu Ihrem TierTrainer24 Account',
+    description: `Bitte geben Sie diesen 6-stelligen Bestätigungscode ein, um Ihre E-Mail-Adresse zu bestätigen:`,
+    codeText: `Ihr Bestätigungscode:`,
+    code: verificationCode,
+    codeInstructions: 'Geben Sie diesen Code im Bestätigungsformular ein, um Ihren Account zu aktivieren.',
+    benefitsTitle: '🚀 Was erwartet Sie bei TierTrainer24?',
+    benefits: [
+      'Professionelle Trainingsmethoden für Ihr Haustier',
+      'Schritt-für-Schritt Anleitungen',
+      'Community mit anderen Haustierbesitzern',
+      'Persönlicher KI-Trainer für individuelle Fragen'
+    ],
+    footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.<br>Falls Sie sich nicht bei TierTrainer24 angemeldet haben, ignorieren Sie diese E-Mail.`,
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Haustiertraining'
+  };
+  
+  return {
+    subject: content.subject,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>${content.subject}</title>
+        </head>
+        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f8fafc; line-height: 1.6;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
+              <div style="background-color: rgba(255, 255, 255, 0.2); border-radius: 50%; width: 80px; height: 80px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 40px;">🐾</span>
+              </div>
+              <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700;">${content.title}</h1>
+              <p style="color: rgba(255, 255, 255, 0.9); margin: 10px 0 0 0; font-size: 16px;">${content.subtitle}</p>
+            </div>
+            
+            <!-- Main Content -->
+            <div style="padding: 40px 30px;">
+              <p style="color: #374151; font-size: 16px; margin: 0 0 30px 0;">${content.description}</p>
+              
+              <!-- Verification Code Box -->
+              <div style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 12px; padding: 30px; text-align: center; margin: 30px 0;">
+                <p style="color: #6b7280; font-size: 14px; margin: 0 0 15px 0; font-weight: 500;">${content.codeText}</p>
+                <div style="background-color: #ffffff; border: 2px dashed #d1d5db; border-radius: 8px; padding: 20px; margin: 15px 0;">
+                  <span style="font-size: 32px; font-weight: 700; color: #1f2937; letter-spacing: 4px; font-family: 'Courier New', monospace;">${content.code}</span>
+                </div>
+                <p style="color: #6b7280; font-size: 14px; margin: 15px 0 0 0;">${content.codeInstructions}</p>
+              </div>
+              
+              <!-- Benefits Section -->
+              <div style="margin-top: 40px;">
+                <h3 style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 0 0 20px 0;">${content.benefitsTitle}</h3>
+                <ul style="color: #4b5563; font-size: 15px; margin: 0; padding-left: 20px;">
+                  ${content.benefits.map(benefit => `<li style="margin-bottom: 8px;">${benefit}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+              <p style="color: #6b7280; font-size: 14px; margin: 0 0 15px 0;">
+                ${content.footerText}
+              </p>
+              <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                ${content.copyright}
+              </p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `
+  };
+};
+
 const generateSignupConfirmationEmail = (data: AuthEmailData, language: string = 'de') => {
   const userName = data.user.user_metadata?.first_name || 
                    data.user.user_metadata?.full_name || 
@@ -849,6 +993,9 @@ serve(async (req) => {
       userEmail: data.user.email,
       userMetadata: data.user.user_metadata,
       newEmail: data.new_email,
+      emailData: data.email_data,
+      hasRedirectTo: !!data.email_data.redirect_to,
+      redirectToValue: data.email_data.redirect_to,
       fullPayload: JSON.stringify(data),
       headers: {
         'accept-language': headers['accept-language'],
@@ -977,23 +1124,58 @@ serve(async (req) => {
     // Generate email based on action type with language support
     switch (data.email_data.email_action_type) {
        case 'signup':
-         logStep('NEW WORKFLOW: Skipping signup verification email - user will proceed to checkout', { 
-           language: userLanguage,
-           preferredLanguage: data.user.user_metadata?.preferred_language,
-           userEmail: data.user.email
+         // Check if emailRedirectTo is set - if it is, send confirmation email (login page signup)
+         // If emailRedirectTo is undefined, skip confirmation email (checkout flow)
+         logStep('Processing signup case', {
+           hasRedirectTo: !!data.email_data.redirect_to,
+           redirectToValue: data.email_data.redirect_to,
+           userEmail: data.user.email,
+           shouldSendEmail: shouldSendEmail
          });
          
-         // NEW WORKFLOW: Skip sending verification email for signup
-         // User will proceed to checkout, email verification will be sent only if payment is cancelled
-         return new Response(
-           JSON.stringify({ 
-             success: true, 
-             emailId: 'skipped-signup-verification',
-             type: data.email_data.email_action_type,
-             message: 'Signup verification email skipped - user proceeding to checkout'
-           }),
-           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-         );
+         if (data.email_data.redirect_to) {
+           logStep('Sending signup verification email - user signed up from login page', { 
+             language: userLanguage,
+             preferredLanguage: data.user.user_metadata?.preferred_language,
+             userEmail: data.user.email,
+             redirectTo: data.email_data.redirect_to
+           });
+           
+           // Generate 6-digit code and send confirmation email for login page signup
+           try {
+             emailTemplate = await generateSignupCodeEmail(data, userLanguage);
+             logStep('6-digit code email template generated successfully', { 
+               email: data.user.email,
+               hasTemplate: !!emailTemplate,
+               templateSubject: emailTemplate?.subject
+             });
+           } catch (error) {
+             logStep('Error generating signup code email template', { 
+               error: error.message,
+               email: data.user.email,
+               stack: error.stack
+             });
+             throw error;
+           }
+           break;
+         } else {
+           logStep('Skipping signup verification email - user proceeding to checkout', { 
+             language: userLanguage,
+             preferredLanguage: data.user.user_metadata?.preferred_language,
+             userEmail: data.user.email
+           });
+           
+           // Skip sending verification email for checkout flow
+           return new Response(
+             JSON.stringify({ 
+               success: true, 
+               emailId: 'skipped-signup-verification',
+               type: data.email_data.email_action_type,
+               message: 'Signup verification email skipped - user proceeding to checkout'
+             }),
+             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+           );
+         }
       case 'magiclink':
         emailTemplate = generateMagicLinkEmail(data, userLanguage);
         break;
@@ -1036,6 +1218,15 @@ serve(async (req) => {
       }
     }
     
+     // Debug: Log the current state before email sending
+     logStep('About to send email - checking conditions', {
+       emailActionType: data.email_data.email_action_type,
+       shouldSendEmail: shouldSendEmail,
+       hasEmailTemplate: !!emailTemplate,
+       recipientEmail: recipientEmail,
+       originalUserEmail: data.user.email
+     });
+     
      // Only send email if shouldSendEmail is true (for signup deduplication)
      if (data.email_data.email_action_type === 'signup' && !shouldSendEmail) {
        logStep('Skipping email send - duplicate prevention', { 
