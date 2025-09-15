@@ -323,7 +323,7 @@ export const SmartLoginModal = ({
                         >
                           <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                           <span className="hidden xs:inline">{t('auth.login')}</span>
-                          <span className="xs:hidden">Login</span>
+                          <span className="xs:hidden">{t('auth.login')}</span>
                         </TabsTrigger>
                         <TabsTrigger 
                           value="signup"
@@ -331,7 +331,7 @@ export const SmartLoginModal = ({
                         >
                           <Lock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                           <span className="hidden xs:inline">{t('auth.register')}</span>
-                          <span className="xs:hidden">Sign Up</span>
+                          <span className="xs:hidden">{t('auth.register')}</span>
                         </TabsTrigger>
                       </TabsList>
                       
@@ -373,13 +373,13 @@ export const SmartLoginModal = ({
                               <>
                                 <Loader2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                                 <span className="hidden xs:inline">{t('auth.loggingIn')}</span>
-                                <span className="xs:hidden">Logging in...</span>
+                                <span className="xs:hidden">{t('auth.loggingIn')}</span>
                               </>
                             ) : (
                               <>
                                 <User className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                                 <span className="hidden xs:inline">{t('auth.login')}</span>
-                                <span className="xs:hidden">Login</span>
+                                <span className="xs:hidden">{t('auth.login')}</span>
                               </>
                             )}
                           </Button>
@@ -482,13 +482,13 @@ export const SmartLoginModal = ({
                               <>
                                 <Loader2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                                 <span className="hidden xs:inline">{t('auth.creatingAccount')}</span>
-                                <span className="xs:hidden">Creating...</span>
+                                <span className="xs:hidden">{t('auth.creatingAccount')}</span>
                               </>
                             ) : (
                               <>
                                 <Lock className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                                 <span className="hidden xs:inline">{t('auth.createAccount')}</span>
-                                <span className="xs:hidden">Sign Up</span>
+                                <span className="xs:hidden">{t('auth.register')}</span>
                               </>
                             )}
                           </Button>

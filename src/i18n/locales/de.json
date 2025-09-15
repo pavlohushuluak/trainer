@@ -445,7 +445,13 @@
       "trainingTitle": "Anmelden für Haustiererziehung",
       "trainingDescription": "Melden Sie sich an, um auf die Haustiererziehung zuzugreifen und mit dem Training zu beginnen.",
       "defaultTitle": "🐾 Kostenloses Training starten – Schnelle Anmeldung",
-      "defaultDescription": "Registrieren Sie sich, um Ihr kostenloses 7-tägiges Training zu starten. Ihr Haustier wird es Ihnen danken! 💛"
+      "defaultDescription": "Registrieren Sie sich, um Ihr kostenloses 7-tägiges Training zu starten. Ihr Haustier wird es Ihnen danken! 💛",
+      "welcomeToast": {
+        "title": "Willkommen zurück!",
+        "description": "Sie wurden erfolgreich angemeldet."
+      },
+      "signupSuccess": "Registrierung erfolgreich!",
+      "signupSuccessDescription": "Bitte überprüfen Sie Ihre E-Mail für den Bestätigungscode."
     }
   },
   "faq": {
