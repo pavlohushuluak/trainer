@@ -541,6 +541,17 @@
     "passwordMinLengthHint": "Passwords must be at least 6 characters.",
     "confirmPasswordRequired": "Please confirm your password",
     "passwordMismatch": "Passwords do not match",
+    "verificationCode": {
+      "title": "Enter verification code",
+      "instructions": "Enter the 6-digit code sent to your email",
+      "validating": "Verifying code...",
+      "resend": "Resend code",
+      "resending": "Resending...",
+      "sentTo": "Code sent to",
+      "invalid": "Invalid verification code",
+      "expired": "Verification code has expired",
+      "required": "Verification code is required"
+    },
     "firstNameRequired": "First name is required",
     "firstNameMinLength": "First name must be at least 2 characters",
     "lastNameRequired": "Last name is required",

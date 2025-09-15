@@ -542,6 +542,17 @@
     "passwordMinLengthHint": "Passwörter müssen mindestens 6 Zeichen lang sein.",
     "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort",
     "passwordMismatch": "Passwörter stimmen nicht überein",
+    "verificationCode": {
+      "title": "Bestätigungscode eingeben",
+      "instructions": "Geben Sie den 6-stelligen Code ein, der an Ihre E-Mail gesendet wurde",
+      "validating": "Code wird überprüft...",
+      "resend": "Code erneut senden",
+      "resending": "Wird erneut gesendet...",
+      "sentTo": "Code gesendet an",
+      "invalid": "Ungültiger Bestätigungscode",
+      "expired": "Bestätigungscode ist abgelaufen",
+      "required": "Bestätigungscode ist erforderlich"
+    },
     "firstNameRequired": "Vorname ist erforderlich",
     "firstNameMinLength": "Vorname muss mindestens 2 Zeichen lang sein",
     "lastNameRequired": "Nachname ist erforderlich",
