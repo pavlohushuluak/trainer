@@ -33,7 +33,8 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
   } = useSmartLogin({
     loginContext: 'checkout',
     redirectToCheckout: true,
-    skipRedirect: true
+    skipRedirect: true,
+    skipWelcomeToast: true
   });
 
   const handleCheckout = async () => {

@@ -19,8 +19,8 @@ import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
 import { useTranslations } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
 import { getCurrentLanguage } from '@/utils/languageSupport';
-import { getCheckoutFlags } from '@/utils/checkoutStorage';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useToast } from '@/hooks/use-toast';
 import { AGBModal } from '@/components/legal/AGBModal';
 import { ImpressumModal } from '@/components/legal/ImpressumModal';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -45,6 +45,7 @@ export const SmartLoginModal = ({
   const navigate = useNavigate();
   const { sendWelcomeEmail } = useEmailNotifications();
   const { t } = useTranslations();
+  const { toast } = useToast();
   
   // Form states
   const [email, setEmail] = useState('');
@@ -124,6 +125,14 @@ export const SmartLoginModal = ({
         console.error('Error sending welcome email:', error);
           }
         }
+        
+        // Show login success toast
+        toast({
+          title: t('auth.smartLogin.welcomeToast.title'),
+          description: t('auth.smartLogin.welcomeToast.description'),
+          duration: 3000
+        });
+        
         onLoginSuccess();
         onClose();
       }
@@ -178,12 +187,12 @@ export const SmartLoginModal = ({
         // Set localStorage to indicate user has signed up
         localStorage.setItem('alreadySignedUp', 'true');
         
-        // Check if there's pending checkout data and save it for email+password signup
-        const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
-        if (hasPendingCheckout && checkoutData) {
-          console.log('🔐 Saving checkout data for email+password signup:', checkoutData);
-          sessionStorage.setItem('checkoutAfterSignup', JSON.stringify(checkoutData));
-        }
+        // Show signup success toast with email confirmation message
+        toast({
+          title: t('auth.smartLogin.signupSuccess'),
+          description: t('auth.smartLogin.signupSuccessDescription'),
+          duration: 5000
+        });
         
         // Clear form after successful registration
         setEmail('');
@@ -192,8 +201,9 @@ export const SmartLoginModal = ({
         setFirstName('');
         setLastName('');
         
-        // Close modal and trigger success callback - same as login
-        onLoginSuccess();
+        // For email+password signup, don't trigger checkout flow immediately
+        // Instead, let the email confirmation handle the checkout redirect
+        // Just close the modal without calling onLoginSuccess()
         onClose();
       }
     } catch (err) {
@@ -259,6 +269,22 @@ export const SmartLoginModal = ({
                       onSuccess={(user, isNewUser) => {
                         setError('');
                         setMessage('');
+                        
+                        // Show appropriate toast based on whether it's a new user or returning user
+                        if (isNewUser) {
+                          toast({
+                            title: t('auth.smartLogin.signupSuccess'),
+                            description: t('auth.smartLogin.signupSuccessDescription'),
+                            duration: 5000
+                          });
+                        } else {
+                          toast({
+                            title: t('auth.smartLogin.welcomeToast.title'),
+                            description: t('auth.smartLogin.welcomeToast.description'),
+                            duration: 3000
+                          });
+                        }
+                        
                         onLoginSuccess();
                         onClose();
                       }}

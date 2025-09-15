@@ -10,13 +10,15 @@ interface UseSmartLoginProps {
   redirectToCheckout?: boolean;
   loginContext?: 'checkout' | 'general' | 'dashboard' | 'admin';
   skipRedirect?: boolean;
+  skipWelcomeToast?: boolean;
 }
 
 export const useSmartLogin = ({ 
   onLoginSuccess, 
   redirectToCheckout = false,
   loginContext = 'general',
-  skipRedirect = false
+  skipRedirect = false,
+  skipWelcomeToast = false
 }: UseSmartLoginProps = {}) => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [selectedPriceType, setSelectedPriceType] = useState<string | null>(null);
@@ -63,12 +65,14 @@ export const useSmartLogin = ({
     const storedPriceType = sessionStorage.getItem('pendingPriceType');
     const storedLoginContext = sessionStorage.getItem('pendingLoginContext');
     
-    // Show success toast immediately
-    toast({
-      title: t('auth.smartLogin.welcomeToast.title'),
-      description: t('auth.smartLogin.welcomeToast.description'),
-      duration: 3000
-    });
+    // Show success toast immediately (unless skipped)
+    if (!skipWelcomeToast) {
+      toast({
+        title: t('auth.smartLogin.welcomeToast.title'),
+        description: t('auth.smartLogin.welcomeToast.description'),
+        duration: 3000
+      });
+    }
     
     // If skipRedirect is true (e.g., for checkout), don't redirect and let the caller handle the next action
     if (skipRedirect) {

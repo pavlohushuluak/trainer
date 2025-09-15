@@ -1,6 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { initializeUserLanguageSupport, detectBrowserLanguage } from '@/utils/languageSupport';
+import { getCheckoutFlags } from '@/utils/checkoutStorage';
 
 export const useAuthOperations = () => {
   const signOut = async () => {
@@ -71,8 +72,22 @@ export const useAuthOperations = () => {
   };
 
   const signUp = async (email: string, password: string, firstName?: string, lastName?: string, language?: string) => {
-    // Use auth/callback for proper email confirmation handling
-    const redirectUrl = `${window.location.origin}/auth/callback`;
+    // Check for pending checkout data to include in redirect URL
+    const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
+    
+    // Build redirect URL with checkout data if available
+    let redirectUrl = `${window.location.origin}/auth/callback`;
+    if (hasPendingCheckout && checkoutData) {
+      // Include checkout data in the redirect URL for email confirmation
+      const checkoutParams = new URLSearchParams({
+        checkout: 'true',
+        priceType: checkoutData.priceType,
+        sessionId: checkoutData.sessionId,
+        origin: checkoutData.origin
+      });
+      redirectUrl = `${redirectUrl}?${checkoutParams.toString()}`;
+      console.log('🔐 Signup - including checkout data in redirect URL:', redirectUrl);
+    }
     
     // Detect preferred language using the unified detection function
     // Always default to German ('de') if no language is provided

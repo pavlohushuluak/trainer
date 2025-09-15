@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from '@/hooks/useTranslations';
-import { getCheckoutFlags, debugCheckoutState } from '@/utils/checkoutStorage';
+import { getCheckoutFlags, debugCheckoutState, setCheckoutFlags } from '@/utils/checkoutStorage';
 
 export const useAuthCallback = () => {
   const navigate = useNavigate();
@@ -91,6 +91,19 @@ export const useAuthCallback = () => {
       const accessToken = searchParams.get('access_token');
       const refreshToken = searchParams.get('refresh_token');
       const code = searchParams.get('code');
+      
+      // Check for checkout data in URL parameters (from email confirmation)
+      const checkout = searchParams.get('checkout');
+      const priceType = searchParams.get('priceType');
+      const sessionId = searchParams.get('sessionId');
+      const origin = searchParams.get('origin');
+      
+      if (checkout === 'true' && priceType && sessionId) {
+        console.log('🔐 OAuth callback: Found checkout data in URL parameters, restoring checkout flags');
+        // Restore checkout flags from URL parameters
+        setCheckoutFlags(priceType, origin || window.location.origin);
+        console.log('🔐 OAuth callback: Checkout flags restored for email confirmation flow');
+      }
       
       // Debug checkout state at start
       debugCheckoutState();

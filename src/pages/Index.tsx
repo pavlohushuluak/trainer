@@ -42,7 +42,8 @@ const Index = () => {
     handleLoginSuccess 
   } = useSmartLogin({
     redirectToCheckout: true,
-    loginContext: 'checkout'
+    loginContext: 'checkout',
+    skipWelcomeToast: true
   });
 
   // Check for pricing_click_data in sessionStorage and call create-checkout directly

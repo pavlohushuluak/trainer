@@ -26,7 +26,8 @@ export const AmazonPayButton = ({ priceType, className = "" }: AmazonPayButtonPr
   } = useSmartLogin({
     loginContext: 'checkout',
     redirectToCheckout: true,
-    skipRedirect: true
+    skipRedirect: true,
+    skipWelcomeToast: true
   });
 
   const handleAmazonPayCheckout = async () => {
