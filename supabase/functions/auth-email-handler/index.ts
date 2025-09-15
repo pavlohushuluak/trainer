@@ -984,6 +984,31 @@ serve(async (req) => {
         // Generate a 6-digit verification code
         const verificationCode = generateVerificationCode();
         logStep('Generated verification code', { code: verificationCode });
+        
+        // Store the verification code in the database
+        try {
+          const supabase = createClient(
+            Deno.env.get('SUPABASE_URL') ?? '',
+            Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+          );
+          
+          const { error: dbError } = await supabase
+            .from('signup_verification_codes')
+            .insert({
+              email: data.user.email,
+              code: verificationCode,
+              expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 1 hour from now
+            });
+          
+          if (dbError) {
+            logStep('Error storing verification code', { error: dbError.message });
+          } else {
+            logStep('Verification code stored successfully', { email: data.user.email });
+          }
+        } catch (error) {
+          logStep('Error storing verification code', { error: error.message });
+        }
+        
         emailTemplate = generateSignupVerificationEmail(data, verificationCode, userLanguage);
         break;
       case 'magiclink':

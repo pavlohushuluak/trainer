@@ -16,7 +16,7 @@ export const useVerificationCode = ({ email, onSuccess, onError }: UseVerificati
 
   const verifyCode = useCallback(async (code: string) => {
     if (!code || code.length !== 6) {
-      const errorMsg = t('validation.verificationCode.required');
+      const errorMsg = t('auth.verificationCode.required');
       setError(errorMsg);
       onError?.(errorMsg);
       return;
@@ -26,33 +26,39 @@ export const useVerificationCode = ({ email, onSuccess, onError }: UseVerificati
     setError('');
 
     try {
-      // For now, we'll use Supabase's built-in verification
-      // In a real implementation, you'd call your backend to verify the code
-      const { data, error: verifyError } = await supabase.auth.verifyOtp({
-        email,
-        token: code,
-        type: 'signup'
+      // Call our custom verification endpoint
+      const { data, error: verifyError } = await supabase.functions.invoke('verify-signup-code', {
+        body: {
+          email,
+          code
+        }
       });
 
       if (verifyError) {
-        let errorMessage = t('validation.verificationCode.invalid');
-        
-        if (verifyError.message.includes('expired')) {
-          errorMessage = t('validation.verificationCode.expired');
-        } else if (verifyError.message.includes('invalid')) {
-          errorMessage = t('validation.verificationCode.invalid');
-        }
-        
+        console.error('Verification error:', verifyError);
+        const errorMessage = t('auth.verificationCode.invalid');
         setError(errorMessage);
         onError?.(errorMessage);
         return;
       }
 
-      if (data?.user) {
+      if (data?.success) {
         onSuccess?.();
+      } else {
+        let errorMessage = t('auth.verificationCode.invalid');
+        
+        if (data?.message?.includes('expired')) {
+          errorMessage = t('auth.verificationCode.expired');
+        } else if (data?.message?.includes('Invalid')) {
+          errorMessage = t('auth.verificationCode.invalid');
+        }
+        
+        setError(errorMessage);
+        onError?.(errorMessage);
       }
     } catch (err) {
-      const errorMessage = t('validation.verificationCode.invalid');
+      console.error('Verification error:', err);
+      const errorMessage = t('auth.verificationCode.invalid');
       setError(errorMessage);
       onError?.(errorMessage);
     } finally {
