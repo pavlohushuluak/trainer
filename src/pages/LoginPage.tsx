@@ -333,6 +333,7 @@ const LoginPage = () => {
                           handleFieldChange('password', value);
                         }}
                         required
+                        showHint={false}
                         error={fieldErrors.password}
                       />
                     </div>
@@ -494,7 +495,6 @@ const LoginPage = () => {
                         }}
                         required
                         minLength={6}
-                        showStrength={true}
                         error={fieldErrors.password}
                       />
                     </div>

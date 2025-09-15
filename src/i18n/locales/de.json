@@ -539,6 +539,7 @@
     "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
     "passwordRequired": "Passwort ist erforderlich",
     "passwordMinLength": "Passwort muss mindestens {{min}} Zeichen lang sein",
+    "passwordMinLengthHint": "Passwörter müssen mindestens 6 Zeichen lang sein.",
     "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort",
     "passwordMismatch": "Passwörter stimmen nicht überein",
     "firstNameRequired": "Vorname ist erforderlich",

@@ -346,6 +346,7 @@ export const SmartLoginModal = ({
                             value={password}
                             onChange={setPassword}
                             required
+                            showHint={false}
                           />
                           
                           <div className="text-right">
@@ -456,7 +457,6 @@ export const SmartLoginModal = ({
                             onChange={setPassword}
                             required
                             minLength={6}
-                            showStrength={true}
                           />
                           
                           <ConfirmPasswordInput

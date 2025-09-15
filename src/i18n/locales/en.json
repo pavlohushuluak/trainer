@@ -538,6 +538,7 @@
     "emailInvalid": "Please enter a valid email address",
     "passwordRequired": "Password is required",
     "passwordMinLength": "Password must be at least {{min}} characters",
+    "passwordMinLengthHint": "Passwords must be at least 6 characters.",
     "confirmPasswordRequired": "Please confirm your password",
     "passwordMismatch": "Passwords do not match",
     "firstNameRequired": "First name is required",

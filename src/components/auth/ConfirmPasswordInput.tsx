@@ -97,15 +97,11 @@ export const ConfirmPasswordInput: React.FC<ConfirmPasswordInputProps> = ({
         </div>
       )}
       
-      {value && !error && (
-        <div className={cn(
-          "flex items-center gap-2 text-sm",
-          validation.isValid ? "text-green-600 dark:text-green-400" : "text-red-500 dark:text-red-400"
-        )}>
-          {validation.icon}
-          <span>{validation.message}</span>
-        </div>
-      )}
+      {/* Password match hint */}
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <div className="w-1 h-1 rounded-full bg-blue-500"></div>
+        <span>{t('validation.passwordMatch')}</span>
+      </div>
     </div>
   );
 }; 
