@@ -404,7 +404,8 @@
     "loggingOut": "Logging out...",
     "myTraining": "My Pet Training",
     "myTrainingShort": "Training",
-    "community": "Community"
+    "community": "Community",
+    "startFree": "Start Free"
   },
   "hero": {
     "title": "Professional Pet Training with AI",
@@ -416,6 +417,7 @@
     "riskFreeTrial": "14 Days Risk-Free Trial",
     "mainTitle": "The <span class=\"text-brand-gradient font-extrabold drop-shadow-beautiful text-beautiful-shadow\">smart training</span><br /><span class=\"text-foreground/85 font-bold tracking-wide\">for happy pets</span> – at home and beyond",
     "subtitle": "Individual training based on the latest methods – <span class=\"text-primary font-semibold\">proven in practice</span>, <span class=\"text-primary font-semibold\">available anytime</span>.",
+    "startPremium": "Start Premium Now",
     "features": {
       "trainerAvailable": "🕒 24/7 Trainer Available",
       "customized": "🐾 Customized for Your Pet",

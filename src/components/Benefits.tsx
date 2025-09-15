@@ -523,14 +523,7 @@ export const Benefits = () => {
           </div>
         </div>
 
-        {/* Enhanced CTA Section */}
-        <div className="text-center mt-8 sm:mt-12 md:mt-16 px-4">
-          <div className="inline-block bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 backdrop-blur-sm px-6 xs:px-8 sm:px-10 py-4 xs:py-5 sm:py-6 md:py-8 rounded-xl xs:rounded-2xl sm:rounded-3xl border border-primary/20 shadow-lg sm:shadow-xl max-w-full">
-            <h3 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-2 xs:mb-3 sm:mb-4 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent leading-tight">
-              {t('benefits.cta.title')}
-            </h3>
-          </div>
-        </div>
+        
       </div>
 
       {/* CSS-in-JS for custom animations */}

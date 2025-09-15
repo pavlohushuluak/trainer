@@ -81,6 +81,8 @@ export const TopNavigationBar = ({
     }
   };
 
+  
+
   const getMenuItems = () => {
     if (isAuthenticated) {
       // Menu items for logged-in users
@@ -135,7 +137,7 @@ export const TopNavigationBar = ({
       return [
         {
           icon: User,
-          label: t('navigation.login'),
+          label: t('navigation.startFree'),
           action: () => navigate('/login')
         }
       ];

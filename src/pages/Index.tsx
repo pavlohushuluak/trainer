@@ -1,15 +1,13 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import { Hero } from "@/components/Hero";
 
+import { Hero } from "@/components/Hero";
 import { StickyPremiumButton } from "@/components/StickyPremiumButton";
 import { SmartLoginModal } from "@/components/auth/SmartLoginModal";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useAuth } from "@/hooks/useAuth";
-import { useAuthOperations } from "@/hooks/auth/useAuthOperations";
 import { useSmartLogin } from "@/hooks/useSmartLogin";
 import { usePetDataPrefetch } from "@/hooks/usePetDataPrefetch";
-import { usePetProfiles } from "@/hooks/usePetProfiles";
 import { supabase } from "@/integrations/supabase/client";
 
 // Lazy load heavy components with proper default export handling
@@ -31,7 +29,6 @@ const Index = () => {
 
   const { trackEvent } = useAnalytics();
   const { user, session } = useAuth();
-  const { signOut } = useAuthOperations();
   const navigate = useNavigate();
   
   // Prefetch pet data for logged-in users for faster navigation
@@ -41,7 +38,6 @@ const Index = () => {
   const { 
     isLoginModalOpen, 
     setIsLoginModalOpen, 
-    requireAuth, 
     handleLoginSuccess 
   } = useSmartLogin({
     redirectToCheckout: true,
@@ -169,12 +165,6 @@ const Index = () => {
     }
   }, [user, hasPrefetchedData]);
 
-  const handleStartChat = () => {
-    requireAuth(() => {
-      navigate('/chat');
-    });
-  };
-
   const handleGoToTraining = () => {
     // Optimized navigation with prefetched data
     if (user && session) {
@@ -232,7 +222,7 @@ const Index = () => {
   return (
     <>
       <div id="hero">
-        <Hero onStartChat={handleStartChat} />
+        <Hero />
       </div>
       <div id="benefits">
         <Suspense fallback={<SectionLoader height="h-96" />}>

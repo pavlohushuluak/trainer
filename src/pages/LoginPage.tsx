@@ -49,19 +49,6 @@ const LoginPage = () => {
     setActiveTab(alreadySignedUp ? 'signin' : 'signup');
   }, []);
 
-  // Password strength validation
-  const isPasswordStrong = useMemo(() => {
-    if (!password) return false;
-    const requirements = {
-      minLength: password.length >= 8,
-      hasUppercase: /[A-Z]/.test(password),
-      hasLowercase: /[a-z]/.test(password),
-      hasNumber: /\d/.test(password),
-      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password)
-    };
-    return Object.values(requirements).every(Boolean);
-  }, [password]);
-
   // Form validation with detailed error tracking
   const [fieldErrors, setFieldErrors] = useState<{
     email?: string;
@@ -80,7 +67,7 @@ const LoginPage = () => {
         return '';
       case 'password':
         if (!value) return t('validation.passwordRequired');
-        if (value.length < 8) return t('validation.passwordMinLength', { min: 8 });
+        if (value.length < 6) return t('validation.passwordMinLength', { min: 6 });
         return '';
       case 'confirmPassword':
         if (!value) return t('validation.confirmPasswordRequired');
@@ -506,7 +493,7 @@ const LoginPage = () => {
                           handleFieldChange('password', value);
                         }}
                         required
-                        minLength={8}
+                        minLength={6}
                         showStrength={true}
                         error={fieldErrors.password}
                       />

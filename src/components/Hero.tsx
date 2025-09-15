@@ -4,27 +4,21 @@ import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { SmartLoginModal } from "@/components/auth/SmartLoginModal";
 import { DevelopmentBadge } from "./hero/DevelopmentBadge";
 import { FloatingElements } from "./hero/FloatingElements";
 import { HeroContent } from "./hero/HeroContent";
 import { HeroCarousel } from "./hero/HeroCarousel";
 import { HeroFeatures } from "./hero/HeroFeatures";
 import { HeroButtons } from "./hero/HeroButtons";
-import { PricingLink } from "./hero/PricingLink";
 import { SocialProof } from "./hero/SocialProof";
 import { BottomWave } from "./hero/BottomWave";
 import { ThemeLogo } from "@/components/ui/theme-logo-home";
 import { useTranslations } from "@/hooks/useTranslations";
 
-interface HeroProps {
-  onStartChat?: () => void;
-}
 
-export const Hero = ({ onStartChat }: HeroProps) => {
+export const Hero = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const { t } = useTranslations();
 
   // In development mode, skip subscription checks
@@ -67,22 +61,7 @@ export const Hero = ({ onStartChat }: HeroProps) => {
   const hasPets = pets && pets.length > 0;
 
   const handleGoToTraining = () => {
-    if (user) {
-      // User ist eingeloggt - direkt zu mein-tiertraining weiterleiten
-      navigate('/mein-tiertraining');
-    } else {
-      // User ist nicht eingeloggt - Login Modal öffnen
-      setShowLoginModal(true);
-    }
-  };
-
-  const handleLoginSuccess = () => {
-    setShowLoginModal(false);
-    
-    // Nach Login direkt zum Tiertraining-Bereich weiterleiten
-    setTimeout(() => {
-      navigate('/mein-tiertraining');
-    }, 1000);
+    navigate('#pricing');
   };
 
   return (
@@ -112,22 +91,14 @@ export const Hero = ({ onStartChat }: HeroProps) => {
           </div>
           
           <HeroFeatures />
-          <HeroButtons handleGoToTraining={handleGoToTraining} onStartChat={onStartChat} />
-          <PricingLink isDevelopment={isDevelopment} />
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 sm:mb-12 animate-fade-in-up delay-400 px-4">
+            <HeroButtons handleGoToTraining={handleGoToTraining} />
+          </div>
           <SocialProof />
         </div>
 
         <BottomWave />
       </section>
-
-      {/* Smart Login Modal */}
-      <SmartLoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        onLoginSuccess={handleLoginSuccess}
-        title={isDevelopment ? t('hero.smartLogin.testAccessTitle') : t('hero.smartLogin.trainingTitle')}
-        description={isDevelopment ? t('hero.smartLogin.testAccessDescription') : t('hero.smartLogin.trainingDescription')}
-      />
     </>
   );
 };

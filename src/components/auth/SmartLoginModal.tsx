@@ -65,30 +65,16 @@ export const SmartLoginModal = ({
     setActiveTab(alreadySignedUp ? 'signin' : 'signup');
   }, []);
 
-  // Password strength validation
-  const isPasswordStrong = useMemo(() => {
-    if (!password) return false;
-    const requirements = {
-      minLength: password.length >= 8,
-      hasUppercase: /[A-Z]/.test(password),
-      hasLowercase: /[a-z]/.test(password),
-      hasNumber: /\d/.test(password),
-      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password)
-    };
-    return Object.values(requirements).every(Boolean);
-  }, [password]);
-
   // Form validation
   const isSignUpValid = useMemo(() => {
     return email && 
            password && 
            confirmPassword && 
            password === confirmPassword && 
-           isPasswordStrong &&
            firstName.trim() && 
            lastName.trim() &&
            termsAgreed;
-  }, [email, password, confirmPassword, isPasswordStrong, firstName, lastName, termsAgreed]);
+  }, [email, password, confirmPassword, firstName, lastName, termsAgreed]);
 
   const isSignInValid = useMemo(() => {
     return email && password && termsAgreed;
@@ -434,7 +420,7 @@ export const SmartLoginModal = ({
                             value={password}
                             onChange={setPassword}
                             required
-                            minLength={8}
+                            minLength={6}
                             showStrength={true}
                           />
                           
