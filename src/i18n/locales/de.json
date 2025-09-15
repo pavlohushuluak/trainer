@@ -3844,6 +3844,8 @@
     "register": "Registrieren",
     "email": "E-Mail",
     "password": "Passwort",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen",
     "forgotPassword": "Passwort vergessen?",
     "loginWithGoogle": "Mit Google anmelden",
     "loginWithEmail": "Mit E-Mail anmelden",

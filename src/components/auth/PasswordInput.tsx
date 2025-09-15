@@ -8,7 +8,7 @@ import { useTranslations } from '@/hooks/useTranslations';
 
 interface PasswordInputProps {
   id: string;
-  label: string;
+  label?: string;
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
@@ -37,14 +37,16 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslations();
   
-  const defaultPlaceholder = placeholder || 'Enter your password';
+  // Use translations for default values
+  const defaultLabel = label || t('auth.password');
+  const defaultPlaceholder = placeholder || t('validation.passwordPlaceholder');
 
 
 
   return (
     <div className={cn("space-y-2", className)}>
       <Label htmlFor={id} className="text-sm font-medium">
-        {label}
+        {defaultLabel}
         {required && <span className="text-red-500 ml-1">*</span>}
       </Label>
       
@@ -52,11 +54,12 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
         <Input
           id={id}
           type={showPassword ? "text" : "password"}
-          placeholder={placeholder || defaultPlaceholder}
+          placeholder={defaultPlaceholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           required={required}
           minLength={minLength}
+          aria-describedby={error ? `${id}-error` : showHint ? `${id}-hint` : undefined}
           className={cn(
             "pr-10",
             error && "border-red-500 focus:border-red-500 focus:ring-red-500"
@@ -68,6 +71,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
           size="sm"
           className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
           onClick={() => setShowPassword(!showPassword)}
+          aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
         >
           {showPassword ? (
             <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -77,9 +81,17 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
         </Button>
       </div>
 
-      {/* Simple password requirement hint - only show when showHint is true */}
-      {showHint && (
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+      {/* Error message */}
+      {error && (
+        <div id={`${id}-error`} className="flex items-center gap-2 text-xs text-red-500" role="alert">
+          <AlertCircle className="h-3 w-3" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      {/* Simple password requirement hint - only show when showHint is true and no error */}
+      {showHint && !error && (
+        <div id={`${id}-hint`} className="flex items-center gap-2 text-xs text-muted-foreground">
           <div className="w-1 h-1 rounded-full bg-blue-500"></div>
           <span>{t('validation.passwordMinLengthHint')}</span>
         </div>

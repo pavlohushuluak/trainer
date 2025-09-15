@@ -37,7 +37,7 @@ export const useAuthCallback = () => {
     }
   };
 
-  // SIMPLIFIED: Only redirect to home if checkout pending, otherwise do role-based redirect
+  // SIMPLIFIED: Always redirect to homepage for OAuth users
   const redirectUserBasedOnRole = async (userId: string, successMessage?: string) => {
     
     console.log('🔐 OAuth callback: redirectUserBasedOnRole called for user:', userId);
@@ -75,14 +75,11 @@ export const useAuthCallback = () => {
       return;
     }
 
-    // Normal role-based redirect (only if no pending checkout)
-    const isAdmin = await checkAdminStatus(userId);
-    const targetUrl = isAdmin ? '/admin/users' : '/mein-tiertraining';
-    
-    console.log('🔐 OAuth callback: Redirecting to:', targetUrl, 'isAdmin:', isAdmin);
+    // Always redirect to homepage for OAuth users
+    console.log('🔐 OAuth callback: Redirecting to homepage');
     
     // Use window.location.href for more reliable redirect after OAuth
-    window.location.href = targetUrl;
+    window.location.href = '/';
   };
 
   const handleAuthCallback = async () => {

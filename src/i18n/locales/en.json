@@ -3842,6 +3842,8 @@
     "register": "Register",
     "email": "Email",
     "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "forgotPassword": "Forgot Password?",
     "loginWithGoogle": "Login with Google",
     "loginWithEmail": "Login with Email",
