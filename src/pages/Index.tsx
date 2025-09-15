@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSmartLogin } from "@/hooks/useSmartLogin";
 import { usePetDataPrefetch } from "@/hooks/usePetDataPrefetch";
 import { supabase } from "@/integrations/supabase/client";
+import { getCheckoutFlags, clearCheckoutFlags } from "@/utils/checkoutStorage";
 
 // Lazy load heavy components with proper default export handling
 const Benefits = lazy(() => import("@/components/Benefits").then(module => ({ default: module.Benefits })));
@@ -102,6 +103,61 @@ const Index = () => {
 
     // Check immediately
     checkPricingClickData();
+  }, [user, session]);
+
+  // Check for main checkout flags after authentication (for signup/login flow)
+  useEffect(() => {
+    const checkMainCheckoutFlags = async () => {
+      try {
+        const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
+        
+        if (hasPendingCheckout && checkoutData && user && session) {
+          console.log('🔐 Found pending checkout flags after authentication, processing checkout:', checkoutData);
+          
+          // Clear the checkout flags immediately to prevent duplicate processing
+          clearCheckoutFlags();
+          setIsProcessingCheckout(true);
+          
+          // Call create-checkout directly
+          const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+          
+          const { data, error } = await supabase.functions.invoke('create-checkout', {
+            body: {
+              priceType: checkoutData.priceType,
+              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
+              cancelUrl: `${window.location.origin}/`,
+              language: currentLanguage,
+              customerInfo: {
+                name: user?.user_metadata?.full_name || user?.email?.split('@')[0]
+              }
+            }
+          });
+
+          if (error) {
+            console.error('🔐 Error creating checkout from flags:', error);
+            // Redirect to pricing section on error
+            window.location.href = '/#pricing';
+          } else if (data?.url) {
+            console.log('🔐 Checkout created successfully from flags, redirecting to:', data.url);
+            // Redirect to Stripe checkout
+            window.location.href = data.url;
+          } else {
+            console.error('🔐 No checkout URL returned from flags');
+            window.location.href = '/#pricing';
+          }
+        }
+      } catch (error) {
+        console.error('🔐 Error checking main checkout flags:', error);
+        setIsProcessingCheckout(false);
+        // Clear any corrupted flags
+        clearCheckoutFlags();
+      }
+    };
+
+    // Only check if user is authenticated
+    if (user && session) {
+      checkMainCheckoutFlags();
+    }
   }, [user, session]);
 
   useEffect(() => {

@@ -183,9 +183,9 @@ export const SmartLoginModal = ({
         setFirstName('');
         setLastName('');
         
-        // Close modal and trigger success callback
-    onLoginSuccess();
-    onClose();
+        // Close modal and trigger success callback - same as login
+        onLoginSuccess();
+        onClose();
       }
     } catch (err) {
       setError(t('auth.generalError'));

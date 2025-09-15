@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useOAuthProfileHandler } from './useOAuthProfileHandler';
+import { getCheckoutFlags } from '@/utils/checkoutStorage';
 
 export const useAuthStateHandler = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -79,7 +80,15 @@ export const useAuthStateHandler = () => {
         return;
       }
 
-
+      // Check for pending checkout first - this takes priority over normal redirects
+      const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
+      
+      if (hasPendingCheckout && checkoutData) {
+        console.log('🔐 Pending checkout detected after signup/login, redirecting to home for checkout processing:', checkoutData);
+        // Redirect to home page where the checkout flow will be handled
+        window.location.href = '/';
+        return;
+      }
 
       // Handle OAuth profile updates first (before redirects)
       if (user.app_metadata?.provider) {
