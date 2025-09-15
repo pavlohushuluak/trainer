@@ -3980,7 +3980,9 @@
       "welcomeToast": {
         "title": "🐾 Welcome!",
         "description": "You have successfully logged in."
-      }
+      },
+      "signupSuccess": "Registration successful!",
+      "signupSuccessDescription": "Please check your email inbox and confirm your email address. The confirmation link is valid for 1 hour."
     },
     "stateHandler": {
       "checkoutError": {

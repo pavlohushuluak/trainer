@@ -3982,7 +3982,9 @@
       "welcomeToast": {
         "title": "🐾 Willkommen!",
         "description": "Du bist erfolgreich eingeloggt."
-      }
+      },
+      "signupSuccess": "Registrierung erfolgreich!",
+      "signupSuccessDescription": "Bitte überprüfen Sie Ihren E-Mail-Posteingang und bestätigen Sie Ihre E-Mail-Adresse. Der Bestätigungslink ist 1 Stunde gültig."
     },
     "stateHandler": {
       "checkoutError": {

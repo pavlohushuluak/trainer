@@ -6,6 +6,13 @@ import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from '@/hooks/useTranslations';
 import { getCheckoutFlags, debugCheckoutState, setCheckoutFlags } from '@/utils/checkoutStorage';
 
+// Import checkout storage constants
+const CHECKOUT_KEY = 'pendingCheckout';
+const PRICE_TYPE_KEY = 'pendingCheckoutPriceType';
+const TIMESTAMP_KEY = 'pendingCheckoutTimestamp';
+const SESSION_ID_KEY = 'pendingCheckoutSessionId';
+const ORIGIN_KEY = 'pendingCheckoutOrigin';
+
 export const useAuthCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -98,11 +105,38 @@ export const useAuthCallback = () => {
       const sessionId = searchParams.get('sessionId');
       const origin = searchParams.get('origin');
       
+      console.log('🔐 OAuth callback: Checking for checkout data in URL parameters:', {
+        checkout,
+        priceType,
+        sessionId,
+        origin,
+        allParams: Object.fromEntries(searchParams.entries())
+      });
+      
       if (checkout === 'true' && priceType && sessionId) {
         console.log('🔐 OAuth callback: Found checkout data in URL parameters, restoring checkout flags');
-        // Restore checkout flags from URL parameters
-        setCheckoutFlags(priceType, origin || window.location.origin);
-        console.log('🔐 OAuth callback: Checkout flags restored for email confirmation flow');
+        // Restore checkout flags from URL parameters with the original sessionId
+        const timestamp = Date.now().toString();
+        const originUrl = origin ? decodeURIComponent(origin) : window.location.origin;
+        
+        // Store checkout data with the original sessionId from the URL
+        const checkoutData = {
+          [CHECKOUT_KEY]: 'true',
+          [PRICE_TYPE_KEY]: priceType,
+          [TIMESTAMP_KEY]: timestamp,
+          [SESSION_ID_KEY]: sessionId,
+          [ORIGIN_KEY]: originUrl
+        };
+        
+        // Store in localStorage and sessionStorage
+        Object.entries(checkoutData).forEach(([key, value]) => {
+          localStorage.setItem(key, value);
+          sessionStorage.setItem(key, value);
+        });
+        
+        console.log('🔐 OAuth callback: Checkout flags restored for email confirmation flow:', checkoutData);
+      } else {
+        console.log('🔐 OAuth callback: No checkout data found in URL parameters');
       }
       
       // Debug checkout state at start
