@@ -112,39 +112,64 @@ const Index = () => {
       try {
         const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
         
-        if (hasPendingCheckout && checkoutData && user && session) {
-          console.log('🔐 Found pending checkout flags after authentication, processing checkout:', checkoutData);
-          
-          // Clear the checkout flags immediately to prevent duplicate processing
-          clearCheckoutFlags();
-          setIsProcessingCheckout(true);
-          
-          // Call create-checkout directly
-          const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
-          
-          const { data, error } = await supabase.functions.invoke('create-checkout', {
-            body: {
-              priceType: checkoutData.priceType,
-              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
-              cancelUrl: `${window.location.origin}/`,
-              language: currentLanguage,
-              customerInfo: {
-                name: user?.user_metadata?.full_name || user?.email?.split('@')[0]
-              }
-            }
+        if (hasPendingCheckout && checkoutData) {
+          console.log('🔐 Found pending checkout flags, checking authentication status:', {
+            hasUser: !!user,
+            hasSession: !!session,
+            checkoutData
           });
+          
+          // If user is authenticated, process checkout immediately
+          if (user && session) {
+            console.log('🔐 User is authenticated, processing checkout immediately:', checkoutData);
+            
+            // Clear the checkout flags immediately to prevent duplicate processing
+            clearCheckoutFlags();
+            setIsProcessingCheckout(true);
+            
+            // Call create-checkout directly
+            const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+            
+            const { data, error } = await supabase.functions.invoke('create-checkout', {
+              body: {
+                priceType: checkoutData.priceType,
+                successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}`,
+                cancelUrl: `${window.location.origin}/`,
+                language: currentLanguage,
+                customerInfo: {
+                  name: user?.user_metadata?.full_name || user?.email?.split('@')[0]
+                }
+              }
+            });
 
-          if (error) {
-            console.error('🔐 Error creating checkout from flags:', error);
-            // Redirect to pricing section on error
-            window.location.href = '/#pricing';
-          } else if (data?.url) {
-            console.log('🔐 Checkout created successfully from flags, redirecting to:', data.url);
-            // Redirect to Stripe checkout
-            window.location.href = data.url;
+            if (error) {
+              console.error('🔐 Error creating checkout from flags:', error);
+              // Redirect to pricing section on error
+              window.location.href = '/#pricing';
+            } else if (data?.url) {
+              console.log('🔐 Checkout created successfully from flags, redirecting to:', data.url);
+              // Redirect to Stripe checkout
+              window.location.href = data.url;
+            } else {
+              console.error('🔐 No checkout URL returned from flags');
+              window.location.href = '/#pricing';
+            }
           } else {
-            console.error('🔐 No checkout URL returned from flags');
-            window.location.href = '/#pricing';
+            // User is not authenticated yet, wait for authentication
+            console.log('🔐 User not authenticated yet, waiting for authentication to process checkout');
+            
+            // Set a timeout to check again after a delay
+            const timeoutId = setTimeout(() => {
+              if (user && session) {
+                console.log('🔐 User authenticated after delay, processing checkout');
+                checkMainCheckoutFlags();
+              } else {
+                console.log('🔐 User still not authenticated after delay, clearing checkout flags');
+                clearCheckoutFlags();
+              }
+            }, 2000); // Wait 2 seconds for authentication
+            
+            return () => clearTimeout(timeoutId);
           }
         }
       } catch (error) {
@@ -155,10 +180,8 @@ const Index = () => {
       }
     };
 
-    // Only check if user is authenticated
-    if (user && session) {
-      checkMainCheckoutFlags();
-    }
+    // Check immediately, regardless of authentication status
+    checkMainCheckoutFlags();
   }, [user, session]);
 
   useEffect(() => {
