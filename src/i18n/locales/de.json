@@ -451,7 +451,14 @@
         "description": "Sie wurden erfolgreich angemeldet."
       },
       "signupSuccess": "Registrierung erfolgreich!",
-      "signupSuccessDescription": "Bitte überprüfen Sie Ihre E-Mail für den Bestätigungscode."
+      "signupSuccessDescription": "Bitte überprüfen Sie Ihre E-Mail für den Bestätigungscode.",
+      "proceedingToCheckout": "Weiterleitung zur Kasse..."
+  },
+  "checkout": {
+    "autoLogin": {
+      "title": "Richte dein Konto ein...",
+      "description": "Bitte warten Sie, während wir Ihre Zahlung bestätigen und Sie automatisch anmelden."
+    }
     }
   },
   "faq": {

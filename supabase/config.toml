@@ -10,7 +10,7 @@ max_rows = 1000
 
 [auth]
 enabled = true
-port = 54324
+# port = 54324
 site_url = "https://tiertrainer24.com"
 additional_redirect_urls = [
   "https://localhost:3000", 
@@ -19,20 +19,20 @@ additional_redirect_urls = [
 ]
 jwt_expiry = 3600
 enable_signup = true
-email_double_confirm_changes = true
+# email_double_confirm_changes = true
 enable_anonymous_sign_ins = false
 # Reduce OTP expiry for security (15 minutes)
-mailer_otp_exp = 900
+# mailer_otp_exp = 900
 # Enable leaked password protection
-password_min_length = 8
-password_require_mixed_case = true  
-password_require_symbols = true
-password_require_numbers = true
-enable_leaked_password_protection = true
+# password_min_length = 8
+# password_require_mixed_case = true  
+# password_require_symbols = true
+# password_require_numbers = true
+# enable_leaked_password_protection = true
 # Ensure email confirmation URL points to our callback
-email_confirm_url = "https://tiertrainer24.com/auth/callback"
+# email_confirm_url = "https://tiertrainer24.com/auth/callback"
 # Set longer expiry for email tokens
-mailer_secure_email_change_enabled = true
+# mailer_secure_email_change_enabled = true
 
 [functions.create-checkout]
 verify_jwt = true

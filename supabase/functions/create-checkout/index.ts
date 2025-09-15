@@ -152,7 +152,7 @@ serve(async (req)=>{
     let user = null;
     let userEmail = "";
     let userId = "";
-    // Try to get authenticated user
+    // Try to get authenticated user (but allow unconfirmed users)
     const authHeader = req.headers.get("Authorization");
     if (authHeader) {
       try {
@@ -165,25 +165,38 @@ serve(async (req)=>{
           userId = user.id;
           logStep("User authenticated", {
             userId: user.id,
-            email: user.email
+            email: user.email,
+            emailConfirmed: !!user.email_confirmed_at
           });
         }
       } catch (authError) {
-        logStep("Authentication failed", {
+        logStep("Authentication failed, will try with request body email", {
           error: authError
         });
-        throw new Error("User not authenticated");
+        // Don't throw error here - we'll try to get email from request body
       }
     } else {
-      logStep("ERROR: No authorization header provided");
-      throw new Error("No authorization header provided");
+      logStep("No authorization header provided, will use email from request body");
+      // Don't throw error here - we'll try to get email from request body
     }
-    if (!userEmail) {
-      logStep("ERROR: No user email available");
-      throw new Error("No user email available for checkout");
-    }
-    const requestBody = await req.json();
-    const { priceType = "monthly", successUrl, cancelUrl, language = 'de' } = requestBody;
+     const requestBody = await req.json();
+     const { priceType = "monthly", successUrl, cancelUrl, language = 'de', userEmail: requestUserEmail } = requestBody;
+     
+     // NEW WORKFLOW: Handle unconfirmed users by using email from request body
+     if (requestUserEmail && !userEmail) {
+       userEmail = requestUserEmail;
+       userId = `temp_${Date.now()}`; // Temporary ID for unconfirmed users
+       logStep("Using user email from request body for unconfirmed user", {
+         email: userEmail,
+         tempUserId: userId
+       });
+     }
+     
+     // Final check for user email
+     if (!userEmail) {
+       logStep("ERROR: No user email available after processing request body");
+       throw new Error("No user email available for checkout");
+     }
     
     // Validate language parameter
     const validLanguages = ['de', 'en'];
@@ -195,6 +208,8 @@ serve(async (req)=>{
       finalLanguage: finalLanguage,
       successUrl,
       cancelUrl,
+      userEmail,
+      userId,
       requestBody: JSON.stringify(requestBody)
     });
     const stripe = new Stripe(stripeKey, {
@@ -202,7 +217,7 @@ serve(async (req)=>{
     });
     // Get or create customer
     const customerId = await getOrCreateCustomer(stripe, userEmail, userId);
-    // Ensure user profile exists
+    // Ensure user profile exists (for authenticated users only)
     if (user) {
       const { error: profileError } = await supabaseClient.from('profiles').upsert({
         id: user.id,
@@ -222,6 +237,11 @@ serve(async (req)=>{
           userId: user.id
         });
       }
+    } else {
+      logStep("Skipping profile creation for unconfirmed user", {
+        email: userEmail,
+        tempUserId: userId
+      });
     }
     // Get pricing configuration with localization
     const selectedPrice = convertPricingConfigToStripe(priceType, finalLanguage);

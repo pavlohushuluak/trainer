@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -26,6 +26,7 @@ import { ImpressumModal } from '@/components/legal/ImpressumModal';
 const LoginPage = () => {
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isScrolled } = useStickyHeader();
   const { t } = useTranslations();
 
@@ -43,11 +44,24 @@ const LoginPage = () => {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(true);
 
-  // Check localStorage for alreadySignedUp value on component mount
+  // Check localStorage for alreadySignedUp value on component mount and handle URL parameters
   useEffect(() => {
     const alreadySignedUp = localStorage.getItem('alreadySignedUp') === 'true';
     setActiveTab(alreadySignedUp ? 'signin' : 'signup');
-  }, []);
+    
+    // Handle URL parameters for payment success messages
+    const searchParams = new URLSearchParams(location.search);
+    const messageParam = searchParams.get('message');
+    
+    if (messageParam === 'payment_success_login_required') {
+      setMessage('Your payment was successful! Please log in to access your premium account.');
+      setActiveTab('signin');
+      
+      // Clean up URL parameters
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+  }, [location.search]);
 
   // Form validation with detailed error tracking
   const [fieldErrors, setFieldErrors] = useState<{

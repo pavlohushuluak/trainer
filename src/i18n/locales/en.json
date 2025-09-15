@@ -450,7 +450,14 @@
         "description": "You have been successfully logged in."
       },
       "signupSuccess": "Registration successful!",
-      "signupSuccessDescription": "Please check your email for the verification code."
+      "signupSuccessDescription": "Please check your email for the verification code.",
+      "proceedingToCheckout": "Proceeding to checkout..."
+  },
+  "checkout": {
+    "autoLogin": {
+      "title": "Setting up your account...",
+      "description": "Please wait while we confirm your payment and log you in automatically."
+    }
     }
   },
   "faq": {

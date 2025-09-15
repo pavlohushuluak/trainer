@@ -977,124 +977,23 @@ serve(async (req) => {
     // Generate email based on action type with language support
     switch (data.email_data.email_action_type) {
        case 'signup':
-         logStep('Generating signup verification code email with language', { 
+         logStep('NEW WORKFLOW: Skipping signup verification email - user will proceed to checkout', { 
            language: userLanguage,
            preferredLanguage: data.user.user_metadata?.preferred_language,
            userEmail: data.user.email
          });
          
-         // Use upsert approach to prevent duplicates
-         const supabase = createClient(
-           Deno.env.get('SUPABASE_URL') ?? '',
-           Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+         // NEW WORKFLOW: Skip sending verification email for signup
+         // User will proceed to checkout, email verification will be sent only if payment is cancelled
+         return new Response(
+           JSON.stringify({ 
+             success: true, 
+             emailId: 'skipped-signup-verification',
+             type: data.email_data.email_action_type,
+             message: 'Signup verification email skipped - user proceeding to checkout'
+           }),
+           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
          );
-         
-         // First, try to get existing valid code
-         const { data: existingCode, error: existingCodeError } = await supabase
-           .from('signup_verification_codes')
-           .select('*')
-           .eq('email', data.user.email)
-           .eq('used', false)
-           .single();
-         
-         let verificationCode: string;
-         let shouldSendEmail = true;
-         
-         if (existingCode && !existingCodeError) {
-           // Check if existing code is still valid
-           const now = new Date();
-           const expiresAt = new Date(existingCode.expires_at);
-           
-           if (now < expiresAt) {
-             logStep('Using existing valid verification code, skipping email send', { 
-               email: data.user.email,
-               code: existingCode.code,
-               expiresAt: existingCode.expires_at,
-               createdAt: existingCode.created_at
-             });
-             verificationCode = existingCode.code;
-             shouldSendEmail = false; // Don't send duplicate email
-           } else {
-             // Generate new code if existing one is expired
-             verificationCode = generateVerificationCode();
-             logStep('Existing code expired, generated new verification code', { 
-               email: data.user.email,
-               oldCode: existingCode.code,
-               newCode: verificationCode
-             });
-             
-             // Update the expired code with new one
-             const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
-             await supabase
-               .from('signup_verification_codes')
-               .update({
-                 code: verificationCode,
-                 expires_at: expiresAt,
-                 created_at: new Date().toISOString()
-               })
-               .eq('id', existingCode.id);
-           }
-         } else {
-           // No existing code, generate new one
-           verificationCode = generateVerificationCode();
-           logStep('Generated new verification code', { code: verificationCode });
-           
-           // Try to insert new code, handle potential race condition
-           try {
-             const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
-             logStep('Storing verification code', { 
-               email: data.user.email, 
-               code: verificationCode,
-               expiresAt: expiresAt
-             });
-
-             const { error: dbError } = await supabase
-               .from('signup_verification_codes')
-               .insert({
-                 user_id: data.user.id,
-                 email: data.user.email,
-                 code: verificationCode,
-                 expires_at: expiresAt
-               });
-             
-             if (dbError) {
-               // If insert failed (likely due to race condition), try to get the existing code
-               logStep('Insert failed, checking for existing code due to race condition', { 
-                 error: dbError.message,
-                 email: data.user.email
-               });
-               
-               const { data: raceConditionCode, error: raceError } = await supabase
-                 .from('signup_verification_codes')
-                 .select('*')
-                 .eq('email', data.user.email)
-                 .eq('used', false)
-                 .single();
-               
-               if (raceConditionCode && !raceError) {
-                 logStep('Found existing code from race condition, using it', { 
-                   email: data.user.email,
-                   code: raceConditionCode.code
-                 });
-                 verificationCode = raceConditionCode.code;
-                 shouldSendEmail = false; // Don't send duplicate email
-               } else {
-                 logStep('Error in race condition handling', { error: raceError?.message });
-               }
-             } else {
-               logStep('Verification code stored successfully', { 
-                 email: data.user.email,
-                 code: verificationCode,
-                 expiresAt: expiresAt
-               });
-             }
-           } catch (error) {
-             logStep('Error storing verification code', { error: error.message });
-           }
-         }
-         
-         emailTemplate = generateSignupVerificationEmail(data, verificationCode, userLanguage);
-         break;
       case 'magiclink':
         emailTemplate = generateMagicLinkEmail(data, userLanguage);
         break;

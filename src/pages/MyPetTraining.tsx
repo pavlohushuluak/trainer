@@ -16,6 +16,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import Confetti from 'react-confetti';
+import { supabase } from '@/integrations/supabase/client';
 
 // Add custom CSS for floating animation
 const floatingAnimation = `
@@ -110,6 +111,7 @@ const MyPetTraining = () => {
   // State for congratulations modal
   const [showCongratulations, setShowCongratulations] = useState(false);
   const [upgradeDetails, setUpgradeDetails] = useState<any>(null);
+  const [isAutoLoggingIn, setIsAutoLoggingIn] = useState(false);
 
   // Use Redux for pet profiles data
   const {
@@ -226,39 +228,150 @@ const MyPetTraining = () => {
     const sessionId = searchParams.get('session_id');
     const paymentType = searchParams.get('payment');
     const isGuest = searchParams.get('guest') === 'true';
+    const userEmail = searchParams.get('user_email');
 
-    if (isCheckoutSuccess && user) {
-      console.log('🎉 Checkout success detected:', { sessionId, paymentType, isGuest });
+    if (isCheckoutSuccess) {
+      console.log('🎉 Checkout success detected:', { sessionId, paymentType, isGuest, userEmail, hasUser: !!user });
       
-      // Show congratulations modal for successful upgrade
-      setUpgradeDetails({
-        sessionId,
-        paymentType,
-        isGuest,
-        timestamp: new Date().toISOString()
-      });
-      setShowCongratulations(true);
-      
-      // Refresh subscription data after a short delay to ensure backend has processed the payment
-      const refreshTimer = setTimeout(async () => {
-        try {
-          console.log('🔄 Refreshing subscription data after checkout success...');
-          await refetchSubscription();
-          console.log('✅ Subscription data refreshed successfully');
-          
-          // Also refresh pet profiles in case there were any changes
-          if (fetchPets) {
-            await fetchPets();
-            console.log('✅ Pet profiles refreshed successfully');
+      // If user is not logged in but we have their email, try to auto-login them
+      if (!user && userEmail) {
+        console.log('🔄 Attempting auto-login for user after payment success:', userEmail);
+        setIsAutoLoggingIn(true);
+        
+        const autoLoginUser = async (retryCount = 0) => {
+          try {
+            console.log(`🔄 Auto-login attempt ${retryCount + 1}/3 for user:`, userEmail);
+            
+            // Call the auto-login function to create a session
+            const { data, error } = await supabase.functions.invoke('auto-login-after-payment', {
+              body: {
+                userEmail: decodeURIComponent(userEmail),
+                sessionId: sessionId
+              }
+            });
+
+            if (error) {
+              console.error(`❌ Auto-login attempt ${retryCount + 1} failed:`, error);
+              
+              // If it's a retryable error and we haven't retried too much, try again
+              if ((error.message?.includes('not confirmed') || error.message?.includes('not yet processed')) && retryCount < 2) {
+                console.log(`⏳ Retrying auto-login in 5 seconds (attempt ${retryCount + 2}/3)...`);
+                setTimeout(() => autoLoginUser(retryCount + 1), 5000);
+                return;
+              }
+              
+              // Redirect to login page with a message
+              navigate('/login?message=payment_success_login_required');
+              return;
+            }
+
+            if (data?.success) {
+              console.log('✅ Auto-login successful, processing session:', data);
+              setIsAutoLoggingIn(false);
+              
+              // Try to use access token directly if available
+              if (data.session?.access_token && data.session?.refresh_token) {
+                console.log('🔑 Using access token for direct login');
+                try {
+                  const { error: sessionError } = await supabase.auth.setSession({
+                    access_token: data.session.access_token,
+                    refresh_token: data.session.refresh_token
+                  });
+                  
+                  if (sessionError) {
+                    console.error('❌ Error setting session with tokens:', sessionError);
+                    // Fallback to magic link
+                    if (data.session?.action_link) {
+                      console.log('🔄 Falling back to magic link');
+                      window.location.href = data.session.action_link;
+                      return;
+                    }
+                  } else {
+                    console.log('✅ Session set successfully with tokens');
+                    // Refresh the page to update the user state
+                    window.location.reload();
+                    return;
+                  }
+                } catch (tokenError) {
+                  console.error('❌ Error processing tokens:', tokenError);
+                  // Fallback to magic link
+                  if (data.session?.action_link) {
+                    console.log('🔄 Falling back to magic link after token error');
+                    window.location.href = data.session.action_link;
+                    return;
+                  }
+                }
+              }
+              
+              // Fallback to magic link if no tokens or token login failed
+              if (data.session?.action_link) {
+                console.log('🔄 Using magic link for login');
+                window.location.href = data.session.action_link;
+                return;
+              }
+              
+              console.error('❌ No valid session method available');
+              navigate('/login?message=payment_success_login_required');
+              return;
+            } else {
+              console.error('❌ Auto-login response invalid:', data);
+              setIsAutoLoggingIn(false);
+              navigate('/login?message=payment_success_login_required');
+              return;
+            }
+          } catch (error) {
+            console.error(`❌ Auto-login error (attempt ${retryCount + 1}):`, error);
+            
+            // If we haven't retried too much, try again
+            if (retryCount < 2) {
+              console.log(`⏳ Retrying auto-login in 5 seconds (attempt ${retryCount + 2}/3)...`);
+              setTimeout(() => autoLoginUser(retryCount + 1), 5000);
+              return;
+            }
+            
+            setIsAutoLoggingIn(false);
+            navigate('/login?message=payment_success_login_required');
+            return;
           }
-        } catch (error) {
-          console.error('❌ Error refreshing data after checkout:', error);
-        }
-      }, 2000); // Wait 2 seconds for backend processing
+        };
 
-      return () => clearTimeout(refreshTimer);
+        // Execute auto-login after a longer delay to ensure webhook has processed
+        setTimeout(() => autoLoginUser(), 10000); // Increased to 10 seconds for better reliability
+        return;
+      }
+
+      // If user is logged in, show congratulations modal
+      if (user) {
+        // Show congratulations modal for successful upgrade
+        setUpgradeDetails({
+          sessionId,
+          paymentType,
+          isGuest,
+          timestamp: new Date().toISOString()
+        });
+        setShowCongratulations(true);
+        
+        // Refresh subscription data after a short delay to ensure backend has processed the payment
+        const refreshTimer = setTimeout(async () => {
+          try {
+            console.log('🔄 Refreshing subscription data after checkout success...');
+            await refetchSubscription();
+            console.log('✅ Subscription data refreshed successfully');
+            
+            // Also refresh pet profiles in case there were any changes
+            if (fetchPets) {
+              await fetchPets();
+              console.log('✅ Pet profiles refreshed successfully');
+            }
+          } catch (error) {
+            console.error('❌ Error refreshing data after checkout:', error);
+          }
+        }, 2000); // Wait 2 seconds for backend processing
+
+        return () => clearTimeout(refreshTimer);
+      }
     }
-  }, [location.search, user, refetchSubscription, fetchPets]);
+  }, [location.search, user, refetchSubscription, fetchPets, navigate]);
 
   // Show loading only when absolutely necessary
   if (loading) {
@@ -266,6 +379,42 @@ const MyPetTraining = () => {
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
+    );
+  }
+
+  // Show auto-login loading overlay
+  if (isAutoLoggingIn) {
+    return (
+      <MainLayout showFooter={false} showSupportButton={false}>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md mx-4 text-center">
+            <div className="flex flex-col items-center space-y-4">
+              {/* Professional loading spinner */}
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 rounded-full animate-spin border-t-primary"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-8 h-8 bg-primary rounded-full animate-pulse"></div>
+                </div>
+              </div>
+              
+              {/* Loading text */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {t('checkout.autoLogin.title', 'Setting up your account...')}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {t('checkout.autoLogin.description', 'Please wait while we confirm your payment and log you in automatically.')}
+                </p>
+              </div>
+              
+              {/* Progress indicator */}
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div className="bg-primary h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </MainLayout>
     );
   }
 

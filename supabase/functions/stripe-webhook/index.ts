@@ -254,7 +254,63 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
     admin_notes: `Webhook updated: ${event.type} at ${new Date().toISOString()}. Status: ${subscription.status}. Tier: ${subscriptionTier}. Amount: ${amount}`
   };
   console.log(subscriptionData);
-  // Only update subscribers table for successful payments
+  // NEW WORKFLOW: First confirm user email, then process payment
+  if (subscription.status === 'active' || subscription.status === 'trialing') {
+    try {
+      logStep("Payment successful - first confirming user email, then processing payment", {
+        email: customer.email,
+        subscriptionStatus: subscription.status
+      });
+
+      // STEP 1: Confirm user email first
+      const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(customer.email);
+      
+      if (userError) {
+        logStep("Error getting user data for auto-confirmation", {
+          email: customer.email,
+          error: userError.message
+        });
+      } else if (userData.user && !userData.user.email_confirmed_at) {
+        // Confirm the user's email first
+        const { error: confirmError } = await supabaseClient.auth.admin.updateUserById(userData.user.id, {
+          email_confirm: true
+        });
+
+        if (confirmError) {
+          logStep("Error auto-confirming user email", {
+            email: customer.email,
+            userId: userData.user.id,
+            error: confirmError.message
+          });
+        } else {
+          logStep("User email auto-confirmed successfully - now processing payment", {
+            email: customer.email,
+            userId: userData.user.id
+          });
+        }
+      } else if (userData.user?.email_confirmed_at) {
+        logStep("User email already confirmed - proceeding with payment processing", {
+          email: customer.email,
+          confirmedAt: userData.user.email_confirmed_at
+        });
+      }
+
+      // STEP 2: Process payment after user confirmation
+      logStep("Processing payment after user confirmation", {
+        email: customer.email,
+        tier: subscriptionTier,
+        tierLimit: tierLimit
+      });
+
+    } catch (error) {
+      logStep("Error in confirmation/payment process", {
+        email: customer.email,
+        error: error.message
+      });
+    }
+  }
+
+  // Update subscribers table for successful payments
   const { error, data } = await supabaseClient.from("subscribers").update(subscriptionData).eq("email", subscriptionData.email);
   if (error) {
     console.error("Update failed:", error.message);

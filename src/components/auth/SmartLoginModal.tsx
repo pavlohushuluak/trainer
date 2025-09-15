@@ -16,9 +16,8 @@ import { PasswordInput } from '@/components/auth/PasswordInput';
 import { ConfirmPasswordInput } from '@/components/auth/ConfirmPasswordInput';
 import { EmailInput } from '@/components/auth/EmailInput';
 import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
-import { VerificationCodeInput } from '@/components/auth/VerificationCodeInput';
-import { useVerificationCode } from '@/hooks/auth/useVerificationCode';
 import { getCheckoutFlags, clearCheckoutFlags } from '@/utils/checkoutStorage';
+import { getCheckoutInformation } from '@/utils/checkoutSessionStorage';
 import { useTranslations } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
 import { getCurrentLanguage } from '@/utils/languageSupport';
@@ -63,25 +62,6 @@ export const SmartLoginModal = ({
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(true);
-  const [showVerification, setShowVerification] = useState(false);
-  const [verificationCode, setVerificationCode] = useState('');
-
-  // Verification code hook
-  const { verifyCode, resendCode, loading: verifyLoading, resendLoading, error: verifyError, clearError } = useVerificationCode({
-    email,
-    password, // Pass password for auto-login after verification
-    onSuccess: () => {
-      setShowVerification(false);
-      setVerificationCode('');
-      
-      // Simple verification success - let the parent handle checkout logic
-      onLoginSuccess();
-      onClose();
-    },
-    onError: (error) => {
-      setError(error);
-    }
-  });
 
   // Check localStorage for alreadySignedUp value on component mount
   useEffect(() => {
@@ -196,17 +176,43 @@ export const SmartLoginModal = ({
         // Set localStorage to indicate user has signed up
         localStorage.setItem('alreadySignedUp', 'true');
         
-        // Show verification step - Supabase webhook will automatically send the verification email
-        setShowVerification(true);
-        setError('');
-        setMessage('');
-        
-        // Show signup success toast with verification message
+        // NEW WORKFLOW: Use signup response data directly, skip auto-login for unconfirmed users
+        // Show signup success toast
         toast({
           title: t('auth.smartLogin.signupSuccess'),
-          description: t('auth.verificationCode.instructions'),
-          duration: 5000
+          description: t('auth.smartLogin.proceedingToCheckout'),
+          duration: 3000
         });
+        
+        // Store user data temporarily for checkout processing
+        if (data?.user) {
+          console.log('User created successfully, storing for checkout:', data.user.email);
+          
+          // Store user data in sessionStorage for checkout processing
+          sessionStorage.setItem('tempUserData', JSON.stringify({
+            email: data.user.email,
+            id: data.user.id,
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            timestamp: Date.now()
+          }));
+          
+          // Trigger checkout processing immediately after storing user data
+          setTimeout(() => {
+            const checkoutInfo = getCheckoutInformation();
+            if (checkoutInfo) {
+              console.log('Triggering checkout processing from SmartLoginModal:', checkoutInfo);
+              // The Index.tsx useEffect should pick this up
+              window.dispatchEvent(new CustomEvent('checkoutRequested', { 
+                detail: { checkoutInfo, tempUserData: JSON.parse(sessionStorage.getItem('tempUserData') || '{}') }
+              }));
+            }
+          }, 100); // Small delay to ensure sessionStorage is set
+        }
+        
+        // Proceed to checkout immediately (Index.tsx will handle the checkout with stored user data)
+        onLoginSuccess();
+        onClose();
       }
     } catch (err) {
       setError(t('auth.generalError'));
@@ -224,9 +230,6 @@ export const SmartLoginModal = ({
     setError('');
     setMessage('');
     setTermsAgreed(true);
-    setShowVerification(false);
-    setVerificationCode('');
-    clearError();
   };
 
   const defaultTitle = title || t('hero.smartLogin.defaultTitle');
@@ -388,8 +391,7 @@ export const SmartLoginModal = ({
                       
                       {/* Sign Up Tab */}
                       <TabsContent value="signup" className="space-y-2 sm:space-y-3 lg:space-y-4 mt-3 sm:mt-4 lg:mt-6">
-                        {!showVerification ? (
-                          <form onSubmit={handleSignUp} className="space-y-2 sm:space-y-3 lg:space-y-4">
+                        <form onSubmit={handleSignUp} className="space-y-2 sm:space-y-3 lg:space-y-4">
                           {/* Name Fields */}
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
                             <div className="space-y-1 sm:space-y-2">
@@ -493,43 +495,6 @@ export const SmartLoginModal = ({
                             )}
                           </Button>
                         </form>
-                        ) : (
-                          <div className="space-y-4">
-                            <div className="text-center">
-                              <h3 className="text-lg font-semibold mb-2">{t('auth.verificationCode.title')}</h3>
-                              <p className="text-sm text-muted-foreground mb-4">
-                                {t('auth.verificationCode.instructions')}
-                              </p>
-                            </div>
-                            
-                            <VerificationCodeInput
-                              id="verification-code"
-                              label={t('auth.verificationCode.title')}
-                              value={verificationCode}
-                              onChange={setVerificationCode}
-                              onVerify={verifyCode}
-                              onResend={resendCode}
-                              onClearError={clearError}
-                              loading={verifyLoading}
-                              resendLoading={resendLoading}
-                              error={verifyError}
-                              email={email}
-                            />
-                            
-                            <div className="text-center">
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setShowVerification(false)}
-                                className="text-xs text-muted-foreground hover:text-foreground"
-                              >
-                                <ArrowLeft className="h-3 w-3 mr-1" />
-                                {t('common.back')}
-                              </Button>
-                            </div>
-                          </div>
-                        )}
                       </TabsContent>
                     </Tabs>
                   </div>

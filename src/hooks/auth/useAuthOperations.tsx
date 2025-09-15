@@ -72,22 +72,7 @@ export const useAuthOperations = () => {
   };
 
   const signUp = async (email: string, password: string, firstName?: string, lastName?: string, language?: string) => {
-    // Check for pending checkout data to include in redirect URL
-    const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
-    
-    // Build redirect URL with checkout data if available
-    let redirectUrl = `${window.location.origin}/auth/callback`;
-    if (hasPendingCheckout && checkoutData) {
-      // Include checkout data in the redirect URL for email confirmation
-      const checkoutParams = new URLSearchParams({
-        checkout: 'true',
-        priceType: checkoutData.priceType,
-        sessionId: checkoutData.sessionId,
-        origin: checkoutData.origin
-      });
-      redirectUrl = `${redirectUrl}?${checkoutParams.toString()}`;
-      console.log('🔐 Signup - including checkout data in redirect URL:', redirectUrl);
-    }
+    // NEW WORKFLOW: Skip email verification initially, proceed to checkout
     
     // Detect preferred language using the unified detection function
     // Always default to German ('de') if no language is provided
@@ -107,8 +92,9 @@ export const useAuthOperations = () => {
       email: email.trim(),
       password: password, // Make sure password is passed as-is
       options: {
-        // Don't use emailRedirectTo for our custom verification flow
-        // emailRedirectTo: redirectUrl,
+        // NEW WORKFLOW: Don't send verification email initially
+        // Email verification will be sent only if payment is cancelled
+        emailRedirectTo: undefined, // Skip email verification
         data: metadata
       }
     });
