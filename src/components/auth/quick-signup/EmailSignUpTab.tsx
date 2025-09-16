@@ -51,7 +51,7 @@ export const EmailSignUpTab = ({ onClose }: EmailSignUpTabProps) => {
           
           // Direkt zum Tierbereich weiterleiten
           setTimeout(() => {
-            window.location.href = '/';
+            window.location.href = '/mein-tiertraining';
             onClose();
           }, 1000);
         }
@@ -87,9 +87,9 @@ export const EmailSignUpTab = ({ onClose }: EmailSignUpTabProps) => {
             description: t('auth.emailSignUpTab.toasts.signupSuccess.description')
           });
           
-          // CRITICAL FIX: Redirect to homepage instead of mein-tiertraining after signup
+          // CRITICAL FIX: Redirect to mein-tiertraining after signup
           setTimeout(() => {
-            window.location.href = '/';
+            window.location.href = '/mein-tiertraining';
             onClose();
           }, 1000);
         } else {

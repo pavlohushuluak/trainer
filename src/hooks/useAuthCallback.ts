@@ -168,7 +168,7 @@ export const useAuthCallback = () => {
           
           if (!userEmail) {
             console.error('🔐 OAuth callback: No user email available for checkout creation');
-            window.location.href = '/';
+            window.location.href = '/mein-tiertraining';
             return;
           }
           
@@ -189,8 +189,8 @@ export const useAuthCallback = () => {
 
           if (error) {
             console.error('🔐 OAuth callback: Error creating checkout:', error);
-            // Fallback to homepage on error
-            window.location.href = '/';
+            // Fallback to mein-tiertraining on error
+            window.location.href = '/mein-tiertraining';
           } else if (data?.url) {
             console.log('🔐 OAuth callback: Checkout created successfully, redirecting to:', data.url);
             // Clear the pending data before redirecting
@@ -201,17 +201,17 @@ export const useAuthCallback = () => {
             window.location.href = data.url;
           } else {
             console.error('🔐 OAuth callback: No checkout URL returned');
-            window.location.href = '/';
+            window.location.href = '/mein-tiertraining';
           }
         } catch (error) {
           console.error('🔐 OAuth callback: Exception creating checkout:', error);
-          window.location.href = '/';
+          window.location.href = '/mein-tiertraining';
         }
         return;
       } else {
-        console.log('🔐 OAuth callback: No pending checkout data, redirecting to homepage');
+        console.log('🔐 OAuth callback: No pending checkout data, redirecting to mein-tiertraining');
         // Use window.location.href for more reliable redirect after OAuth
-        window.location.href = '/';
+        window.location.href = '/mein-tiertraining';
         return;
       }
     }
@@ -289,8 +289,8 @@ export const useAuthCallback = () => {
           localStorage.removeItem('sign_in_google_backup');
           window.location.href = '/mein-tiertraining';
         } else {
-          console.log('🔐 OAuth callback: Normal user without Google signin flag, redirecting to homepage');
-          window.location.href = '/';
+          console.log('🔐 OAuth callback: Normal user without Google signin flag, redirecting to mein-tiertraining');
+          window.location.href = '/mein-tiertraining';
         }
       }
     } catch (error) {
@@ -486,8 +486,8 @@ export const useAuthCallback = () => {
             if (attempts < maxAttempts) {
               setTimeout(waitForSession, checkInterval);
             } else {
-              console.log('🔐 OAuth callback: Session establishment timeout, redirecting to homepage');
-              window.location.href = '/';
+              console.log('🔐 OAuth callback: Session establishment timeout, redirecting to mein-tiertraining');
+              window.location.href = '/mein-tiertraining';
             }
           };
           
