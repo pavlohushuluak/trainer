@@ -65,12 +65,6 @@ export const PackageContent = () => {
             <CardTitle className="text-lg">{t('pricing.packageContent.cards.imageAnalysis.title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="text-sm font-medium text-center mb-2">
-              {t('pricing.packageContent.cards.imageAnalysis.question')}
-            </div>
-            <div className="text-xs text-muted-foreground text-center mb-3">
-              {t('pricing.packageContent.cards.imageAnalysis.description')}
-            </div>
             <div className="flex items-start gap-2">
               <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
               <span className="text-sm">{t('pricing.packageContent.cards.imageAnalysis.feature1')}</span>
