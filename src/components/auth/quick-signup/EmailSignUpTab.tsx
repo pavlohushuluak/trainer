@@ -51,7 +51,7 @@ export const EmailSignUpTab = ({ onClose }: EmailSignUpTabProps) => {
           
           // Direkt zum Tierbereich weiterleiten
           setTimeout(() => {
-            window.location.href = '/mein-tiertraining';
+            window.location.href = '/';
             onClose();
           }, 1000);
         }
