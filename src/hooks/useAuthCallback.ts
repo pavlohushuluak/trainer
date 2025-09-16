@@ -267,8 +267,8 @@ export const useAuthCallback = () => {
     
     // If userId is 'oauth-no-session', skip admin check and use default redirect
     if (userId === 'oauth-no-session') {
-      console.log('🔐 OAuth callback: No session available, using default redirect to mein-tiertraining');
-      window.location.href = '/mein-tiertraining';
+      console.log('🔐 OAuth callback: No session available, using default redirect to homepage');
+      window.location.href = '/';
       return;
     }
     
@@ -283,11 +283,11 @@ export const useAuthCallback = () => {
       } else {
         // For normal users, check if they signed in with Google from login page
         if (signInGoogle === 'true') {
-          console.log('🔐 OAuth callback: Normal user with Google signin from login page, redirecting to mein-tiertraining');
+          console.log('🔐 OAuth callback: Normal user with Google signin from login page, redirecting to homepage');
           // Remove both flags after using them
           sessionStorage.removeItem('sign_in_google');
           localStorage.removeItem('sign_in_google_backup');
-          window.location.href = '/mein-tiertraining';
+          window.location.href = '/';
         } else {
           console.log('🔐 OAuth callback: Normal user without Google signin flag, redirecting to homepage');
           window.location.href = '/';
@@ -295,9 +295,9 @@ export const useAuthCallback = () => {
       }
     } catch (error) {
       console.error('🔐 OAuth callback: Error checking admin status:', error);
-      // Fallback to mein-tiertraining if admin check fails
-      console.log('🔐 OAuth callback: Admin check failed, redirecting to mein-tiertraining as fallback');
-      window.location.href = '/mein-tiertraining';
+      // CRITICAL FIX: Fallback to homepage if admin check fails
+      console.log('🔐 OAuth callback: Admin check failed, redirecting to homepage as fallback');
+      window.location.href = '/';
     }
   };
 

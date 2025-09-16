@@ -142,25 +142,26 @@ export const useAuthStateHandler = () => {
       console.log('🔐 Redirect decision:', {
         isAdmin,
         currentPath,
-        targetPath: isAdmin ? '/admin/users' : '/mein-tiertraining'
+        targetPath: isAdmin ? '/admin/users' : '/'
       });
 
       if (isAdmin && !currentPath.startsWith('/admin')) {
         console.log('🔐 Redirecting admin to /admin/users');
         window.location.href = '/admin/users';
       } else if (!isAdmin && currentPath.startsWith('/admin')) {
-        console.log('🔐 Redirecting non-admin away from admin area to /mein-tiertraining');
-        window.location.href = '/mein-tiertraining';
+        console.log('🔐 Redirecting non-admin away from admin area to homepage');
+        window.location.href = '/';
       } else {
-        window.location.href = '/mein-tiertraining';
-        console.log('🔐 No redirect needed - user is in correct location');
+        // CRITICAL FIX: Redirect to homepage instead of mein-tiertraining
+        window.location.href = '/';
+        console.log('🔐 Redirecting user to homepage after signin');
       }
 
     } catch (error) {
       console.warn('Error in handleSignedIn:', error);
-      // Fallback redirect to main training page
+      // CRITICAL FIX: Fallback redirect to homepage instead of mein-tiertraining
       if (!window.location.pathname.includes('/auth/callback')) {
-        window.location.href = '/mein-tiertraining';
+        window.location.href = '/';
       }
     }
   }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin]);
