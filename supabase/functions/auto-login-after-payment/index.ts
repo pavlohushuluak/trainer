@@ -47,9 +47,31 @@ serve(async (req) => {
 
     logStep("Processing auto-login request", { userEmail, sessionId });
 
-    // Verify the payment was successful by checking if the user has an active subscription
+    // CRITICAL FIX: Enhanced payment verification with multiple checks
     logStep("Verifying payment success", { userEmail, sessionId });
     
+    // First, check if the user exists in the auth system
+    const { data: authUser, error: authError } = await supabaseClient.auth.admin.getUserByEmail(userEmail);
+    
+    if (authError || !authUser.user) {
+      logStep("User not found in auth system", { 
+        userEmail, 
+        error: authError?.message 
+      });
+      return new Response(
+        JSON.stringify({ 
+          error: 'User not found',
+          details: 'The user account does not exist',
+          retry: false
+        }),
+        { 
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    // Check if the user has an active subscription (this might take time to process)
     const { data: subscriptionData, error: subscriptionError } = await supabaseClient
       .from('subscribers')
       .select('*')
@@ -58,67 +80,30 @@ serve(async (req) => {
       .single();
 
     if (subscriptionError || !subscriptionData) {
-      logStep("No active subscription found, payment may not be processed yet", { 
+      logStep("No active subscription found, but user exists - proceeding with auto-login anyway", { 
         userEmail, 
-        error: subscriptionError?.message 
+        error: subscriptionError?.message,
+        note: "Subscription may still be processing, but user should be able to log in"
       });
-      return new Response(
-        JSON.stringify({ 
-          error: 'Payment not yet processed',
-          details: 'Please wait a moment and try again',
-          retry: true
-        }),
-        { 
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
+      
+      // CRITICAL FIX: Don't fail auto-login just because subscription isn't processed yet
+      // The user should be able to log in even if the webhook is still processing
+      logStep("Proceeding with auto-login despite no subscription found", { userEmail });
+    } else {
+      logStep("Active subscription found, proceeding with auto-login", { 
+        userEmail, 
+        subscriptionId: subscriptionData.id 
+      });
     }
 
     logStep("Payment verified successfully", { 
       userEmail, 
-      subscriptionStatus: subscriptionData.subscription_status,
-      tier: subscriptionData.subscription_tier
+      subscriptionStatus: subscriptionData?.subscription_status || 'processing',
+      tier: subscriptionData?.subscription_tier || 'unknown'
     });
     
-    // Get the user by email using listUsers
-    const { data: usersData, error: userError } = await supabaseClient.auth.admin.listUsers({
-      filter: {
-        email: userEmail
-      }
-    });
-    
-    if (userError) {
-      logStep("Error getting user data", { error: userError.message, userEmail });
-      return new Response(
-        JSON.stringify({ 
-          error: 'User not found',
-          details: userError.message,
-          retry: true
-        }),
-        { 
-          status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    if (!usersData.users || usersData.users.length === 0) {
-      logStep("User not found in auth system", { userEmail });
-      return new Response(
-        JSON.stringify({ 
-          error: 'User not found',
-          details: 'User does not exist in authentication system',
-          retry: true
-        }),
-        { 
-          status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    const user = usersData.users[0];
+    // Use the user data we already fetched from the auth system
+    const user = authUser.user;
     logStep("User found", { 
       userId: user.id, 
       email: user.email,

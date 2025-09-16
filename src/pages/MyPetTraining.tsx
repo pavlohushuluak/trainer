@@ -262,16 +262,43 @@ const MyPetTraining = () => {
 
         if (error) {
           console.error(`❌ Auto-login attempt ${retryCount + 1} failed:`, error);
+          console.error('❌ Error details:', {
+            message: error.message,
+            details: error.details,
+            hint: error.hint,
+            code: error.code
+          });
           
           // If it's a retryable error and we haven't retried too much, try again
-          if ((error.message?.includes('not confirmed') || error.message?.includes('not yet processed')) && retryCount < 2) {
+          if ((error.message?.includes('not confirmed') || 
+               error.message?.includes('not yet processed') || 
+               error.message?.includes('Payment not yet processed') ||
+               error.message?.includes('retry')) && retryCount < 2) {
             console.log(`⏳ Retrying auto-login in 5 seconds (attempt ${retryCount + 2}/3)...`);
             setTimeout(() => autoLoginUser(email, sessionId, retryCount + 1), 5000);
             return;
           }
           
-          // Redirect to login page with a message
-          navigate('/login?message=payment_success_login_required');
+          // CRITICAL FIX: Don't redirect to login immediately - try to handle the error better
+          console.error('❌ Auto-login failed after retries, but payment was successful');
+          console.error('❌ This should not happen - user should be auto-logged in after payment');
+          
+          // Show error toast but don't redirect to login
+          toast({
+            title: "Payment Successful!",
+            description: "Your payment was processed successfully. Please refresh the page or try logging in manually.",
+            duration: 10000,
+            variant: "default"
+          });
+          
+          // Set a flag to indicate auto-login failed but payment succeeded
+          sessionStorage.setItem('autoLoginFailed', JSON.stringify({
+            email: email,
+            sessionId: sessionId,
+            timestamp: Date.now(),
+            error: error.message
+          }));
+          
           return;
         }
 
@@ -321,16 +348,36 @@ const MyPetTraining = () => {
     };
 
     if (isCheckoutSuccess) {
-      console.log('🎉 Checkout success detected:', { sessionId, paymentType, isGuest, userEmail, hasUser: !!user, currentUserEmail: user?.email });
+      console.log('🎉 Checkout success detected:', { 
+        sessionId, 
+        paymentType, 
+        isGuest, 
+        userEmail, 
+        hasUser: !!user, 
+        currentUserEmail: user?.email,
+        decodedUserEmail: userEmail ? decodeURIComponent(userEmail) : null
+      });
       
-      // Check if we need to switch users
-      const needsUserSwitch = userEmail && user && user.email !== decodeURIComponent(userEmail);
-      const needsAutoLogin = !user && userEmail;
+      // CRITICAL FIX: Enhanced auto-login logic for SmartLoginModal workflow
+      const decodedUserEmail = userEmail ? decodeURIComponent(userEmail) : null;
+      const needsUserSwitch = decodedUserEmail && user && user.email !== decodedUserEmail;
+      const needsAutoLogin = !user && decodedUserEmail;
+      const userMatches = user && decodedUserEmail && user.email === decodedUserEmail;
+      
+      console.log('🔍 Auto-login conditions:', {
+        needsUserSwitch,
+        needsAutoLogin,
+        userMatches,
+        hasUser: !!user,
+        hasUserEmail: !!decodedUserEmail,
+        currentUserEmail: user?.email,
+        paymentUserEmail: decodedUserEmail
+      });
       
       if (needsUserSwitch) {
         console.log('🔄 Current user does not match payment user, switching users:', {
           currentUser: user.email,
-          paymentUser: decodeURIComponent(userEmail)
+          paymentUser: decodedUserEmail
         });
         
         // Clear current session and auto-login the correct user
@@ -340,24 +387,68 @@ const MyPetTraining = () => {
         supabase.auth.signOut().then(() => {
           // Wait a moment for signout to complete
           setTimeout(() => {
-            autoLoginUser(decodeURIComponent(userEmail), sessionId);
+            autoLoginUser(decodedUserEmail, sessionId);
           }, 1000);
         });
         
       } else if (needsAutoLogin) {
-        console.log('🔄 Attempting auto-login for user after payment success:', userEmail);
+        console.log('🔄 Attempting auto-login for user after payment success:', decodedUserEmail);
         setIsAutoLoggingIn(true);
-        autoLoginUser(decodeURIComponent(userEmail), sessionId);
-      } else if (user && user.email === decodeURIComponent(userEmail)) {
+        autoLoginUser(decodedUserEmail, sessionId);
+      } else if (userMatches) {
         console.log('✅ Current user matches payment user, proceeding with success handling');
         // User is already logged in correctly, proceed with normal success handling
         handlePaymentSuccess(sessionId, paymentType, isGuest);
       } else {
-        console.log('⚠️ No user email provided or user already logged in, proceeding with normal success handling');
+        console.log('⚠️ No user email provided or unexpected state, proceeding with normal success handling');
+        console.log('⚠️ Debug info:', {
+          hasUser: !!user,
+          hasUserEmail: !!decodedUserEmail,
+          userEmail: user?.email,
+          paymentUserEmail: decodedUserEmail
+        });
         handlePaymentSuccess(sessionId, paymentType, isGuest);
       }
     }
   }, [location.search, user, refetchSubscription, fetchPets, navigate]);
+
+  // CRITICAL FIX: Check for auto-login failure and provide manual login option
+  useEffect(() => {
+    const autoLoginFailed = sessionStorage.getItem('autoLoginFailed');
+    if (autoLoginFailed && !user) {
+      try {
+        const failedData = JSON.parse(autoLoginFailed);
+        console.log('🔍 Auto-login failed detected, providing manual login option:', failedData);
+        
+        // Show a more helpful message with manual login option
+        toast({
+          title: "Payment Successful!",
+          description: "Your payment was processed successfully. Please log in to access your account.",
+          duration: 15000,
+          action: (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => {
+                // Clear the failed flag
+                sessionStorage.removeItem('autoLoginFailed');
+                // Redirect to login with helpful message
+                navigate('/login?message=payment_success_manual_login_required');
+              }}
+            >
+              Log In Now
+            </Button>
+          )
+        });
+        
+        // Clear the failed flag after showing the message
+        sessionStorage.removeItem('autoLoginFailed');
+      } catch (error) {
+        console.error('Error parsing autoLoginFailed data:', error);
+        sessionStorage.removeItem('autoLoginFailed');
+      }
+    }
+  }, [user, navigate, toast]);
 
   // Check for pricing_click_data and SmartLoginModal data in sessionStorage and call create-checkout directly
   useEffect(() => {
