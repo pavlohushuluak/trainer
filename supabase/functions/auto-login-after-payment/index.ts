@@ -125,18 +125,19 @@ serve(async (req) => {
       emailConfirmed: !!user.email_confirmed_at
     });
 
-    // Ensure the user's email is confirmed (should already be done by webhook)
+    // CRITICAL FIX: Always ensure the user's email is confirmed for checkout flow
+    // This handles cases where users signed up through SmartLoginModal without email confirmation
     if (!user.email_confirmed_at) {
-      logStep("User email not confirmed, confirming now", { userId: user.id, email: user.email });
+      logStep("User email not confirmed, auto-confirming for checkout flow", { userId: user.id, email: user.email });
       const { error: confirmError } = await supabaseClient.auth.admin.updateUserById(user.id, {
         email_confirm: true
       });
 
       if (confirmError) {
-        logStep("Error confirming user email", { error: confirmError.message, userId: user.id });
+        logStep("Error auto-confirming user email", { error: confirmError.message, userId: user.id });
         return new Response(
           JSON.stringify({ 
-            error: 'Email not confirmed',
+            error: 'Failed to confirm email',
             details: confirmError.message,
             retry: true
           }),
@@ -147,7 +148,7 @@ serve(async (req) => {
         );
       }
       
-      logStep("User email confirmed successfully", { userId: user.id });
+      logStep("User email auto-confirmed successfully for checkout flow", { userId: user.id });
     } else {
       logStep("User email already confirmed", { userId: user.id, confirmedAt: user.email_confirmed_at });
     }
@@ -181,10 +182,12 @@ serve(async (req) => {
     logStep("Magic link generated successfully", { 
       userId: user.id,
       hasActionLink: !!linkData.properties?.action_link,
-      hasAccessToken: !!linkData.properties?.access_token
+      hasAccessToken: !!linkData.properties?.access_token,
+      hasRefreshToken: !!linkData.properties?.refresh_token
     });
 
-    // Return the session data with both magic link and tokens
+    // CRITICAL FIX: Return session data in the format expected by the client
+    // The client expects access_token and refresh_token for direct session setting
     return new Response(
       JSON.stringify({ 
         success: true,
@@ -194,12 +197,18 @@ serve(async (req) => {
           email_confirmed_at: user.email_confirmed_at
         },
         session: {
-          action_link: linkData.properties?.action_link,
           access_token: linkData.properties?.access_token,
           refresh_token: linkData.properties?.refresh_token,
-          expires_at: linkData.properties?.expires_at
+          expires_at: linkData.properties?.expires_at,
+          token_type: 'bearer',
+          user: {
+            id: user.id,
+            email: user.email,
+            email_confirmed_at: user.email_confirmed_at
+          }
         },
-        message: 'Auto-login successful - session created'
+        action_link: linkData.properties?.action_link, // Keep for fallback
+        message: 'Auto-login successful - session created and email confirmed'
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

@@ -194,27 +194,9 @@ export const SmartLoginModal = ({
             id: data.user.id,
             firstName: firstName.trim(),
             lastName: lastName.trim(),
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            needsEmailConfirmation: true // Flag to indicate this user needs email confirmation
           }));
-          
-          // CRITICAL FIX: Automatically confirm user email for checkout flow
-          // This ensures the user can be auto-logged in after payment success
-          try {
-            console.log('Auto-confirming user email for checkout flow:', data.user.email);
-            const { error: confirmError } = await supabase.auth.admin.updateUserById(data.user.id, {
-              email_confirm: true
-            });
-            
-            if (confirmError) {
-              console.error('Error auto-confirming user email:', confirmError);
-              // Continue with checkout anyway - the auto-login function will handle confirmation
-            } else {
-              console.log('User email auto-confirmed successfully for checkout flow');
-            }
-          } catch (confirmError) {
-            console.error('Exception during email auto-confirmation:', confirmError);
-            // Continue with checkout anyway
-          }
           
           // Trigger checkout processing immediately after storing user data
           setTimeout(() => {

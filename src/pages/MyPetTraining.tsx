@@ -279,8 +279,9 @@ const MyPetTraining = () => {
           console.log('✅ Auto-login successful, processing session:', data);
           setIsAutoLoggingIn(false);
           
-          // Try to use access token directly if available
+          // CRITICAL FIX: Try to use access token directly if available
           if (data.session?.access_token && data.session?.refresh_token) {
+            console.log('🔄 Setting session with tokens from auto-login response');
             const { error: sessionError } = await supabase.auth.setSession({
               access_token: data.session.access_token,
               refresh_token: data.session.refresh_token
@@ -288,6 +289,12 @@ const MyPetTraining = () => {
             
             if (sessionError) {
               console.error('❌ Error setting session:', sessionError);
+              // Try fallback with action_link if available
+              if (data.action_link) {
+                console.log('🔄 Falling back to action_link redirect');
+                window.location.href = data.action_link;
+                return;
+              }
               navigate('/login?message=payment_success_login_required');
               return;
             }
@@ -295,8 +302,12 @@ const MyPetTraining = () => {
             console.log('✅ Session set successfully, proceeding with success handling');
             // Proceed with normal success handling
             handlePaymentSuccess(sessionId, paymentType, isGuest);
+          } else if (data.action_link) {
+            console.log('🔄 No direct session tokens, using action_link for auto-login');
+            // Fallback to action_link if direct session setting fails
+            window.location.href = data.action_link;
           } else {
-            console.log('⚠️ No session data returned, redirecting to login');
+            console.log('⚠️ No session data or action_link returned, redirecting to login');
             navigate('/login?message=payment_success_login_required');
           }
         } else {
