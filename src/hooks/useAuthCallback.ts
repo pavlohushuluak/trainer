@@ -153,7 +153,7 @@ export const useAuthCallback = () => {
       } else {
         console.log('🔐 OAuth callback: User is regular user, redirecting to mein-tiertraining');
         // Use window.location.href for more reliable redirect after OAuth
-        window.location.href = '/mein-tiertraining';
+        window.location.href = '/';
       }
     } catch (error) {
       console.error('🔐 OAuth callback: Error checking admin status:', error);
