@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import Confetti from 'react-confetti';
 import { supabase } from '@/integrations/supabase/client';
+import { useSmartLoginRedirect } from '@/hooks/useSmartLoginRedirect';
 
 // Add custom CSS for floating animation
 const floatingAnimation = `
@@ -107,6 +108,9 @@ const MyPetTraining = () => {
   const navigate = useNavigate();
   const { t } = useTranslations();
   const { toast } = useToast();
+
+  // Check for SmartLoginModal OAuth redirect
+  useSmartLoginRedirect();
 
   // State for congratulations modal
   const [showCongratulations, setShowCongratulations] = useState(false);

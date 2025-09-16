@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { ThemeLogo } from '@/components/ui/theme-logo';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import { useSmartLoginRedirect } from '@/hooks/useSmartLoginRedirect';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -28,6 +29,9 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { signOut, user, loading: authLoading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pageLoadTime, setPageLoadTime] = useState<number>(0);
+
+  // Check for SmartLoginModal OAuth redirect
+  useSmartLoginRedirect();
   const navigate = useNavigate();
   // Track page load time for debugging
   useEffect(() => {
