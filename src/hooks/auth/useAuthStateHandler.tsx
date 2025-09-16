@@ -80,33 +80,7 @@ export const useAuthStateHandler = () => {
         return;
       }
 
-      // Check for pending checkout first - this takes priority over normal redirects
-      const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
-      
-      if (hasPendingCheckout && checkoutData) {
-        console.log('🔐 Pending checkout detected after signup/login, redirecting to home for checkout processing:', checkoutData);
-        // Redirect to home page where the checkout flow will be handled
-        window.location.href = '/';
-        return;
-      }
-
-      // Handle OAuth profile updates first (before redirects)
-      if (user.app_metadata?.provider) {
-        try {
-          await handleOAuthProfile(user);
-        } catch (error) {
-          console.warn('Error handling OAuth profile:', error);
-          // Continue with redirect even if profile update fails
-        }
-      }
-
-      // Skip other redirects if skipAutoRedirect is true or if already on target page
-      if (skipAutoRedirect || currentPath !== '/login') {
-        console.log('🔐 Skipping redirect - skipAutoRedirect or already on target page');
-        return;
-      }
-
-      // Check if this is an OAuth callback - if so, let useAuthCallback handle the redirect
+      // Check if this is an OAuth callback FIRST - if so, let useAuthCallback handle the redirect
       const urlParams = new URLSearchParams(window.location.search);
       const hasCode = urlParams.has('code');
       const hasAccessToken = window.location.hash.includes('access_token');
@@ -133,6 +107,32 @@ export const useAuthStateHandler = () => {
         setTimeout(() => {
           console.log('🔐 useAuthStateHandler: OAuth callback delay completed, checking if redirect is still needed');
         }, 2000);
+        return;
+      }
+
+      // Check for pending checkout - this takes priority over normal redirects
+      const { hasPendingCheckout, data: checkoutData } = getCheckoutFlags();
+      
+      if (hasPendingCheckout && checkoutData) {
+        console.log('🔐 Pending checkout detected after signup/login, redirecting to home for checkout processing:', checkoutData);
+        // Redirect to home page where the checkout flow will be handled
+        window.location.href = '/';
+        return;
+      }
+
+      // Handle OAuth profile updates first (before redirects)
+      if (user.app_metadata?.provider) {
+        try {
+          await handleOAuthProfile(user);
+        } catch (error) {
+          console.warn('Error handling OAuth profile:', error);
+          // Continue with redirect even if profile update fails
+        }
+      }
+
+      // Skip other redirects if skipAutoRedirect is true or if already on target page
+      if (skipAutoRedirect || currentPath !== '/login') {
+        console.log('🔐 Skipping redirect - skipAutoRedirect or already on target page');
         return;
       }
 

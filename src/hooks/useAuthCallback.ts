@@ -127,6 +127,8 @@ export const useAuthCallback = () => {
     // If OAuth came from SmartLoginModal, check for pending checkout data
     if (oauthSource === 'smartlogin') {
       console.log('🔐 OAuth callback: OAuth from SmartLoginModal, checking for pending checkout data');
+      console.log('🔐 OAuth callback: Current URL:', window.location.href);
+      console.log('🔐 OAuth callback: User ID:', userId);
       
       // Check for pending checkout data from SmartLoginModal
       const pendingPriceType = sessionStorage.getItem('pendingPriceType');
@@ -135,6 +137,7 @@ export const useAuthCallback = () => {
       console.log('🔐 OAuth callback: SmartLoginModal checkout data:', {
         pendingPriceType,
         pendingLoginContext,
+        userId,
         allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
           acc[key] = sessionStorage.getItem(key);
           return acc;
@@ -145,18 +148,28 @@ export const useAuthCallback = () => {
       if (pendingPriceType && pendingLoginContext === 'checkout') {
         console.log('🔐 OAuth callback: Found pending checkout data, redirecting directly to checkout');
         
+        // For SmartLoginModal checkout, we can proceed even without a valid user ID
+        // The create-checkout function will handle the user creation/authentication
+        console.log('🔐 OAuth callback: Proceeding with SmartLoginModal checkout, userId:', userId);
+        
         // Call create-checkout directly from here
         try {
           const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
           
+          console.log('🔐 OAuth callback: Creating checkout with data:', {
+            priceType: pendingPriceType,
+            userId,
+            currentLanguage
+          });
+          
           const { data, error } = await supabase.functions.invoke('create-checkout', {
             body: {
               priceType: pendingPriceType,
-              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userId)}`,
+              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userId || '')}`,
               cancelUrl: `${window.location.origin}/`,
               language: currentLanguage,
               customerInfo: {
-                name: userId?.split('@')[0] || 'User'
+                name: (userId && userId !== 'oauth-no-session') ? userId.split('@')[0] : 'User'
               }
             }
           });
@@ -410,7 +423,7 @@ export const useAuthCallback = () => {
 
       // Fallback session check - wait a bit for OAuth session to be established
       console.log('🔐 OAuth callback: Waiting for session to be established...');
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Increased delay for OAuth
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Increased delay for OAuth
       
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       
