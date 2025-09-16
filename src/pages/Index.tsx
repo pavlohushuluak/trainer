@@ -57,9 +57,11 @@ const Index = () => {
   });
 
   useEffect(() => {
-    const checkoutFlag = sessionStorage.getItem('checkout_flag') || localStorage.getItem('checkout_flag_backup');
+    const checkoutFlag = sessionStorage.getItem('checkout_flag');
     if (checkoutFlag === 'true') {
       setIsGoogleProcessingCheckout(true);
+      sessionStorage.removeItem('checkout_flag');
+      localStorage.removeItem('checkout_flag_backup');
     }
     return () => {
       sessionStorage.removeItem('checkout_flag');
