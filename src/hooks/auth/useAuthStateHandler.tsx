@@ -152,16 +152,16 @@ export const useAuthStateHandler = () => {
         console.log('🔐 Redirecting non-admin away from admin area to /mein-tiertraining');
         window.location.href = '/mein-tiertraining';
       } else {
-        // CRITICAL FIX: Redirect to mein-tiertraining after successful login
-        window.location.href = '/mein-tiertraining';
-        console.log('🔐 Redirecting to mein-tiertraining after login');
+        // CRITICAL FIX: Redirect to homepage instead of mein-tiertraining after signup
+        window.location.href = '/';
+        console.log('🔐 Redirecting to homepage after signup');
       }
 
     } catch (error) {
       console.warn('Error in handleSignedIn:', error);
-      // CRITICAL FIX: Fallback redirect to mein-tiertraining
+      // CRITICAL FIX: Fallback redirect to homepage instead of mein-tiertraining
       if (!window.location.pathname.includes('/auth/callback')) {
-        window.location.href = '/mein-tiertraining';
+        window.location.href = '/';
       }
     }
   }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin]);
