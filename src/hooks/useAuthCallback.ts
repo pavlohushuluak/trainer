@@ -130,11 +130,13 @@ export const useAuthCallback = () => {
       console.log('🔐 OAuth callback: Current URL:', window.location.href);
       console.log('🔐 OAuth callback: User ID:', userId);
       
-      // Check for homepage checkout data
-      const homepageCheckoutData = sessionStorage.getItem('homepage_checkout_data');
+      // Check for pending checkout data from SmartLoginModal
+      const pendingPriceType = sessionStorage.getItem('pendingPriceType');
+      const pendingLoginContext = sessionStorage.getItem('pendingLoginContext');
       
-      console.log('🔐 OAuth callback: Homepage checkout data:', {
-        homepageCheckoutData,
+      console.log('🔐 OAuth callback: SmartLoginModal checkout data:', {
+        pendingPriceType,
+        pendingLoginContext,
         userId,
         allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
           acc[key] = sessionStorage.getItem(key);
@@ -142,28 +144,27 @@ export const useAuthCallback = () => {
         }, {} as Record<string, string>)
       });
       
-      // If there's homepage checkout data, redirect directly to checkout
-      if (homepageCheckoutData) {
-        console.log('🔐 OAuth callback: Found homepage checkout data, redirecting directly to checkout');
+      // If there's pending checkout data, redirect directly to checkout
+      if (pendingPriceType && pendingLoginContext === 'checkout') {
+        console.log('🔐 OAuth callback: Found pending checkout data, redirecting directly to checkout');
         
         // For SmartLoginModal checkout, we can proceed even without a valid user ID
         // The create-checkout function will handle the user creation/authentication
-        console.log('🔐 OAuth callback: Proceeding with homepage checkout, userId:', userId);
+        console.log('🔐 OAuth callback: Proceeding with SmartLoginModal checkout, userId:', userId);
         
         // Call create-checkout directly from here
         try {
-          const parsedData = JSON.parse(homepageCheckoutData);
           const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
           
           console.log('🔐 OAuth callback: Creating checkout with data:', {
-            priceType: parsedData.priceType,
+            priceType: pendingPriceType,
             userId,
             currentLanguage
           });
           
           const { data, error } = await supabase.functions.invoke('create-checkout', {
             body: {
-              priceType: parsedData.priceType,
+              priceType: pendingPriceType,
               successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userId || '')}`,
               cancelUrl: `${window.location.origin}/`,
               language: currentLanguage,
@@ -179,8 +180,9 @@ export const useAuthCallback = () => {
             window.location.href = '/';
           } else if (data?.url) {
             console.log('🔐 OAuth callback: Checkout created successfully, redirecting to:', data.url);
-            // Clear the checkout data before redirecting
-            sessionStorage.removeItem('homepage_checkout_data');
+            // Clear the pending data before redirecting
+            sessionStorage.removeItem('pendingPriceType');
+            sessionStorage.removeItem('pendingLoginContext');
             window.location.href = data.url;
           } else {
             console.error('🔐 OAuth callback: No checkout URL returned');
@@ -192,7 +194,7 @@ export const useAuthCallback = () => {
         }
         return;
       } else {
-        console.log('🔐 OAuth callback: No homepage checkout data, redirecting to homepage');
+        console.log('🔐 OAuth callback: No pending checkout data, redirecting to homepage');
         // Use window.location.href for more reliable redirect after OAuth
         window.location.href = '/';
         return;
