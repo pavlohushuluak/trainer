@@ -21,7 +21,7 @@ export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) =
   const handleOAuthSignIn = async () => {
     setLoading(true);
     try {
-      console.log('🔐 OAuth button: Starting OAuth sign-in for provider:', provider);
+      console.log('🔐 OAuth button: Starting OAuth sign-in for provider:', provider, 'with source:', source);
       
       const { data, error } = await signInWithOAuth(provider, source);
       

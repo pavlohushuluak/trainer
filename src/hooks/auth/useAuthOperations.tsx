@@ -113,6 +113,14 @@ export const useAuthOperations = () => {
     const sourceParam = source ? `?source=${encodeURIComponent(source)}` : '';
     const redirectUrl = `${window.location.origin}/auth/callback${sourceParam}`;
     
+    console.log('🔐 OAuth operations: Starting OAuth with source tracking:', {
+      provider,
+      source,
+      sourceParam,
+      redirectUrl,
+      currentUrl: window.location.href
+    });
+    
     try {
       // Clear any existing auth errors first
       sessionStorage.removeItem('auth_error');
@@ -120,6 +128,16 @@ export const useAuthOperations = () => {
       // Store source information in sessionStorage for backup
       if (source) {
         sessionStorage.setItem('oauth_source', source);
+        // Also store in localStorage as a more persistent backup
+        localStorage.setItem('oauth_source_backup', source);
+        // Store additional context information
+        localStorage.setItem('oauth_context', JSON.stringify({
+          source: source,
+          timestamp: Date.now(),
+          currentUrl: window.location.href,
+          referrer: document.referrer
+        }));
+        console.log('🔐 OAuth operations: Stored source in sessionStorage and localStorage:', source);
       }
       
       const result = await supabase.auth.signInWithOAuth({

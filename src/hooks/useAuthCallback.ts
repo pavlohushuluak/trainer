@@ -76,14 +76,52 @@ export const useAuthCallback = () => {
     }
 
     // Check OAuth source to determine redirect behavior
+    // Add a small delay to ensure URL parameters are properly set
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
     const urlParams = new URLSearchParams(window.location.search);
-    const oauthSource = urlParams.get('source') || sessionStorage.getItem('oauth_source');
+    const urlSource = urlParams.get('source');
+    const sessionSource = sessionStorage.getItem('oauth_source');
+    const localStorageSource = localStorage.getItem('oauth_source_backup');
     
-    console.log('🔐 OAuth callback: OAuth source detected:', oauthSource);
+    // Try to get context information
+    let contextSource = null;
+    try {
+      const contextData = localStorage.getItem('oauth_context');
+      if (contextData) {
+        const context = JSON.parse(contextData);
+        contextSource = context.source;
+        console.log('🔐 OAuth callback: Found context data:', context);
+      }
+    } catch (error) {
+      console.log('🔐 OAuth callback: Error parsing context data:', error);
+    }
     
-    // Clean up sessionStorage
+    const oauthSource = urlSource || sessionSource || localStorageSource || contextSource;
+    
+    console.log('🔐 OAuth callback: Debug source detection:', {
+      currentUrl: window.location.href,
+      searchParams: window.location.search,
+      urlSource: urlSource,
+      sessionSource: sessionSource,
+      localStorageSource: localStorageSource,
+      contextSource: contextSource,
+      finalSource: oauthSource,
+      allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
+        acc[key] = sessionStorage.getItem(key);
+        return acc;
+      }, {} as Record<string, string>),
+      allLocalStorage: Object.keys(localStorage).reduce((acc, key) => {
+        acc[key] = localStorage.getItem(key);
+        return acc;
+      }, {} as Record<string, string>)
+    });
+    
+    // Clean up storage
     if (oauthSource) {
       sessionStorage.removeItem('oauth_source');
+      localStorage.removeItem('oauth_source_backup');
+      localStorage.removeItem('oauth_context');
     }
 
     // If OAuth came from SmartLoginModal, always redirect to homepage
