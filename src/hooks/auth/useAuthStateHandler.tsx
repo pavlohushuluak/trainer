@@ -106,6 +106,36 @@ export const useAuthStateHandler = () => {
         return;
       }
 
+      // Check if this is an OAuth callback - if so, let useAuthCallback handle the redirect
+      const urlParams = new URLSearchParams(window.location.search);
+      const hasCode = urlParams.has('code');
+      const hasAccessToken = window.location.hash.includes('access_token');
+      const hasSource = urlParams.has('source');
+      const hasSessionSource = sessionStorage.getItem('oauth_source');
+      const hasLocalSource = localStorage.getItem('oauth_source_backup');
+      
+      const isOAuthCallback = hasCode || hasAccessToken || hasSource || hasSessionSource || hasLocalSource;
+      
+      console.log('🔐 useAuthStateHandler: OAuth callback detection:', {
+        hasCode,
+        hasAccessToken,
+        hasSource,
+        hasSessionSource,
+        hasLocalSource,
+        isOAuthCallback,
+        currentPath: window.location.pathname,
+        searchParams: window.location.search
+      });
+      
+      if (isOAuthCallback) {
+        console.log('🔐 OAuth callback detected - letting useAuthCallback handle redirect');
+        // Add a small delay to ensure useAuthCallback has processed the OAuth source
+        setTimeout(() => {
+          console.log('🔐 useAuthStateHandler: OAuth callback delay completed, checking if redirect is still needed');
+        }, 2000);
+        return;
+      }
+
       // Admin redirect
       const isAdmin = await checkIfUserIsAdmin(user.id);
 
