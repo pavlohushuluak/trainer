@@ -102,7 +102,7 @@ const TrainingPlansCard = lazy(() => import('@/components/training/TrainingPlans
 const SubscriptionManagementSection = lazy(() => import('@/components/training/SubscriptionManagementSection').then(module => ({ default: module.SubscriptionManagementSection })));
 
 const MyPetTraining = () => {
-  const { user, loading } = useAuth();
+  const { user, session, loading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslations();
@@ -112,6 +112,7 @@ const MyPetTraining = () => {
   const [showCongratulations, setShowCongratulations] = useState(false);
   const [upgradeDetails, setUpgradeDetails] = useState<any>(null);
   const [isAutoLoggingIn, setIsAutoLoggingIn] = useState(false);
+  const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
 
   // Use Redux for pet profiles data
   const {
@@ -378,12 +379,13 @@ const MyPetTraining = () => {
     const checkPricingClickData = async () => {
       try {
         const pricingClickData = sessionStorage.getItem('pricing_click_data');
-        if (pricingClickData && user) {
+        if (pricingClickData && user && session) {
           const parsedData = JSON.parse(pricingClickData);
           console.log('Found pricing_click_data with logged in user on mein-tiertraining, calling create-checkout directly:', parsedData);
           
           // Remove the data from sessionStorage immediately
           sessionStorage.removeItem('pricing_click_data');
+          setIsProcessingCheckout(false);
           
           // Call create-checkout directly
           const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
@@ -402,43 +404,35 @@ const MyPetTraining = () => {
 
           if (error) {
             console.error('Error creating checkout:', error);
-            toast({
-              title: t('subscription.checkout.error.title'),
-              description: t('subscription.checkout.error.description'),
-              variant: "destructive"
-            });
+            // Redirect to pricing section on error (same as homepage)
+            window.location.href = '/#pricing';
           } else if (data?.url) {
             console.log('Checkout created successfully, redirecting to:', data.url);
             // Redirect to Stripe checkout
             window.location.href = data.url;
           } else {
             console.error('No checkout URL returned');
-            toast({
-              title: t('subscription.checkout.error.title'),
-              description: t('subscription.checkout.error.description'),
-              variant: "destructive"
-            });
+            window.location.href = '/#pricing';
           }
         } else if (pricingClickData) {
           console.log('Found pricing_click_data on mein-tiertraining, but user is not logged in - removing data');
           // Remove pricing_click_data when user is not logged in
           sessionStorage.removeItem('pricing_click_data');
+          setIsProcessingCheckout(false);
+        } else {
+          setIsProcessingCheckout(false);
         }
       } catch (error) {
         console.error('Error checking pricing_click_data:', error);
+        setIsProcessingCheckout(false);
         // Remove corrupted data
         sessionStorage.removeItem('pricing_click_data');
-        toast({
-          title: t('subscription.checkout.error.title'),
-          description: t('subscription.checkout.error.description'),
-          variant: "destructive"
-        });
       }
     };
 
     // Check immediately
     checkPricingClickData();
-  }, [user, toast, t]);
+  }, [user, session]);
 
   // Show loading only when absolutely necessary
   if (loading) {
