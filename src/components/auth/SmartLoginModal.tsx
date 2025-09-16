@@ -213,7 +213,7 @@ export const SmartLoginModal = ({
             }
 
             if (confirmData?.success && confirmData?.action_link) {
-              console.log('Auto-confirm successful, preparing for checkout flow:', confirmData.action_link);
+              console.log('Auto-confirm successful, redirecting to action link:', confirmData.action_link);
               
               // Store user data for after login
               sessionStorage.setItem('tempUserData', JSON.stringify({
@@ -222,8 +222,7 @@ export const SmartLoginModal = ({
                 firstName: firstName.trim(),
                 lastName: lastName.trim(),
                 timestamp: Date.now(),
-                emailConfirmed: true,
-                actionLink: confirmData.action_link
+                emailConfirmed: true
               }));
               
               // Show success message
@@ -233,9 +232,9 @@ export const SmartLoginModal = ({
                 duration: 3000
               });
               
-              // Close modal and trigger checkout processing
+              // Close modal and redirect to action link for automatic login
               onClose();
-              onLoginSuccess();
+              window.location.href = confirmData.action_link;
               return;
             }
           } catch (error) {

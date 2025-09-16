@@ -667,58 +667,27 @@ const MyPetTraining = () => {
         
         // Check if this is the same user
         if (user.email === userData.email) {
-          console.log('✅ User matches temp user data, processing auto-login flow');
+          console.log('✅ User matches temp user data, clearing stored data');
           
-          // Check if this is an auto-login from SmartLoginModal signup
-          const urlParams = new URLSearchParams(window.location.search);
-          const isAutoLogin = urlParams.get('auto_login') === 'true';
+          // Clear the stored data
+          sessionStorage.removeItem('tempUserData');
           
-          if (isAutoLogin) {
-            console.log('🔄 Auto-login detected, redirecting to checkout');
+          // Check if there's pending checkout information
+          const checkoutInfo = getCheckoutInformation();
+          if (checkoutInfo) {
+            console.log('🛒 Pending checkout found, processing checkout for auto-logged-in user');
             
-            // Clear URL parameters
-            window.history.replaceState({}, document.title, '/mein-tiertraining');
-            
-            // Check if there's pending checkout information
-            const checkoutInfo = getCheckoutInformation();
-            if (checkoutInfo) {
-              console.log('🛒 Pending checkout found, processing checkout for auto-logged-in user');
-              
-              // Trigger checkout processing
-              window.dispatchEvent(new CustomEvent('checkoutRequested', { 
-                detail: { checkoutInfo, tempUserData: userData }
-              }));
-            } else {
-              console.log('⚠️ No pending checkout found, redirecting to pricing');
-              // Clear tempUserData since we're redirecting
-              sessionStorage.removeItem('tempUserData');
-              // Redirect to pricing page to start checkout
-              window.location.href = '/#pricing';
-            }
+            // Trigger checkout processing
+            window.dispatchEvent(new CustomEvent('checkoutRequested', { 
+              detail: { checkoutInfo, tempUserData: userData }
+            }));
           } else {
-            // Normal tempUserData processing
-            console.log('✅ Normal tempUserData processing');
-            
-            // Clear the stored data
-            sessionStorage.removeItem('tempUserData');
-            
-            // Check if there's pending checkout information
-            const checkoutInfo = getCheckoutInformation();
-            if (checkoutInfo) {
-              console.log('🛒 Pending checkout found, processing checkout for auto-logged-in user');
-              
-              // Trigger checkout processing
-              window.dispatchEvent(new CustomEvent('checkoutRequested', { 
-                detail: { checkoutInfo, tempUserData: userData }
-              }));
-            } else {
-              console.log('✅ No pending checkout, user is ready to use the app');
-              toast({
-                title: "Welcome!",
-                description: "Your account has been created and you're now logged in.",
-                duration: 3000,
-              });
-            }
+            console.log('✅ No pending checkout, user is ready to use the app');
+            toast({
+              title: "Welcome!",
+              description: "Your account has been created and you're now logged in.",
+              duration: 3000,
+            });
           }
         } else {
           console.log('⚠️ User does not match temp user data, clearing stored data');
