@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import Confetti from 'react-confetti';
 import { supabase } from '@/integrations/supabase/client';
-import { useSmartLoginRedirect } from '@/hooks/useSmartLoginRedirect';
 
 // Add custom CSS for floating animation
 const floatingAnimation = `
@@ -108,9 +107,6 @@ const MyPetTraining = () => {
   const navigate = useNavigate();
   const { t } = useTranslations();
   const { toast } = useToast();
-
-  // Check for SmartLoginModal OAuth redirect
-  useSmartLoginRedirect();
 
   // State for congratulations modal
   const [showCongratulations, setShowCongratulations] = useState(false);
@@ -376,6 +372,73 @@ const MyPetTraining = () => {
       }
     }
   }, [location.search, user, refetchSubscription, fetchPets, navigate]);
+
+  // Check for pricing_click_data in sessionStorage and call create-checkout directly
+  useEffect(() => {
+    const checkPricingClickData = async () => {
+      try {
+        const pricingClickData = sessionStorage.getItem('pricing_click_data');
+        if (pricingClickData && user) {
+          const parsedData = JSON.parse(pricingClickData);
+          console.log('Found pricing_click_data with logged in user on mein-tiertraining, calling create-checkout directly:', parsedData);
+          
+          // Remove the data from sessionStorage immediately
+          sessionStorage.removeItem('pricing_click_data');
+          
+          // Call create-checkout directly
+          const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+          
+          const { data, error } = await supabase.functions.invoke('create-checkout', {
+            body: {
+              priceType: parsedData.priceType,
+              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(user?.email || '')}`,
+              cancelUrl: `${window.location.origin}/mein-tiertraining`,
+              language: currentLanguage,
+              customerInfo: {
+                name: user?.user_metadata?.full_name || user?.email?.split('@')[0]
+              }
+            }
+          });
+
+          if (error) {
+            console.error('Error creating checkout:', error);
+            toast({
+              title: t('subscription.checkout.error.title'),
+              description: t('subscription.checkout.error.description'),
+              variant: "destructive"
+            });
+          } else if (data?.url) {
+            console.log('Checkout created successfully, redirecting to:', data.url);
+            // Redirect to Stripe checkout
+            window.location.href = data.url;
+          } else {
+            console.error('No checkout URL returned');
+            toast({
+              title: t('subscription.checkout.error.title'),
+              description: t('subscription.checkout.error.description'),
+              variant: "destructive"
+            });
+          }
+        } else if (pricingClickData) {
+          console.log('Found pricing_click_data on mein-tiertraining, but user is not logged in - removing data');
+          // Remove pricing_click_data when user is not logged in
+          sessionStorage.removeItem('pricing_click_data');
+        }
+      } catch (error) {
+        console.error('Error checking pricing_click_data:', error);
+        // Remove corrupted data
+        sessionStorage.removeItem('pricing_click_data');
+        toast({
+          title: t('subscription.checkout.error.title'),
+          description: t('subscription.checkout.error.description'),
+          variant: "destructive"
+        });
+      }
+    };
+
+    // Check immediately
+    checkPricingClickData();
+  }, [user, toast, t]);
 
   // Show loading only when absolutely necessary
   if (loading) {

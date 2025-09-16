@@ -10,10 +10,9 @@ interface OAuthButtonProps {
   provider: "google" | "github";
   onSuccess?: (user?: any, isNewUser?: boolean) => void;
   source?: string;
-  onBeforeOAuth?: () => void;
 }
 
-export const OAuthButton = ({ provider, onSuccess, source, onBeforeOAuth }: OAuthButtonProps) => {
+export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) => {
   const { signInWithOAuth } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -23,11 +22,6 @@ export const OAuthButton = ({ provider, onSuccess, source, onBeforeOAuth }: OAut
     setLoading(true);
     try {
       console.log('🔐 OAuth button: Starting OAuth sign-in for provider:', provider, 'with source:', source);
-      
-      // Call onBeforeOAuth callback if provided
-      if (onBeforeOAuth) {
-        onBeforeOAuth();
-      }
       
       const { data, error } = await signInWithOAuth(provider, source);
       

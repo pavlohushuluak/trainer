@@ -521,11 +521,6 @@ export const SmartLoginModal = ({
                             onLoginSuccess();
                             onClose();
                           }}
-                          onBeforeOAuth={() => {
-                            // Save SmartLoginModal OAuth flag to sessionStorage
-                            sessionStorage.setItem('smartlogin_oauth_redirect', 'true');
-                            console.log('🔐 SmartLoginModal: Saved OAuth redirect flag to sessionStorage');
-                          }}
                         />
                       </div>
                     </div>
