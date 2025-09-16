@@ -142,19 +142,19 @@ export const useAuthStateHandler = () => {
       console.log('🔐 Redirect decision:', {
         isAdmin,
         currentPath,
-        targetPath: isAdmin ? '/admin/users' : '/'
+        targetPath: isAdmin ? '/admin/users' : '/mein-tiertraining'
       });
 
       if (isAdmin && !currentPath.startsWith('/admin')) {
         console.log('🔐 Redirecting admin to /admin/users');
         window.location.href = '/admin/users';
       } else if (!isAdmin && currentPath.startsWith('/admin')) {
-        console.log('🔐 Redirecting non-admin away from admin area to homepage');
-        window.location.href = '/';
+        console.log('🔐 Redirecting non-admin away from admin area to /mein-tiertraining');
+        window.location.href = '/mein-tiertraining';
       } else {
-        // CRITICAL FIX: Redirect to homepage instead of mein-tiertraining
+        // CRITICAL FIX: Redirect to homepage instead of mein-tiertraining after signup
         window.location.href = '/';
-        console.log('🔐 Redirecting user to homepage after signin');
+        console.log('🔐 Redirecting to homepage after signup');
       }
 
     } catch (error) {

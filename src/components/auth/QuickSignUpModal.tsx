@@ -26,9 +26,9 @@ export const QuickSignUpModal = ({ isOpen, onClose, onSignUpSuccess }: QuickSign
       description: t('auth.quickSignup.toasts.googleSuccess.description')
     });
     
-    // Redirect to homepage after Google signup
+    // Direkt zum Tierbereich weiterleiten nach Google-Anmeldung
     setTimeout(() => {
-      window.location.href = '/';
+      window.location.href = '/mein-tiertraining';
       onClose();
     }, 1500);
   };

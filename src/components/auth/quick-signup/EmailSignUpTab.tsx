@@ -87,7 +87,7 @@ export const EmailSignUpTab = ({ onClose }: EmailSignUpTabProps) => {
             description: t('auth.emailSignUpTab.toasts.signupSuccess.description')
           });
           
-          // Redirect to homepage after successful signup
+          // CRITICAL FIX: Redirect to homepage instead of mein-tiertraining after signup
           setTimeout(() => {
             window.location.href = '/';
             onClose();
