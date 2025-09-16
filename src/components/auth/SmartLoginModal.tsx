@@ -176,8 +176,73 @@ export const SmartLoginModal = ({
         // Set localStorage to indicate user has signed up
         localStorage.setItem('alreadySignedUp', 'true');
         
-        // NEW WORKFLOW: Use signup response data directly, skip auto-login for unconfirmed users
-        // Show signup success toast
+        // CRITICAL FIX: Auto-confirm user email and create session immediately
+        if (data?.user) {
+          console.log('User created successfully, auto-confirming email and creating session:', data.user.email);
+          
+          try {
+            // Call the auto-confirm function to confirm email and create session
+            const { data: confirmData, error: confirmError } = await supabase.functions.invoke('auto-confirm-user', {
+              body: {
+                userEmail: data.user.email
+              }
+            });
+
+            if (confirmError) {
+              console.error('Auto-confirm failed:', confirmError);
+              // Fallback to original behavior
+              toast({
+                title: t('auth.smartLogin.signupSuccess'),
+                description: t('auth.smartLogin.proceedingToCheckout'),
+                duration: 3000
+              });
+              
+              // Store user data for checkout processing
+              sessionStorage.setItem('tempUserData', JSON.stringify({
+                email: data.user.email,
+                id: data.user.id,
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                timestamp: Date.now(),
+                needsEmailConfirmation: true
+              }));
+              
+              onLoginSuccess();
+              onClose();
+              return;
+            }
+
+            if (confirmData?.success && confirmData?.action_link) {
+              console.log('Auto-confirm successful, redirecting to action link:', confirmData.action_link);
+              
+              // Store user data for after login
+              sessionStorage.setItem('tempUserData', JSON.stringify({
+                email: data.user.email,
+                id: data.user.id,
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                timestamp: Date.now(),
+                emailConfirmed: true
+              }));
+              
+              // Show success message
+              toast({
+                title: t('auth.smartLogin.signupSuccess'),
+                description: "Account created successfully! Redirecting to checkout...",
+                duration: 3000
+              });
+              
+              // Close modal and redirect to action link for automatic login
+              onClose();
+              window.location.href = confirmData.action_link;
+              return;
+            }
+          } catch (error) {
+            console.error('Error calling auto-confirm function:', error);
+          }
+        }
+        
+        // Fallback: Original behavior if auto-confirm fails
         toast({
           title: t('auth.smartLogin.signupSuccess'),
           description: t('auth.smartLogin.proceedingToCheckout'),
@@ -186,16 +251,13 @@ export const SmartLoginModal = ({
         
         // Store user data temporarily for checkout processing
         if (data?.user) {
-          console.log('User created successfully, storing for checkout:', data.user.email);
-          
-          // Store user data in sessionStorage for checkout processing
           sessionStorage.setItem('tempUserData', JSON.stringify({
             email: data.user.email,
             id: data.user.id,
             firstName: firstName.trim(),
             lastName: lastName.trim(),
             timestamp: Date.now(),
-            needsEmailConfirmation: true // Flag to indicate this user needs email confirmation
+            needsEmailConfirmation: true
           }));
           
           // Trigger checkout processing immediately after storing user data
@@ -203,15 +265,14 @@ export const SmartLoginModal = ({
             const checkoutInfo = getCheckoutInformation();
             if (checkoutInfo) {
               console.log('Triggering checkout processing from SmartLoginModal:', checkoutInfo);
-              // The Index.tsx useEffect should pick this up
               window.dispatchEvent(new CustomEvent('checkoutRequested', { 
                 detail: { checkoutInfo, tempUserData: JSON.parse(sessionStorage.getItem('tempUserData') || '{}') }
               }));
             }
-          }, 100); // Small delay to ensure sessionStorage is set
+          }, 100);
         }
         
-        // Proceed to checkout immediately (Index.tsx will handle the checkout with stored user data)
+        // Proceed to checkout immediately
         onLoginSuccess();
         onClose();
       }

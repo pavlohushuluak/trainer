@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import Confetti from 'react-confetti';
 import { supabase } from '@/integrations/supabase/client';
+import { getCheckoutInformation } from '@/utils/checkoutSessionStorage';
 
 // Add custom CSS for floating animation
 const floatingAnimation = `
@@ -649,6 +650,50 @@ const MyPetTraining = () => {
       }
     }
   }, [user, session, handlePaymentSuccess, refetchSubscription, toast]);
+
+  // CRITICAL FIX: Handle tempUserData after auto-login from SmartLoginModal
+  useEffect(() => {
+    const tempUserData = sessionStorage.getItem('tempUserData');
+    if (tempUserData && user && session) {
+      try {
+        const userData = JSON.parse(tempUserData);
+        console.log('🔍 Temp user data found after auto-login:', userData);
+        
+        // Check if this is the same user
+        if (user.email === userData.email) {
+          console.log('✅ User matches temp user data, clearing stored data');
+          
+          // Clear the stored data
+          sessionStorage.removeItem('tempUserData');
+          
+          // Check if there's pending checkout information
+          const checkoutInfo = getCheckoutInformation();
+          if (checkoutInfo) {
+            console.log('🛒 Pending checkout found, processing checkout for auto-logged-in user');
+            
+            // Trigger checkout processing
+            window.dispatchEvent(new CustomEvent('checkoutRequested', { 
+              detail: { checkoutInfo, tempUserData: userData }
+            }));
+          } else {
+            console.log('✅ No pending checkout, user is ready to use the app');
+            toast({
+              title: "Welcome!",
+              description: "Your account has been created and you're now logged in.",
+              duration: 3000,
+            });
+          }
+        } else {
+          console.log('⚠️ User does not match temp user data, clearing stored data');
+          sessionStorage.removeItem('tempUserData');
+        }
+        
+      } catch (error) {
+        console.error('Error parsing tempUserData:', error);
+        sessionStorage.removeItem('tempUserData');
+      }
+    }
+  }, [user, session, toast]);
 
   // Check for pricing_click_data and SmartLoginModal data in sessionStorage and call create-checkout directly
   useEffect(() => {
