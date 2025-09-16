@@ -3907,6 +3907,7 @@
       "failed": "Anmeldung fehlgeschlagen",
       "error": "Ein Fehler ist aufgetreten",
       "loading": "Laden...",
+      "proceedingToCheckout": "Weiterleitung zur Kasse...",
       "providers": {
         "google": "Mit Google anmelden",
         "github": "Mit GitHub anmelden",
@@ -4011,6 +4012,7 @@
       "defaultTitle": "🐾 Kostenloses Training starten – Schnelle Anmeldung",
       "defaultDescription": "Registrieren Sie sich, um Ihr kostenloses 7-tägiges Training zu starten. Ihr Haustier wird es Ihnen danken! 💛",
       "proceedingToCheckout": "Weiterleitung zur Kasse...",
+      "checkoutDescription": "Bitte warten Sie, während wir Ihre Kasse vorbereiten...",
       "welcomeToast": {
         "title": "🐾 Willkommen!",
         "description": "Du bist erfolgreich eingeloggt."

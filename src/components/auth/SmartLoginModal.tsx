@@ -56,6 +56,7 @@ export const SmartLoginModal = ({
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [oauthCheckoutLoading, setOauthCheckoutLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('signin');
@@ -68,6 +69,13 @@ export const SmartLoginModal = ({
     const alreadySignedUp = localStorage.getItem('alreadySignedUp') === 'true';
     setActiveTab(alreadySignedUp ? 'signin' : 'signup');
   }, []);
+
+  // Clear OAuth checkout loading when modal is closed
+  useEffect(() => {
+    if (!isOpen) {
+      setOauthCheckoutLoading(false);
+    }
+  }, [isOpen]);
 
   // Form validation
   const isSignUpValid = useMemo(() => {
@@ -243,6 +251,21 @@ export const SmartLoginModal = ({
             {/* Auth Error Display */}
             <AuthErrorDisplay />
 
+            {/* OAuth Checkout Loading Overlay */}
+            {oauthCheckoutLoading && (
+              <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50">
+                <div className="bg-card border rounded-lg p-6 max-w-sm mx-4 text-center shadow-2xl">
+                  <div className="flex items-center justify-center mb-4">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">{t('auth.oauth.proceedingToCheckout')}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {t('auth.smartLogin.checkoutDescription')}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Main Content */}
             <div className="space-y-4">
               {/* Main Card */}
@@ -274,24 +297,33 @@ export const SmartLoginModal = ({
                     
                     <OAuthButton 
                       provider="google"
+                      source="smartlogin"
                       onSuccess={(user, isNewUser) => {
                         setError('');
                         setMessage('');
+                        
+                        // Show checkout loading state
+                        setOauthCheckoutLoading(true);
                         
                         // Show appropriate toast based on whether it's a new user or returning user
                         if (isNewUser) {
                           toast({
                             title: t('auth.smartLogin.signupSuccess'),
-                            description: t('auth.smartLogin.signupSuccessDescription'),
+                            description: t('auth.oauth.proceedingToCheckout'),
                             duration: 5000
                           });
                         } else {
                           toast({
                             title: t('auth.smartLogin.welcomeToast.title'),
-                            description: t('auth.smartLogin.welcomeToast.description'),
-                            duration: 3000
+                            description: t('auth.oauth.proceedingToCheckout'),
+                            duration: 5000
                           });
                         }
+                        
+                        // Set a timeout to clear loading state in case redirect takes too long
+                        setTimeout(() => {
+                          setOauthCheckoutLoading(false);
+                        }, 10000); // 10 seconds timeout
                         
                         // Simple OAuth success - let the parent handle checkout logic
                         onLoginSuccess();
