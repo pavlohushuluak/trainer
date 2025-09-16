@@ -251,6 +251,12 @@ const MyPetTraining = () => {
     const autoLoginUser = async (email: string, sessionId: string, retryCount = 0) => {
       try {
         console.log(`🔄 Auto-login attempt ${retryCount + 1}/3 for user:`, email);
+        console.log('🔍 Auto-login request details:', {
+          email: email,
+          sessionId: sessionId,
+          retryCount: retryCount,
+          timestamp: new Date().toISOString()
+        });
         
         // Call the auto-login function to create a session
         const { data, error } = await supabase.functions.invoke('auto-login-after-payment', {
@@ -258,6 +264,13 @@ const MyPetTraining = () => {
             userEmail: email,
             sessionId: sessionId
           }
+        });
+
+        console.log('🔍 Auto-login response:', {
+          data: data,
+          error: error,
+          hasData: !!data,
+          hasError: !!error
         });
 
         if (error) {
@@ -303,10 +316,27 @@ const MyPetTraining = () => {
         }
 
         if (data?.success) {
-          console.log('✅ Auto-login successful, processing session:', data);
+          console.log('✅ Auto-login successful, processing response:', data);
           setIsAutoLoggingIn(false);
           
-          // CRITICAL FIX: Try to use access token directly if available
+          // CRITICAL FIX: Use action_link approach which is more reliable
+          if (data.action_link) {
+            console.log('🔄 Using action_link for auto-login:', data.action_link);
+            
+            // Store the session ID and other data for after login
+            sessionStorage.setItem('pendingPaymentSuccess', JSON.stringify({
+              sessionId: sessionId,
+              paymentType: paymentType,
+              isGuest: isGuest,
+              timestamp: Date.now()
+            }));
+            
+            // Redirect to the action_link which will automatically log the user in
+            window.location.href = data.action_link;
+            return;
+          }
+          
+          // Fallback: Try to use direct session tokens if available
           if (data.session?.access_token && data.session?.refresh_token) {
             console.log('🔄 Setting session with tokens from auto-login response');
             const { error: sessionError } = await supabase.auth.setSession({
@@ -316,12 +346,6 @@ const MyPetTraining = () => {
             
             if (sessionError) {
               console.error('❌ Error setting session:', sessionError);
-              // Try fallback with action_link if available
-              if (data.action_link) {
-                console.log('🔄 Falling back to action_link redirect');
-                window.location.href = data.action_link;
-                return;
-              }
               navigate('/login?message=payment_success_login_required');
               return;
             }
@@ -329,12 +353,8 @@ const MyPetTraining = () => {
             console.log('✅ Session set successfully, proceeding with success handling');
             // Proceed with normal success handling
             handlePaymentSuccess(sessionId, paymentType, isGuest);
-          } else if (data.action_link) {
-            console.log('🔄 No direct session tokens, using action_link for auto-login');
-            // Fallback to action_link if direct session setting fails
-            window.location.href = data.action_link;
           } else {
-            console.log('⚠️ No session data or action_link returned, redirecting to login');
+            console.log('⚠️ No action_link or session data returned, redirecting to login');
             navigate('/login?message=payment_success_login_required');
           }
         } else {
@@ -449,6 +469,27 @@ const MyPetTraining = () => {
       }
     }
   }, [user, navigate, toast]);
+
+  // CRITICAL FIX: Handle pending payment success after auto-login via action_link
+  useEffect(() => {
+    const pendingPaymentSuccess = sessionStorage.getItem('pendingPaymentSuccess');
+    if (pendingPaymentSuccess && user && session) {
+      try {
+        const paymentData = JSON.parse(pendingPaymentSuccess);
+        console.log('🔍 Pending payment success detected after auto-login:', paymentData);
+        
+        // Clear the pending data
+        sessionStorage.removeItem('pendingPaymentSuccess');
+        
+        // Proceed with payment success handling
+        handlePaymentSuccess(paymentData.sessionId, paymentData.paymentType, paymentData.isGuest);
+        
+      } catch (error) {
+        console.error('Error parsing pendingPaymentSuccess data:', error);
+        sessionStorage.removeItem('pendingPaymentSuccess');
+      }
+    }
+  }, [user, session, handlePaymentSuccess]);
 
   // Check for pricing_click_data and SmartLoginModal data in sessionStorage and call create-checkout directly
   useEffect(() => {

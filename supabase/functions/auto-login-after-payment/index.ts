@@ -181,24 +181,145 @@ serve(async (req) => {
       logStep("User email already confirmed", { userId: user.id, confirmedAt: user.email_confirmed_at });
     }
 
-    // Create a session for the user using Admin API
-    logStep("Creating session for user", { userId: user.id });
+    // CRITICAL FIX: Create a session using multiple approaches for maximum reliability
+    logStep("Creating session for user using multiple approaches", { userId: user.id });
     
-    // Generate a magic link that will automatically log the user in
-    const { data: linkData, error: linkError } = await supabaseClient.auth.admin.generateLink({
-      type: 'magiclink',
-      email: user.email!,
-      options: {
-        redirectTo: `${req.headers.get('origin') || 'http://localhost:3000'}/mein-tiertraining`
-      }
-    });
+    try {
+      // Approach 1: Try magic link first
+      const { data: magicLinkData, error: magicLinkError } = await supabaseClient.auth.admin.generateLink({
+        type: 'magiclink',
+        email: user.email!,
+        options: {
+          redirectTo: `${req.headers.get('origin') || 'http://localhost:3000'}/mein-tiertraining`
+        }
+      });
 
-    if (linkError) {
-      logStep("Error generating magic link", { error: linkError.message, userId: user.id });
+      if (!magicLinkError && magicLinkData.properties?.action_link) {
+        logStep("Magic link generated successfully", { 
+          userId: user.id,
+          actionLink: magicLinkData.properties.action_link
+        });
+
+        return new Response(
+          JSON.stringify({ 
+            success: true,
+            user: {
+              id: user.id,
+              email: user.email,
+              email_confirmed_at: user.email_confirmed_at
+            },
+            action_link: magicLinkData.properties.action_link,
+            message: 'Auto-login successful - magic link generated'
+          }),
+          { 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+      logStep("Magic link failed, trying signup link", { 
+        error: magicLinkError?.message, 
+        userId: user.id 
+      });
+
+      // Approach 2: Try signup link (for already confirmed users)
+      const { data: signupData, error: signupError } = await supabaseClient.auth.admin.generateLink({
+        type: 'signup',
+        email: user.email!,
+        options: {
+          redirectTo: `${req.headers.get('origin') || 'http://localhost:3000'}/mein-tiertraining`
+        }
+      });
+
+      if (!signupError && signupData.properties?.action_link) {
+        logStep("Signup link generated successfully", { 
+          userId: user.id,
+          actionLink: signupData.properties.action_link
+        });
+
+        return new Response(
+          JSON.stringify({ 
+            success: true,
+            user: {
+              id: user.id,
+              email: user.email,
+              email_confirmed_at: user.email_confirmed_at
+            },
+            action_link: signupData.properties.action_link,
+            message: 'Auto-login successful - signup link generated'
+          }),
+          { 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+      logStep("Signup link failed, trying recovery link", { 
+        error: signupError?.message, 
+        userId: user.id 
+      });
+
+      // Approach 3: Try recovery link as final fallback
+      const { data: recoveryData, error: recoveryError } = await supabaseClient.auth.admin.generateLink({
+        type: 'recovery',
+        email: user.email!,
+        options: {
+          redirectTo: `${req.headers.get('origin') || 'http://localhost:3000'}/mein-tiertraining`
+        }
+      });
+
+      if (!recoveryError && recoveryData.properties?.action_link) {
+        logStep("Recovery link generated successfully", { 
+          userId: user.id,
+          actionLink: recoveryData.properties.action_link
+        });
+
+        return new Response(
+          JSON.stringify({ 
+            success: true,
+            user: {
+              id: user.id,
+              email: user.email,
+              email_confirmed_at: user.email_confirmed_at
+            },
+            action_link: recoveryData.properties.action_link,
+            message: 'Auto-login successful - recovery link generated'
+          }),
+          { 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+      // All approaches failed
+      logStep("All auto-login approaches failed", { 
+        magicLinkError: magicLinkError?.message,
+        signupError: signupError?.message,
+        recoveryError: recoveryError?.message,
+        userId: user.id 
+      });
+
       return new Response(
         JSON.stringify({ 
-          error: 'Failed to create session',
-          details: linkError.message
+          error: 'Failed to create auto-login link',
+          details: 'All auto-login methods failed',
+          retry: true
+        }),
+        { 
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+
+    } catch (error) {
+      logStep("Exception during session creation", { 
+        error: error.message, 
+        userId: user.id 
+      });
+      return new Response(
+        JSON.stringify({ 
+          error: 'Session creation failed',
+          details: error.message
         }),
         { 
           status: 500,
@@ -206,42 +327,6 @@ serve(async (req) => {
         }
       );
     }
-
-    logStep("Magic link generated successfully", { 
-      userId: user.id,
-      hasActionLink: !!linkData.properties?.action_link,
-      hasAccessToken: !!linkData.properties?.access_token,
-      hasRefreshToken: !!linkData.properties?.refresh_token
-    });
-
-    // CRITICAL FIX: Return session data in the format expected by the client
-    // The client expects access_token and refresh_token for direct session setting
-    return new Response(
-      JSON.stringify({ 
-        success: true,
-        user: {
-          id: user.id,
-          email: user.email,
-          email_confirmed_at: user.email_confirmed_at
-        },
-        session: {
-          access_token: linkData.properties?.access_token,
-          refresh_token: linkData.properties?.refresh_token,
-          expires_at: linkData.properties?.expires_at,
-          token_type: 'bearer',
-          user: {
-            id: user.id,
-            email: user.email,
-            email_confirmed_at: user.email_confirmed_at
-          }
-        },
-        action_link: linkData.properties?.action_link, // Keep for fallback
-        message: 'Auto-login successful - session created and email confirmed'
-      }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    );
 
   } catch (error) {
     logStep("Unexpected error", { error: error.message });
