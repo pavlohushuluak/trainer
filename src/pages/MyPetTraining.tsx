@@ -231,145 +231,119 @@ const MyPetTraining = () => {
     const isGuest = searchParams.get('guest') === 'true';
     const userEmail = searchParams.get('user_email');
 
-    if (isCheckoutSuccess) {
-      console.log('🎉 Checkout success detected:', { sessionId, paymentType, isGuest, userEmail, hasUser: !!user });
+    const handlePaymentSuccess = (sessionId: string, paymentType: string | null, isGuest: boolean) => {
+      console.log('🎉 Processing payment success:', { sessionId, paymentType, isGuest });
       
-      // If user is not logged in but we have their email, try to auto-login them
-      if (!user && userEmail) {
-        console.log('🔄 Attempting auto-login for user after payment success:', userEmail);
-        setIsAutoLoggingIn(true);
+      // Show success message
+      toast({
+        title: "Payment Successful!",
+        description: "Your subscription has been activated successfully.",
+        duration: 5000,
+      });
+      
+      // Refresh subscription data
+      refetchSubscription();
+      
+      // Clear URL parameters
+      window.history.replaceState({}, document.title, '/mein-tiertraining');
+    };
+    
+    const autoLoginUser = async (email: string, sessionId: string, retryCount = 0) => {
+      try {
+        console.log(`🔄 Auto-login attempt ${retryCount + 1}/3 for user:`, email);
         
-        const autoLoginUser = async (retryCount = 0) => {
-          try {
-            console.log(`🔄 Auto-login attempt ${retryCount + 1}/3 for user:`, userEmail);
-            
-            // Call the auto-login function to create a session
-            const { data, error } = await supabase.functions.invoke('auto-login-after-payment', {
-              body: {
-                userEmail: decodeURIComponent(userEmail),
-                sessionId: sessionId
-              }
-            });
+        // Call the auto-login function to create a session
+        const { data, error } = await supabase.functions.invoke('auto-login-after-payment', {
+          body: {
+            userEmail: email,
+            sessionId: sessionId
+          }
+        });
 
-            if (error) {
-              console.error(`❌ Auto-login attempt ${retryCount + 1} failed:`, error);
-              
-              // If it's a retryable error and we haven't retried too much, try again
-              if ((error.message?.includes('not confirmed') || error.message?.includes('not yet processed')) && retryCount < 2) {
-                console.log(`⏳ Retrying auto-login in 5 seconds (attempt ${retryCount + 2}/3)...`);
-                setTimeout(() => autoLoginUser(retryCount + 1), 5000);
-                return;
-              }
-              
-              // Redirect to login page with a message
-              navigate('/login?message=payment_success_login_required');
-              return;
-            }
-
-            if (data?.success) {
-              console.log('✅ Auto-login successful, processing session:', data);
-              setIsAutoLoggingIn(false);
-              
-              // Try to use access token directly if available
-              if (data.session?.access_token && data.session?.refresh_token) {
-                console.log('🔑 Using access token for direct login');
-                try {
-                  const { error: sessionError } = await supabase.auth.setSession({
-                    access_token: data.session.access_token,
-                    refresh_token: data.session.refresh_token
-                  });
-                  
-                  if (sessionError) {
-                    console.error('❌ Error setting session with tokens:', sessionError);
-                    // Fallback to magic link
-                    if (data.session?.action_link) {
-                      console.log('🔄 Falling back to magic link');
-                      window.location.href = data.session.action_link;
-                      return;
-                    }
-                  } else {
-                    console.log('✅ Session set successfully with tokens');
-                    // Refresh the page to update the user state
-                    window.location.reload();
-                    return;
-                  }
-                } catch (tokenError) {
-                  console.error('❌ Error processing tokens:', tokenError);
-                  // Fallback to magic link
-                  if (data.session?.action_link) {
-                    console.log('🔄 Falling back to magic link after token error');
-                    window.location.href = data.session.action_link;
-                    return;
-                  }
-                }
-              }
-              
-              // Fallback to magic link if no tokens or token login failed
-              if (data.session?.action_link) {
-                console.log('🔄 Using magic link for login');
-                window.location.href = data.session.action_link;
-                return;
-              }
-              
-              console.error('❌ No valid session method available');
-              navigate('/login?message=payment_success_login_required');
-              return;
-            } else {
-              console.error('❌ Auto-login response invalid:', data);
-              setIsAutoLoggingIn(false);
-              navigate('/login?message=payment_success_login_required');
-              return;
-            }
-          } catch (error) {
-            console.error(`❌ Auto-login error (attempt ${retryCount + 1}):`, error);
-            
-            // If we haven't retried too much, try again
-            if (retryCount < 2) {
-              console.log(`⏳ Retrying auto-login in 5 seconds (attempt ${retryCount + 2}/3)...`);
-              setTimeout(() => autoLoginUser(retryCount + 1), 5000);
-              return;
-            }
-            
-            setIsAutoLoggingIn(false);
-            navigate('/login?message=payment_success_login_required');
+        if (error) {
+          console.error(`❌ Auto-login attempt ${retryCount + 1} failed:`, error);
+          
+          // If it's a retryable error and we haven't retried too much, try again
+          if ((error.message?.includes('not confirmed') || error.message?.includes('not yet processed')) && retryCount < 2) {
+            console.log(`⏳ Retrying auto-login in 5 seconds (attempt ${retryCount + 2}/3)...`);
+            setTimeout(() => autoLoginUser(email, sessionId, retryCount + 1), 5000);
             return;
           }
-        };
+          
+          // Redirect to login page with a message
+          navigate('/login?message=payment_success_login_required');
+          return;
+        }
 
-        // Execute auto-login after a longer delay to ensure webhook has processed
-        setTimeout(() => autoLoginUser(), 10000); // Increased to 10 seconds for better reliability
-        return;
-      }
-
-      // If user is logged in, show congratulations modal
-      if (user) {
-        // Show congratulations modal for successful upgrade
-        setUpgradeDetails({
-          sessionId,
-          paymentType,
-          isGuest,
-          timestamp: new Date().toISOString()
-        });
-        setShowCongratulations(true);
-        
-        // Refresh subscription data after a short delay to ensure backend has processed the payment
-        const refreshTimer = setTimeout(async () => {
-          try {
-            console.log('🔄 Refreshing subscription data after checkout success...');
-            await refetchSubscription();
-            console.log('✅ Subscription data refreshed successfully');
+        if (data?.success) {
+          console.log('✅ Auto-login successful, processing session:', data);
+          setIsAutoLoggingIn(false);
+          
+          // Try to use access token directly if available
+          if (data.session?.access_token && data.session?.refresh_token) {
+            const { error: sessionError } = await supabase.auth.setSession({
+              access_token: data.session.access_token,
+              refresh_token: data.session.refresh_token
+            });
             
-            // Also refresh pet profiles in case there were any changes
-            if (fetchPets) {
-              await fetchPets();
-              console.log('✅ Pet profiles refreshed successfully');
+            if (sessionError) {
+              console.error('❌ Error setting session:', sessionError);
+              navigate('/login?message=payment_success_login_required');
+              return;
             }
-          } catch (error) {
-            console.error('❌ Error refreshing data after checkout:', error);
+            
+            console.log('✅ Session set successfully, proceeding with success handling');
+            // Proceed with normal success handling
+            handlePaymentSuccess(sessionId, paymentType, isGuest);
+          } else {
+            console.log('⚠️ No session data returned, redirecting to login');
+            navigate('/login?message=payment_success_login_required');
           }
-        }, 2000); // Wait 2 seconds for backend processing
+        } else {
+          console.error('❌ Auto-login failed:', data);
+          navigate('/login?message=payment_success_login_required');
+        }
+      } catch (error) {
+        console.error('❌ Auto-login exception:', error);
+        navigate('/login?message=payment_success_login_required');
+      }
+    };
 
-        return () => clearTimeout(refreshTimer);
+    if (isCheckoutSuccess) {
+      console.log('🎉 Checkout success detected:', { sessionId, paymentType, isGuest, userEmail, hasUser: !!user, currentUserEmail: user?.email });
+      
+      // Check if we need to switch users
+      const needsUserSwitch = userEmail && user && user.email !== decodeURIComponent(userEmail);
+      const needsAutoLogin = !user && userEmail;
+      
+      if (needsUserSwitch) {
+        console.log('🔄 Current user does not match payment user, switching users:', {
+          currentUser: user.email,
+          paymentUser: decodeURIComponent(userEmail)
+        });
+        
+        // Clear current session and auto-login the correct user
+        setIsAutoLoggingIn(true);
+        
+        // Sign out current user first
+        supabase.auth.signOut().then(() => {
+          // Wait a moment for signout to complete
+          setTimeout(() => {
+            autoLoginUser(decodeURIComponent(userEmail), sessionId);
+          }, 1000);
+        });
+        
+      } else if (needsAutoLogin) {
+        console.log('🔄 Attempting auto-login for user after payment success:', userEmail);
+        setIsAutoLoggingIn(true);
+        autoLoginUser(decodeURIComponent(userEmail), sessionId);
+      } else if (user && user.email === decodeURIComponent(userEmail)) {
+        console.log('✅ Current user matches payment user, proceeding with success handling');
+        // User is already logged in correctly, proceed with normal success handling
+        handlePaymentSuccess(sessionId, paymentType, isGuest);
+      } else {
+        console.log('⚠️ No user email provided or user already logged in, proceeding with normal success handling');
+        handlePaymentSuccess(sessionId, paymentType, isGuest);
       }
     }
   }, [location.search, user, refetchSubscription, fetchPets, navigate]);
