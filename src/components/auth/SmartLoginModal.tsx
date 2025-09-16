@@ -56,7 +56,6 @@ export const SmartLoginModal = ({
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [oauthCheckoutLoading, setOauthCheckoutLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('signin');
@@ -69,13 +68,6 @@ export const SmartLoginModal = ({
     const alreadySignedUp = localStorage.getItem('alreadySignedUp') === 'true';
     setActiveTab(alreadySignedUp ? 'signin' : 'signup');
   }, []);
-
-  // Clear OAuth checkout loading when modal is closed
-  useEffect(() => {
-    if (!isOpen) {
-      setOauthCheckoutLoading(false);
-    }
-  }, [isOpen]);
 
   // Form validation
   const isSignUpValid = useMemo(() => {
@@ -251,21 +243,6 @@ export const SmartLoginModal = ({
             {/* Auth Error Display */}
             <AuthErrorDisplay />
 
-            {/* OAuth Checkout Loading Overlay */}
-            {oauthCheckoutLoading && (
-              <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50">
-                <div className="bg-card border rounded-lg p-6 max-w-sm mx-4 text-center shadow-2xl">
-                  <div className="flex items-center justify-center mb-4">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">{t('auth.oauth.proceedingToCheckout')}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {t('auth.smartLogin.checkoutDescription')}
-                  </p>
-                </div>
-              </div>
-            )}
-
             {/* Main Content */}
             <div className="space-y-4">
               {/* Main Card */}
@@ -302,32 +279,55 @@ export const SmartLoginModal = ({
                         setError('');
                         setMessage('');
                         
-                        // Show checkout loading state
-                        setOauthCheckoutLoading(true);
-                        
-                        // Show appropriate toast based on whether it's a new user or returning user
+                        // Show professional loading state for OAuth signup
                         if (isNewUser) {
+                          setLoading(true);
                           toast({
                             title: t('auth.smartLogin.signupSuccess'),
-                            description: t('auth.oauth.proceedingToCheckout'),
-                            duration: 5000
+                            description: t('auth.smartLogin.proceedingToCheckout'),
+                            duration: 3000
                           });
+                          
+                          // Store user data temporarily for checkout processing (similar to email signup)
+                          if (user) {
+                            console.log('OAuth user created successfully, storing for checkout:', user.email);
+                            
+                            // Store user data in sessionStorage for checkout processing
+                            sessionStorage.setItem('tempUserData', JSON.stringify({
+                              email: user.email,
+                              id: user.id,
+                              firstName: user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'User',
+                              lastName: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+                              timestamp: Date.now()
+                            }));
+                            
+                            // Trigger checkout processing immediately after storing user data
+                            setTimeout(() => {
+                              const checkoutInfo = getCheckoutInformation();
+                              if (checkoutInfo) {
+                                console.log('Triggering checkout processing from SmartLoginModal OAuth:', checkoutInfo);
+                                // The Index.tsx useEffect should pick this up
+                                window.dispatchEvent(new CustomEvent('checkoutRequested', { 
+                                  detail: { checkoutInfo, tempUserData: JSON.parse(sessionStorage.getItem('tempUserData') || '{}') }
+                                }));
+                              }
+                            }, 100); // Small delay to ensure sessionStorage is set
+                          }
+                          
+                          // Proceed to checkout immediately (Index.tsx will handle the checkout with stored user data)
+                          onLoginSuccess();
+                          onClose();
                         } else {
+                          // Returning user - show welcome toast and proceed normally
                           toast({
                             title: t('auth.smartLogin.welcomeToast.title'),
-                            description: t('auth.oauth.proceedingToCheckout'),
-                            duration: 5000
+                            description: t('auth.smartLogin.welcomeToast.description'),
+                            duration: 3000
                           });
+                          
+                          onLoginSuccess();
+                          onClose();
                         }
-                        
-                        // Set a timeout to clear loading state in case redirect takes too long
-                        setTimeout(() => {
-                          setOauthCheckoutLoading(false);
-                        }, 10000); // 10 seconds timeout
-                        
-                        // Simple OAuth success - let the parent handle checkout logic
-                        onLoginSuccess();
-                        onClose();
                       }}
                     />
                     

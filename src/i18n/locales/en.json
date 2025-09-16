@@ -3905,7 +3905,6 @@
       "failed": "Login failed",
       "error": "An error occurred",
       "loading": "Loading...",
-      "proceedingToCheckout": "Proceeding to checkout...",
       "providers": {
         "google": "Sign in with Google",
         "github": "Sign in with GitHub",
@@ -4010,7 +4009,6 @@
       "defaultTitle": "🐾 Start Free Training – Quick Sign Up",
       "defaultDescription": "Sign up to start your free 7-day training. Your pet will thank you! 💛",
       "proceedingToCheckout": "Proceeding to checkout...",
-      "checkoutDescription": "Please wait while we prepare your checkout...",
       "welcomeToast": {
         "title": "🐾 Welcome!",
         "description": "You have successfully logged in."

@@ -415,23 +415,56 @@ const Index = () => {
     
     // Handle OAuth callback and auto-login logic
     const handleOAuthCallback = async () => {
-      // Check if this is an OAuth callback with session
+      // Check if this is an OAuth callback
       const urlParams = new URLSearchParams(window.location.search);
       const isOAuthCallback = urlParams.has('code') || window.location.hash.includes('access_token');
       
-      if (isOAuthCallback && user && session) {
-        // Check for stored package selection
+      if (isOAuthCallback) {
+        // Check for stored package selection (even without session)
         const storedPriceType = sessionStorage.getItem('pendingPriceType');
         const storedLoginContext = sessionStorage.getItem('pendingLoginContext');
         
-        if (storedPriceType || storedLoginContext === 'checkout') {
-          // Trigger smart login logic for checkout
-          await handleLoginSuccess();
-        } else {
-          // Clear URL parameters but stay on homepage
+        console.log('🏠 Homepage: OAuth callback detected', {
+          isOAuthCallback,
+          hasUser: !!user,
+          hasSession: !!session,
+          storedPriceType,
+          storedLoginContext
+        });
+        
+        // If we have pending checkout data, show loading state immediately
+        if (storedPriceType && storedLoginContext === 'checkout') {
+          console.log('🏠 Homepage: Found pending checkout data, showing loading state');
+          setIsProcessingCheckout(true);
+          
+          // Wait for session to be established, then process checkout
+          const waitForSession = async () => {
+            let attempts = 0;
+            const maxAttempts = 30; // 30 seconds max wait
+            
+            while (attempts < maxAttempts) {
+              if (user && session) {
+                console.log('🏠 Homepage: Session established, processing checkout');
+                await handleLoginSuccess();
+                return;
+              }
+              
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              attempts++;
+            }
+            
+            // If session not established after max attempts, hide loading
+            console.log('🏠 Homepage: Session not established after max attempts, hiding loading');
+            setIsProcessingCheckout(false);
+          };
+          
+          waitForSession();
+          return;
+        } else if (user && session) {
+          // No pending checkout data, but we have a session - clear URL parameters
           window.history.replaceState({}, document.title, '/');
+          return;
         }
-        return;
       }
     };
 
