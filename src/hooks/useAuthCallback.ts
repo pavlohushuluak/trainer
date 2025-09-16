@@ -122,6 +122,10 @@ export const useAuthCallback = () => {
       sessionStorage.removeItem('oauth_source');
       localStorage.removeItem('oauth_source_backup');
       localStorage.removeItem('oauth_context');
+      
+      // Clean up google_signin_checkout flag if it exists
+      sessionStorage.removeItem('google_signin_checkout');
+      localStorage.removeItem('google_signin_checkout_backup');
     }
 
     // If OAuth came from SmartLoginModal, check for pending checkout data
@@ -247,12 +251,12 @@ export const useAuthCallback = () => {
     }
     
     try {
-      const isAdmin = await checkAdminStatus(userId);
+    const isAdmin = await checkAdminStatus(userId);
       console.log('🔐 OAuth callback: Admin check result:', isAdmin);
-      
+    
       if (isAdmin) {
         console.log('🔐 OAuth callback: User is admin, redirecting to admin page');
-        // Use window.location.href for more reliable redirect after OAuth
+    // Use window.location.href for more reliable redirect after OAuth
         window.location.href = '/admin/users';
       } else {
         // For normal users, check if they signed in with Google from login page

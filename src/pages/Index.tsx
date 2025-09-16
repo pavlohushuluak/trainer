@@ -29,6 +29,7 @@ const SectionLoader = ({ height = "h-32" }: { height?: string }) => (
 
 const Index = () => {
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
+  const [isGoogleSigninCheckout, setIsGoogleSigninCheckout] = useState(false);
   const [showVerificationCode, setShowVerificationCode] = useState(false);
   const [cancelledUserEmail, setCancelledUserEmail] = useState('');
   const [cancelledUserPassword, setCancelledUserPassword] = useState('');
@@ -409,62 +410,53 @@ const Index = () => {
     checkPricingClickData();
   }, [user, session]);
 
+  // Check for Google signin checkout flag and show professional loading
+  useEffect(() => {
+    const checkGoogleSigninCheckout = () => {
+      const googleSigninCheckout = sessionStorage.getItem('google_signin_checkout') || localStorage.getItem('google_signin_checkout_backup');
+      
+      if (googleSigninCheckout === 'true') {
+        console.log('🏠 Homepage: Found google_signin_checkout flag, showing professional loading');
+        setIsGoogleSigninCheckout(true);
+        
+        // Remove the flag immediately to prevent showing loading again
+        sessionStorage.removeItem('google_signin_checkout');
+        localStorage.removeItem('google_signin_checkout_backup');
+        
+        // Hide loading after a reasonable time (e.g., 3 seconds)
+        setTimeout(() => {
+          console.log('🏠 Homepage: Hiding Google signin checkout loading');
+          setIsGoogleSigninCheckout(false);
+        }, 3000);
+      }
+    };
+
+    // Check immediately on mount
+    checkGoogleSigninCheckout();
+  }, []);
 
   useEffect(() => {
     // Page view tracking is now handled by PageViewTracker component
     
     // Handle OAuth callback and auto-login logic
     const handleOAuthCallback = async () => {
-      // Check if this is an OAuth callback
+      // Check if this is an OAuth callback with session
       const urlParams = new URLSearchParams(window.location.search);
       const isOAuthCallback = urlParams.has('code') || window.location.hash.includes('access_token');
       
-      if (isOAuthCallback) {
-        // Check for stored package selection (even without session)
+      if (isOAuthCallback && user && session) {
+        // Check for stored package selection
         const storedPriceType = sessionStorage.getItem('pendingPriceType');
         const storedLoginContext = sessionStorage.getItem('pendingLoginContext');
         
-        console.log('🏠 Homepage: OAuth callback detected', {
-          isOAuthCallback,
-          hasUser: !!user,
-          hasSession: !!session,
-          storedPriceType,
-          storedLoginContext
-        });
-        
-        // If we have pending checkout data, show loading state immediately
-        if (storedPriceType && storedLoginContext === 'checkout') {
-          console.log('🏠 Homepage: Found pending checkout data, showing loading state');
-          setIsProcessingCheckout(true);
-          
-          // Wait for session to be established, then process checkout
-          const waitForSession = async () => {
-            let attempts = 0;
-            const maxAttempts = 30; // 30 seconds max wait
-            
-            while (attempts < maxAttempts) {
-              if (user && session) {
-                console.log('🏠 Homepage: Session established, processing checkout');
-                await handleLoginSuccess();
-                return;
-              }
-              
-              await new Promise(resolve => setTimeout(resolve, 1000));
-              attempts++;
-            }
-            
-            // If session not established after max attempts, hide loading
-            console.log('🏠 Homepage: Session not established after max attempts, hiding loading');
-            setIsProcessingCheckout(false);
-          };
-          
-          waitForSession();
-          return;
-        } else if (user && session) {
-          // No pending checkout data, but we have a session - clear URL parameters
+        if (storedPriceType || storedLoginContext === 'checkout') {
+          // Trigger smart login logic for checkout
+          await handleLoginSuccess();
+        } else {
+          // Clear URL parameters but stay on homepage
           window.history.replaceState({}, document.title, '/');
-          return;
         }
+        return;
       }
     };
 
@@ -623,6 +615,42 @@ const Index = () => {
               {/* Professional progress indicator */}
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div className="bg-primary h-2 rounded-full animate-pulse" style={{width: '60%'}}></div>
+              </div>
+              
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Please wait while we prepare your secure checkout
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Professional Google Signin Checkout Processing Overlay */}
+      {isGoogleSigninCheckout && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md mx-4 text-center">
+            <div className="flex flex-col items-center space-y-4">
+              {/* Professional loading spinner */}
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 rounded-full animate-spin border-t-primary"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-8 h-8 bg-primary rounded-full animate-pulse"></div>
+                </div>
+              </div>
+              
+              {/* Professional message */}
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                  Preparing Your Checkout
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  Setting up your secure payment process...
+                </p>
+              </div>
+              
+              {/* Professional progress indicator */}
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div className="bg-primary h-2 rounded-full animate-pulse" style={{width: '75%'}}></div>
               </div>
               
               <p className="text-xs text-gray-500 dark:text-gray-400">

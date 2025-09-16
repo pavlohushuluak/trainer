@@ -42,6 +42,25 @@ export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) =
         });
       }
       
+      // Set google_signin_checkout flag if this is Google OAuth from SmartLoginModal
+      if (provider === 'google' && source === 'smartlogin') {
+        sessionStorage.setItem('google_signin_checkout', 'true');
+        console.log('🔐 OAuth button: Set google_signin_checkout flag for SmartLoginModal Google OAuth');
+        
+        // Also store in localStorage as backup
+        localStorage.setItem('google_signin_checkout_backup', 'true');
+        console.log('🔐 OAuth button: Also stored google_signin_checkout_backup in localStorage');
+        
+        // Debug: Check what's in sessionStorage before OAuth
+        console.log('🔐 OAuth button: SessionStorage before OAuth:', {
+          google_signin_checkout: sessionStorage.getItem('google_signin_checkout'),
+          allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
+            acc[key] = sessionStorage.getItem(key);
+            return acc;
+          }, {} as Record<string, string>)
+        });
+      }
+      
       const { data, error } = await signInWithOAuth(provider, source);
       
       if (error) throw error;
