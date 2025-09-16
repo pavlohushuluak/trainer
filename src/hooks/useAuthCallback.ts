@@ -135,6 +135,13 @@ export const useAuthCallback = () => {
     // For OAuth from LoginPage or other sources, use role-based redirect
     console.log('🔐 OAuth callback: OAuth from LoginPage, checking admin status for user:', userId);
     
+    // If userId is 'oauth-no-session', skip admin check and use default redirect
+    if (userId === 'oauth-no-session') {
+      console.log('🔐 OAuth callback: No session available, using default redirect to mein-tiertraining');
+      window.location.href = '/mein-tiertraining';
+      return;
+    }
+    
     try {
       const isAdmin = await checkAdminStatus(userId);
       console.log('🔐 OAuth callback: Admin check result:', isAdmin);
@@ -317,9 +324,12 @@ export const useAuthCallback = () => {
       
       if (sessionError || !sessionData.session?.user) { 
         console.log('🔐 OAuth callback: No valid session found');
-        // For OAuth, this might be normal - redirect to home and let auth state handler deal with it
+        // For OAuth, this might be normal - check source and redirect accordingly
         if (window.location.search.includes('provider=')) {
-          navigate('/', { replace: true });
+          console.log('🔐 OAuth callback: OAuth detected but no session, checking source for redirect');
+          // Call redirectUserBasedOnRole with a dummy user ID to trigger source detection
+          await redirectUserBasedOnRole('oauth-no-session');
+          return;
         } else {
           toast({
             title: t('auth.authCallback.loginRequired.title'),
