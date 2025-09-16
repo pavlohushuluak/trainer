@@ -323,6 +323,69 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
     tier: subscriptionTier,
     tierLimit: tierLimit
   });
+
+  // Send congratulations email for successful subscriptions
+  if (subscription.status === 'active' || subscription.status === 'trialing') {
+    try {
+      logStep("Sending congratulations email for subscription success", {
+        email: customer.email,
+        tier: subscriptionTier,
+        status: subscription.status
+      });
+
+      // Get user data for email personalization
+      const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(customer.email);
+      
+      if (userError) {
+        logStep("Error getting user data for congratulations email", {
+          email: customer.email,
+          error: userError.message
+        });
+      } else if (userData.user) {
+        // Call auth-email-handler to send congratulations email
+        const emailPayload = {
+          user: {
+            id: userData.user.id,
+            email: userData.user.email,
+            user_metadata: userData.user.user_metadata
+          },
+          email_data: {
+            email_action_type: 'subscription_success',
+            site_url: Deno.env.get('SITE_URL') || 'https://tiertrainer24.com'
+          },
+          subscription_tier: subscriptionTier,
+          subscription_amount: amount ? (amount / 100).toFixed(2) : '9.90',
+          subscription_interval: interval || 'month'
+        };
+
+        // Send congratulations email via auth-email-handler
+        const emailResponse = await supabaseClient.functions.invoke('auth-email-handler', {
+          body: emailPayload
+        });
+
+        if (emailResponse.error) {
+          logStep("Error sending congratulations email", {
+            email: customer.email,
+            error: emailResponse.error
+          });
+        } else {
+          logStep("Congratulations email sent successfully", {
+            email: customer.email,
+            emailId: emailResponse.data?.emailId
+          });
+        }
+      } else {
+        logStep("No user found for congratulations email", {
+          email: customer.email
+        });
+      }
+    } catch (error) {
+      logStep("Error in congratulations email process", {
+        email: customer.email,
+        error: error.message
+      });
+    }
+  }
   if (subscription.status === 'trialing' && subscription.trial_end) {
     await updateTrialUsage(customer.email, supabaseClient);
   }
