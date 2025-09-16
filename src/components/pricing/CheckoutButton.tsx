@@ -8,7 +8,6 @@ import { Loader2, ShoppingCart } from 'lucide-react';
 import { SmartLoginModal } from '@/components/auth/SmartLoginModal';
 import { useSmartLogin } from '@/hooks/useSmartLogin';
 import { useGTM } from '@/hooks/useGTM';
-import { saveCheckoutInformation } from '@/utils/checkoutSessionStorage';
 import { getPrice } from '@/config/pricing';
 import { useTranslation } from 'react-i18next';
 
@@ -50,7 +49,12 @@ export const CheckoutButton = ({ priceType, children, className = "" }: Checkout
       // If not logged in, save checkout information and show login modal
       if (!user || !session) {
         console.log('User not logged in, saving checkout information:', priceType);
-        saveCheckoutInformation(priceType, 'pricing-card');
+        // Save checkout data in simple format
+        sessionStorage.setItem('checkout_data', JSON.stringify({
+          priceType: priceType,
+          timestamp: Date.now(),
+          source: 'pricing-card'
+        }));
         setLoading(false);
         setIsLoginModalOpen(true);
         return;

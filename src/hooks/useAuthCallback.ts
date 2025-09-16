@@ -130,11 +130,13 @@ export const useAuthCallback = () => {
       console.log('🔐 OAuth callback: Current URL:', window.location.href);
       console.log('🔐 OAuth callback: User ID:', userId);
       
-      // Check for pending checkout data from SmartLoginModal
+      // Check for checkout data in sessionStorage
+      const checkoutData = sessionStorage.getItem('checkout_data');
       const pendingPriceType = sessionStorage.getItem('pendingPriceType');
       const pendingLoginContext = sessionStorage.getItem('pendingLoginContext');
       
-      console.log('🔐 OAuth callback: SmartLoginModal checkout data:', {
+      console.log('🔐 OAuth callback: Checkout data check:', {
+        checkoutData,
         pendingPriceType,
         pendingLoginContext,
         userId,
@@ -144,8 +146,8 @@ export const useAuthCallback = () => {
         }, {} as Record<string, string>)
       });
       
-      // If there's pending checkout data, redirect directly to checkout
-      if (pendingPriceType && pendingLoginContext === 'checkout') {
+      // If there's checkout data, redirect directly to checkout
+      if (checkoutData || (pendingPriceType && pendingLoginContext === 'checkout')) {
         console.log('🔐 OAuth callback: Found pending checkout data, redirecting directly to checkout');
         
         // For SmartLoginModal checkout, we can proceed even without a valid user ID
@@ -156,15 +158,35 @@ export const useAuthCallback = () => {
         try {
           const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
           
+          // Determine price type from either data source
+          let priceType = null;
+          if (checkoutData) {
+            try {
+              const parsed = JSON.parse(checkoutData);
+              priceType = parsed.priceType;
+            } catch (error) {
+              console.error('🔐 OAuth callback: Error parsing checkout data:', error);
+            }
+          } else if (pendingPriceType) {
+            priceType = pendingPriceType;
+          }
+          
           console.log('🔐 OAuth callback: Creating checkout with data:', {
-            priceType: pendingPriceType,
+            priceType,
             userId,
-            currentLanguage
+            currentLanguage,
+            dataSource: checkoutData ? 'checkout_data' : 'pendingPriceType'
           });
+          
+          if (!priceType) {
+            console.error('🔐 OAuth callback: No valid price type found');
+            window.location.href = '/';
+            return;
+          }
           
           const { data, error } = await supabase.functions.invoke('create-checkout', {
             body: {
-              priceType: pendingPriceType,
+              priceType: priceType,
               successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userId || '')}`,
               cancelUrl: `${window.location.origin}/`,
               language: currentLanguage,
@@ -180,7 +202,8 @@ export const useAuthCallback = () => {
             window.location.href = '/';
           } else if (data?.url) {
             console.log('🔐 OAuth callback: Checkout created successfully, redirecting to:', data.url);
-            // Clear the pending data before redirecting
+            // Clear all checkout data before redirecting
+            sessionStorage.removeItem('checkout_data');
             sessionStorage.removeItem('pendingPriceType');
             sessionStorage.removeItem('pendingLoginContext');
             window.location.href = data.url;

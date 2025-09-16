@@ -70,373 +70,95 @@ const Index = () => {
     skipRedirect: true
   });
 
-  // Check for checkout information after authentication or with temporary user data
+  // Simple checkout processing - only for authenticated users
   useEffect(() => {
-    const processCheckoutInformation = async () => {
-      const checkoutInfo = getCheckoutInformation();
-      
-      if (checkoutInfo) {
-        // Check if we have authenticated user OR temporary user data from signup
-        const tempUserData = sessionStorage.getItem('tempUserData');
-        let userEmail = '';
-        let userName = '';
-        
-        if (user && session) {
-          // User is authenticated
-          userEmail = user.email || '';
-          userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '';
-          console.log('Processing checkout with authenticated user:', userEmail);
-        } else if (tempUserData) {
-          // Use temporary user data from signup
-          try {
-            const tempUser = JSON.parse(tempUserData);
-            userEmail = tempUser.email;
-            userName = `${tempUser.firstName} ${tempUser.lastName}`.trim() || tempUser.email.split('@')[0];
-            console.log('Processing checkout with temporary user data:', userEmail);
-          } catch (error) {
-            console.error('Error parsing temporary user data:', error);
-            window.location.href = '/#pricing';
-            return;
-          }
-        } else {
-          // No user data available
-          console.log('No user data available for checkout processing');
-          return;
-        }
-        
-        if (userEmail) {
-          console.log('Found checkout information, processing checkout:', checkoutInfo);
-          
-          // Remove checkout information immediately
-          removeCheckoutInformation();
-          setIsProcessingCheckout(true);
-          
-          try {
-            const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
-            
-            const { data, error } = await supabase.functions.invoke('create-checkout', {
-              body: {
-                priceType: checkoutInfo.priceType,
-                successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userEmail)}`,
-                cancelUrl: `${window.location.origin}/?checkout_cancelled=true`,
-                language: currentLanguage,
-                customerInfo: {
-                  name: userName
-                },
-                // Include user email for checkout processing
-                userEmail: userEmail
-              }
-            });
-
-            if (error) {
-              console.error('Error creating checkout:', error);
-              window.location.href = '/#pricing';
-            } else if (data?.url) {
-              console.log('Checkout created successfully, redirecting to:', data.url);
-              // Clean up temporary user data
-              if (tempUserData) {
-                sessionStorage.removeItem('tempUserData');
-              }
-              window.location.href = data.url;
-            } else {
-              console.error('No checkout URL returned');
-              window.location.href = '/#pricing';
-            }
-          } catch (error) {
-            console.error('Error processing checkout:', error);
-            window.location.href = '/#pricing';
-          } finally {
-            setIsProcessingCheckout(false);
-          }
-        }
+    const processCheckout = async () => {
+      // Only process checkout if user is authenticated
+      if (!user || !session) {
+        return;
       }
-    };
 
-    processCheckoutInformation();
-  }, [user, session]);
-
-  // Additional useEffect to handle checkout when temporary user data becomes available
-  useEffect(() => {
-    const handleTempUserCheckout = async () => {
-      const checkoutInfo = getCheckoutInformation();
-      const tempUserData = sessionStorage.getItem('tempUserData');
+      // Check for checkout data in sessionStorage
+      const checkoutData = sessionStorage.getItem('checkout_data');
       
-      // Only process if we have checkout info and temp user data, but no authenticated user
-      if (checkoutInfo && tempUserData && !user && !session) {
-        console.log('Processing checkout with temporary user data (no auth):', tempUserData);
-        
+      if (checkoutData) {
         try {
-          const tempUser = JSON.parse(tempUserData);
-          const userEmail = tempUser.email;
-          const userName = `${tempUser.firstName} ${tempUser.lastName}`.trim() || tempUser.email.split('@')[0];
+          const { priceType } = JSON.parse(checkoutData);
+          console.log('🏠 Homepage: Found checkout data, processing checkout:', { priceType, userEmail: user.email });
           
-          console.log('Found checkout information with temp user, processing checkout:', checkoutInfo);
-          
-          // Remove checkout information immediately
-          removeCheckoutInformation();
+          // Remove checkout data immediately
+          sessionStorage.removeItem('checkout_data');
           setIsProcessingCheckout(true);
           
           const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
           
           const { data, error } = await supabase.functions.invoke('create-checkout', {
             body: {
-              priceType: checkoutInfo.priceType,
-              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userEmail)}`,
-              cancelUrl: `${window.location.origin}/?checkout_cancelled=true`,
-              language: currentLanguage,
-              customerInfo: {
-                name: userName
-              },
-              // Include user email for checkout processing
-              userEmail: userEmail
-            }
-          });
-
-          if (error) {
-            console.error('Error creating checkout:', error);
-            window.location.href = '/#pricing';
-          } else if (data?.url) {
-            console.log('Checkout created successfully, redirecting to:', data.url);
-            // Clean up temporary user data
-            sessionStorage.removeItem('tempUserData');
-            window.location.href = data.url;
-          } else {
-            console.error('No checkout URL returned');
-            window.location.href = '/#pricing';
-          }
-        } catch (error) {
-          console.error('Error processing checkout with temp user:', error);
-          window.location.href = '/#pricing';
-        } finally {
-          setIsProcessingCheckout(false);
-        }
-      }
-    };
-
-    // Listen for custom checkout events from SmartLoginModal
-    const handleCheckoutRequest = async (event: CustomEvent) => {
-      const { checkoutInfo, tempUserData } = event.detail;
-      console.log('Received checkout request event:', { checkoutInfo, tempUserData });
-      
-      if (checkoutInfo && tempUserData && !user && !session) {
-        console.log('Processing checkout from SmartLoginModal event');
-        
-        try {
-          const userEmail = tempUserData.email;
-          const userName = `${tempUserData.firstName} ${tempUserData.lastName}`.trim() || tempUserData.email.split('@')[0];
-          
-          // Remove checkout information immediately
-          removeCheckoutInformation();
-          setIsProcessingCheckout(true);
-          
-          const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
-          
-          const { data, error } = await supabase.functions.invoke('create-checkout', {
-            body: {
-              priceType: checkoutInfo.priceType,
-              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userEmail)}`,
-              cancelUrl: `${window.location.origin}/?checkout_cancelled=true`,
-              language: currentLanguage,
-              customerInfo: {
-                name: userName
-              },
-              // Include user email for checkout processing
-              userEmail: userEmail
-            }
-          });
-
-          if (error) {
-            console.error('Error creating checkout:', error);
-            window.location.href = '/#pricing';
-          } else if (data?.url) {
-            console.log('Checkout created successfully, redirecting to:', data.url);
-            // Clean up temporary user data
-            sessionStorage.removeItem('tempUserData');
-            window.location.href = data.url;
-          } else {
-            console.error('No checkout URL returned');
-            window.location.href = '/#pricing';
-          }
-        } catch (error) {
-          console.error('Error processing checkout from event:', error);
-          window.location.href = '/#pricing';
-        } finally {
-          setIsProcessingCheckout(false);
-        }
-      }
-    };
-
-    // Add event listener for checkout requests
-    window.addEventListener('checkoutRequested', handleCheckoutRequest as EventListener);
-
-    // Initial check on mount
-    handleTempUserCheckout();
-
-    // Cleanup
-    return () => {
-      window.removeEventListener('checkoutRequested', handleCheckoutRequest as EventListener);
-    };
-  }, []); // Run once on mount
-
-  // Check for cancelled checkout and handle verification code flow
-  useEffect(() => {
-    const handleCancelledCheckout = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const checkoutCancelled = urlParams.get('checkout_cancelled') === 'true';
-      
-      if (checkoutCancelled) {
-        console.log('Checkout was cancelled, checking for unconfirmed user...');
-        
-        // Check if we have temporary user data from signup
-        const tempUserData = sessionStorage.getItem('tempUserData');
-        
-        if (tempUserData) {
-          try {
-            const tempUser = JSON.parse(tempUserData);
-            console.log('Found temp user data from cancelled checkout:', tempUser.email);
-            
-            // Send verification email to the user who cancelled checkout
-            const { error } = await supabase.functions.invoke('send-verification-after-cancellation', {
-              body: { email: tempUser.email }
-            });
-
-            if (error) {
-              console.error('Error sending verification email after cancellation:', error);
-            } else {
-              console.log('Verification email sent successfully after checkout cancellation');
-              
-              // Show verification code modal
-              setCancelledUserEmail(tempUser.email);
-              setCancelledUserPassword(''); // We don't have the password stored
-              setShowVerificationCode(true);
-              
-              // Clean up temp user data
-              sessionStorage.removeItem('tempUserData');
-            }
-          } catch (error) {
-            console.error('Error processing cancelled checkout:', error);
-          }
-        } else if (user && !user.email_confirmed_at) {
-          // Handle case where user is logged in but unconfirmed
-          console.log('Checkout was cancelled for unconfirmed logged-in user:', user.email);
-          
-          try {
-            const { error } = await supabase.functions.invoke('send-verification-after-cancellation', {
-              body: { email: user.email }
-            });
-
-            if (error) {
-              console.error('Error sending verification email after cancellation:', error);
-            } else {
-              console.log('Verification email sent successfully after checkout cancellation');
-              
-              // Show verification code modal
-              setCancelledUserEmail(user.email);
-              setCancelledUserPassword(''); // We don't have the password stored
-              setShowVerificationCode(true);
-            }
-          } catch (error) {
-            console.error('Error calling send-verification-after-cancellation:', error);
-          }
-        }
-
-        // Clean up URL parameters
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, '', newUrl);
-      }
-    };
-
-    handleCancelledCheckout();
-  }, [user, session]);
-
-  // Check for pricing_click_data in sessionStorage and call create-checkout directly
-  useEffect(() => {
-    const checkPricingClickData = async () => {
-      try {
-        const pricingClickData = sessionStorage.getItem('pricing_click_data');
-        if (pricingClickData && user && session) {
-          const parsedData = JSON.parse(pricingClickData);
-          console.log('For darkhorse: Found pricing_click_data with logged in user, calling create-checkout directly:', parsedData);
-          
-          // Remove the data from sessionStorage immediately
-          sessionStorage.removeItem('pricing_click_data');
-          setIsProcessingCheckout(false);
-          
-          // Call create-checkout directly
-          const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
-          
-          const { data, error } = await supabase.functions.invoke('create-checkout', {
-            body: {
-              priceType: parsedData.priceType,
-              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(user?.email || '')}`,
+              priceType: priceType,
+              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(user.email)}`,
               cancelUrl: `${window.location.origin}/`,
               language: currentLanguage,
               customerInfo: {
-                name: user?.user_metadata?.full_name || user?.email?.split('@')[0]
+                name: user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'
               }
             }
           });
 
           if (error) {
-            console.error('For darkhorse: Error creating checkout:', error);
-            // Redirect to pricing section on error
+            console.error('🏠 Homepage: Error creating checkout:', error);
             window.location.href = '/#pricing';
           } else if (data?.url) {
-            console.log('For darkhorse: Checkout created successfully, redirecting to:', data.url);
-            // Redirect to Stripe checkout
+            console.log('🏠 Homepage: Checkout created successfully, redirecting to:', data.url);
             window.location.href = data.url;
           } else {
-            console.error('For darkhorse: No checkout URL returned');
+            console.error('🏠 Homepage: No checkout URL returned');
             window.location.href = '/#pricing';
           }
-        } else if (pricingClickData) {
-          console.log('For darkhorse: Found pricing_click_data on homepage, but user is not logged in - removing data');
-          // Remove pricing_click_data when user is not logged in
-          sessionStorage.removeItem('pricing_click_data');
-          setIsProcessingCheckout(false);
-        } else {
+        } catch (error) {
+          console.error('🏠 Homepage: Error processing checkout:', error);
+          sessionStorage.removeItem('checkout_data');
+          window.location.href = '/#pricing';
+        } finally {
           setIsProcessingCheckout(false);
         }
-      } catch (error) {
-        console.error('For darkhorse: Error checking pricing_click_data:', error);
-        setIsProcessingCheckout(false);
-        // Remove corrupted data
-        sessionStorage.removeItem('pricing_click_data');
       }
     };
 
-    // Check immediately
-    checkPricingClickData();
+    processCheckout();
   }, [user, session]);
+
+  // Clean up any old checkout data on mount
+  useEffect(() => {
+    // Remove old checkout data formats
+    sessionStorage.removeItem('tempUserData');
+    sessionStorage.removeItem('checkout-information');
+    removeCheckoutInformation();
+    
+    console.log('🏠 Homepage: Cleaned up old checkout data');
+  }, []);
+
+  // Handle cancelled checkout - simple cleanup
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const checkoutCancelled = urlParams.get('checkout_cancelled') === 'true';
+    
+    if (checkoutCancelled) {
+      console.log('🏠 Homepage: Checkout was cancelled, cleaning up');
+      // Clean up URL parameters
+      window.history.replaceState({}, document.title, '/');
+    }
+  }, []);
+
+  // Clean up old pricing click data
+  useEffect(() => {
+    // Remove old pricing click data format
+    sessionStorage.removeItem('pricing_click_data');
+    console.log('🏠 Homepage: Cleaned up old pricing click data');
+  }, []);
 
 
   useEffect(() => {
     // Page view tracking is now handled by PageViewTracker component
-    
-    // Handle OAuth callback and auto-login logic
-    const handleOAuthCallback = async () => {
-      // Check if this is an OAuth callback with session
-      const urlParams = new URLSearchParams(window.location.search);
-      const isOAuthCallback = urlParams.has('code') || window.location.hash.includes('access_token');
-      
-      if (isOAuthCallback && user && session) {
-        // Check for stored package selection
-        const storedPriceType = sessionStorage.getItem('pendingPriceType');
-        const storedLoginContext = sessionStorage.getItem('pendingLoginContext');
-        
-        if (storedPriceType || storedLoginContext === 'checkout') {
-          // Trigger smart login logic for checkout
-          await handleLoginSuccess();
-        } else {
-          // Clear URL parameters but stay on homepage
-          window.history.replaceState({}, document.title, '/');
-        }
-        return;
-      }
-    };
-
-    // Handle OAuth callback
-    handleOAuthCallback();
     
     // Handle pricing hash scroll with improved logic
     if (window.location.hash === '#pricing') {

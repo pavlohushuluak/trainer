@@ -51,7 +51,6 @@ export const Benefits = () => {
       icon: Euro,
       title: t('benefits.benefit3.title'),
       descriptions: [
-        t('benefits.benefit3.description1'),
         t('benefits.benefit3.description2')
       ],
       priceInfo: {

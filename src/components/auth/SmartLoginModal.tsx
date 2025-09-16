@@ -16,8 +16,6 @@ import { PasswordInput } from '@/components/auth/PasswordInput';
 import { ConfirmPasswordInput } from '@/components/auth/ConfirmPasswordInput';
 import { EmailInput } from '@/components/auth/EmailInput';
 import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
-import { getCheckoutFlags, clearCheckoutFlags } from '@/utils/checkoutStorage';
-import { getCheckoutInformation } from '@/utils/checkoutSessionStorage';
 import { useTranslations } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
 import { getCurrentLanguage } from '@/utils/languageSupport';
@@ -184,33 +182,12 @@ export const SmartLoginModal = ({
           duration: 3000
         });
         
-        // Store user data temporarily for checkout processing
+        // User created successfully - let the homepage handle checkout if needed
         if (data?.user) {
-          console.log('User created successfully, storing for checkout:', data.user.email);
-          
-          // Store user data in sessionStorage for checkout processing
-          sessionStorage.setItem('tempUserData', JSON.stringify({
-            email: data.user.email,
-            id: data.user.id,
-            firstName: firstName.trim(),
-            lastName: lastName.trim(),
-            timestamp: Date.now()
-          }));
-          
-          // Trigger checkout processing immediately after storing user data
-          setTimeout(() => {
-            const checkoutInfo = getCheckoutInformation();
-            if (checkoutInfo) {
-              console.log('Triggering checkout processing from SmartLoginModal:', checkoutInfo);
-              // The Index.tsx useEffect should pick this up
-              window.dispatchEvent(new CustomEvent('checkoutRequested', { 
-                detail: { checkoutInfo, tempUserData: JSON.parse(sessionStorage.getItem('tempUserData') || '{}') }
-              }));
-            }
-          }, 100); // Small delay to ensure sessionStorage is set
+          console.log('User created successfully:', data.user.email);
         }
         
-        // Proceed to checkout immediately (Index.tsx will handle the checkout with stored user data)
+        // Proceed to homepage - it will handle checkout if checkout_data exists
         onLoginSuccess();
         onClose();
       }
