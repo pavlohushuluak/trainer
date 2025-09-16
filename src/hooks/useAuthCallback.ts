@@ -162,15 +162,28 @@ export const useAuthCallback = () => {
             currentLanguage
           });
           
+          // Get the current user email from the session
+          const { data: { session } } = await supabase.auth.getSession();
+          const userEmail = session?.user?.email;
+          
+          if (!userEmail) {
+            console.error('🔐 OAuth callback: No user email available for checkout creation');
+            window.location.href = '/';
+            return;
+          }
+          
+          console.log('🔐 OAuth callback: Creating checkout with user email:', userEmail);
+          
           const { data, error } = await supabase.functions.invoke('create-checkout', {
             body: {
               priceType: pendingPriceType,
-              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userId || '')}`,
+              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userEmail)}`,
               cancelUrl: `${window.location.origin}/`,
               language: currentLanguage,
               customerInfo: {
-                name: (userId && userId !== 'oauth-no-session') ? userId.split('@')[0] : 'User'
-              }
+                name: userEmail.split('@')[0] || 'User'
+              },
+              userEmail: userEmail // Pass user email explicitly
             }
           });
 
@@ -451,9 +464,35 @@ export const useAuthCallback = () => {
         console.log('🔐 OAuth callback: No valid session found');
         // For OAuth, this might be normal - check source and redirect accordingly
         if (window.location.search.includes('provider=')) {
-          console.log('🔐 OAuth callback: OAuth detected but no session, checking source for redirect');
-          // Call redirectUserBasedOnRole with a dummy user ID to trigger source detection
-          await redirectUserBasedOnRole('oauth-no-session');
+          console.log('🔐 OAuth callback: OAuth detected but no session, waiting for session establishment');
+          
+          // Wait for session to be established before proceeding
+          let attempts = 0;
+          const maxAttempts = 10;
+          const checkInterval = 500; // 500ms intervals
+          
+          const waitForSession = async () => {
+            attempts++;
+            console.log(`🔐 OAuth callback: Waiting for session establishment (attempt ${attempts}/${maxAttempts})`);
+            
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (session?.user) {
+              console.log('🔐 OAuth callback: Session established, proceeding with redirect:', session.user.email);
+              await redirectUserBasedOnRole(session.user.id);
+              return;
+            }
+            
+            if (attempts < maxAttempts) {
+              setTimeout(waitForSession, checkInterval);
+            } else {
+              console.log('🔐 OAuth callback: Session establishment timeout, redirecting to homepage');
+              window.location.href = '/';
+            }
+          };
+          
+          // Start waiting for session
+          setTimeout(waitForSession, checkInterval);
           return;
         } else {
           toast({
