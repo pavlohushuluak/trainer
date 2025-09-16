@@ -11,7 +11,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<{ data?: any; error?: any }>;
   signUp: (email: string, password: string, firstName?: string, lastName?: string, language?: string, skipEmailVerification?: boolean) => Promise<{ data?: any; error?: any }>;
-  signInWithOAuth: (provider: 'google' | 'github') => Promise<{ data?: any; error?: any }>;
+  signInWithOAuth: (provider: 'google' | 'github', source?: string) => Promise<{ data?: any; error?: any }>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

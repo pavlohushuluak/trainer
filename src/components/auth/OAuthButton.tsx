@@ -9,9 +9,10 @@ import { useTranslations } from "@/hooks/useTranslations";
 interface OAuthButtonProps {
   provider: "google" | "github";
   onSuccess?: (user?: any, isNewUser?: boolean) => void;
+  source?: string;
 }
 
-export const OAuthButton = ({ provider, onSuccess }: OAuthButtonProps) => {
+export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) => {
   const { signInWithOAuth } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -22,7 +23,7 @@ export const OAuthButton = ({ provider, onSuccess }: OAuthButtonProps) => {
     try {
       console.log('🔐 OAuth button: Starting OAuth sign-in for provider:', provider);
       
-      const { data, error } = await signInWithOAuth(provider);
+      const { data, error } = await signInWithOAuth(provider, source);
       
       if (error) throw error;
       

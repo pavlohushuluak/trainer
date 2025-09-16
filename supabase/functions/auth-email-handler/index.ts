@@ -1270,6 +1270,8 @@ serve(async (req) => {
       emailData: data.email_data,
       hasRedirectTo: !!data.email_data.redirect_to,
       redirectToValue: data.email_data.redirect_to,
+      stripeCustomerEmail: (data as any).stripe_customer_email,
+      supabaseUserEmail: (data as any).supabase_user_email,
       fullPayload: JSON.stringify(data),
       headers: {
         'accept-language': headers['accept-language'],
@@ -1530,7 +1532,10 @@ serve(async (req) => {
        type: data.email_data.email_action_type,
        to: recipientEmail,
        originalUserEmail: data.user.email,
-       subject: emailTemplate.subject 
+       subject: emailTemplate.subject,
+       stripeCustomerEmail: (data as any).stripe_customer_email,
+       supabaseUserEmail: (data as any).supabase_user_email,
+       emailSource: 'stripe-webhook'
      });
 
      // Send email via Resend

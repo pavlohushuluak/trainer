@@ -108,12 +108,19 @@ export const useAuthOperations = () => {
     return result;
   };
 
-  const signInWithOAuth = async (provider: 'google' | 'github') => {
-    const redirectUrl = `${window.location.origin}/auth/callback`;
+  const signInWithOAuth = async (provider: 'google' | 'github', source?: string) => {
+    // Include source information in redirect URL to determine redirect behavior
+    const sourceParam = source ? `?source=${encodeURIComponent(source)}` : '';
+    const redirectUrl = `${window.location.origin}/auth/callback${sourceParam}`;
     
     try {
       // Clear any existing auth errors first
       sessionStorage.removeItem('auth_error');
+      
+      // Store source information in sessionStorage for backup
+      if (source) {
+        sessionStorage.setItem('oauth_source', source);
+      }
       
       const result = await supabase.auth.signInWithOAuth({
         provider,

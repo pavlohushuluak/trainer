@@ -392,14 +392,7 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
       }
 
       if (shouldSendEmail) {
-        logStep(`Sending congratulations email for ${emailReason}`, {
-          email: customer.email,
-          tier: subscriptionTier,
-          status: subscription.status,
-          emailType: emailType
-        });
-
-        // Get user data for email personalization
+        // Get user data for email personalization first
         const { data: usersData, error: userError } = await supabaseClient.auth.admin.listUsers({
           filter: {
             email: customer.email
@@ -407,6 +400,15 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
         });
         
         const userData = usersData && usersData.users && usersData.users.length > 0 ? { user: usersData.users[0] } : null;
+
+        logStep(`Sending congratulations email for ${emailReason}`, {
+          stripeCustomerEmail: customer.email,
+          supabaseUserEmail: userData?.user?.email,
+          tier: subscriptionTier,
+          status: subscription.status,
+          emailType: emailType,
+          emailWillBeSentTo: customer.email
+        });
         
         if (userError) {
           logStep("Error getting user data for congratulations email", {
@@ -415,10 +417,11 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
           });
         } else if (userData && userData.user) {
           // Call auth-email-handler to send congratulations email
+          // Use the Stripe customer email as the recipient (not the Supabase user email)
           const emailPayload = {
             user: {
               id: userData.user.id,
-              email: userData.user.email,
+              email: customer.email, // Use Stripe customer email as recipient
               user_metadata: userData.user.user_metadata
             },
             email_data: {
@@ -429,7 +432,10 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
             subscription_amount: amount ? (amount / 100).toFixed(2) : '9.90',
             subscription_interval: interval || 'month',
             previous_tier: existingSubscriber?.subscription_tier || null,
-            upgrade_reason: emailReason
+            upgrade_reason: emailReason,
+            // Add the Stripe customer email explicitly for debugging
+            stripe_customer_email: customer.email,
+            supabase_user_email: userData.user.email
           };
 
           // Send congratulations email via auth-email-handler

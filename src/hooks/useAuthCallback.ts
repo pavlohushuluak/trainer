@@ -37,7 +37,7 @@ export const useAuthCallback = () => {
     }
   };
 
-  // Enhanced: Redirect based on user role for OAuth users
+  // Enhanced: Redirect based on user role and OAuth source
   const redirectUserBasedOnRole = async (userId: string, successMessage?: string) => {
     
     console.log('🔐 OAuth callback: redirectUserBasedOnRole called for user:', userId);
@@ -75,8 +75,27 @@ export const useAuthCallback = () => {
       return;
     }
 
-    // Check if user is admin and redirect accordingly
-    console.log('🔐 OAuth callback: Checking admin status for user:', userId);
+    // Check OAuth source to determine redirect behavior
+    const urlParams = new URLSearchParams(window.location.search);
+    const oauthSource = urlParams.get('source') || sessionStorage.getItem('oauth_source');
+    
+    console.log('🔐 OAuth callback: OAuth source detected:', oauthSource);
+    
+    // Clean up sessionStorage
+    if (oauthSource) {
+      sessionStorage.removeItem('oauth_source');
+    }
+
+    // If OAuth came from SmartLoginModal, always redirect to homepage
+    if (oauthSource === 'smartlogin') {
+      console.log('🔐 OAuth callback: OAuth from SmartLoginModal, redirecting to homepage');
+      // Use window.location.href for more reliable redirect after OAuth
+      window.location.href = '/';
+      return;
+    }
+
+    // For OAuth from LoginPage or other sources, use role-based redirect
+    console.log('🔐 OAuth callback: OAuth from LoginPage, checking admin status for user:', userId);
     
     try {
       const isAdmin = await checkAdminStatus(userId);

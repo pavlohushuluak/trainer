@@ -299,6 +299,7 @@ const LoginPage = () => {
 
                 <OAuthButton
                   provider="google"
+                  source="loginpage"
                   onSuccess={() => {
                     setError('');
                     setMessage('');
