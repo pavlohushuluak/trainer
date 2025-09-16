@@ -23,6 +23,12 @@ export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) =
     try {
       console.log('🔐 OAuth button: Starting OAuth sign-in for provider:', provider, 'with source:', source);
       
+      // Set sign_in_google flag if this is Google OAuth from login page
+      if (provider === 'google' && source === 'loginpage') {
+        sessionStorage.setItem('sign_in_google', 'true');
+        console.log('🔐 OAuth button: Set sign_in_google flag for login page Google OAuth');
+      }
+      
       const { data, error } = await signInWithOAuth(provider, source);
       
       if (error) throw error;

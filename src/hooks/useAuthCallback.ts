@@ -135,6 +135,10 @@ export const useAuthCallback = () => {
     // For OAuth from LoginPage or other sources, use role-based redirect
     console.log('🔐 OAuth callback: OAuth from LoginPage, checking admin status for user:', userId);
     
+    // Check if this was a Google signin from login page
+    const signInGoogle = sessionStorage.getItem('sign_in_google');
+    console.log('🔐 OAuth callback: sign_in_google flag:', signInGoogle);
+    
     // If userId is 'oauth-no-session', skip admin check and use default redirect
     if (userId === 'oauth-no-session') {
       console.log('🔐 OAuth callback: No session available, using default redirect to mein-tiertraining');
@@ -151,9 +155,16 @@ export const useAuthCallback = () => {
         // Use window.location.href for more reliable redirect after OAuth
         window.location.href = '/admin/users';
       } else {
-        console.log('🔐 OAuth callback: User is regular user, redirecting to mein-tiertraining');
-        // Use window.location.href for more reliable redirect after OAuth
-        window.location.href = '/';
+        // For normal users, check if they signed in with Google from login page
+        if (signInGoogle === 'true') {
+          console.log('🔐 OAuth callback: Normal user with Google signin from login page, redirecting to mein-tiertraining');
+          // Remove the flag after using it
+          sessionStorage.removeItem('sign_in_google');
+          window.location.href = '/mein-tiertraining';
+        } else {
+          console.log('🔐 OAuth callback: Normal user without Google signin flag, redirecting to homepage');
+          window.location.href = '/';
+        }
       }
     } catch (error) {
       console.error('🔐 OAuth callback: Error checking admin status:', error);
