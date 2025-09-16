@@ -109,7 +109,7 @@ export const useSmartLogin = ({
       }
 
       // For all other cases, redirect to /mein-tiertraining immediately
-      window.location.href = '/mein-tiertraining';
+      window.location.href = '/';
       
       // Gespeichertes Paket zurücksetzen
       setSelectedPriceType(null);
@@ -120,8 +120,8 @@ export const useSmartLogin = ({
       }
     } catch (error) {
       console.error('🔄 Error during login redirect:', error);
-      // Fallback: Immer zum mein-tiertraining
-      window.location.href = '/mein-tiertraining';
+      // Fallback: Immer zum Dashboard
+      window.location.href = '/';
       
       // Clear state
       setSelectedPriceType(null);
