@@ -87,9 +87,9 @@ export const EmailSignUpTab = ({ onClose }: EmailSignUpTabProps) => {
             description: t('auth.emailSignUpTab.toasts.signupSuccess.description')
           });
           
-          // Direkt zum Tierbereich weiterleiten
+          // Redirect to homepage after successful signup
           setTimeout(() => {
-            window.location.href = '/mein-tiertraining';
+            window.location.href = '/';
             onClose();
           }, 1000);
         } else {

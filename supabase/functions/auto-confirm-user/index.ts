@@ -122,7 +122,7 @@ serve(async (req) => {
         type: 'magiclink',
         email: user.email!,
         options: {
-          redirectTo: `${req.headers.get('origin') || 'http://localhost:3000'}/mein-tiertraining`
+          redirectTo: `${req.headers.get('origin') || 'http://localhost:3000'}/`
         }
       });
 
