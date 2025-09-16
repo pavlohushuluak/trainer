@@ -301,34 +301,37 @@ const MyPetTraining = () => {
           if ((error.message?.includes('not confirmed') || 
                error.message?.includes('not yet processed') || 
                error.message?.includes('Payment not yet processed') ||
-               error.message?.includes('retry')) && retryCount < 2) {
-            console.log(`⏳ Retrying auto-login in 5 seconds (attempt ${retryCount + 2}/3)...`);
-            setTimeout(() => autoLoginUser(email, sessionId, retryCount + 1), 5000);
+               error.message?.includes('retry') ||
+               error.message?.includes('Failed to confirm email')) && retryCount < 2) {
+            console.log(`⏳ Retrying auto-login in 3 seconds (attempt ${retryCount + 2}/3)...`);
+            setTimeout(() => autoLoginUser(email, sessionId, retryCount + 1), 3000);
             return;
           }
           
-          // CRITICAL FIX: Don't redirect to login immediately - try to handle the error better
-          console.error('❌ Auto-login failed after retries, but payment was successful');
-          console.error('❌ This should not happen - user should be auto-logged in after payment');
+          // CRITICAL FIX: If auto-login fails, store payment data and redirect to login with special handling
+          console.error('❌ Auto-login failed after retries, storing payment data for manual login');
           console.error('❌ Full error object:', error);
           
-          // Show error toast but don't redirect to login
-          toast({
-            title: "Payment Successful!",
-            description: "Your payment was processed successfully. Please refresh the page or try logging in manually.",
-            duration: 10000,
-            variant: "default"
-          });
-          
-          // Set a flag to indicate auto-login failed but payment succeeded
-          sessionStorage.setItem('autoLoginFailed', JSON.stringify({
-            email: email,
+          // Store the payment success data for manual login
+          sessionStorage.setItem('paymentSuccessData', JSON.stringify({
             sessionId: sessionId,
+            paymentType: paymentType,
+            isGuest: isGuest,
+            userEmail: email,
             timestamp: Date.now(),
-            error: error.message,
-            fullError: error
+            autoLoginFailed: true,
+            error: error.message
           }));
           
+          // Show success message with login instruction
+          toast({
+            title: "Payment Successful!",
+            description: "Your payment was processed successfully. Please log in to activate your subscription.",
+            duration: 8000,
+          });
+          
+          // Redirect to login page with special message
+          navigate('/login?message=payment_success_please_login');
           return;
         }
 
@@ -345,8 +348,16 @@ const MyPetTraining = () => {
               sessionId: sessionId,
               paymentType: paymentType,
               isGuest: isGuest,
+              userEmail: email,
               timestamp: Date.now()
             }));
+            
+            // Show loading message
+            toast({
+              title: "Completing Login...",
+              description: "Please wait while we complete your login process.",
+              duration: 5000,
+            });
             
             // Redirect to the action_link which will automatically log the user in
             window.location.href = data.action_link;
@@ -480,27 +491,9 @@ const MyPetTraining = () => {
           timestamp: new Date().toISOString()
         });
         
-        // CRITICAL FIX: Store payment success data and redirect to login with special message
-        console.log('🔄 Storing payment success data and redirecting to login...');
-        
-        // Store the payment success data in sessionStorage
-        sessionStorage.setItem('paymentSuccessData', JSON.stringify({
-          sessionId: sessionId,
-          paymentType: paymentType,
-          isGuest: isGuest,
-          userEmail: decodedUserEmail,
-          timestamp: Date.now()
-        }));
-        
-        // Show success message
-        toast({
-          title: "Payment Successful!",
-          description: "Your payment was processed successfully. Please log in to activate your subscription.",
-          duration: 8000,
-        });
-        
-        // Redirect to login page with special message
-        navigate('/login?message=payment_success_please_login');
+        // CRITICAL FIX: Actually attempt auto-login instead of redirecting to login page
+        setIsAutoLoggingIn(true);
+        autoLoginUser(decodedUserEmail, sessionId);
       } else if (userMatches) {
         console.log('✅ Current user matches payment user, proceeding with success handling');
         // User is already logged in correctly, proceed with normal success handling
@@ -586,21 +579,29 @@ const MyPetTraining = () => {
         const paymentData = JSON.parse(pendingPaymentSuccess);
         console.log('🔍 Pending payment success detected after auto-login:', paymentData);
         
-        // Clear the pending data
-        sessionStorage.removeItem('pendingPaymentSuccess');
-        
-        // Proceed with payment success handling
-        if (handlePaymentSuccess) {
-          handlePaymentSuccess(paymentData.sessionId, paymentData.paymentType, paymentData.isGuest);
+        // Verify the user matches the payment user
+        if (user.email === paymentData.userEmail) {
+          console.log('✅ User matches payment user, processing payment success');
+          
+          // Clear the pending data
+          sessionStorage.removeItem('pendingPaymentSuccess');
+          
+          // Proceed with payment success handling
+          if (handlePaymentSuccess) {
+            handlePaymentSuccess(paymentData.sessionId, paymentData.paymentType, paymentData.isGuest);
+          } else {
+            console.error('❌ handlePaymentSuccess function not available');
+            // Fallback: show success message and refresh
+            toast({
+              title: "Payment Successful!",
+              description: "Your subscription has been activated successfully.",
+              duration: 5000,
+            });
+            refetchSubscription();
+          }
         } else {
-          console.error('❌ handlePaymentSuccess function not available');
-          // Fallback: show success message and refresh
-          toast({
-            title: "Payment Successful!",
-            description: "Your subscription has been activated successfully.",
-            duration: 5000,
-          });
-          refetchSubscription();
+          console.log('⚠️ User does not match payment user, clearing pending data');
+          sessionStorage.removeItem('pendingPaymentSuccess');
         }
         
       } catch (error) {

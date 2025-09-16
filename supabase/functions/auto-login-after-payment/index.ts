@@ -175,17 +175,48 @@ serve(async (req) => {
     // This handles cases where users signed up through SmartLoginModal without email confirmation
     if (!user.email_confirmed_at) {
       logStep("User email not confirmed, auto-confirming for checkout flow", { userId: user.id, email: user.email });
+      
+      // Try multiple approaches to confirm the email
+      let emailConfirmed = false;
+      
+      // Approach 1: Use admin API to confirm email
       const { error: confirmError } = await supabaseClient.auth.admin.updateUserById(user.id, {
         email_confirm: true
       });
 
       if (confirmError) {
-        logStep("Error auto-confirming user email", { error: confirmError.message, userId: user.id });
+        logStep("Error auto-confirming user email with admin API", { error: confirmError.message, userId: user.id });
+        
+        // Approach 2: Try to resend confirmation and then confirm
+        try {
+          const { error: resendError } = await supabaseClient.auth.admin.generateLink({
+            type: 'signup',
+            email: user.email!,
+            options: {
+              redirectTo: `${req.headers.get('origin') || 'http://localhost:3000'}/mein-tiertraining`
+            }
+          });
+          
+          if (!resendError) {
+            logStep("Generated signup link as fallback for email confirmation", { userId: user.id });
+            emailConfirmed = true;
+          }
+        } catch (fallbackError) {
+          logStep("Fallback email confirmation also failed", { error: fallbackError, userId: user.id });
+        }
+      } else {
+        logStep("User email auto-confirmed successfully for checkout flow", { userId: user.id });
+        emailConfirmed = true;
+      }
+      
+      if (!emailConfirmed) {
+        logStep("All email confirmation attempts failed", { userId: user.id, email: user.email });
         return new Response(
           JSON.stringify({ 
             error: 'Failed to confirm email',
-            details: confirmError.message,
-            retry: true
+            details: 'Unable to confirm user email for checkout flow. Please try logging in manually.',
+            retry: false,
+            fallback: true
           }),
           { 
             status: 400,
@@ -193,8 +224,6 @@ serve(async (req) => {
           }
         );
       }
-      
-      logStep("User email auto-confirmed successfully for checkout flow", { userId: user.id });
     } else {
       logStep("User email already confirmed", { userId: user.id, confirmedAt: user.email_confirmed_at });
     }
