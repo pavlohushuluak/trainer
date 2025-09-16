@@ -263,14 +263,20 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
       });
 
       // STEP 1: Confirm user email first
-      const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(customer.email);
+      const { data: usersData, error: userError } = await supabaseClient.auth.admin.listUsers({
+        filter: {
+          email: customer.email
+        }
+      });
+      
+      const userData = usersData && usersData.users && usersData.users.length > 0 ? { user: usersData.users[0] } : null;
       
       if (userError) {
         logStep("Error getting user data for auto-confirmation", {
           email: customer.email,
           error: userError.message
         });
-      } else if (userData.user && !userData.user.email_confirmed_at) {
+      } else if (userData && userData.user && !userData.user.email_confirmed_at) {
         // Confirm the user's email first
         const { error: confirmError } = await supabaseClient.auth.admin.updateUserById(userData.user.id, {
           email_confirm: true
@@ -288,7 +294,7 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
             userId: userData.user.id
           });
         }
-      } else if (userData.user?.email_confirmed_at) {
+      } else if (userData && userData.user?.email_confirmed_at) {
         logStep("User email already confirmed - proceeding with payment processing", {
           email: customer.email,
           confirmedAt: userData.user.email_confirmed_at
@@ -324,59 +330,137 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
     tierLimit: tierLimit
   });
 
-  // Send congratulations email for successful subscriptions
+  // Send congratulations email for successful subscriptions (only for upgrades or new subscriptions)
   if (subscription.status === 'active' || subscription.status === 'trialing') {
     try {
-      logStep("Sending congratulations email for subscription success", {
-        email: customer.email,
-        tier: subscriptionTier,
-        status: subscription.status
-      });
+      // Check if this is an upgrade by comparing with existing subscription data
+      const { data: existingSubscriber } = await supabaseClient.from("subscribers")
+        .select("subscription_tier, subscription_status")
+        .eq("email", customer.email)
+        .single();
 
-      // Get user data for email personalization
-      const { data: userData, error: userError } = await supabaseClient.auth.admin.getUserByEmail(customer.email);
-      
-      if (userError) {
-        logStep("Error getting user data for congratulations email", {
+      let shouldSendEmail = true;
+      let emailType = 'subscription_success';
+      let emailReason = '';
+
+      if (!existingSubscriber) {
+        // New subscription
+        shouldSendEmail = true;
+        emailReason = 'new subscription';
+        logStep("New subscription detected - will send welcome email", {
           email: customer.email,
-          error: userError.message
+          tier: subscriptionTier
         });
-      } else if (userData.user) {
-        // Call auth-email-handler to send congratulations email
-        const emailPayload = {
-          user: {
-            id: userData.user.id,
-            email: userData.user.email,
-            user_metadata: userData.user.user_metadata
-          },
-          email_data: {
-            email_action_type: 'subscription_success',
-            site_url: Deno.env.get('SITE_URL') || 'https://tiertrainer24.com'
-          },
-          subscription_tier: subscriptionTier,
-          subscription_amount: amount ? (amount / 100).toFixed(2) : '9.90',
-          subscription_interval: interval || 'month'
-        };
-
-        // Send congratulations email via auth-email-handler
-        const emailResponse = await supabaseClient.functions.invoke('auth-email-handler', {
-          body: emailPayload
-        });
-
-        if (emailResponse.error) {
-          logStep("Error sending congratulations email", {
+      } else if (existingSubscriber.subscription_tier !== subscriptionTier) {
+        // Subscription tier changed - check if it's an upgrade
+        const tierOrder = ['plan1', 'plan2', 'plan3', 'plan4', 'plan5'];
+        const oldTierIndex = tierOrder.indexOf(existingSubscriber.subscription_tier);
+        const newTierIndex = tierOrder.indexOf(subscriptionTier);
+        
+        if (newTierIndex > oldTierIndex) {
+          // Upgrade detected
+          shouldSendEmail = true;
+          emailType = 'subscription_upgrade';
+          emailReason = 'subscription upgrade';
+          logStep("Subscription upgrade detected - will send congratulations email", {
             email: customer.email,
-            error: emailResponse.error
+            oldTier: existingSubscriber.subscription_tier,
+            newTier: subscriptionTier,
+            oldTierIndex,
+            newTierIndex
+          });
+        } else if (newTierIndex < oldTierIndex) {
+          // Downgrade detected
+          logStep("Subscription downgrade detected - no email sent", {
+            email: customer.email,
+            oldTier: existingSubscriber.subscription_tier,
+            newTier: subscriptionTier
           });
         } else {
-          logStep("Congratulations email sent successfully", {
+          // Same tier, different status (e.g., reactivation)
+          if (existingSubscriber.subscription_status !== subscription.status) {
+            shouldSendEmail = true;
+            emailReason = 'subscription reactivation';
+            logStep("Subscription reactivation detected - will send congratulations email", {
+              email: customer.email,
+              tier: subscriptionTier,
+              oldStatus: existingSubscriber.subscription_status,
+              newStatus: subscription.status
+            });
+          }
+        }
+      }
+
+      if (shouldSendEmail) {
+        logStep(`Sending congratulations email for ${emailReason}`, {
+          email: customer.email,
+          tier: subscriptionTier,
+          status: subscription.status,
+          emailType: emailType
+        });
+
+        // Get user data for email personalization
+        const { data: usersData, error: userError } = await supabaseClient.auth.admin.listUsers({
+          filter: {
+            email: customer.email
+          }
+        });
+        
+        const userData = usersData && usersData.users && usersData.users.length > 0 ? { user: usersData.users[0] } : null;
+        
+        if (userError) {
+          logStep("Error getting user data for congratulations email", {
             email: customer.email,
-            emailId: emailResponse.data?.emailId
+            error: userError.message
+          });
+        } else if (userData && userData.user) {
+          // Call auth-email-handler to send congratulations email
+          const emailPayload = {
+            user: {
+              id: userData.user.id,
+              email: userData.user.email,
+              user_metadata: userData.user.user_metadata
+            },
+            email_data: {
+              email_action_type: emailType,
+              site_url: Deno.env.get('SITE_URL') || 'https://tiertrainer24.com'
+            },
+            subscription_tier: subscriptionTier,
+            subscription_amount: amount ? (amount / 100).toFixed(2) : '9.90',
+            subscription_interval: interval || 'month',
+            previous_tier: existingSubscriber?.subscription_tier || null,
+            upgrade_reason: emailReason
+          };
+
+          // Send congratulations email via auth-email-handler
+          const emailResponse = await supabaseClient.functions.invoke('auth-email-handler', {
+            body: emailPayload
+          });
+
+          if (emailResponse.error) {
+            logStep("Error sending congratulations email", {
+              email: customer.email,
+              error: emailResponse.error
+            });
+          } else {
+            logStep("Congratulations email sent successfully", {
+              email: customer.email,
+              emailId: emailResponse.data?.emailId,
+              emailType: emailType,
+              reason: emailReason
+            });
+          }
+        } else {
+          logStep("No user found for congratulations email", {
+            email: customer.email
           });
         }
       } else {
-        logStep("No user found for congratulations email", {
-          email: customer.email
+        logStep("No congratulations email needed", {
+          email: customer.email,
+          existingTier: existingSubscriber?.subscription_tier,
+          newTier: subscriptionTier,
+          reason: "no upgrade or new subscription detected"
         });
       }
     } catch (error) {

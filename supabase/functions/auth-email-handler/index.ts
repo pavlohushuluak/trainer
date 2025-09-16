@@ -1075,6 +1075,150 @@ const generateSubscriptionSuccessEmail = (data: AuthEmailData, language: string 
   };
 };
 
+const generateSubscriptionUpgradeEmail = (data: AuthEmailData, language: string = 'de') => {
+  const userName = data.user.user_metadata?.first_name || 
+                   data.user.user_metadata?.full_name || 
+                   (language === 'en' ? 'Pet Friend' : 'Tierfreund');
+  
+  // Extract subscription details from the data
+  const subscriptionTier = (data as any).subscription_tier || 'Premium';
+  const subscriptionAmount = (data as any).subscription_amount || '9.90';
+  const subscriptionInterval = (data as any).subscription_interval || 'month';
+  const previousTier = (data as any).previous_tier || null;
+  const upgradeReason = (data as any).upgrade_reason || 'subscription upgrade';
+  
+  // Map tier names to display names
+  const getTierDisplayName = (tier: string) => {
+    const tierMap: { [key: string]: string } = {
+      'plan1': language === 'en' ? '1 Pet Plan' : '1 Tier Plan',
+      'plan2': language === 'en' ? '2 Pets Plan' : '2 Tiere Plan',
+      'plan3': language === 'en' ? '3-4 Pets Plan' : '3-4 Tiere Plan',
+      'plan4': language === 'en' ? '5-8 Pets Plan' : '5-8 Tiere Plan',
+      'plan5': language === 'en' ? 'Unlimited Plan' : 'Unbegrenzt Plan'
+    };
+    return tierMap[tier] || tier;
+  };
+  
+  const content = language === 'en' ? {
+    subject: '🚀 Your TierTrainer24 Subscription Has Been Upgraded!',
+    title: `Congratulations, ${userName}! 🚀`,
+    subtitle: `Your subscription has been upgraded to ${getTierDisplayName(subscriptionTier)}`,
+    description: `Great news! Your TierTrainer24 subscription has been successfully upgraded from ${previousTier ? getTierDisplayName(previousTier) : 'your previous plan'} to ${getTierDisplayName(subscriptionTier)}. You now have access to even more premium features!`,
+    upgradeTitle: '🎉 What\'s New in Your Upgraded Plan:',
+    newFeatures: [
+      'Increased pet profile capacity',
+      'Advanced training analytics',
+      'Priority customer support',
+      'Exclusive training content',
+      'Enhanced AI training recommendations',
+      'Extended training session limits'
+    ],
+    nextStepsTitle: '📋 Make the Most of Your Upgrade:',
+    nextSteps: [
+      'Add more pets to your profiles',
+      'Explore advanced training features',
+      'Try the new analytics dashboard',
+      'Contact support for personalized guidance'
+    ],
+    supportTitle: '💬 Need Help with Your New Features?',
+    supportText: 'Our team is excited to help you make the most of your upgraded subscription. Contact us anytime for personalized assistance!',
+    footerText: `This email was sent to <strong>${data.user.email}</strong>.`,
+    copyright: '© 2024 TierTrainer24 - Your partner for professional pet training'
+  } : {
+    subject: '🚀 Ihr TierTrainer24 Abonnement wurde aufgewertet!',
+    title: `Herzlichen Glückwunsch, ${userName}! 🚀`,
+    subtitle: `Ihr Abonnement wurde auf ${getTierDisplayName(subscriptionTier)} aufgewertet`,
+    description: `Großartige Neuigkeiten! Ihr TierTrainer24-Abonnement wurde erfolgreich von ${previousTier ? getTierDisplayName(previousTier) : 'Ihrem vorherigen Plan'} auf ${getTierDisplayName(subscriptionTier)} aufgewertet. Sie haben jetzt Zugang zu noch mehr Premium-Funktionen!`,
+    upgradeTitle: '🎉 Was ist neu in Ihrem aufgewerteten Plan:',
+    newFeatures: [
+      'Erhöhte Haustierprofil-Kapazität',
+      'Erweiterte Trainingsanalysen',
+      'Prioritäts-Kundensupport',
+      'Exklusive Trainingsinhalte',
+      'Verbesserte KI-Trainingsempfehlungen',
+      'Erweiterte Trainingssession-Limits'
+    ],
+    nextStepsTitle: '📋 Machen Sie das Beste aus Ihrer Aufwertung:',
+    nextSteps: [
+      'Fügen Sie mehr Haustiere zu Ihren Profilen hinzu',
+      'Erkunden Sie erweiterte Trainingsfunktionen',
+      'Testen Sie das neue Analysedashboard',
+      'Kontaktieren Sie den Support für personalisierte Beratung'
+    ],
+    supportTitle: '💬 Brauchen Sie Hilfe mit Ihren neuen Funktionen?',
+    supportText: 'Unser Team freut sich darauf, Ihnen dabei zu helfen, das Beste aus Ihrem aufgewerteten Abonnement herauszuholen. Kontaktieren Sie uns jederzeit für personalisierte Unterstützung!',
+    footerText: `Diese E-Mail wurde an <strong>${data.user.email}</strong> gesendet.`,
+    copyright: '© 2024 TierTrainer24 - Ihr Partner für professionelles Haustiertraining'
+  };
+  
+  return {
+    subject: content.subject,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #2563eb; margin: 0;">🐾 TierTrainer24</h1>
+            <p style="color: #666; margin: 5px 0;">${language === 'en' ? 'Professional Pet Training' : 'Professionelles Haustiertraining'}</p>
+          </div>
+          
+          <div style="background: linear-gradient(135deg, #f59e0b, #d97706); background-color: #f59e0b; color: white; padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+            <h2 style="margin: 0 0 15px 0;">${content.title}</h2>
+            <p style="margin: 0; font-size: 16px;">${content.subtitle}</p>
+          </div>
+          
+          <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 25px 0;">
+            <p style="margin: 0 0 20px 0; font-size: 16px;">
+              ${content.description}
+            </p>
+            
+            <div style="text-align: center; margin: 25px 0;">
+              <a href="${data.email_data.site_url}/mein-tiertraining" 
+                 style="display: inline-block; background: #f59e0b; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                ${language === 'en' ? '🚀 Explore New Features' : '🚀 Neue Funktionen erkunden'}
+              </a>
+            </div>
+          </div>
+          
+          <div style="background: #dbeafe; padding: 20px; border-radius: 8px; margin: 25px 0;">
+            <h3 style="margin: 0 0 15px 0; color: #1e40af;">${content.upgradeTitle}</h3>
+            <ul style="margin: 0; padding-left: 20px; color: #1e40af;">
+              ${content.newFeatures.map(feature => `<li style="margin-bottom: 8px;">${feature}</li>`).join('')}
+            </ul>
+          </div>
+          
+          <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 25px 0;">
+            <h3 style="margin: 0 0 15px 0; color: #92400e;">${content.nextStepsTitle}</h3>
+            <ul style="margin: 0; padding-left: 20px; color: #92400e;">
+              ${content.nextSteps.map(step => `<li style="margin-bottom: 8px;">${step}</li>`).join('')}
+            </ul>
+          </div>
+          
+          <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #0ea5e9;">
+            <h3 style="margin: 0 0 15px 0; color: #0c4a6e;">${content.supportTitle}</h3>
+            <p style="margin: 0; color: #0c4a6e; font-size: 14px;">
+              ${content.supportText}
+            </p>
+          </div>
+          
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 14px;">
+            <p style="margin: 0;">
+              ${content.footerText}
+            </p>
+            <p style="margin: 15px 0 0 0;">
+              ${content.copyright}
+            </p>
+          </div>
+        </body>
+      </html>
+    `
+  };
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -1329,6 +1473,9 @@ serve(async (req) => {
         break;
       case 'subscription_success':
         emailTemplate = generateSubscriptionSuccessEmail(data, userLanguage);
+        break;
+      case 'subscription_upgrade':
+        emailTemplate = generateSubscriptionUpgradeEmail(data, userLanguage);
         break;
       default:
         throw new Error(`Unsupported email action type: ${data.email_data.email_action_type}`);

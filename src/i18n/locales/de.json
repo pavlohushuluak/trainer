@@ -3875,7 +3875,7 @@
     "termsAgreement": "Mit der Registrierung stimmen Sie unseren",
     "alreadyHaveAccountText": "Haben Sie bereits ein Konto?",
     "dontHaveAccountText": "Haben Sie noch kein Konto?",
-      "loginNow": "Jetzt anmelden",
+    "loginNow": "Jetzt anmelden",
       "orContinueWith": "Oder fortfahren mit",
       "verificationCode": {
       "title": "E-Mail bestätigen",
