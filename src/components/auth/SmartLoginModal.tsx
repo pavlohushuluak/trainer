@@ -474,33 +474,6 @@ export const SmartLoginModal = ({
                         </form>
                       </TabsContent>
                     </Tabs>
-
-                    {/* OAuth Login Section */}
-                    <div className="space-y-4 mt-6">
-                      <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                          <Separator className="w-full" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                          <span className="bg-background px-2 text-muted-foreground">
-                            {t('auth.orContinueWith')}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 gap-3">
-                        <OAuthButton 
-                          provider="google" 
-                          source="smartlogin"
-                          onSuccess={(user, isNewUser) => {
-                            console.log('Google OAuth success from SmartLoginModal:', { user: user?.email, isNewUser });
-                            // OAuth success will be handled by the auth callback with source=smartlogin
-                            onLoginSuccess();
-                            onClose();
-                          }}
-                        />
-                      </div>
-                    </div>
                   </div>
                   
                   {/* Error Messages */}
