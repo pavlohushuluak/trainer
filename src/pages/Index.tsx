@@ -30,6 +30,7 @@ const SectionLoader = ({ height = "h-32" }: { height?: string }) => (
 const Index = () => {
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
   const [showVerificationCode, setShowVerificationCode] = useState(false);
+  const [isgoogleProcessingCheckout, setIsGoogleProcessingCheckout] = useState(false);
   const [cancelledUserEmail, setCancelledUserEmail] = useState('');
   const [cancelledUserPassword, setCancelledUserPassword] = useState('');
 
@@ -54,6 +55,17 @@ const Index = () => {
       console.error('Verification failed:', error);
     }
   });
+
+  useEffect(() => {
+    const checkoutFlag = sessionStorage.getItem('checkout_flag') || localStorage.getItem('checkout_flag_backup');
+    if (checkoutFlag === 'true') {
+      setIsGoogleProcessingCheckout(true);
+    }
+    return () => {
+      sessionStorage.removeItem('checkout_flag');
+      localStorage.removeItem('checkout_flag_backup');
+    };
+  }, []);
   
   // Prefetch pet data for logged-in users for faster navigation
   const { pets, isAdmin, hasPrefetchedData } = usePetDataPrefetch();
@@ -69,87 +81,6 @@ const Index = () => {
     skipWelcomeToast: true,
     skipRedirect: true
   });
-
-  // Check for checkout_data in sessionStorage and show professional checkout modal
-  useEffect(() => {
-    const checkForCheckoutData = () => {
-      try {
-        const checkoutData = sessionStorage.getItem('checkout_data');
-        
-        if (checkoutData) {
-          console.log('🏠 Homepage: Found checkout_data in sessionStorage:', checkoutData);
-          
-          // Parse the checkout data
-          const parsedData = JSON.parse(checkoutData);
-          console.log('🏠 Homepage: Parsed checkout_data:', parsedData);
-          
-          // Validate the checkout data structure
-          if (parsedData.priceType && parsedData.timestamp && parsedData.source) {
-            console.log('🏠 Homepage: Valid checkout_data found, showing professional checkout modal');
-            
-            // Set processing state to show the modal
-            setIsProcessingCheckout(true);
-            
-            // Remove the checkout_data from sessionStorage
-            sessionStorage.removeItem('checkout_data');
-            console.log('🏠 Homepage: Removed checkout_data from sessionStorage');
-            
-            // Process the checkout after a short delay to show the modal
-            setTimeout(async () => {
-              try {
-                console.log('🏠 Homepage: Processing checkout with data:', parsedData);
-                
-                // Call create-checkout function
-                const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
-                
-                const { data, error } = await supabase.functions.invoke('create-checkout', {
-                  body: {
-                    priceType: parsedData.priceType,
-                    successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(user?.email || '')}`,
-                    cancelUrl: `${window.location.origin}/`,
-                    language: currentLanguage,
-                    customerInfo: {
-                      name: user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'
-                    }
-                  }
-                });
-
-                if (error) {
-                  console.error('🏠 Homepage: Error creating checkout:', error);
-                  setIsProcessingCheckout(false);
-                  // Redirect to pricing section on error
-                  window.location.href = '/#pricing';
-                } else if (data?.url) {
-                  console.log('🏠 Homepage: Checkout created successfully, redirecting to:', data.url);
-                  // Redirect to Stripe checkout
-                  window.location.href = data.url;
-                } else {
-                  console.error('🏠 Homepage: No checkout URL returned');
-                  setIsProcessingCheckout(false);
-                  window.location.href = '/#pricing';
-                }
-              } catch (error) {
-                console.error('🏠 Homepage: Exception processing checkout:', error);
-                setIsProcessingCheckout(false);
-                window.location.href = '/#pricing';
-              }
-            }, 2000); // Show modal for 2 seconds before processing
-            
-          } else {
-            console.log('🏠 Homepage: Invalid checkout_data structure, removing');
-            sessionStorage.removeItem('checkout_data');
-          }
-        }
-      } catch (error) {
-        console.error('🏠 Homepage: Error processing checkout_data:', error);
-        // Remove corrupted data
-        sessionStorage.removeItem('checkout_data');
-      }
-    };
-
-    // Check immediately on component mount
-    checkForCheckoutData();
-  }, []); // Empty dependency array - only run on mount
 
   // Check for checkout information after authentication or with temporary user data
   useEffect(() => {
@@ -647,6 +578,41 @@ const Index = () => {
 
       {/* Professional Checkout Processing Overlay */}
       {isProcessingCheckout && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md mx-4 text-center">
+            <div className="flex flex-col items-center space-y-4">
+              {/* Professional loading spinner */}
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-600 rounded-full animate-spin border-t-primary"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-8 h-8 bg-primary rounded-full animate-pulse"></div>
+                </div>
+              </div>
+              
+              {/* Professional message */}
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                  Processing Your Request
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  Generating checkout for payment...
+                </p>
+              </div>
+              
+              {/* Professional progress indicator */}
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div className="bg-primary h-2 rounded-full animate-pulse" style={{width: '60%'}}></div>
+              </div>
+              
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Please wait while we prepare your secure checkout
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isgoogleProcessingCheckout && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md mx-4 text-center">
             <div className="flex flex-col items-center space-y-4">

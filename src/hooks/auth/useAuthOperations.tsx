@@ -135,18 +135,25 @@ export const useAuthOperations = () => {
         const signInGoogle = sessionStorage.getItem('sign_in_google');
         const signInGoogleBackup = localStorage.getItem('sign_in_google_backup');
         
+        // Check if this is Google OAuth from SmartLoginModal and include that info
+        const checkoutFlag = sessionStorage.getItem('checkout_flag');
+        const checkoutFlagBackup = localStorage.getItem('checkout_flag_backup');
+        
         // Store additional context information
         localStorage.setItem('oauth_context', JSON.stringify({
           source: source,
           timestamp: Date.now(),
           currentUrl: window.location.href,
           referrer: document.referrer,
-          sign_in_google: signInGoogle || signInGoogleBackup || null
+          sign_in_google: signInGoogle || signInGoogleBackup || null,
+          checkout_flag: checkoutFlag || checkoutFlagBackup || null
         }));
         console.log('🔐 OAuth operations: Stored source in sessionStorage and localStorage:', {
           source,
           signInGoogle,
-          signInGoogleBackup
+          signInGoogleBackup,
+          checkoutFlag,
+          checkoutFlagBackup
         });
       }
       

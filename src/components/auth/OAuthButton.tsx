@@ -42,6 +42,25 @@ export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) =
         });
       }
       
+      // Set checkout_flag if this is Google OAuth from SmartLoginModal
+      if (provider === 'google' && source === 'smartlogin') {
+        sessionStorage.setItem('checkout_flag', 'true');
+        console.log('🔐 OAuth button: Set checkout_flag for SmartLoginModal Google OAuth');
+        
+        // Also store in localStorage as backup
+        localStorage.setItem('checkout_flag_backup', 'true');
+        console.log('🔐 OAuth button: Also stored checkout_flag_backup in localStorage');
+        
+        // Debug: Check what's in sessionStorage before OAuth
+        console.log('🔐 OAuth button: SessionStorage before OAuth:', {
+          checkout_flag: sessionStorage.getItem('checkout_flag'),
+          allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
+            acc[key] = sessionStorage.getItem(key);
+            return acc;
+          }, {} as Record<string, string>)
+        });
+      }
+      
       const { data, error } = await signInWithOAuth(provider, source);
       
       if (error) throw error;
@@ -53,6 +72,18 @@ export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) =
         console.log('🔐 OAuth button: SessionStorage after OAuth call:', {
           sign_in_google: sessionStorage.getItem('sign_in_google'),
           sign_in_google_backup: localStorage.getItem('sign_in_google_backup'),
+          allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
+            acc[key] = sessionStorage.getItem(key);
+            return acc;
+          }, {} as Record<string, string>)
+        });
+      }
+      
+      // Debug: Check if checkout_flag is still there after OAuth call
+      if (provider === 'google' && source === 'smartlogin') {
+        console.log('🔐 OAuth button: SessionStorage after OAuth call:', {
+          checkout_flag: sessionStorage.getItem('checkout_flag'),
+          checkout_flag_backup: localStorage.getItem('checkout_flag_backup'),
           allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
             acc[key] = sessionStorage.getItem(key);
             return acc;

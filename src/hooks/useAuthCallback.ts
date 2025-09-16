@@ -183,6 +183,8 @@ export const useAuthCallback = () => {
             // Clear the pending data before redirecting
             sessionStorage.removeItem('pendingPriceType');
             sessionStorage.removeItem('pendingLoginContext');
+            sessionStorage.removeItem('checkout_flag');
+            localStorage.removeItem('checkout_flag_backup');
             window.location.href = data.url;
           } else {
             console.error('🔐 OAuth callback: No checkout URL returned');
@@ -210,23 +212,34 @@ export const useAuthCallback = () => {
     
     // Also check OAuth context for the flag
     let signInGoogleContext = null;
+    let checkoutFlagContext = null;
     try {
       const contextData = localStorage.getItem('oauth_context');
       if (contextData) {
         const context = JSON.parse(contextData);
         signInGoogleContext = context.sign_in_google;
+        checkoutFlagContext = context.checkout_flag;
       }
     } catch (error) {
       console.log('🔐 OAuth callback: Error parsing OAuth context:', error);
     }
     
     const signInGoogle = signInGoogleSession || signInGoogleLocal || signInGoogleContext;
+    const checkoutFlag = sessionStorage.getItem('checkout_flag') || localStorage.getItem('checkout_flag_backup') || checkoutFlagContext;
     
-    console.log('🔐 OAuth callback: sign_in_google flag check:', {
-      sessionStorage: signInGoogleSession,
-      localStorage: signInGoogleLocal,
-      oauthContext: signInGoogleContext,
-      finalValue: signInGoogle,
+    console.log('🔐 OAuth callback: flag check:', {
+      signInGoogle: {
+        sessionStorage: signInGoogleSession,
+        localStorage: signInGoogleLocal,
+        oauthContext: signInGoogleContext,
+        finalValue: signInGoogle
+      },
+      checkoutFlag: {
+        sessionStorage: sessionStorage.getItem('checkout_flag'),
+        localStorage: localStorage.getItem('checkout_flag_backup'),
+        oauthContext: checkoutFlagContext,
+        finalValue: checkoutFlag
+      },
       allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
         acc[key] = sessionStorage.getItem(key);
         return acc;
