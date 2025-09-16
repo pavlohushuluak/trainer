@@ -136,8 +136,39 @@ export const useAuthCallback = () => {
     console.log('🔐 OAuth callback: OAuth from LoginPage, checking admin status for user:', userId);
     
     // Check if this was a Google signin from login page
-    const signInGoogle = sessionStorage.getItem('sign_in_google');
-    console.log('🔐 OAuth callback: sign_in_google flag:', signInGoogle);
+    const signInGoogleSession = sessionStorage.getItem('sign_in_google');
+    const signInGoogleLocal = localStorage.getItem('sign_in_google_backup');
+    
+    // Also check OAuth context for the flag
+    let signInGoogleContext = null;
+    try {
+      const contextData = localStorage.getItem('oauth_context');
+      if (contextData) {
+        const context = JSON.parse(contextData);
+        signInGoogleContext = context.sign_in_google;
+      }
+    } catch (error) {
+      console.log('🔐 OAuth callback: Error parsing OAuth context:', error);
+    }
+    
+    const signInGoogle = signInGoogleSession || signInGoogleLocal || signInGoogleContext;
+    
+    console.log('🔐 OAuth callback: sign_in_google flag check:', {
+      sessionStorage: signInGoogleSession,
+      localStorage: signInGoogleLocal,
+      oauthContext: signInGoogleContext,
+      finalValue: signInGoogle,
+      allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
+        acc[key] = sessionStorage.getItem(key);
+        return acc;
+      }, {} as Record<string, string>),
+      allLocalStorage: Object.keys(localStorage).reduce((acc, key) => {
+        if (key.includes('sign_in_google') || key.includes('oauth')) {
+          acc[key] = localStorage.getItem(key);
+        }
+        return acc;
+      }, {} as Record<string, string>)
+    });
     
     // If userId is 'oauth-no-session', skip admin check and use default redirect
     if (userId === 'oauth-no-session') {
@@ -158,8 +189,9 @@ export const useAuthCallback = () => {
         // For normal users, check if they signed in with Google from login page
         if (signInGoogle === 'true') {
           console.log('🔐 OAuth callback: Normal user with Google signin from login page, redirecting to mein-tiertraining');
-          // Remove the flag after using it
+          // Remove both flags after using them
           sessionStorage.removeItem('sign_in_google');
+          localStorage.removeItem('sign_in_google_backup');
           window.location.href = '/mein-tiertraining';
         } else {
           console.log('🔐 OAuth callback: Normal user without Google signin flag, redirecting to homepage');

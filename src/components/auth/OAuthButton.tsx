@@ -27,6 +27,19 @@ export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) =
       if (provider === 'google' && source === 'loginpage') {
         sessionStorage.setItem('sign_in_google', 'true');
         console.log('🔐 OAuth button: Set sign_in_google flag for login page Google OAuth');
+        
+        // Also store in localStorage as backup
+        localStorage.setItem('sign_in_google_backup', 'true');
+        console.log('🔐 OAuth button: Also stored sign_in_google_backup in localStorage');
+        
+        // Debug: Check what's in sessionStorage before OAuth
+        console.log('🔐 OAuth button: SessionStorage before OAuth:', {
+          sign_in_google: sessionStorage.getItem('sign_in_google'),
+          allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
+            acc[key] = sessionStorage.getItem(key);
+            return acc;
+          }, {} as Record<string, string>)
+        });
       }
       
       const { data, error } = await signInWithOAuth(provider, source);
@@ -34,6 +47,18 @@ export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) =
       if (error) throw error;
       
       console.log('🔐 OAuth button: OAuth sign-in initiated successfully');
+      
+      // Debug: Check if flag is still there after OAuth call
+      if (provider === 'google' && source === 'loginpage') {
+        console.log('🔐 OAuth button: SessionStorage after OAuth call:', {
+          sign_in_google: sessionStorage.getItem('sign_in_google'),
+          sign_in_google_backup: localStorage.getItem('sign_in_google_backup'),
+          allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
+            acc[key] = sessionStorage.getItem(key);
+            return acc;
+          }, {} as Record<string, string>)
+        });
+      }
       
       toast({
         title: t('auth.oauth.preparing'),

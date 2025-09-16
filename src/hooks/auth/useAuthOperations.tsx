@@ -130,14 +130,24 @@ export const useAuthOperations = () => {
         sessionStorage.setItem('oauth_source', source);
         // Also store in localStorage as a more persistent backup
         localStorage.setItem('oauth_source_backup', source);
+        
+        // Check if this is Google OAuth from login page and include that info
+        const signInGoogle = sessionStorage.getItem('sign_in_google');
+        const signInGoogleBackup = localStorage.getItem('sign_in_google_backup');
+        
         // Store additional context information
         localStorage.setItem('oauth_context', JSON.stringify({
           source: source,
           timestamp: Date.now(),
           currentUrl: window.location.href,
-          referrer: document.referrer
+          referrer: document.referrer,
+          sign_in_google: signInGoogle || signInGoogleBackup || null
         }));
-        console.log('🔐 OAuth operations: Stored source in sessionStorage and localStorage:', source);
+        console.log('🔐 OAuth operations: Stored source in sessionStorage and localStorage:', {
+          source,
+          signInGoogle,
+          signInGoogleBackup
+        });
       }
       
       const result = await supabase.auth.signInWithOAuth({
