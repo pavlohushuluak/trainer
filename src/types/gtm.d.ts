@@ -23,7 +23,7 @@ export interface GTMCustomEvent extends GTMEvent {
 }
 
 export interface GTMEcommerceEvent extends GTMEvent {
-  event: 'purchase' | 'add_to_cart' | 'begin_checkout' | 'view_item';
+  event: 'purchase' | 'add_to_cart' | 'begin_checkout' | 'view_item' | 'subscription_upgrade';
   transaction_id?: string;
   value?: number;
   currency?: string;
@@ -34,12 +34,40 @@ export interface GTMEcommerceEvent extends GTMEvent {
     quantity: number;
     price: number;
   }>;
+  custom_parameter?: {
+    plan_type?: string;
+    plan_id?: string;
+    from_plan?: string;
+    to_plan?: string;
+    upgrade_amount?: number;
+    payment_method?: string;
+    timestamp?: string;
+  };
 }
 
 export interface GTMAuthEvent extends GTMEvent {
   event: 'sign_up' | 'login' | 'logout';
   method?: string;
   user_id?: string;
+  custom_parameter?: {
+    login_method?: string;
+    timestamp?: string;
+  };
+}
+
+export interface GTMEngagementEvent extends GTMEvent {
+  event: 'chat_start' | 'chat_message' | 'feature_usage';
+  event_category: 'engagement';
+  event_label?: string;
+  custom_parameter?: {
+    chat_type?: string;
+    pet_type?: string;
+    message_type?: 'user' | 'assistant';
+    message_length?: number;
+    feature_name?: string;
+    feature_category?: string;
+    timestamp?: string;
+  };
 }
 
 // GTM DataLayer Interface

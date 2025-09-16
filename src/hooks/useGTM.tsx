@@ -41,21 +41,43 @@ export const useGTM = () => {
   };
 
   // Specific tracking functions with proper types
-  const trackChatStart = () => {
+  const trackChatStart = (chatType?: string, petType?: string) => {
     trackEvent({
-      event: 'start_chat',
+      event: 'chat_start',
       event_category: 'engagement',
-      event_label: 'chat_started'
+      event_label: chatType || 'general_chat',
+      custom_parameter: {
+        chat_type: chatType || 'general',
+        pet_type: petType || 'unknown',
+        timestamp: new Date().toISOString()
+      }
     });
   };
 
-  const trackPaymentSuccess = (amount: number, transactionId?: string) => {
+  const trackPaymentSuccess = (
+    amount: number, 
+    transactionId: string, 
+    items: Array<{
+      item_id: string;
+      item_name: string;
+      category: string;
+      quantity: number;
+      price: number;
+    }>,
+    planType?: string
+  ) => {
     trackEvent({
       event: 'purchase',
+      transaction_id: transactionId,
       value: amount,
       currency: 'EUR',
-      transaction_id: transactionId,
-      event_category: 'ecommerce'
+      items: items,
+      event_category: 'ecommerce',
+      custom_parameter: {
+        plan_type: planType || 'subscription',
+        payment_method: 'stripe',
+        timestamp: new Date().toISOString()
+      }
     });
   };
 
@@ -67,13 +89,82 @@ export const useGTM = () => {
     });
   };
 
-  const trackAddToCart = (amount: number, planType?: string) => {
+  const trackAddToCart = (
+    amount: number, 
+    planType: string,
+    planId: string,
+    planName: string
+  ) => {
     trackEvent({
       event: 'add_to_cart',
       value: amount,
       currency: 'EUR',
+      items: [{
+        item_id: planId,
+        item_name: planName,
+        category: 'subscription_plan',
+        quantity: 1,
+        price: amount
+      }],
       event_category: 'ecommerce',
-      event_label: planType || 'subscription_plan'
+      event_label: planType,
+      custom_parameter: {
+        plan_type: planType,
+        plan_id: planId,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackBeginCheckout = (
+    amount: number,
+    planType: string,
+    planId: string,
+    planName: string
+  ) => {
+    trackEvent({
+      event: 'begin_checkout',
+      value: amount,
+      currency: 'EUR',
+      items: [{
+        item_id: planId,
+        item_name: planName,
+        category: 'subscription_plan',
+        quantity: 1,
+        price: amount
+      }],
+      event_category: 'ecommerce',
+      custom_parameter: {
+        plan_type: planType,
+        plan_id: planId,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackViewItem = (
+    planId: string,
+    planName: string,
+    planType: string,
+    price: number
+  ) => {
+    trackEvent({
+      event: 'view_item',
+      value: price,
+      currency: 'EUR',
+      items: [{
+        item_id: planId,
+        item_name: planName,
+        category: 'subscription_plan',
+        quantity: 1,
+        price: price
+      }],
+      event_category: 'ecommerce',
+      custom_parameter: {
+        plan_type: planType,
+        plan_id: planId,
+        timestamp: new Date().toISOString()
+      }
     });
   };
 
@@ -90,17 +181,67 @@ export const useGTM = () => {
     trackEvent({
       event: 'login',
       method: method || 'email',
-      event_category: 'auth'
+      event_category: 'auth',
+      custom_parameter: {
+        login_method: method || 'email',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackChatMessage = (messageType: 'user' | 'assistant', messageLength?: number) => {
+    trackEvent({
+      event: 'chat_message',
+      event_category: 'engagement',
+      event_label: messageType,
+      custom_parameter: {
+        message_type: messageType,
+        message_length: messageLength || 0,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackSubscriptionUpgrade = (fromPlan: string, toPlan: string, amount: number) => {
+    trackEvent({
+      event: 'subscription_upgrade',
+      event_category: 'ecommerce',
+      value: amount,
+      currency: 'EUR',
+      custom_parameter: {
+        from_plan: fromPlan,
+        to_plan: toPlan,
+        upgrade_amount: amount,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackFeatureUsage = (featureName: string, featureCategory: string) => {
+    trackEvent({
+      event: 'feature_usage',
+      event_category: 'engagement',
+      event_label: featureName,
+      custom_parameter: {
+        feature_name: featureName,
+        feature_category: featureCategory,
+        timestamp: new Date().toISOString()
+      }
     });
   };
 
   return {
     trackEvent,
     trackChatStart,
+    trackChatMessage,
     trackPaymentSuccess,
     trackSignUp,
     trackAddToCart,
+    trackBeginCheckout,
+    trackViewItem,
     trackPageView,
     trackLogin,
+    trackSubscriptionUpgrade,
+    trackFeatureUsage,
   };
 };
