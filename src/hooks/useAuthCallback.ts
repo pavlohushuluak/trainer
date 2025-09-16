@@ -124,12 +124,68 @@ export const useAuthCallback = () => {
       localStorage.removeItem('oauth_context');
     }
 
-    // If OAuth came from SmartLoginModal, always redirect to homepage
+    // If OAuth came from SmartLoginModal, check for pending checkout data
     if (oauthSource === 'smartlogin') {
-      console.log('🔐 OAuth callback: OAuth from SmartLoginModal, redirecting to homepage');
-      // Use window.location.href for more reliable redirect after OAuth
-      window.location.href = '/';
-      return;
+      console.log('🔐 OAuth callback: OAuth from SmartLoginModal, checking for pending checkout data');
+      
+      // Check for pending checkout data from SmartLoginModal
+      const pendingPriceType = sessionStorage.getItem('pendingPriceType');
+      const pendingLoginContext = sessionStorage.getItem('pendingLoginContext');
+      
+      console.log('🔐 OAuth callback: SmartLoginModal checkout data:', {
+        pendingPriceType,
+        pendingLoginContext,
+        allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
+          acc[key] = sessionStorage.getItem(key);
+          return acc;
+        }, {} as Record<string, string>)
+      });
+      
+      // If there's pending checkout data, redirect directly to checkout
+      if (pendingPriceType && pendingLoginContext === 'checkout') {
+        console.log('🔐 OAuth callback: Found pending checkout data, redirecting directly to checkout');
+        
+        // Call create-checkout directly from here
+        try {
+          const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
+          
+          const { data, error } = await supabase.functions.invoke('create-checkout', {
+            body: {
+              priceType: pendingPriceType,
+              successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userId)}`,
+              cancelUrl: `${window.location.origin}/`,
+              language: currentLanguage,
+              customerInfo: {
+                name: userId?.split('@')[0] || 'User'
+              }
+            }
+          });
+
+          if (error) {
+            console.error('🔐 OAuth callback: Error creating checkout:', error);
+            // Fallback to homepage on error
+            window.location.href = '/';
+          } else if (data?.url) {
+            console.log('🔐 OAuth callback: Checkout created successfully, redirecting to:', data.url);
+            // Clear the pending data before redirecting
+            sessionStorage.removeItem('pendingPriceType');
+            sessionStorage.removeItem('pendingLoginContext');
+            window.location.href = data.url;
+          } else {
+            console.error('🔐 OAuth callback: No checkout URL returned');
+            window.location.href = '/';
+          }
+        } catch (error) {
+          console.error('🔐 OAuth callback: Exception creating checkout:', error);
+          window.location.href = '/';
+        }
+        return;
+      } else {
+        console.log('🔐 OAuth callback: No pending checkout data, redirecting to homepage');
+        // Use window.location.href for more reliable redirect after OAuth
+        window.location.href = '/';
+        return;
+      }
     }
 
     // For OAuth from LoginPage or other sources, use role-based redirect
