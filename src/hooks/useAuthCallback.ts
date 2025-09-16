@@ -122,10 +122,6 @@ export const useAuthCallback = () => {
       sessionStorage.removeItem('oauth_source');
       localStorage.removeItem('oauth_source_backup');
       localStorage.removeItem('oauth_context');
-      
-      // Clean up google_signin_checkout flag if it exists
-      sessionStorage.removeItem('google_signin_checkout');
-      localStorage.removeItem('google_signin_checkout_backup');
     }
 
     // If OAuth came from SmartLoginModal, check for pending checkout data
@@ -202,78 +198,6 @@ export const useAuthCallback = () => {
         // Use window.location.href for more reliable redirect after OAuth
         window.location.href = '/';
         return;
-      }
-    }
-
-    // Check for checkout_data in sessionStorage for any OAuth source
-    const checkoutData = sessionStorage.getItem('checkout_data');
-    if (checkoutData) {
-      console.log('🔐 OAuth callback: Found checkout_data in sessionStorage, parsing and redirecting to checkout');
-      
-      try {
-        const parsedCheckoutData = JSON.parse(checkoutData);
-        console.log('🔐 OAuth callback: Parsed checkout_data:', parsedCheckoutData);
-        
-        // Validate the checkout data structure
-        if (parsedCheckoutData.priceType && parsedCheckoutData.timestamp && parsedCheckoutData.source) {
-          console.log('🔐 OAuth callback: Valid checkout_data found, redirecting directly to checkout');
-          
-          // Check if we have a valid user ID
-          if (!userId || userId === 'oauth-no-session') {
-            console.log('🔐 OAuth callback: No valid user ID for checkout_data, redirecting to homepage');
-            window.location.href = '/';
-            return;
-          }
-          
-          // Call create-checkout directly from here
-          try {
-            const currentLanguage = localStorage.getItem('i18nextLng') || 'de';
-            
-            console.log('🔐 OAuth callback: Creating checkout with checkout_data:', {
-              priceType: parsedCheckoutData.priceType,
-              userId,
-              currentLanguage,
-              source: parsedCheckoutData.source
-            });
-            
-            const { data, error } = await supabase.functions.invoke('create-checkout', {
-              body: {
-                priceType: parsedCheckoutData.priceType,
-                successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(userId)}`,
-                cancelUrl: `${window.location.origin}/`,
-                language: currentLanguage,
-                customerInfo: {
-                  name: (userId && userId !== 'oauth-no-session') ? userId.split('@')[0] : 'User'
-                }
-              }
-            });
-
-            if (error) {
-              console.error('🔐 OAuth callback: Error creating checkout from checkout_data:', error);
-              // Fallback to homepage on error
-              window.location.href = '/';
-            } else if (data?.url) {
-              console.log('🔐 OAuth callback: Checkout created successfully from checkout_data, redirecting to:', data.url);
-              // Clear the checkout_data before redirecting
-              sessionStorage.removeItem('checkout_data');
-              window.location.href = data.url;
-            } else {
-              console.error('🔐 OAuth callback: No checkout URL returned from checkout_data');
-              window.location.href = '/';
-            }
-          } catch (error) {
-            console.error('🔐 OAuth callback: Exception creating checkout from checkout_data:', error);
-            window.location.href = '/';
-          }
-          return;
-        } else {
-          console.log('🔐 OAuth callback: Invalid checkout_data structure, removing and continuing with normal flow');
-          sessionStorage.removeItem('checkout_data');
-        }
-      } catch (error) {
-        console.error('🔐 OAuth callback: Error parsing checkout_data:', error);
-        // Remove corrupted data
-        sessionStorage.removeItem('checkout_data');
       }
     }
 

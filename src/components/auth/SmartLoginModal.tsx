@@ -274,7 +274,6 @@ export const SmartLoginModal = ({
                     
                     <OAuthButton 
                       provider="google"
-                      source="smartlogin"
                       onSuccess={(user, isNewUser) => {
                         setError('');
                         setMessage('');
