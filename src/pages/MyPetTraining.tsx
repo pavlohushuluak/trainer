@@ -374,17 +374,39 @@ const MyPetTraining = () => {
     }
   }, [location.search, user, refetchSubscription, fetchPets, navigate]);
 
-  // Check for pricing_click_data in sessionStorage and call create-checkout directly
+  // Check for pricing_click_data and SmartLoginModal data in sessionStorage and call create-checkout directly
   useEffect(() => {
     const checkPricingClickData = async () => {
       try {
+        // Check for both pricing_click_data (direct) and pendingPriceType (SmartLoginModal)
         const pricingClickData = sessionStorage.getItem('pricing_click_data');
+        const pendingPriceType = sessionStorage.getItem('pendingPriceType');
+        const pendingLoginContext = sessionStorage.getItem('pendingLoginContext');
+        
+        let priceType = null;
+        let dataSource = null;
+        
         if (pricingClickData && user && session) {
+          // Direct pricing click data
           const parsedData = JSON.parse(pricingClickData);
+          priceType = parsedData.priceType;
+          dataSource = 'pricing_click_data';
           console.log('Found pricing_click_data with logged in user on mein-tiertraining, calling create-checkout directly:', parsedData);
           
           // Remove the data from sessionStorage immediately
           sessionStorage.removeItem('pricing_click_data');
+        } else if (pendingPriceType && pendingLoginContext === 'checkout' && user && session) {
+          // SmartLoginModal data
+          priceType = pendingPriceType;
+          dataSource = 'pendingPriceType';
+          console.log('Found pendingPriceType with logged in user on mein-tiertraining, calling create-checkout directly:', { priceType, context: pendingLoginContext });
+          
+          // Remove the data from sessionStorage immediately
+          sessionStorage.removeItem('pendingPriceType');
+          sessionStorage.removeItem('pendingLoginContext');
+        }
+        
+        if (priceType && user && session) {
           setIsProcessingCheckout(false);
           
           // Call create-checkout directly
@@ -392,7 +414,7 @@ const MyPetTraining = () => {
           
           const { data, error } = await supabase.functions.invoke('create-checkout', {
             body: {
-              priceType: parsedData.priceType,
+              priceType: priceType,
               successUrl: `${window.location.origin}/mein-tiertraining?success=true&session_id={CHECKOUT_SESSION_ID}&user_email=${encodeURIComponent(user?.email || '')}`,
               cancelUrl: `${window.location.origin}/mein-tiertraining`,
               language: currentLanguage,
@@ -414,19 +436,23 @@ const MyPetTraining = () => {
             console.error('No checkout URL returned');
             window.location.href = '/#pricing';
           }
-        } else if (pricingClickData) {
-          console.log('Found pricing_click_data on mein-tiertraining, but user is not logged in - removing data');
-          // Remove pricing_click_data when user is not logged in
-          sessionStorage.removeItem('pricing_click_data');
+        } else if (pricingClickData || pendingPriceType) {
+          console.log('Found checkout data on mein-tiertraining, but user is not logged in - removing data');
+          // Remove data when user is not logged in
+          if (pricingClickData) sessionStorage.removeItem('pricing_click_data');
+          if (pendingPriceType) sessionStorage.removeItem('pendingPriceType');
+          if (pendingLoginContext) sessionStorage.removeItem('pendingLoginContext');
           setIsProcessingCheckout(false);
         } else {
           setIsProcessingCheckout(false);
         }
       } catch (error) {
-        console.error('Error checking pricing_click_data:', error);
+        console.error('Error checking pricing data:', error);
         setIsProcessingCheckout(false);
         // Remove corrupted data
         sessionStorage.removeItem('pricing_click_data');
+        sessionStorage.removeItem('pendingPriceType');
+        sessionStorage.removeItem('pendingLoginContext');
       }
     };
 
