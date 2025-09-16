@@ -37,7 +37,7 @@ export const useAuthCallback = () => {
     }
   };
 
-  // SIMPLIFIED: Always redirect to homepage for OAuth users
+  // Enhanced: Redirect based on user role for OAuth users
   const redirectUserBasedOnRole = async (userId: string, successMessage?: string) => {
     
     console.log('🔐 OAuth callback: redirectUserBasedOnRole called for user:', userId);
@@ -75,11 +75,28 @@ export const useAuthCallback = () => {
       return;
     }
 
-    // Always redirect to homepage for OAuth users
-    console.log('🔐 OAuth callback: Redirecting to homepage');
+    // Check if user is admin and redirect accordingly
+    console.log('🔐 OAuth callback: Checking admin status for user:', userId);
     
-    // Use window.location.href for more reliable redirect after OAuth
-    window.location.href = '/';
+    try {
+      const isAdmin = await checkAdminStatus(userId);
+      console.log('🔐 OAuth callback: Admin check result:', isAdmin);
+      
+      if (isAdmin) {
+        console.log('🔐 OAuth callback: User is admin, redirecting to admin page');
+        // Use window.location.href for more reliable redirect after OAuth
+        window.location.href = '/admin/users';
+      } else {
+        console.log('🔐 OAuth callback: User is regular user, redirecting to mein-tiertraining');
+        // Use window.location.href for more reliable redirect after OAuth
+        window.location.href = '/mein-tiertraining';
+      }
+    } catch (error) {
+      console.error('🔐 OAuth callback: Error checking admin status:', error);
+      // Fallback to mein-tiertraining if admin check fails
+      console.log('🔐 OAuth callback: Admin check failed, redirecting to mein-tiertraining as fallback');
+      window.location.href = '/mein-tiertraining';
+    }
   };
 
   const handleAuthCallback = async () => {

@@ -3873,8 +3873,9 @@
     "termsAgreement": "By signing up, you agree to our",
     "alreadyHaveAccountText": "Already have an account?",
     "dontHaveAccountText": "Don't have an account?",
-    "loginNow": "Login now",
-    "verificationCode": {
+      "loginNow": "Login now",
+      "orContinueWith": "Or continue with",
+      "verificationCode": {
       "title": "Verify Your Email",
       "description": "We sent a 6-digit verification code to",
       "success": "Email verified successfully! You are now logged in.",
