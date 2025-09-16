@@ -232,7 +232,8 @@ const Index = () => {
       const { checkoutInfo, tempUserData } = event.detail;
       console.log('Received checkout request event:', { checkoutInfo, tempUserData });
       
-      if (checkoutInfo && tempUserData && !user && !session) {
+      // CRITICAL FIX: Handle checkout for both logged-in and non-logged-in users
+      if (checkoutInfo && tempUserData) {
         console.log('Processing checkout from SmartLoginModal event');
         
         try {
