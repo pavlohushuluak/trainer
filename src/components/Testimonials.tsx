@@ -262,9 +262,9 @@ export const Testimonials = () => {
 
   return (
     <section id="testimonials" className="pt-6 md:pt-10 lg:pt-16 pb-4">
-      <div className="container mx-auto px-0">
+      <div className="mx-auto px-0">
         <div className="text-center mb-6 sm:mb-8 md:mb-12">
-          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6 md:mb-8 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent px-2">
+          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground pb-4 sm:pb-6 md:pb-8 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent px-2">
             {t('testimonials.title')}
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4 sm:px-6 leading-relaxed">
@@ -343,7 +343,7 @@ export const Testimonials = () => {
           </Button>
 
           {/* Main 3D Carousel */}
-          <div className="relative overflow-hidden pb-20 pt-8">
+          <div className="relative overflow-hidden pb-20 pt-8 w-full">
             <div className="relative h-[450px] md:h-[400px] lg:h-[420px]">
               {testimonials.map((testimonial, index) => {
                 const screenSize = isMobile ? 'mobile' : window.innerWidth >= 1280 ? 'desktop' : 'tablet';
