@@ -46,6 +46,11 @@ serve(async (req) => {
     }
 
     logStep("Processing auto-login request", { userEmail, sessionId });
+    logStep("Request details", { 
+      method: req.method,
+      headers: Object.fromEntries(req.headers.entries()),
+      url: req.url
+    });
 
     // CRITICAL FIX: Verify payment success directly with Stripe using session ID
     // This is more reliable than checking subscription data which might not be processed yet
@@ -76,14 +81,26 @@ serve(async (req) => {
     
     try {
       // Verify the checkout session with Stripe
+      logStep("Retrieving Stripe session", { sessionId });
       const session = await stripe.checkout.sessions.retrieve(sessionId);
+      
+      logStep("Stripe session retrieved", { 
+        sessionId,
+        sessionExists: !!session,
+        paymentStatus: session?.payment_status,
+        sessionStatus: session?.status,
+        customerEmail: session?.customer_details?.email,
+        amountTotal: session?.amount_total,
+        currency: session?.currency
+      });
       
       if (!session || session.payment_status !== 'paid') {
         logStep("Payment not successful according to Stripe", { 
           userEmail, 
           sessionId,
           paymentStatus: session?.payment_status,
-          sessionStatus: session?.status
+          sessionStatus: session?.status,
+          sessionExists: !!session
         });
         return new Response(
           JSON.stringify({ 
@@ -110,7 +127,8 @@ serve(async (req) => {
       logStep("Error verifying payment with Stripe", { 
         userEmail, 
         sessionId,
-        error: stripeError.message 
+        error: stripeError.message,
+        errorStack: stripeError.stack
       });
       return new Response(
         JSON.stringify({ 

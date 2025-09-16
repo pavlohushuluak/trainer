@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { usePetProfiles } from '@/hooks/usePetProfiles';
@@ -223,6 +223,24 @@ const MyPetTraining = () => {
   }, []);
 
   // Handle checkout success and refresh subscription data
+  // CRITICAL FIX: Move handlePaymentSuccess outside useEffect to make it accessible
+  const handlePaymentSuccess = useCallback((sessionId: string, paymentType: string | null, isGuest: boolean) => {
+    console.log('🎉 Processing payment success:', { sessionId, paymentType, isGuest });
+    
+    // Show success message
+    toast({
+      title: "Payment Successful!",
+      description: "Your subscription has been activated successfully.",
+      duration: 5000,
+    });
+    
+    // Refresh subscription data
+    refetchSubscription();
+    
+    // Clear URL parameters
+    window.history.replaceState({}, document.title, '/mein-tiertraining');
+  }, [toast, refetchSubscription]);
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const isCheckoutSuccess = searchParams.get('success') === 'true';
@@ -230,23 +248,6 @@ const MyPetTraining = () => {
     const paymentType = searchParams.get('payment');
     const isGuest = searchParams.get('guest') === 'true';
     const userEmail = searchParams.get('user_email');
-
-    const handlePaymentSuccess = (sessionId: string, paymentType: string | null, isGuest: boolean) => {
-      console.log('🎉 Processing payment success:', { sessionId, paymentType, isGuest });
-      
-      // Show success message
-      toast({
-        title: "Payment Successful!",
-        description: "Your subscription has been activated successfully.",
-        duration: 5000,
-      });
-      
-      // Refresh subscription data
-      refetchSubscription();
-      
-      // Clear URL parameters
-      window.history.replaceState({}, document.title, '/mein-tiertraining');
-    };
     
     const autoLoginUser = async (email: string, sessionId: string, retryCount = 0) => {
       try {
@@ -258,7 +259,17 @@ const MyPetTraining = () => {
           timestamp: new Date().toISOString()
         });
         
+        console.log('🔍 About to call auto-login-after-payment function...');
+        
         // Call the auto-login function to create a session
+        console.log('🔍 Calling supabase.functions.invoke with:', {
+          functionName: 'auto-login-after-payment',
+          body: {
+            userEmail: email,
+            sessionId: sessionId
+          }
+        });
+        
         const { data, error } = await supabase.functions.invoke('auto-login-after-payment', {
           body: {
             userEmail: email,
@@ -270,7 +281,9 @@ const MyPetTraining = () => {
           data: data,
           error: error,
           hasData: !!data,
-          hasError: !!error
+          hasError: !!error,
+          dataType: typeof data,
+          errorType: typeof error
         });
 
         if (error) {
@@ -279,7 +292,9 @@ const MyPetTraining = () => {
             message: error.message,
             details: error.details,
             hint: error.hint,
-            code: error.code
+            code: error.code,
+            status: error.status,
+            statusText: error.statusText
           });
           
           // If it's a retryable error and we haven't retried too much, try again
@@ -295,6 +310,7 @@ const MyPetTraining = () => {
           // CRITICAL FIX: Don't redirect to login immediately - try to handle the error better
           console.error('❌ Auto-login failed after retries, but payment was successful');
           console.error('❌ This should not happen - user should be auto-logged in after payment');
+          console.error('❌ Full error object:', error);
           
           // Show error toast but don't redirect to login
           toast({
@@ -309,7 +325,8 @@ const MyPetTraining = () => {
             email: email,
             sessionId: sessionId,
             timestamp: Date.now(),
-            error: error.message
+            error: error.message,
+            fullError: error
           }));
           
           return;
@@ -352,7 +369,18 @@ const MyPetTraining = () => {
             
             console.log('✅ Session set successfully, proceeding with success handling');
             // Proceed with normal success handling
-            handlePaymentSuccess(sessionId, paymentType, isGuest);
+            if (handlePaymentSuccess) {
+              handlePaymentSuccess(sessionId, paymentType, isGuest);
+            } else {
+              console.error('❌ handlePaymentSuccess function not available');
+              // Fallback: show success message and refresh
+              toast({
+                title: "Payment Successful!",
+                description: "Your subscription has been activated successfully.",
+                duration: 5000,
+              });
+              refetchSubscription();
+            }
           } else {
             console.log('⚠️ No action_link or session data returned, redirecting to login');
             navigate('/login?message=payment_success_login_required');
@@ -378,6 +406,16 @@ const MyPetTraining = () => {
         decodedUserEmail: userEmail ? decodeURIComponent(userEmail) : null
       });
       
+      console.log('🔍 User state analysis:', {
+        'user object': user,
+        'user exists': !!user,
+        'user email': user?.email,
+        'user id': user?.id,
+        'session exists': !!session,
+        'session user': session?.user,
+        'auth loading': loading
+      });
+      
       // CRITICAL FIX: Enhanced auto-login logic for SmartLoginModal workflow
       const decodedUserEmail = userEmail ? decodeURIComponent(userEmail) : null;
       const needsUserSwitch = decodedUserEmail && user && user.email !== decodedUserEmail;
@@ -391,8 +429,31 @@ const MyPetTraining = () => {
         hasUser: !!user,
         hasUserEmail: !!decodedUserEmail,
         currentUserEmail: user?.email,
-        paymentUserEmail: decodedUserEmail
+        paymentUserEmail: decodedUserEmail,
+        rawUserEmail: userEmail,
+        decodedUserEmail: decodedUserEmail
       });
+      
+      console.log('🔍 Detailed analysis:', {
+        'user exists': !!user,
+        'user email': user?.email,
+        'payment user email': decodedUserEmail,
+        'emails match': user?.email === decodedUserEmail,
+        'needs auto-login': needsAutoLogin,
+        'needs user switch': needsUserSwitch,
+        'user matches': userMatches
+      });
+      
+      // CRITICAL DEBUG: Check if user is already logged in but logic is wrong
+      if (user && decodedUserEmail) {
+        console.log('🔍 User comparison:', {
+          'user.email': user.email,
+          'decodedUserEmail': decodedUserEmail,
+          'exact match': user.email === decodedUserEmail,
+          'lowercase match': user.email?.toLowerCase() === decodedUserEmail?.toLowerCase(),
+          'trimmed match': user.email?.trim() === decodedUserEmail?.trim()
+        });
+      }
       
       if (needsUserSwitch) {
         console.log('🔄 Current user does not match payment user, switching users:', {
@@ -413,12 +474,48 @@ const MyPetTraining = () => {
         
       } else if (needsAutoLogin) {
         console.log('🔄 Attempting auto-login for user after payment success:', decodedUserEmail);
-        setIsAutoLoggingIn(true);
-        autoLoginUser(decodedUserEmail, sessionId);
+        console.log('🔄 Auto-login parameters:', {
+          email: decodedUserEmail,
+          sessionId: sessionId,
+          timestamp: new Date().toISOString()
+        });
+        
+        // CRITICAL FIX: Store payment success data and redirect to login with special message
+        console.log('🔄 Storing payment success data and redirecting to login...');
+        
+        // Store the payment success data in sessionStorage
+        sessionStorage.setItem('paymentSuccessData', JSON.stringify({
+          sessionId: sessionId,
+          paymentType: paymentType,
+          isGuest: isGuest,
+          userEmail: decodedUserEmail,
+          timestamp: Date.now()
+        }));
+        
+        // Show success message
+        toast({
+          title: "Payment Successful!",
+          description: "Your payment was processed successfully. Please log in to activate your subscription.",
+          duration: 8000,
+        });
+        
+        // Redirect to login page with special message
+        navigate('/login?message=payment_success_please_login');
       } else if (userMatches) {
         console.log('✅ Current user matches payment user, proceeding with success handling');
         // User is already logged in correctly, proceed with normal success handling
-        handlePaymentSuccess(sessionId, paymentType, isGuest);
+        if (handlePaymentSuccess) {
+          handlePaymentSuccess(sessionId, paymentType, isGuest);
+        } else {
+          console.error('❌ handlePaymentSuccess function not available');
+          // Fallback: show success message and refresh
+          toast({
+            title: "Payment Successful!",
+            description: "Your subscription has been activated successfully.",
+            duration: 5000,
+          });
+          refetchSubscription();
+        }
       } else {
         console.log('⚠️ No user email provided or unexpected state, proceeding with normal success handling');
         console.log('⚠️ Debug info:', {
@@ -427,7 +524,18 @@ const MyPetTraining = () => {
           userEmail: user?.email,
           paymentUserEmail: decodedUserEmail
         });
-        handlePaymentSuccess(sessionId, paymentType, isGuest);
+        if (handlePaymentSuccess) {
+          handlePaymentSuccess(sessionId, paymentType, isGuest);
+        } else {
+          console.error('❌ handlePaymentSuccess function not available');
+          // Fallback: show success message and refresh
+          toast({
+            title: "Payment Successful!",
+            description: "Your subscription has been activated successfully.",
+            duration: 5000,
+          });
+          refetchSubscription();
+        }
       }
     }
   }, [location.search, user, refetchSubscription, fetchPets, navigate]);
@@ -482,7 +590,18 @@ const MyPetTraining = () => {
         sessionStorage.removeItem('pendingPaymentSuccess');
         
         // Proceed with payment success handling
-        handlePaymentSuccess(paymentData.sessionId, paymentData.paymentType, paymentData.isGuest);
+        if (handlePaymentSuccess) {
+          handlePaymentSuccess(paymentData.sessionId, paymentData.paymentType, paymentData.isGuest);
+        } else {
+          console.error('❌ handlePaymentSuccess function not available');
+          // Fallback: show success message and refresh
+          toast({
+            title: "Payment Successful!",
+            description: "Your subscription has been activated successfully.",
+            duration: 5000,
+          });
+          refetchSubscription();
+        }
         
       } catch (error) {
         console.error('Error parsing pendingPaymentSuccess data:', error);
@@ -490,6 +609,45 @@ const MyPetTraining = () => {
       }
     }
   }, [user, session, handlePaymentSuccess]);
+
+  // CRITICAL FIX: Handle payment success data when user logs in after payment
+  useEffect(() => {
+    const paymentSuccessData = sessionStorage.getItem('paymentSuccessData');
+    if (paymentSuccessData && user && session) {
+      try {
+        const paymentData = JSON.parse(paymentSuccessData);
+        console.log('🔍 Payment success data found after login:', paymentData);
+        
+        // Check if this is the same user who made the payment
+        if (user.email === paymentData.userEmail) {
+          console.log('✅ User matches payment user, processing payment success');
+          
+          // Clear the stored data
+          sessionStorage.removeItem('paymentSuccessData');
+          
+          // Process payment success
+          if (handlePaymentSuccess) {
+            handlePaymentSuccess(paymentData.sessionId, paymentData.paymentType, paymentData.isGuest);
+          } else {
+            // Fallback
+            toast({
+              title: "Payment Successful!",
+              description: "Your subscription has been activated successfully.",
+              duration: 5000,
+            });
+            refetchSubscription();
+          }
+        } else {
+          console.log('⚠️ User does not match payment user, clearing stored data');
+          sessionStorage.removeItem('paymentSuccessData');
+        }
+        
+      } catch (error) {
+        console.error('Error parsing paymentSuccessData:', error);
+        sessionStorage.removeItem('paymentSuccessData');
+      }
+    }
+  }, [user, session, handlePaymentSuccess, refetchSubscription, toast]);
 
   // Check for pricing_click_data and SmartLoginModal data in sessionStorage and call create-checkout directly
   useEffect(() => {

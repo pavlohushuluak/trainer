@@ -95,6 +95,24 @@ const MyComponent = () => {
 };
 ```
 
+### Subscription Upgrade Tracking
+```typescript
+import { useGTM } from '@/hooks/useGTM';
+
+const SubscriptionComponent = () => {
+  const { trackSubscriptionUpgrade } = useGTM();
+  
+  const handleUpgrade = (fromPlan: string, toPlan: string, amount: number) => {
+    // Auto-detect billing cycle based on plan name
+    trackSubscriptionUpgrade(fromPlan, toPlan, amount);
+    
+    // Or explicitly specify billing cycle
+    trackSubscriptionUpgrade(fromPlan, toPlan, amount, 'monthly');
+    trackSubscriptionUpgrade(fromPlan, toPlan, amount, 'halfyearly');
+  };
+};
+```
+
 ### Conditional Tracking
 ```typescript
 import { useConditionalGTM } from '@/components/analytics/GTMProvider';
@@ -139,6 +157,34 @@ const MyComponent = () => {
   currency: 'EUR',
   transaction_id: 'txn_123456',
   event_category: 'ecommerce'
+}
+
+// Subscription Upgrade (Monthly)
+{
+  event: 'subscription_upgrade_monthly',
+  value: 4.99,
+  currency: 'EUR',
+  event_category: 'ecommerce',
+  custom_parameter: {
+    from_plan: 'basic',
+    to_plan: 'premium-monthly',
+    upgrade_amount: 4.99,
+    billing_cycle: 'monthly'
+  }
+}
+
+// Subscription Upgrade (Half-yearly)
+{
+  event: 'subscription_upgrade_halfyearly',
+  value: 29.99,
+  currency: 'EUR',
+  event_category: 'ecommerce',
+  custom_parameter: {
+    from_plan: 'basic',
+    to_plan: 'premium-halfyearly',
+    upgrade_amount: 29.99,
+    billing_cycle: 'halfyearly'
+  }
 }
 ```
 

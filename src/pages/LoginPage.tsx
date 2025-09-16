@@ -83,6 +83,13 @@ const LoginPage = () => {
       // Clean up URL parameters
       const newUrl = window.location.pathname;
       window.history.replaceState({}, document.title, newUrl);
+    } else if (messageParam === 'payment_success_please_login') {
+      setMessage('🎉 Payment Successful! Please log in to activate your subscription and access your premium features.');
+      setActiveTab('signin');
+      
+      // Clean up URL parameters
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
     }
   }, [location.search]);
 

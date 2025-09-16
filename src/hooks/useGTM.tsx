@@ -202,7 +202,48 @@ export const useGTM = () => {
     });
   };
 
-  const trackSubscriptionUpgrade = (fromPlan: string, toPlan: string, amount: number) => {
+  const trackSubscriptionUpgrade = (
+    fromPlan: string, 
+    toPlan: string, 
+    amount: number, 
+    billingCycle?: 'monthly' | 'halfyearly'
+  ) => {
+    // Auto-detect billing cycle if not provided
+    let detectedBillingCycle: 'monthly' | 'halfyearly';
+    
+    if (billingCycle) {
+      detectedBillingCycle = billingCycle;
+    } else {
+      // Auto-detect based on plan name or amount
+      const planName = toPlan.toLowerCase();
+      if (planName.includes('monthly') || planName.includes('month')) {
+        detectedBillingCycle = 'monthly';
+      } else if (planName.includes('halfyearly') || planName.includes('half') || planName.includes('year')) {
+        detectedBillingCycle = 'halfyearly';
+      } else {
+        // Fallback: determine by amount (assuming monthly < 5000 cents, halfyearly >= 5000 cents)
+        detectedBillingCycle = amount < 5000 ? 'monthly' : 'halfyearly';
+      }
+    }
+    
+    // Determine the specific upgrade event based on billing cycle
+    const upgradeEvent = detectedBillingCycle === 'monthly' ? 'subscription_upgrade_monthly' : 'subscription_upgrade_halfyearly';
+    
+    trackEvent({
+      event: upgradeEvent,
+      event_category: 'ecommerce',
+      value: amount,
+      currency: 'EUR',
+      custom_parameter: {
+        from_plan: fromPlan,
+        to_plan: toPlan,
+        upgrade_amount: amount,
+        billing_cycle: detectedBillingCycle,
+        timestamp: new Date().toISOString()
+      }
+    });
+    
+    // Also track the general upgrade event for backward compatibility
     trackEvent({
       event: 'subscription_upgrade',
       event_category: 'ecommerce',
@@ -212,6 +253,7 @@ export const useGTM = () => {
         from_plan: fromPlan,
         to_plan: toPlan,
         upgrade_amount: amount,
+        billing_cycle: detectedBillingCycle,
         timestamp: new Date().toISOString()
       }
     });
