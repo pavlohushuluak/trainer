@@ -47,21 +47,96 @@ serve(async (req) => {
 
     logStep("Processing auto-login request", { userEmail, sessionId });
 
-    // CRITICAL FIX: Enhanced payment verification with multiple checks
-    logStep("Verifying payment success", { userEmail, sessionId });
+    // CRITICAL FIX: Verify payment success directly with Stripe using session ID
+    // This is more reliable than checking subscription data which might not be processed yet
+    logStep("Verifying payment success with Stripe", { userEmail, sessionId });
     
-    // First, check if the user exists in the auth system
-    const { data: authUser, error: authError } = await supabaseClient.auth.admin.getUserByEmail(userEmail);
+    // Import Stripe to verify the session
+    const Stripe = (await import('https://esm.sh/stripe@14.21.0')).default;
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     
-    if (authError || !authUser.user) {
+    if (!stripeKey) {
+      logStep("Stripe secret key not found", { userEmail, sessionId });
+      return new Response(
+        JSON.stringify({ 
+          error: 'Payment verification failed',
+          details: 'Stripe configuration error',
+          retry: false
+        }),
+        { 
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+    
+    const stripe = new Stripe(stripeKey, {
+      apiVersion: "2023-10-16"
+    });
+    
+    try {
+      // Verify the checkout session with Stripe
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      
+      if (!session || session.payment_status !== 'paid') {
+        logStep("Payment not successful according to Stripe", { 
+          userEmail, 
+          sessionId,
+          paymentStatus: session?.payment_status,
+          sessionStatus: session?.status
+        });
+        return new Response(
+          JSON.stringify({ 
+            error: 'Payment not successful',
+            details: 'Payment was not completed successfully',
+            retry: false
+          }),
+          { 
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      
+      logStep("Payment verified successfully with Stripe", { 
+        userEmail, 
+        sessionId,
+        paymentStatus: session.payment_status,
+        sessionStatus: session.status,
+        customerEmail: session.customer_details?.email
+      });
+      
+    } catch (stripeError) {
+      logStep("Error verifying payment with Stripe", { 
+        userEmail, 
+        sessionId,
+        error: stripeError.message 
+      });
+      return new Response(
+        JSON.stringify({ 
+          error: 'Payment verification failed',
+          details: 'Could not verify payment with Stripe',
+          retry: true
+        }),
+        { 
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+    
+    // CRITICAL FIX: Get the user by email using getUserByEmail (more reliable)
+    const { data: authUser, error: userError } = await supabaseClient.auth.admin.getUserByEmail(userEmail);
+    
+    if (userError || !authUser.user) {
       logStep("User not found in auth system", { 
         userEmail, 
-        error: authError?.message 
+        error: userError?.message 
       });
       return new Response(
         JSON.stringify({ 
           error: 'User not found',
-          details: 'The user account does not exist',
+          details: 'The user account does not exist in the authentication system',
           retry: false
         }),
         { 
@@ -71,38 +146,6 @@ serve(async (req) => {
       );
     }
 
-    // Check if the user has an active subscription (this might take time to process)
-    const { data: subscriptionData, error: subscriptionError } = await supabaseClient
-      .from('subscribers')
-      .select('*')
-      .eq('email', userEmail)
-      .eq('subscribed', true)
-      .single();
-
-    if (subscriptionError || !subscriptionData) {
-      logStep("No active subscription found, but user exists - proceeding with auto-login anyway", { 
-        userEmail, 
-        error: subscriptionError?.message,
-        note: "Subscription may still be processing, but user should be able to log in"
-      });
-      
-      // CRITICAL FIX: Don't fail auto-login just because subscription isn't processed yet
-      // The user should be able to log in even if the webhook is still processing
-      logStep("Proceeding with auto-login despite no subscription found", { userEmail });
-    } else {
-      logStep("Active subscription found, proceeding with auto-login", { 
-        userEmail, 
-        subscriptionId: subscriptionData.id 
-      });
-    }
-
-    logStep("Payment verified successfully", { 
-      userEmail, 
-      subscriptionStatus: subscriptionData?.subscription_status || 'processing',
-      tier: subscriptionData?.subscription_tier || 'unknown'
-    });
-    
-    // Use the user data we already fetched from the auth system
     const user = authUser.user;
     logStep("User found", { 
       userId: user.id, 
