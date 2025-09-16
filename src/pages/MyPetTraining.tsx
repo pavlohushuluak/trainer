@@ -376,12 +376,42 @@ const MyPetTraining = () => {
 
   // Check for pricing_click_data and SmartLoginModal data in sessionStorage and call create-checkout directly
   useEffect(() => {
+    console.log('🔍 MyPetTraining: useEffect triggered', {
+      hasUser: !!user,
+      hasSession: !!session,
+      userEmail: user?.email,
+      timestamp: new Date().toISOString()
+    });
+    
     const checkPricingClickData = async () => {
       try {
+        // Check if this is an OAuth callback
+        const urlParams = new URLSearchParams(window.location.search);
+        const isOAuthCallback = urlParams.has('code') || window.location.hash.includes('access_token');
+        
+        console.log('🔍 MyPetTraining: Starting checkout detection check', {
+          hasUser: !!user,
+          hasSession: !!session,
+          userEmail: user?.email,
+          currentUrl: window.location.href,
+          searchParams: window.location.search,
+          isOAuthCallback
+        });
+        
         // Check for both pricing_click_data (direct) and pendingPriceType (SmartLoginModal)
         const pricingClickData = sessionStorage.getItem('pricing_click_data');
         const pendingPriceType = sessionStorage.getItem('pendingPriceType');
         const pendingLoginContext = sessionStorage.getItem('pendingLoginContext');
+        
+        console.log('🔍 MyPetTraining: Found sessionStorage data', {
+          pricingClickData,
+          pendingPriceType,
+          pendingLoginContext,
+          allSessionStorage: Object.keys(sessionStorage).reduce((acc, key) => {
+            acc[key] = sessionStorage.getItem(key);
+            return acc;
+          }, {} as Record<string, string>)
+        });
         
         let priceType = null;
         let dataSource = null;
@@ -407,6 +437,13 @@ const MyPetTraining = () => {
         }
         
         if (priceType && user && session) {
+          console.log('🔍 MyPetTraining: Processing checkout with data', {
+            priceType,
+            dataSource,
+            userEmail: user.email,
+            hasSession: !!session
+          });
+          
           setIsProcessingCheckout(false);
           
           // Call create-checkout directly
@@ -437,13 +474,19 @@ const MyPetTraining = () => {
             window.location.href = '/#pricing';
           }
         } else if (pricingClickData || pendingPriceType) {
-          console.log('Found checkout data on mein-tiertraining, but user is not logged in - removing data');
+          console.log('🔍 MyPetTraining: Found checkout data but user not logged in - removing data', {
+            hasUser: !!user,
+            hasSession: !!session,
+            pricingClickData: !!pricingClickData,
+            pendingPriceType: !!pendingPriceType
+          });
           // Remove data when user is not logged in
           if (pricingClickData) sessionStorage.removeItem('pricing_click_data');
           if (pendingPriceType) sessionStorage.removeItem('pendingPriceType');
           if (pendingLoginContext) sessionStorage.removeItem('pendingLoginContext');
           setIsProcessingCheckout(false);
         } else {
+          console.log('🔍 MyPetTraining: No checkout data found');
           setIsProcessingCheckout(false);
         }
       } catch (error) {
@@ -456,8 +499,17 @@ const MyPetTraining = () => {
       }
     };
 
-    // Check immediately
-    checkPricingClickData();
+    // Add a delay to ensure session is properly established after OAuth
+    // If this is an OAuth callback, wait longer for session establishment
+    const urlParams = new URLSearchParams(window.location.search);
+    const isOAuthCallback = urlParams.has('code') || window.location.hash.includes('access_token');
+    const delay = isOAuthCallback ? 2000 : 500; // Longer delay for OAuth callbacks
+    
+    const timer = setTimeout(() => {
+      checkPricingClickData();
+    }, delay);
+    
+    return () => clearTimeout(timer);
   }, [user, session]);
 
   // Show loading only when absolutely necessary
