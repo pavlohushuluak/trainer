@@ -34,9 +34,14 @@ export const useSmartLogin = ({
       // User ist nicht eingeloggt - Paket merken und Login Modal öffnen
       if (priceType) {
         setSelectedPriceType(priceType);
-        // Store in sessionStorage for OAuth flow
-        sessionStorage.setItem('pendingPriceType', priceType);
-        sessionStorage.setItem('pendingLoginContext', 'checkout');
+        // Store checkout data in simple format for homepage
+        const checkoutData = {
+          priceType: priceType,
+          timestamp: Date.now(),
+          source: 'homepage'
+        };
+        sessionStorage.setItem('homepage_checkout_data', JSON.stringify(checkoutData));
+        console.log('🏠 Homepage: Saved checkout data for Google signin:', checkoutData);
       }
       setIsLoginModalOpen(true);
     }
@@ -61,9 +66,8 @@ export const useSmartLogin = ({
   const handleLoginSuccess = async () => {
     setIsLoginModalOpen(false);
     
-    // Clear stored values immediately to prevent duplicate processing
-    const storedPriceType = sessionStorage.getItem('pendingPriceType');
-    const storedLoginContext = sessionStorage.getItem('pendingLoginContext');
+    // Clear stored checkout data immediately to prevent duplicate processing
+    const storedCheckoutData = sessionStorage.getItem('homepage_checkout_data');
     
     // Show success toast immediately (unless skipped)
     if (!skipWelcomeToast) {
@@ -78,8 +82,7 @@ export const useSmartLogin = ({
     if (skipRedirect) {
       // Clear state but don't redirect
       setSelectedPriceType(null);
-      sessionStorage.removeItem('pendingPriceType');
-      sessionStorage.removeItem('pendingLoginContext');
+      sessionStorage.removeItem('homepage_checkout_data');
       
       // Custom onLoginSuccess ausführen falls vorhanden
       if (onLoginSuccess) {
@@ -89,14 +92,21 @@ export const useSmartLogin = ({
     }
     
     // Clear sessionStorage only after we've used the values
-    sessionStorage.removeItem('pendingPriceType');
-    sessionStorage.removeItem('pendingLoginContext');
+    sessionStorage.removeItem('homepage_checkout_data');
     
     // Normal redirect logic for non-checkout contexts
     try {
       // Use stored values if available, otherwise use props
-      const effectivePriceType = storedPriceType || selectedPriceType;
-      const effectiveContext = storedLoginContext || loginContext;
+      let effectivePriceType = selectedPriceType;
+      if (storedCheckoutData) {
+        try {
+          const parsed = JSON.parse(storedCheckoutData);
+          effectivePriceType = parsed.priceType;
+        } catch (error) {
+          console.error('Error parsing stored checkout data:', error);
+        }
+      }
+      const effectiveContext = loginContext;
 
       // Only redirect to admin if explicitly requested (loginContext === 'admin')
       if (effectiveContext === 'admin' && user) {
