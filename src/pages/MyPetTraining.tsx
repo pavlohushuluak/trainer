@@ -309,7 +309,7 @@ const MyPetTraining = () => {
             return;
           }
           
-          // CRITICAL FIX: If auto-login fails, store payment data and redirect to login with special handling
+          // CRITICAL FIX: If auto-login fails, store payment data and stay on mein-tiertraining
           console.error('❌ Auto-login failed after retries, storing payment data for manual login');
           console.error('❌ Full error object:', error);
           
@@ -331,8 +331,9 @@ const MyPetTraining = () => {
             duration: 8000,
           });
           
-          // Redirect to login page with special message
-          navigate('/login?message=payment_success_please_login');
+          // CRITICAL FIX: Stay on mein-tiertraining page instead of redirecting to login
+          // Clear URL parameters to show clean URL
+          window.history.replaceState({}, document.title, '/mein-tiertraining');
           return;
         }
 
@@ -375,7 +376,8 @@ const MyPetTraining = () => {
             
             if (sessionError) {
               console.error('❌ Error setting session:', sessionError);
-              navigate('/login?message=payment_success_login_required');
+              // CRITICAL FIX: Stay on mein-tiertraining instead of redirecting to login
+              window.history.replaceState({}, document.title, '/mein-tiertraining');
               return;
             }
             
@@ -394,16 +396,19 @@ const MyPetTraining = () => {
               refetchSubscription();
             }
           } else {
-            console.log('⚠️ No action_link or session data returned, redirecting to login');
-            navigate('/login?message=payment_success_login_required');
+            console.log('⚠️ No action_link or session data returned, staying on mein-tiertraining');
+            // CRITICAL FIX: Stay on mein-tiertraining instead of redirecting to login
+            window.history.replaceState({}, document.title, '/mein-tiertraining');
           }
         } else {
           console.error('❌ Auto-login failed:', data);
-          navigate('/login?message=payment_success_login_required');
+          // CRITICAL FIX: Stay on mein-tiertraining instead of redirecting to login
+          window.history.replaceState({}, document.title, '/mein-tiertraining');
         }
       } catch (error) {
         console.error('❌ Auto-login exception:', error);
-        navigate('/login?message=payment_success_login_required');
+        // CRITICAL FIX: Stay on mein-tiertraining instead of redirecting to login
+        window.history.replaceState({}, document.title, '/mein-tiertraining');
       }
     };
 
@@ -554,8 +559,9 @@ const MyPetTraining = () => {
               onClick={() => {
                 // Clear the failed flag
                 sessionStorage.removeItem('autoLoginFailed');
-                // Redirect to login with helpful message
-                navigate('/login?message=payment_success_manual_login_required');
+                // CRITICAL FIX: Stay on mein-tiertraining instead of redirecting to login
+                // The user can use the login modal or navigate to login manually if needed
+                window.history.replaceState({}, document.title, '/mein-tiertraining');
               }}
             >
               Log In Now
@@ -694,6 +700,40 @@ const MyPetTraining = () => {
       }
     }
   }, [user, session, toast]);
+
+  // CRITICAL FIX: Show login prompt for users with payment success data but not logged in
+  useEffect(() => {
+    const paymentSuccessData = sessionStorage.getItem('paymentSuccessData');
+    if (paymentSuccessData && !user && !loading) {
+      try {
+        const paymentData = JSON.parse(paymentSuccessData);
+        console.log('🔍 Payment success data found but user not logged in:', paymentData);
+        
+        // Show persistent login prompt
+        toast({
+          title: "Payment Successful!",
+          description: "Your payment was processed successfully. Please log in to activate your subscription.",
+          duration: 0, // Persistent toast
+          action: (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => {
+                // Navigate to login page
+                navigate('/login?message=payment_success_please_login');
+              }}
+            >
+              Log In Now
+            </Button>
+          )
+        });
+        
+      } catch (error) {
+        console.error('Error parsing paymentSuccessData:', error);
+        sessionStorage.removeItem('paymentSuccessData');
+      }
+    }
+  }, [user, loading, navigate, toast]);
 
   // Check for pricing_click_data and SmartLoginModal data in sessionStorage and call create-checkout directly
   useEffect(() => {
