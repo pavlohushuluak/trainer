@@ -16,6 +16,8 @@ import { PasswordInput } from '@/components/auth/PasswordInput';
 import { ConfirmPasswordInput } from '@/components/auth/ConfirmPasswordInput';
 import { EmailInput } from '@/components/auth/EmailInput';
 import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
+import { getCheckoutFlags, clearCheckoutFlags } from '@/utils/checkoutStorage';
+import { getCheckoutInformation } from '@/utils/checkoutSessionStorage';
 import { useTranslations } from '@/hooks/useTranslations';
 import { supabase } from '@/integrations/supabase/client';
 import { getCurrentLanguage } from '@/utils/languageSupport';
@@ -182,12 +184,33 @@ export const SmartLoginModal = ({
           duration: 3000
         });
         
-        // User created successfully - let the homepage handle checkout if needed
+        // Store user data temporarily for checkout processing
         if (data?.user) {
-          console.log('User created successfully:', data.user.email);
+          console.log('User created successfully, storing for checkout:', data.user.email);
+          
+          // Store user data in sessionStorage for checkout processing
+          sessionStorage.setItem('tempUserData', JSON.stringify({
+            email: data.user.email,
+            id: data.user.id,
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            timestamp: Date.now()
+          }));
+          
+          // Trigger checkout processing immediately after storing user data
+          setTimeout(() => {
+            const checkoutInfo = getCheckoutInformation();
+            if (checkoutInfo) {
+              console.log('Triggering checkout processing from SmartLoginModal:', checkoutInfo);
+              // The Index.tsx useEffect should pick this up
+              window.dispatchEvent(new CustomEvent('checkoutRequested', { 
+                detail: { checkoutInfo, tempUserData: JSON.parse(sessionStorage.getItem('tempUserData') || '{}') }
+              }));
+            }
+          }, 100); // Small delay to ensure sessionStorage is set
         }
         
-        // Proceed to homepage - it will handle checkout if checkout_data exists
+        // Proceed to checkout immediately (Index.tsx will handle the checkout with stored user data)
         onLoginSuccess();
         onClose();
       }
@@ -474,6 +497,33 @@ export const SmartLoginModal = ({
                         </form>
                       </TabsContent>
                     </Tabs>
+
+                    {/* OAuth Login Section */}
+                    <div className="space-y-4 mt-6">
+                      <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                          <Separator className="w-full" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                          <span className="bg-background px-2 text-muted-foreground">
+                            {t('auth.orContinueWith')}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 gap-3">
+                        <OAuthButton 
+                          provider="google" 
+                          source="smartlogin"
+                          onSuccess={(user, isNewUser) => {
+                            console.log('Google OAuth success from SmartLoginModal:', { user: user?.email, isNewUser });
+                            // OAuth success will be handled by the auth callback with source=smartlogin
+                            onLoginSuccess();
+                            onClose();
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
                   
                   {/* Error Messages */}
