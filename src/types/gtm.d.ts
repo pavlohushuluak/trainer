@@ -57,11 +57,12 @@ export interface GTMAuthEvent extends GTMEvent {
 }
 
 export interface GTMEngagementEvent extends GTMEvent {
-  event: 'chat_start' | 'chat_message' | 'feature_usage';
+  event: 'start_chat' | 'continue_chat' | 'chat_message' | 'feature_usage';
   event_category: 'engagement';
   event_label?: string;
   custom_parameter?: {
     chat_type?: string;
+    session_id?: string;
     pet_type?: string;
     message_type?: 'user' | 'assistant';
     message_length?: number;

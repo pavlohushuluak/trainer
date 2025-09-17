@@ -41,18 +41,6 @@ export const useGTM = () => {
   };
 
   // Specific tracking functions with proper types
-  const trackChatStart = (chatType?: string, petType?: string) => {
-    trackEvent({
-      event: 'chat_start',
-      event_category: 'engagement',
-      event_label: chatType || 'general_chat',
-      custom_parameter: {
-        chat_type: chatType || 'general',
-        pet_type: petType || 'unknown',
-        timestamp: new Date().toISOString()
-      }
-    });
-  };
 
   const trackPaymentSuccess = (
     amount: number, 
@@ -189,6 +177,33 @@ export const useGTM = () => {
     });
   };
 
+  const trackChatStart = (chatType?: string, petType?: string) => {
+    trackEvent({
+      event: 'start_chat',
+      event_category: 'engagement',
+      event_label: chatType || 'new_chat',
+      custom_parameter: {
+        chat_type: chatType || 'new_chat',
+        pet_type: petType || 'none',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackChatContinue = (sessionId?: string, petType?: string) => {
+    trackEvent({
+      event: 'continue_chat',
+      event_category: 'engagement',
+      event_label: 'continue_existing',
+      custom_parameter: {
+        chat_type: 'continue_existing',
+        session_id: sessionId || 'unknown',
+        pet_type: petType || 'none',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
   const trackChatMessage = (messageType: 'user' | 'assistant', messageLength?: number) => {
     trackEvent({
       event: 'chat_message',
@@ -275,6 +290,7 @@ export const useGTM = () => {
   return {
     trackEvent,
     trackChatStart,
+    trackChatContinue,
     trackChatMessage,
     trackPaymentSuccess,
     trackSignUp,

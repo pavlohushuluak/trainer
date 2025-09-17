@@ -70,6 +70,7 @@ import {
 import { useTranslation as useI18n } from 'react-i18next';
 import { AnimatedDots } from '@/components/ui/animated-dots';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { useGTM } from '@/hooks/useGTM';
 
 interface ChatSession {
   id: string;
@@ -101,6 +102,7 @@ export const ChatPage = () => {
   const { usage, incrementUsage, refetch: refetchUsage } = useFreeChatLimit();
   const { checkSubscriptionStatus } = useSubscriptionStatusChecker();
   const { trackEvent } = useAnalytics();
+  const { trackChatStart, trackChatContinue } = useGTM();
 
   useEffect(
     () => {
@@ -258,6 +260,10 @@ export const ChatPage = () => {
 
   const continueChat = async () => {
     if (!selectedSession) return;
+
+    // Track chat continuation
+    const petType = selectedSession.pet_profiles?.species || 'none';
+    trackChatContinue(selectedSession.id, petType);
 
     // Check if free user has reached limit
     if (!hasActiveSubscription && usage.hasReachedLimit) {
@@ -489,6 +495,10 @@ export const ChatPage = () => {
       setMessages([]);
       setHasStartedChat(false);
       setSelectedPet(petId);
+
+      // Track new chat start
+      const petType = petId !== 'none' ? pets.find(p => p.id === petId)?.species : 'none';
+      trackChatStart('new_session', petType);
 
       toast({
         title: t('chat.page.success.newSession.title'),
