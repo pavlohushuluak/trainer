@@ -11,7 +11,7 @@ export const usePlans = () => {
   const { toast } = useToast();
   const { t } = useTranslations();
   const queryClient = useQueryClient();
-  const { trackPlanCreatedByManual } = useGTM();
+  const { trackPlanCreatedByManual, trackPlanCompleted, trackPlanStarted, trackPlanDeleted } = useGTM();
 
   // Fetch pets with caching
   const { data: pets = [] } = useQuery({
@@ -115,7 +115,17 @@ export const usePlans = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      // Track plan status updates
+      const plan = trainingPlans.find(p => p.id === variables.id);
+      const petType = plan?.pet_profiles?.name ? pets.find(p => p.name === plan.pet_profiles.name)?.species : 'unknown';
+      
+      if (variables.updates.status === 'completed') {
+        trackPlanCompleted(variables.id, plan?.title, petType);
+      } else if (variables.updates.status === 'active') {
+        trackPlanStarted(variables.id, plan?.title, petType);
+      }
+
       queryClient.invalidateQueries({ queryKey: ['training-plans'] });
       toast({
         title: t('training.usePlans.updatePlan.title'),
@@ -127,14 +137,25 @@ export const usePlans = () => {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (planId: string) => {
+      // Get plan info before deletion for tracking
+      const planToDelete = trainingPlans.find(p => p.id === planId);
+      
       const { error } = await supabase
         .from('training_plans')
         .delete()
         .eq('id', planId);
 
       if (error) throw error;
+      
+      return planToDelete; // Return for tracking in onSuccess
     },
-    onSuccess: () => {
+    onSuccess: (planToDelete) => {
+      // Track plan deletion
+      if (planToDelete) {
+        const petType = planToDelete.pet_profiles?.name ? pets.find(p => p.name === planToDelete.pet_profiles.name)?.species : 'unknown';
+        trackPlanDeleted(planToDelete.id, planToDelete.title, petType);
+      }
+
       queryClient.invalidateQueries({ queryKey: ['training-plans'] });
       toast({
         title: t('training.usePlans.deletePlan.title'),

@@ -810,7 +810,7 @@
   },
   "imageAnalysis": {
     "page": {
-      "title": "AI Image Analysis",
+      "title": "Image Analysis",
       "subtitle": "Upload images of your pet and receive AI-powered behavior analysis for dogs, cats, horses, small animals and birds.",
       "loginRequired": {
         "title": "Login Required",
@@ -836,7 +836,7 @@
     },
     "features": {
       "title": "Analysis Features",
-      "description": "What our AI image analysis can detect",
+      "description": "What our image analysis can detect",
       "bodyLanguage": {
         "title": "Body Language",
         "description": "Detection of stress, relaxation, attention and other body signals"
@@ -3270,7 +3270,7 @@
       }
     },
     "imageAnalysis": {
-      "title": "AI Image Analysis",
+      "title": "Image Analysis",
       "description": "Upload a photo of your pet and receive detailed behavior analysis with training recommendations",
       "freeForAll": "Free for everyone!",
       "freeDescription": "This feature is available for all users.",
@@ -4286,7 +4286,7 @@
         "features": {
           "trainerAvailable": "24/7 Trainer Available",
           "customized": "Personalized",
-          "imageAnalysis": "AI Image Analysis"
+          "imageAnalysis": "Image Analysis"
         },
         "viewPricing": "View Pricing",
         "socialProof": {
@@ -4988,7 +4988,7 @@
       "features": {
         "trainerAvailable": "24/7 Trainer Available",
         "customized": "Personalized",
-        "imageAnalysis": "AI Image Analysis"
+        "imageAnalysis": "Image Analysis"
       },
       "viewPricing": "View Pricing",
       "socialProof": {

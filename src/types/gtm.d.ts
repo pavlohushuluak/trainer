@@ -104,10 +104,11 @@ export interface GTMSupportEvent extends GTMEvent {
 }
 
 export interface GTMTrainingEvent extends GTMEvent {
-  event: 'plan_created_by_chat' | 'plan_created_by_image' | 'plan_created_by_manual';
+  event: 'plan_created_by_chat' | 'plan_created_by_image' | 'plan_created_by_manual' | 'plan_completed' | 'plan_started' | 'plan_deleted';
   event_category: 'training';
   event_label?: string;
   custom_parameter?: {
+    plan_id?: string;
     plan_title?: string;
     pet_type?: string;
     plan_reason?: string;
@@ -115,12 +116,38 @@ export interface GTMTrainingEvent extends GTMEvent {
     image_analysis_type?: string;
     creation_method?: 'chat' | 'image_analysis' | 'manual';
     is_ai_generated?: boolean;
+    completion_time_days?: number;
+    timestamp?: string;
+  };
+}
+
+export interface GTMPetManagementEvent extends GTMEvent {
+  event: 'add_pet_profile' | 'edit_pet_profile' | 'delete_pet_profile';
+  event_category: 'pet_management';
+  event_label?: string;
+  custom_parameter?: {
+    pet_type?: string;
+    pet_name?: string;
+    edited_fields?: string;
+    timestamp?: string;
+  };
+}
+
+export interface GTMImageAnalysisEvent extends GTMEvent {
+  event: 'image_analysis_start' | 'image_analysis_complete' | 'image_analysis_error';
+  event_category: 'image_analysis';
+  event_label?: string;
+  custom_parameter?: {
+    pet_type?: string;
+    analysis_type?: string;
+    confidence_level?: string;
+    error_type?: string;
     timestamp?: string;
   };
 }
 
 // Union type for all GTM events
-export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent | GTMTrainingEvent;
+export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent | GTMTrainingEvent | GTMPetManagementEvent | GTMImageAnalysisEvent;
 
 // GTM DataLayer Interface
 export interface GTMDataLayer extends Array<GTMEvent> {

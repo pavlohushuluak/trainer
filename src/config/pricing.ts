@@ -16,7 +16,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     halfYearlyPrice: 59.40,
     tierLimit: 1,
     features: [
-      'Unbegrenzter Chat mit KI-Trainer',
+      'Unbegrenzter Chat mit Trainer',
       'Individuelle Trainingspläne',
       'Bildanalyse für Verhaltenserkennung',
       'Fortschrittsverfolgung',

@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useGTM } from '@/hooks/useGTM';
 
 interface UseImageUploadProps {
   onUploadComplete: (result: any) => void;
@@ -31,6 +32,7 @@ export const useImageUpload = ({
   const { toast } = useToast();
   const { t } = useTranslation();
   const { currentLanguage } = useTranslations();
+  const { trackImageAnalysisStart, trackImageAnalysisError } = useGTM();
 
   const validateFile = (file: File): boolean => {
     if (!canAnalyze) {
@@ -78,6 +80,9 @@ export const useImageUpload = ({
 
     setIsUploading(true);
     setUploadError(null);
+
+    // Track image analysis start
+    trackImageAnalysisStart('unknown', 'behavior_analysis');
     
     try {
       // Create image preview URL
@@ -190,6 +195,9 @@ export const useImageUpload = ({
       console.error('❌ Analysis error:', error);
       const errorMessage = error.message || t('training.toasts.imageAnalysis.uploadError.description');
       setUploadError(errorMessage);
+      
+      // Track image analysis error
+      trackImageAnalysisError('unknown', 'upload_error');
       
       toast({
         title: t('training.toasts.imageAnalysis.uploadError.title'),

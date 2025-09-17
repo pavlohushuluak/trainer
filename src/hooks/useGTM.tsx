@@ -361,6 +361,132 @@ export const useGTM = () => {
     });
   };
 
+  // Pet profile tracking functions
+  const trackAddPetProfile = (petType?: string, petName?: string) => {
+    trackEvent({
+      event: 'add_pet_profile',
+      event_category: 'pet_management',
+      event_label: petType || 'unknown',
+      custom_parameter: {
+        pet_type: petType || 'unknown',
+        pet_name: petName || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackEditPetProfile = (petType?: string, petName?: string, editedFields?: string[]) => {
+    trackEvent({
+      event: 'edit_pet_profile',
+      event_category: 'pet_management',
+      event_label: petType || 'unknown',
+      custom_parameter: {
+        pet_type: petType || 'unknown',
+        pet_name: petName || 'unknown',
+        edited_fields: editedFields?.join(',') || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackDeletePetProfile = (petType?: string, petName?: string) => {
+    trackEvent({
+      event: 'delete_pet_profile',
+      event_category: 'pet_management',
+      event_label: petType || 'unknown',
+      custom_parameter: {
+        pet_type: petType || 'unknown',
+        pet_name: petName || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  // Image analysis tracking functions
+  const trackImageAnalysisStart = (petType?: string, analysisType?: string) => {
+    trackEvent({
+      event: 'image_analysis_start',
+      event_category: 'image_analysis',
+      event_label: analysisType || 'general',
+      custom_parameter: {
+        pet_type: petType || 'unknown',
+        analysis_type: analysisType || 'general',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackImageAnalysisComplete = (petType?: string, analysisType?: string, confidence?: string) => {
+    trackEvent({
+      event: 'image_analysis_complete',
+      event_category: 'image_analysis',
+      event_label: analysisType || 'general',
+      custom_parameter: {
+        pet_type: petType || 'unknown',
+        analysis_type: analysisType || 'general',
+        confidence_level: confidence || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackImageAnalysisError = (petType?: string, errorType?: string) => {
+    trackEvent({
+      event: 'image_analysis_error',
+      event_category: 'image_analysis',
+      event_label: errorType || 'unknown',
+      custom_parameter: {
+        pet_type: petType || 'unknown',
+        error_type: errorType || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  // Training plan completion tracking
+  const trackPlanCompleted = (planId?: string, planTitle?: string, petType?: string, completionTime?: number) => {
+    trackEvent({
+      event: 'plan_completed',
+      event_category: 'training',
+      event_label: 'plan_finished',
+      custom_parameter: {
+        plan_id: planId || 'unknown',
+        plan_title: planTitle || 'unknown',
+        pet_type: petType || 'unknown',
+        completion_time_days: completionTime || 0,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackPlanStarted = (planId?: string, planTitle?: string, petType?: string) => {
+    trackEvent({
+      event: 'plan_started',
+      event_category: 'training',
+      event_label: 'plan_activated',
+      custom_parameter: {
+        plan_id: planId || 'unknown',
+        plan_title: planTitle || 'unknown',
+        pet_type: petType || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackPlanDeleted = (planId?: string, planTitle?: string, petType?: string) => {
+    trackEvent({
+      event: 'plan_deleted',
+      event_category: 'training',
+      event_label: 'plan_removed',
+      custom_parameter: {
+        plan_id: planId || 'unknown',
+        plan_title: planTitle || 'unknown',
+        pet_type: petType || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
   const trackChatMessage = (messageType: 'user' | 'assistant', messageLength?: number) => {
     trackEvent({
       event: 'chat_message',
@@ -460,6 +586,15 @@ export const useGTM = () => {
     trackPlanCreatedByChat,
     trackPlanCreatedByImage,
     trackPlanCreatedByManual,
+    trackAddPetProfile,
+    trackEditPetProfile,
+    trackDeletePetProfile,
+    trackImageAnalysisStart,
+    trackImageAnalysisComplete,
+    trackImageAnalysisError,
+    trackPlanCompleted,
+    trackPlanStarted,
+    trackPlanDeleted,
     trackPaymentSuccess,
     trackSignUp,
     trackAddToCart,

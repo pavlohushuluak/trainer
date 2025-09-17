@@ -811,8 +811,8 @@
   },
   "imageAnalysis": {
     "page": {
-      "title": "KI-Bildanalyse",
-      "subtitle": "Laden Sie Bilder Ihres Haustiers hoch und erhalten Sie KI-gestützte Verhaltensanalyse für Hunde, Katzen, Pferde, Kleintiere und Vögel.",
+      "title": "Bildanalyse",
+      "subtitle": "Laden Sie Bilder Ihres Haustiers hoch und erhalten Sie gestützte Verhaltensanalyse für Hunde, Katzen, Pferde, Kleintiere und Vögel.",
       "loginRequired": {
         "title": "Anmeldung erforderlich",
         "description": "Sie müssen angemeldet sein, um die Bildanalyse zu nutzen."
@@ -829,15 +829,15 @@
     },
     "upload": {
       "title": "Bild hochladen & analysieren",
-      "description": "Laden Sie ein Foto Ihres Haustiers für KI-gestützte Verhaltensanalyse hoch"
+      "description": "Laden Sie ein Foto Ihres Haustiers für gestützte Verhaltensanalyse hoch"
     },
     "results": {
       "title": "Analyseergebnisse",
-      "description": "KI-gestützte Verhaltensanalyse Ihres Haustiers"
+      "description": "gestützte Verhaltensanalyse Ihres Haustiers"
     },
     "features": {
       "title": "Analyse-Features",
-      "description": "Was unsere KI-Bildanalyse erkennen kann",
+      "description": "Was unsere Bildanalyse erkennen kann",
       "bodyLanguage": {
         "title": "Körpersprache",
         "description": "Erkennung von Stress, Entspannung, Aufmerksamkeit und anderen Körpersignalen"
@@ -1107,7 +1107,7 @@
         }
       },
       "aiPreferences": {
-        "title": "KI-Präferenzen",
+        "title": "Präferenzen",
         "detailedResponses": {
           "title": "Detaillierte Antworten",
           "description": "KI liefert umfassendere und detailliertere Antworten"
@@ -1368,7 +1368,7 @@
       "startChat": {
         "title": "Chat starten",
         "button": "Chat öffnen",
-        "description": "Unser KI-Trainer ist verfügbar für:",
+        "description": "Unser Trainer ist verfügbar für:",
         "features": [
           "Erstellung individueller Trainingspläne",
           "Analyse von Verhaltensproblemen",
@@ -3285,7 +3285,7 @@
       "completedOn": "Abgeschlossen am"
     },
     "imageAnalysis": {
-      "title": "KI-Bildanalyse",
+      "title": "Bildanalyse",
       "description": "Laden Sie ein Foto Ihres Haustiers hoch und erhalten Sie detaillierte Verhaltensanalyse mit Trainingsempfehlungen",
       "freeForAll": "Kostenlos für alle!",
       "freeDescription": "Diese Funktion ist für alle Benutzer verfügbar.",

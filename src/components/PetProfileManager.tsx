@@ -13,6 +13,7 @@ import { PetProfileContent } from "./pet/PetProfileContent";
 import { UpgradeModal } from "./subscription/UpgradeModal";
 import { usePetProfiles } from "@/hooks/usePetProfiles";
 import { PetProfile } from "@/store/slices/petProfilesSlice";
+import { useGTM } from "@/hooks/useGTM";
 
 interface PetProfileManagerProps {
   shouldOpenPetModal?: boolean;
@@ -28,6 +29,7 @@ const PetProfileManager = React.memo(({ shouldOpenPetModal = false }: PetProfile
 
   // Use Redux for pet profiles data
   const { pets, createPet, updatePet, removePet, loading } = usePetProfiles();
+  const { trackDeletePetProfile } = useGTM();
 
   const { hasActiveSubscription } = useSubscriptionStatus();
   const { startMetric, endMetric } = usePerformanceMonitor('PetProfileManager');
@@ -95,8 +97,17 @@ const PetProfileManager = React.memo(({ shouldOpenPetModal = false }: PetProfile
     devLog('🐾 PetProfileManager: Starting delete for pet:', petName);
     
     try {
+      // Find pet info before deletion for tracking
+      const petToDelete = pets.find(pet => pet.id === petId);
+      
       // Use Redux action for deletion
       await removePet(petId);
+      
+      // Track deletion after successful removal
+      if (petToDelete) {
+        trackDeletePetProfile(petToDelete.species, petToDelete.name);
+      }
+      
       devLog('🐾 PetProfileManager: Pet deleted successfully');
     } catch (error) {
       devLog('❌ PetProfileManager: Error deleting pet:', error);

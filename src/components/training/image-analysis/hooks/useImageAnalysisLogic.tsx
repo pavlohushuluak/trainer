@@ -28,11 +28,22 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const { currentLanguage, t } = useTranslations();
   const { saveAnalysis } = useImageAnalysisHistory();
   const queryClient = useQueryClient();
-  const { trackPlanCreatedByImage } = useGTM();
+  const { trackPlanCreatedByImage, trackImageAnalysisStart, trackImageAnalysisComplete, trackImageAnalysisError } = useGTM();
 
   const handleUploadComplete = async (result: any, pet?: Pet) => {
+    const petUsed = pet || selectedPet;
+    
+    // Track image analysis completion
+    if (result && petUsed) {
+      trackImageAnalysisComplete(
+        petUsed.species,
+        result.behavior_analysis || 'general',
+        result.confidence_level || 'unknown'
+      );
+    }
+    
     setAnalysisResult(result);
-    setAnalysisPet(pet || selectedPet || null);
+    setAnalysisPet(petUsed || null);
   };
 
   const handleCreatePlan = async () => {

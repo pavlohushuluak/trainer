@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { usePetProfiles } from "@/hooks/usePetProfiles";
 import { useTranslations } from "@/hooks/useTranslations";
 import CalendarModal from "./CalendarModal";
+import { useGTM } from "@/hooks/useGTM";
 
 interface PetProfile {
   id: string;
@@ -38,6 +39,7 @@ const PetProfileForm = ({ editingPet, onPetSaved, onClose }: PetProfileFormProps
   const { user } = useAuth();
   const { toast } = useToast();
   const { createPet, updatePet } = usePetProfiles();
+  const { trackAddPetProfile, trackEditPetProfile } = useGTM();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -139,8 +141,16 @@ const PetProfileForm = ({ editingPet, onPetSaved, onClose }: PetProfileFormProps
 
       if (editingPet) {
         await updatePet(editingPet.id, petData);
+        // Track pet profile edit asynchronously
+        setTimeout(() => {
+          trackEditPetProfile(petData.species, petData.name, Object.keys(petData));
+        }, 0);
       } else {
         await createPet(petData);
+        // Track new pet profile creation asynchronously
+        setTimeout(() => {
+          trackAddPetProfile(petData.species, petData.name);
+        }, 0);
       }
 
       // Show success toast
