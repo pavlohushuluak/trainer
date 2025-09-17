@@ -118,22 +118,11 @@ export const usePlans = () => {
     onSuccess: (data, variables) => {
       // Track plan status updates
       const plan = trainingPlans.find(p => p.id === variables.id);
+      const petType = plan?.pet_profiles?.name ? pets.find(p => p.name === plan.pet_profiles.name)?.species : 'unknown';
       
-      // Fix pet type resolution - get from the plan's pet_id
-      let petType = 'unknown';
-      if (plan?.pet_id) {
-        const associatedPet = pets.find(p => p.id === plan.pet_id);
-        petType = associatedPet?.species || 'unknown';
-      } else if (plan?.pet_profiles?.name) {
-        // Fallback to name matching
-        const associatedPet = pets.find(p => p.name === plan.pet_profiles.name);
-        petType = associatedPet?.species || 'unknown';
-      }
-      
-      // Track based on status change - fix status mapping
       if (variables.updates.status === 'completed') {
         trackPlanCompleted(variables.id, plan?.title, petType);
-      } else if (variables.updates.status === 'in_progress' || variables.updates.status === 'active') {
+      } else if (variables.updates.status === 'active') {
         trackPlanStarted(variables.id, plan?.title, petType);
       }
 
@@ -163,17 +152,7 @@ export const usePlans = () => {
     onSuccess: (planToDelete) => {
       // Track plan deletion
       if (planToDelete) {
-        // Fix pet type resolution for deletion tracking
-        let petType = 'unknown';
-        if (planToDelete.pet_id) {
-          const associatedPet = pets.find(p => p.id === planToDelete.pet_id);
-          petType = associatedPet?.species || 'unknown';
-        } else if (planToDelete.pet_profiles?.name) {
-          // Fallback to name matching
-          const associatedPet = pets.find(p => p.name === planToDelete.pet_profiles.name);
-          petType = associatedPet?.species || 'unknown';
-        }
-        
+        const petType = planToDelete.pet_profiles?.name ? pets.find(p => p.name === planToDelete.pet_profiles.name)?.species : 'unknown';
         trackPlanDeleted(planToDelete.id, planToDelete.title, petType);
       }
 
