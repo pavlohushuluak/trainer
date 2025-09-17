@@ -233,17 +233,6 @@ export const useGTM = () => {
   };
 
   // Support tracking functions
-  const trackSupportPageVisit = () => {
-    trackEvent({
-      event: 'support_page_visit',
-      event_category: 'support',
-      event_label: 'page_view',
-      custom_parameter: {
-        timestamp: new Date().toISOString()
-      }
-    });
-  };
-
   const trackSupportChatStart = () => {
     trackEvent({
       event: 'support_chat_start',
@@ -413,7 +402,6 @@ export const useGTM = () => {
     trackChatMessage,
     trackNewPost,
     trackDeletePost,
-    trackSupportPageVisit,
     trackSupportChatStart,
     trackSupportTicketCreate,
     trackSupportMessage,

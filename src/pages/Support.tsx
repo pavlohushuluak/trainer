@@ -25,7 +25,7 @@ const Support = () => {
   const { t } = useTranslations();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { fetchTickets } = useSupportTickets();
-  const { trackSupportPageVisit, trackSupportChatStart, trackSupportFAQClick } = useGTM();
+  const { trackSupportChatStart, trackSupportFAQClick } = useGTM();
   
   // Wrapper function that clears cache before fetching tickets
   const refreshTickets = useCallback(async () => {
@@ -55,11 +55,6 @@ const Support = () => {
     petsData: pets,
     timestamp: new Date().toISOString()
   });
-
-  // Track support page visit
-  React.useEffect(() => {
-    trackSupportPageVisit();
-  }, [trackSupportPageVisit]);
 
   // Manual fetch if needed
   React.useEffect(() => {

@@ -86,7 +86,7 @@ export interface GTMCommunityEvent extends GTMEvent {
 }
 
 export interface GTMSupportEvent extends GTMEvent {
-  event: 'support_page_visit' | 'support_chat_start' | 'support_ticket_create' | 'support_message' | 'support_feedback' | 'support_ticket_resolve' | 'support_faq_click';
+  event: 'support_chat_start' | 'support_ticket_create' | 'support_message' | 'support_feedback' | 'support_ticket_resolve' | 'support_faq_click';
   event_category: 'support';
   event_label?: string;
   custom_parameter?: {
