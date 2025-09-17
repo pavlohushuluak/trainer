@@ -12,6 +12,7 @@ import { usePetDataPrefetch } from "@/hooks/usePetDataPrefetch";
 import { useVerificationCode } from "@/hooks/auth/useVerificationCode";
 import { supabase } from "@/integrations/supabase/client";
 import { getCheckoutInformation, removeCheckoutInformation } from "@/utils/checkoutSessionStorage";
+import { usePurchaseCancel } from "@/hooks/usePurchaseCancel";
 
 // Lazy load heavy components with proper default export handling
 const Benefits = lazy(() => import("@/components/Benefits").then(module => ({ default: module.Benefits })));
@@ -37,6 +38,9 @@ const Index = () => {
   const { trackEvent } = useAnalytics();
   const { user, session } = useAuth();
   const navigate = useNavigate();
+  
+  // Initialize purchase cancellation tracking
+  usePurchaseCancel();
 
   // Verification code hook for cancelled checkout users
   const { verifyCode, resendCode, loading: verificationLoading, error: verificationError } = useVerificationCode({

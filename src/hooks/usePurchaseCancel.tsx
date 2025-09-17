@@ -1,31 +1,61 @@
 import { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useGTM } from './useGTM';
+import { getPlanById, getPrice } from '@/config/pricing';
 
 export const usePurchaseCancel = () => {
   const { trackPurchaseCancel } = useGTM();
+  const location = useLocation();
   const processedCancellationsRef = useRef(new Set<string>());
+  const lastLocationRef = useRef<string>('');
 
   useEffect(() => {
     const handlePurchaseCancel = () => {
-      // Check URL parameters and referrer for cancelled checkout
       const urlParams = new URLSearchParams(window.location.search);
+      const checkoutCancelled = urlParams.get('checkout_cancelled');
       const success = urlParams.get('success');
       const sessionId = urlParams.get('session_id');
       const referrer = document.referrer;
       
-      // Check if user came back from Stripe checkout without success
-      const isFromStripe = referrer && referrer.includes('checkout.stripe.com');
-      const isNotSuccess = success !== 'true' && !sessionId;
+      // Method 1: Direct cancel parameter from Stripe
+      const isDirectCancel = checkoutCancelled === 'true';
       
-      // Also check sessionStorage for pending checkout data that wasn't completed
+      // Method 2: Coming from Stripe without success
+      const isFromStripe = referrer && (
+        referrer.includes('checkout.stripe.com') || 
+        referrer.includes('js.stripe.com')
+      );
+      const isNotSuccess = success !== 'true' && !sessionId;
+      const isStripeCancel = isFromStripe && isNotSuccess;
+      
+      // Method 3: Landing on cancel URL without success after having checkout data
       const pendingCheckoutData = sessionStorage.getItem('pendingPaymentSuccess');
       const checkoutInfo = sessionStorage.getItem('checkout-information');
+      const hasCheckoutData = pendingCheckoutData || checkoutInfo;
+      const isOnCancelPath = window.location.pathname === '/' || window.location.pathname === '/mein-tiertraining';
+      const isLikelyCancel = hasCheckoutData && isOnCancelPath && isNotSuccess;
       
-      if (isFromStripe && isNotSuccess) {
-        console.log('🚫 Purchase cancellation detected from Stripe redirect');
+      // Method 4: Check if user just navigated from a different page and we have stale checkout data
+      const currentLocation = `${window.location.pathname}${window.location.search}`;
+      const hasLocationChanged = lastLocationRef.current !== currentLocation;
+      lastLocationRef.current = currentLocation;
+      
+      const shouldTrackCancel = isDirectCancel || isStripeCancel || isLikelyCancel;
+      
+      if (shouldTrackCancel) {
+        console.log('🚫 Purchase cancellation detected:', {
+          method: isDirectCancel ? 'direct_cancel_param' : 
+                  isStripeCancel ? 'stripe_referrer' : 
+                  isLikelyCancel ? 'cancel_path_with_data' : 'unknown',
+          checkoutCancelled,
+          isFromStripe,
+          referrer,
+          hasCheckoutData,
+          currentPath: window.location.pathname
+        });
         
-        // Generate a unique key for this cancellation to prevent duplicates
-        const cancellationKey = `${Date.now()}_${referrer}`;
+        // Generate unique cancellation key
+        const cancellationKey = `cancel_${Date.now()}_${window.location.pathname}`;
         
         if (processedCancellationsRef.current.has(cancellationKey)) {
           console.log('🔄 Purchase cancellation already processed');
@@ -34,55 +64,78 @@ export const usePurchaseCancel = () => {
         
         processedCancellationsRef.current.add(cancellationKey);
         
-        // Try to get plan information from sessionStorage
+        // Extract plan information
         let planType = 'unknown';
         let amount = 0;
+        let cancelReason = 'user_cancelled';
         
+        // Try to get data from sessionStorage first
         if (pendingCheckoutData) {
           try {
             const paymentData = JSON.parse(pendingCheckoutData);
             planType = paymentData.planType || paymentData.planId || 'unknown';
             amount = paymentData.amountEuros || (paymentData.amount ? paymentData.amount / 100 : 0);
+            console.log('📦 Using pending payment data for cancel tracking:', { planType, amount });
           } catch (error) {
-            console.error('Error parsing pending checkout data:', error);
+            console.error('Error parsing pending payment data:', error);
           }
         } else if (checkoutInfo) {
           try {
             const checkoutData = JSON.parse(checkoutInfo);
             planType = checkoutData.priceType || 'unknown';
-            // Amount would need to be calculated from pricing config
+            
+            // Calculate amount from pricing config
+            if (planType !== 'unknown') {
+              const [planId, billingCycle] = planType.split('-');
+              const plan = getPlanById(planId);
+              if (plan) {
+                const isHalfYearly = billingCycle === 'halfyearly';
+                amount = getPrice(planId, isHalfYearly);
+              }
+            }
+            console.log('📦 Using checkout info for cancel tracking:', { planType, amount });
           } catch (error) {
             console.error('Error parsing checkout info:', error);
           }
         }
         
-        // Track purchase cancellation
-        trackPurchaseCancel(planType, amount, 'user_cancelled');
-        
-        // Clean up any pending checkout data
-        sessionStorage.removeItem('pendingPaymentSuccess');
-        
-        console.log('📊 Purchase cancellation tracked:', { planType, amount });
-      }
-      
-      // Also handle cases where user navigates away during checkout process
-      const handleBeforeUnload = () => {
-        const currentUrl = window.location.href;
-        const isOnCheckoutPage = currentUrl.includes('checkout') || currentUrl.includes('pricing');
-        
-        if (isOnCheckoutPage && (pendingCheckoutData || checkoutInfo)) {
-          // User is leaving a checkout-related page with pending data
-          // This could indicate an abandonment, but we'll only track confirmed cancellations from Stripe
+        // Determine cancel reason based on detection method
+        if (isDirectCancel) {
+          cancelReason = 'stripe_cancel_button';
+        } else if (isFromStripe) {
+          cancelReason = 'stripe_redirect_cancel';
+        } else {
+          cancelReason = 'checkout_abandonment';
         }
-      };
-      
-      window.addEventListener('beforeunload', handleBeforeUnload);
-      
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
+        
+        // Track the cancellation
+        trackPurchaseCancel(planType, amount, cancelReason);
+        
+        // Clean up checkout data
+        if (pendingCheckoutData) {
+          sessionStorage.removeItem('pendingPaymentSuccess');
+        }
+        if (checkoutInfo) {
+          sessionStorage.removeItem('checkout-information');
+        }
+        
+        console.log('📊 Purchase cancellation tracked:', { 
+          planType, 
+          amount, 
+          cancelReason,
+          detectionMethod: isDirectCancel ? 'direct_cancel_param' : 
+                          isStripeCancel ? 'stripe_referrer' : 'cancel_path_with_data'
+        });
+        
+        // Clean up URL parameters
+        if (checkoutCancelled) {
+          const newUrl = window.location.pathname;
+          window.history.replaceState({}, document.title, newUrl);
+        }
+      }
     };
 
+    // Run on mount and location changes
     handlePurchaseCancel();
-  }, [trackPurchaseCancel]);
+  }, [location, trackPurchaseCancel]);
 };
