@@ -36,6 +36,7 @@ export interface GTMEcommerceEvent extends GTMEvent {
   }>;
   custom_parameter?: {
     plan_type?: string;
+    plan_name?: string;
     plan_id?: string;
     from_plan?: string;
     to_plan?: string;

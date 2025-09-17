@@ -12,9 +12,42 @@ export const usePaymentSuccess = () => {
     const sessionId = urlParams.get('session_id');
 
     if (success === 'true' && sessionId) {
-      // Track payment success - default amount, could be enhanced to get actual amount
-      const amount = 9.99; // This could be improved to get the actual amount from the session
-      trackPaymentSuccess(amount, sessionId);
+      // Try to get payment data from sessionStorage first
+      const pendingPaymentData = sessionStorage.getItem('pendingPaymentSuccess');
+      
+      if (pendingPaymentData) {
+        try {
+          const paymentData = JSON.parse(pendingPaymentData);
+          console.log('🔍 Payment success data found in sessionStorage:', paymentData);
+          
+          // Use actual payment data from sessionStorage
+          const amount = paymentData.amountEuros || (paymentData.amount / 100) || 9.99; // Convert from cents if needed
+          const planType = paymentData.planType || 'subscription';
+          const planName = paymentData.planName || 'Subscription Plan';
+          const billingCycle = paymentData.billingCycle || 'monthly';
+          
+          trackPaymentSuccess(amount, sessionId, planType, planName, billingCycle);
+          
+          // Clean up sessionStorage
+          sessionStorage.removeItem('pendingPaymentSuccess');
+          
+          console.log('✅ Payment success tracked with actual data:', {
+            amount,
+            sessionId,
+            planType,
+            planName,
+            billingCycle
+          });
+        } catch (error) {
+          console.error('Error parsing payment success data:', error);
+          // Fallback to default tracking
+          trackPaymentSuccess(9.99, sessionId, 'subscription', 'Subscription Plan', 'monthly');
+        }
+      } else {
+        // Fallback: Track with minimal data if no sessionStorage data available
+        console.log('⚠️ No payment data in sessionStorage, using fallback');
+        trackPaymentSuccess(9.99, sessionId, 'subscription', 'Subscription Plan', 'monthly');
+      }
       
       // Clean up URL parameters
       const newUrl = window.location.pathname;

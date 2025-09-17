@@ -235,6 +235,38 @@ const MyPetTraining = () => {
   const handlePaymentSuccess = useCallback((sessionId: string, paymentType: string | null, isGuest: boolean) => {
     console.log('🎉 Processing payment success:', { sessionId, paymentType, isGuest });
     
+    // Try to get payment data from sessionStorage for accurate tracking
+    const pendingPaymentData = sessionStorage.getItem('pendingPaymentSuccess');
+    
+    if (pendingPaymentData) {
+      try {
+        const paymentData = JSON.parse(pendingPaymentData);
+        const amount = paymentData.amountEuros || (paymentData.amount / 100) || 9.99;
+        const planType = paymentData.planType || paymentType || 'subscription';
+        const planName = paymentData.planName || 'Subscription Plan';
+        const billingCycle = paymentData.billingCycle || 'monthly';
+        
+        // Track payment success with actual data
+        trackPaymentSuccess(amount, sessionId, planType, planName, billingCycle);
+        
+        console.log('✅ Payment success tracked:', {
+          amount,
+          sessionId,
+          planType,
+          planName,
+          billingCycle
+        });
+      } catch (error) {
+        console.error('Error parsing payment data for tracking:', error);
+        // Fallback tracking
+        trackPaymentSuccess(9.99, sessionId, paymentType || 'subscription', 'Subscription Plan', 'monthly');
+      }
+    } else {
+      // Fallback tracking if no sessionStorage data
+      console.log('⚠️ No payment data found, using fallback for tracking');
+      trackPaymentSuccess(9.99, sessionId, paymentType || 'subscription', 'Subscription Plan', 'monthly');
+    }
+    
     // Show success message
     toast({
       title: "Payment Successful!",
@@ -247,7 +279,7 @@ const MyPetTraining = () => {
     
     // Clear URL parameters
     window.history.replaceState({}, document.title, '/mein-tiertraining');
-  }, [toast, refetchSubscription]);
+  }, [toast, refetchSubscription, trackPaymentSuccess]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);

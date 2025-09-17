@@ -6,7 +6,7 @@ import type { GTMEvent } from '@/types/gtm';
 interface GTMContextType {
   trackEvent: (event: GTMEvent) => void;
   trackChatStart: () => void;
-  trackPaymentSuccess: (amount: number, transactionId?: string) => void;
+  trackPaymentSuccess: (amount: number, transactionId: string, planType?: string, planName?: string, billingCycle?: string) => void;
   trackSignUp: (method?: string) => void;
   trackAddToCart: (amount: number, planType?: string) => void;
   trackPageView: (pagePath: string, pageTitle?: string) => void;
