@@ -45,19 +45,15 @@ export const useGTM = () => {
   const trackPaymentSuccess = (
     amount: number, 
     transactionId: string, 
-    planType?: string,
-    planName?: string,
-    billingCycle?: string
+    items: Array<{
+      item_id: string;
+      item_name: string;
+      category: string;
+      quantity: number;
+      price: number;
+    }>,
+    planType?: string
   ) => {
-    // Create items array for e-commerce tracking
-    const items = [{
-      item_id: planType || 'subscription',
-      item_name: planName || 'Subscription Plan',
-      category: 'subscription',
-      quantity: 1,
-      price: amount
-    }];
-
     trackEvent({
       event: 'purchase',
       transaction_id: transactionId,
@@ -67,8 +63,6 @@ export const useGTM = () => {
       event_category: 'ecommerce',
       custom_parameter: {
         plan_type: planType || 'subscription',
-        plan_name: planName || 'unknown',
-        billing_cycle: billingCycle || 'unknown',
         payment_method: 'stripe',
         timestamp: new Date().toISOString()
       }
