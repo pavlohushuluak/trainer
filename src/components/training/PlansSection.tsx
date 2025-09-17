@@ -15,6 +15,8 @@ import { useState, useMemo, useEffect } from "react";
 import { SubscriptionGuard } from "../auth/SubscriptionGuard";
 import { Pet } from './types';
 import { useTranslation } from 'react-i18next';
+import { usePlans } from './usePlans';
+import { useGTM } from '@/hooks/useGTM';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X, Trophy, Star, Sparkles, CheckCircle, Zap, Crown } from "lucide-react";
@@ -67,20 +69,12 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
 
   const { data: plansWithSteps, isLoading: plansLoading, error: plansError, refetch } = usePlansWithSteps(selectedPlanType, selectedPetId);
   const { handleTemplateSelect, handleDeletePlan } = usePlanActions(refetch);
+  const { updateMutation, pets: plansPets } = usePlans();
+  const { trackPlanCompleted } = useGTM();
 
   // Enhanced refetch with success notification and congratulations
   const handleRefetchWithSuccess = async (planId?: string) => {
     await refetch();
-    
-    // Check if a specific plan was completed
-    if (planId && plansWithSteps) {
-      const plan = plansWithSteps.find(p => p.id === planId);
-      if (plan && plan.steps.every(step => step.is_completed)) {
-        setCompletedPlan(plan);
-        setShowCongratulations(true);
-        return;
-      }
-    }
     
     // Show regular success notification
     toast({
@@ -88,6 +82,37 @@ export const PlansSection = ({ pets = [] }: PlansSectionProps) => {
       description: "Your training plan has been updated successfully.",
     });
   };
+
+  // Monitor for plan status changes and auto-update
+  useEffect(() => {
+    if (!plansWithSteps || plansWithSteps.length === 0) return;
+
+    plansWithSteps.forEach(plan => {
+      const completedSteps = plan.steps.filter(step => step.is_completed).length;
+      const totalSteps = plan.steps.length;
+      
+      // Auto-start plan: if plan is 'planned' and has at least one completed step
+      if (plan.status === 'planned' && completedSteps > 0 && totalSteps > 0) {
+        console.log('🚀 Auto-starting plan:', plan.title);
+        updateMutation.mutate({
+          id: plan.id,
+          updates: { status: 'in_progress' }
+        });
+      }
+      
+      // Auto-complete plan: if all steps are completed but plan status is not 'completed'
+      else if (totalSteps > 0 && 
+               completedSteps === totalSteps && 
+               plan.status !== 'completed') {
+        
+        console.log('🎯 Auto-completing plan:', plan.title);
+        updateMutation.mutate({
+          id: plan.id,
+          updates: { status: 'completed' }
+        });
+      }
+    });
+  }, [plansWithSteps, updateMutation]);
 
   // Keep modal data in sync with parent data
   useEffect(() => {

@@ -238,7 +238,7 @@ export const useTrainingSessions = (stepId?: string, date?: string) => {
 
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate all related queries
       queryClient.invalidateQueries({ queryKey: ['training-plans-with-steps'] });
       queryClient.invalidateQueries({ queryKey: ['training-steps'] });

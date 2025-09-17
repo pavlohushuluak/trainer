@@ -51,6 +51,7 @@ export const TrainingStepItem = ({ step, onStepComplete }: TrainingStepItemProps
 
       // Invalidate rewards cache to trigger refresh
       queryClient.invalidateQueries({ queryKey: ['user-rewards'] });
+      queryClient.invalidateQueries({ queryKey: ['training-plans-with-steps'] });
 
       // Trigger step confetti celebration
       triggerStepConfetti();
