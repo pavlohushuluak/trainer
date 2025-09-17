@@ -69,6 +69,24 @@ export const useGTM = () => {
     });
   };
 
+  const trackPurchaseCancel = (
+    planType?: string,
+    amount?: number,
+    reason?: string
+  ) => {
+    trackEvent({
+      event: 'purchase_cancel',
+      event_category: 'ecommerce',
+      event_label: 'checkout_cancelled',
+      custom_parameter: {
+        plan_type: planType || 'unknown',
+        amount: amount || 0,
+        cancel_reason: reason || 'user_cancelled',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
   const trackSignUp = (method?: string) => {
     trackEvent({
       event: 'sign_up',
