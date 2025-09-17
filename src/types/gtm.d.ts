@@ -103,8 +103,24 @@ export interface GTMSupportEvent extends GTMEvent {
   };
 }
 
+export interface GTMTrainingEvent extends GTMEvent {
+  event: 'plan_created_by_chat' | 'plan_created_by_image' | 'plan_created_by_manual';
+  event_category: 'training';
+  event_label?: string;
+  custom_parameter?: {
+    plan_title?: string;
+    pet_type?: string;
+    plan_reason?: string;
+    plan_description?: string;
+    image_analysis_type?: string;
+    creation_method?: 'chat' | 'image_analysis' | 'manual';
+    is_ai_generated?: boolean;
+    timestamp?: string;
+  };
+}
+
 // Union type for all GTM events
-export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent;
+export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent | GTMTrainingEvent;
 
 // GTM DataLayer Interface
 export interface GTMDataLayer extends Array<GTMEvent> {

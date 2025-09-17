@@ -18,6 +18,9 @@ import { useToast } from "@/hooks/use-toast";
 import Confetti from 'react-confetti';
 import { supabase } from '@/integrations/supabase/client';
 import { getCheckoutInformation } from '@/utils/checkoutSessionStorage';
+import { useGTM } from '@/hooks/useGTM';
+import { getPlanById, getPrice } from '@/config/pricing';
+import { usePaymentSuccess } from '@/hooks/usePaymentSuccess';
 
 // Add custom CSS for floating animation
 const floatingAnimation = `
@@ -108,6 +111,10 @@ const MyPetTraining = () => {
   const navigate = useNavigate();
   const { t } = useTranslations();
   const { toast } = useToast();
+  const { trackPaymentSuccess } = useGTM();
+  
+  // Initialize payment success tracking hook as backup
+  usePaymentSuccess();
 
   // State for congratulations modal
   const [showCongratulations, setShowCongratulations] = useState(false);

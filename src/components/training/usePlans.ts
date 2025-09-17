@@ -4,12 +4,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from '@/hooks/useTranslations';
 import { TrainingPlan, Pet, NewPlanData } from './types';
+import { useGTM } from '@/hooks/useGTM';
 
 export const usePlans = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslations();
   const queryClient = useQueryClient();
+  const { trackPlanCreatedByManual } = useGTM();
 
   // Fetch pets with caching
   const { data: pets = [] } = useQuery({
@@ -79,7 +81,12 @@ export const usePlans = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      // Track manual plan creation
+      const selectedPet = pets.find(pet => pet.id === variables.pet_id);
+      const petType = selectedPet?.species || 'none';
+      trackPlanCreatedByManual(variables.title, petType, variables.description);
+
       queryClient.invalidateQueries({ queryKey: ['training-plans'] });
       toast({
         title: t('training.usePlans.createPlan.title'),

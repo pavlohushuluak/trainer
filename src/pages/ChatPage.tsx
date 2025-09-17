@@ -102,7 +102,7 @@ export const ChatPage = () => {
   const { usage, incrementUsage, refetch: refetchUsage } = useFreeChatLimit();
   const { checkSubscriptionStatus } = useSubscriptionStatusChecker();
   const { trackEvent } = useAnalytics();
-  const { trackChatStart, trackChatContinue } = useGTM();
+  const { trackChatStart, trackChatContinue, trackPlanCreatedByChat } = useGTM();
 
   useEffect(
     () => {
@@ -744,6 +744,14 @@ export const ChatPage = () => {
       loadChatSessions();
 
       setMessage("");
+
+      // Track plan creation by chat
+      const petType = selectedSession.pet_profiles?.species || 'none';
+      trackPlanCreatedByChat(
+        `Training Plan for ${selectedSession.pet_profiles?.name || 'Pet'}`,
+        petType,
+        planReason
+      );
 
       toast({
         title: t('chat.createPlan.modal.success')

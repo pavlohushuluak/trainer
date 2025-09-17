@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTranslations } from '@/hooks/useTranslations';
 import { useImageAnalysisHistory } from '@/hooks/useImageAnalysisHistory';
 import { useQueryClient } from '@tanstack/react-query';
+import { useGTM } from '@/hooks/useGTM';
 
 interface Pet {
   id: string;
@@ -27,6 +28,7 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
   const { currentLanguage, t } = useTranslations();
   const { saveAnalysis } = useImageAnalysisHistory();
   const queryClient = useQueryClient();
+  const { trackPlanCreatedByImage } = useGTM();
 
   const handleUploadComplete = async (result: any, pet?: Pet) => {
     setAnalysisResult(result);
@@ -118,6 +120,13 @@ export const useImageAnalysisLogic = (selectedPet?: Pet, onPlanCreated?: () => v
       console.log('Plan creation response:', result);
 
       if (result.plan_creation_success && result.created_plan) {
+        // Track plan creation by image
+        trackPlanCreatedByImage(
+          result.created_plan.title,
+          petToUse.species,
+          analysisResult.behavior_analysis || 'general'
+        );
+
         // Plan was created successfully
         const successMessages = {
           de: {

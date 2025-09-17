@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "react-i18next";
+import { useGTM } from "@/hooks/useGTM";
 
 interface Pet {
   id: string;
@@ -60,6 +61,7 @@ export const CreatePlanModal = ({ isOpen, onClose, onPlanCreated, pets }: Create
   const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { trackPlanCreatedByManual } = useGTM();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -98,6 +100,11 @@ export const CreatePlanModal = ({ isOpen, onClose, onPlanCreated, pets }: Create
         });
 
       if (error) throw error;
+
+      // Track manual plan creation
+      const selectedPet = pets.find(pet => pet.id === formData.petId);
+      const petType = selectedPet?.species || 'none';
+      trackPlanCreatedByManual(formData.title, petType, formData.description);
 
       toast({
         title: t('training.createPlanModal.toast.success.title'),

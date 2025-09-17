@@ -312,6 +312,55 @@ export const useGTM = () => {
     });
   };
 
+  // Training plan creation tracking functions
+  const trackPlanCreatedByChat = (planTitle?: string, petType?: string, planReason?: string) => {
+    trackEvent({
+      event: 'plan_created_by_chat',
+      event_category: 'training',
+      event_label: 'chat_generated',
+      custom_parameter: {
+        plan_title: planTitle || 'unknown',
+        pet_type: petType || 'none',
+        plan_reason: planReason?.substring(0, 100) || 'unknown', // Limit length
+        creation_method: 'chat',
+        is_ai_generated: true,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackPlanCreatedByImage = (planTitle?: string, petType?: string, imageAnalysisType?: string) => {
+    trackEvent({
+      event: 'plan_created_by_image',
+      event_category: 'training',
+      event_label: 'image_generated',
+      custom_parameter: {
+        plan_title: planTitle || 'unknown',
+        pet_type: petType || 'none',
+        image_analysis_type: imageAnalysisType || 'unknown',
+        creation_method: 'image_analysis',
+        is_ai_generated: true,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackPlanCreatedByManual = (planTitle?: string, petType?: string, planDescription?: string) => {
+    trackEvent({
+      event: 'plan_created_by_manual',
+      event_category: 'training',
+      event_label: 'manual_created',
+      custom_parameter: {
+        plan_title: planTitle || 'unknown',
+        pet_type: petType || 'none',
+        plan_description: planDescription?.substring(0, 100) || 'unknown', // Limit length
+        creation_method: 'manual',
+        is_ai_generated: false,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
   const trackChatMessage = (messageType: 'user' | 'assistant', messageLength?: number) => {
     trackEvent({
       event: 'chat_message',
@@ -408,6 +457,9 @@ export const useGTM = () => {
     trackSupportFeedback,
     trackSupportTicketResolve,
     trackSupportFAQClick,
+    trackPlanCreatedByChat,
+    trackPlanCreatedByImage,
+    trackPlanCreatedByManual,
     trackPaymentSuccess,
     trackSignUp,
     trackAddToCart,
