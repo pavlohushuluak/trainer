@@ -72,6 +72,40 @@ export interface GTMEngagementEvent extends GTMEvent {
   };
 }
 
+export interface GTMCommunityEvent extends GTMEvent {
+  event: 'new_post' | 'delete_post';
+  event_category: 'community';
+  event_label?: string;
+  custom_parameter?: {
+    post_id?: string;
+    post_type?: string;
+    category?: string;
+    pet_type?: string;
+    timestamp?: string;
+  };
+}
+
+export interface GTMSupportEvent extends GTMEvent {
+  event: 'support_page_visit' | 'support_chat_start' | 'support_ticket_create' | 'support_message' | 'support_feedback' | 'support_ticket_resolve' | 'support_faq_click';
+  event_category: 'support';
+  event_label?: string;
+  custom_parameter?: {
+    support_type?: string;
+    ticket_id?: string;
+    ticket_category?: string;
+    ticket_priority?: string;
+    message_type?: 'user' | 'ai' | 'admin';
+    satisfaction_rating?: number;
+    resolved_by?: string;
+    has_feedback_text?: boolean;
+    feedback_length?: number;
+    timestamp?: string;
+  };
+}
+
+// Union type for all GTM events
+export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent;
+
 // GTM DataLayer Interface
 export interface GTMDataLayer extends Array<GTMEvent> {
   push(event: GTMEvent): void;

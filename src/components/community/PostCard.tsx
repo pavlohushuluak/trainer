@@ -20,6 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useGTM } from "@/hooks/useGTM";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -97,6 +98,7 @@ export const PostCard = ({ post }: PostCardProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { t, currentLanguage } = useTranslations();
+  const { trackDeletePost } = useGTM();
   const [showComments, setShowComments] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -265,6 +267,9 @@ export const PostCard = ({ post }: PostCardProps) => {
       }
     },
     onSuccess: () => {
+      // Track post deletion
+      trackDeletePost(post.id, post.post_type, post.category);
+
       queryClient.invalidateQueries({ queryKey: ['community-posts'] });
       toast({
         title: t('community.postCard.toasts.deleteSuccess'),

@@ -13,6 +13,7 @@ import { ChatInput } from './ChatInput';
 import { SatisfactionRequest } from './SatisfactionRequest';
 import { useTranslations } from '@/hooks/useTranslations';
 import { AnimatedDots } from '@/components/ui/animated-dots';
+import { useGTM } from '@/hooks/useGTM';
 
 interface SupportChatProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ interface SupportChatProps {
 export const SupportChat = ({ isOpen, onClose, onTicketChange }: SupportChatProps) => {
   const { t } = useTranslations();
   const [showNewTicketDialog, setShowNewTicketDialog] = useState(false);
+  const { trackSupportTicketCreate, trackSupportMessage, trackSupportFeedback } = useGTM();
   
   const {
     messages,

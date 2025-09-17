@@ -23,6 +23,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { VideoUpload } from "./VideoUpload";
 import { uploadVideo, VideoUploadResult } from "./utils/videoUpload";
+import { useGTM } from "@/hooks/useGTM";
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ export const CreatePostModal = ({ isOpen, onClose }: CreatePostModalProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+  const { trackNewPost } = useGTM();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -123,6 +125,11 @@ export const CreatePostModal = ({ isOpen, onClose }: CreatePostModalProps) => {
       
     },
     onSuccess: () => {
+      // Track new post creation
+      const selectedPet = pets?.find(pet => pet.id === formData.pet_id);
+      const petType = selectedPet?.species || 'none';
+      trackNewPost(formData.post_type, formData.category, petType);
+
       queryClient.invalidateQueries({ queryKey: ['community-posts'] });
       toast({
         title: t('community.createPost.toasts.success'),

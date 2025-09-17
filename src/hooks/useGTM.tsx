@@ -204,6 +204,125 @@ export const useGTM = () => {
     });
   };
 
+  const trackNewPost = (postType?: string, category?: string, petType?: string) => {
+    trackEvent({
+      event: 'new_post',
+      event_category: 'community',
+      event_label: postType || 'question',
+      custom_parameter: {
+        post_type: postType || 'question',
+        category: category || 'unknown',
+        pet_type: petType || 'none',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackDeletePost = (postId?: string, postType?: string, category?: string) => {
+    trackEvent({
+      event: 'delete_post',
+      event_category: 'community',
+      event_label: postType || 'unknown',
+      custom_parameter: {
+        post_id: postId || 'unknown',
+        post_type: postType || 'unknown',
+        category: category || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  // Support tracking functions
+  const trackSupportPageVisit = () => {
+    trackEvent({
+      event: 'support_page_visit',
+      event_category: 'support',
+      event_label: 'page_view',
+      custom_parameter: {
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackSupportChatStart = () => {
+    trackEvent({
+      event: 'support_chat_start',
+      event_category: 'support',
+      event_label: 'chat_initiated',
+      custom_parameter: {
+        support_type: 'chat',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackSupportTicketCreate = (category?: string, priority?: string) => {
+    trackEvent({
+      event: 'support_ticket_create',
+      event_category: 'support',
+      event_label: category || 'general',
+      custom_parameter: {
+        ticket_category: category || 'general',
+        ticket_priority: priority || 'medium',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackSupportMessage = (messageType: 'user' | 'ai' | 'admin', ticketId?: string) => {
+    trackEvent({
+      event: 'support_message',
+      event_category: 'support',
+      event_label: messageType,
+      custom_parameter: {
+        message_type: messageType,
+        ticket_id: ticketId || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackSupportFeedback = (rating: number, ticketId?: string, feedbackText?: string) => {
+    trackEvent({
+      event: 'support_feedback',
+      event_category: 'support',
+      event_label: `rating_${rating}`,
+      custom_parameter: {
+        satisfaction_rating: rating,
+        ticket_id: ticketId || 'unknown',
+        has_feedback_text: !!feedbackText,
+        feedback_length: feedbackText?.length || 0,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackSupportTicketResolve = (ticketId?: string, resolvedBy?: string, rating?: number) => {
+    trackEvent({
+      event: 'support_ticket_resolve',
+      event_category: 'support',
+      event_label: resolvedBy || 'unknown',
+      custom_parameter: {
+        ticket_id: ticketId || 'unknown',
+        resolved_by: resolvedBy || 'unknown',
+        satisfaction_rating: rating || 0,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackSupportFAQClick = () => {
+    trackEvent({
+      event: 'support_faq_click',
+      event_category: 'support',
+      event_label: 'faq_navigation',
+      custom_parameter: {
+        support_type: 'faq',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
   const trackChatMessage = (messageType: 'user' | 'assistant', messageLength?: number) => {
     trackEvent({
       event: 'chat_message',
@@ -292,6 +411,15 @@ export const useGTM = () => {
     trackChatStart,
     trackChatContinue,
     trackChatMessage,
+    trackNewPost,
+    trackDeletePost,
+    trackSupportPageVisit,
+    trackSupportChatStart,
+    trackSupportTicketCreate,
+    trackSupportMessage,
+    trackSupportFeedback,
+    trackSupportTicketResolve,
+    trackSupportFAQClick,
     trackPaymentSuccess,
     trackSignUp,
     trackAddToCart,

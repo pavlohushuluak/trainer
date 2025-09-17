@@ -15,6 +15,7 @@ import { useTranslations } from '@/hooks/useTranslations';
 import { usePetProfiles } from '@/hooks/usePetProfiles';
 import { useSupportTickets } from '@/hooks/useSupportTickets';
 import { requestCache } from '@/utils/requestCache';
+import { useGTM } from '@/hooks/useGTM';
 
 const Support = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const Support = () => {
   const { t } = useTranslations();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const { fetchTickets } = useSupportTickets();
+  const { trackSupportPageVisit, trackSupportChatStart, trackSupportFAQClick } = useGTM();
   
   // Wrapper function that clears cache before fetching tickets
   const refreshTickets = useCallback(async () => {
@@ -53,6 +55,11 @@ const Support = () => {
     petsData: pets,
     timestamp: new Date().toISOString()
   });
+
+  // Track support page visit
+  React.useEffect(() => {
+    trackSupportPageVisit();
+  }, [trackSupportPageVisit]);
 
   // Manual fetch if needed
   React.useEffect(() => {
@@ -104,7 +111,10 @@ const Support = () => {
                 </p>
                 <Button
                   className="w-full h-12 text-base font-medium bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all duration-200 shadow-lg hover:shadow-xl"
-                  onClick={() => setIsChatOpen(true)}
+                  onClick={() => {
+                    trackSupportChatStart();
+                    setIsChatOpen(true);
+                  }}
                 >
                   <MessageCircle className="h-5 w-5 mr-2" />
                   {t('support.chatSupport.button')}
@@ -114,6 +124,7 @@ const Support = () => {
 
             <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-gradient-to-br from-background to-muted/5 cursor-pointer"
               onClick={() => {
+                trackSupportFAQClick();
                 navigate('/#faq');
                 // Scroll to FAQ section after navigation
                 setTimeout(() => {

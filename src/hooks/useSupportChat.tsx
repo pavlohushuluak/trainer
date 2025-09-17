@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from '@/hooks/useTranslations';
 import { requestCache } from '@/utils/requestCache';
+import { useGTM } from '@/hooks/useGTM';
 
 interface Message {
   id: string;
@@ -20,6 +21,7 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
   const { user } = useAuth();
   const { toast } = useToast();
   const { t, currentLanguage } = useTranslations();
+  const { trackSupportTicketCreate, trackSupportMessage, trackSupportFeedback, trackSupportTicketResolve } = useGTM();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -128,6 +130,9 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
         return null;
       }
 
+      // Track ticket creation
+      trackSupportTicketCreate('allgemein', 'medium');
+
       return ticket.id;
     } catch (error) {
       console.error('Error creating ticket:', error);
@@ -169,6 +174,9 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
     setNewMessage('');
     setShowSatisfactionRequest(false);
 
+    // Track user message
+    trackSupportMessage('user', currentTicketId);
+
     try {
       const { data, error } = await supabase.functions.invoke('support-ai-chat', {
         body: {
@@ -194,6 +202,9 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
 
         setMessages(prev => [...prev, aiMessage]);
         setLastAiMessageId(aiMessage.id);
+        
+        // Track AI response
+        trackSupportMessage('ai', currentTicketId);
         
         if (data.showSatisfactionRequest) {
           setTimeout(() => {
@@ -251,6 +262,10 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
 
         setMessages(prev => [...prev, thankYouMessage]);
         
+        // Track positive feedback and ticket resolution
+        trackSupportFeedback(5, ticketId);
+        trackSupportTicketResolve(ticketId, 'ai', 5);
+        
         toast({
           title: t('support.chat.satisfaction.thankYouToast.title'),
           description: t('support.chat.satisfaction.thankYouToast.description')
@@ -281,6 +296,9 @@ export const useSupportChat = (isOpen: boolean, onTicketChange?: () => void) => 
         };
 
         setMessages(prev => [...prev, escalationMessage]);
+        
+        // Track negative feedback (escalation)
+        trackSupportFeedback(2, ticketId);
         
         toast({
           title: t('support.chat.satisfaction.escalationToast.title'),
