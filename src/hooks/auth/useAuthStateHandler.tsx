@@ -4,6 +4,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useOAuthProfileHandler } from './useOAuthProfileHandler';
 import { getCheckoutFlags } from '@/utils/checkoutStorage';
+import { useGTM } from '@/hooks/useGTM';
 
 export const useAuthStateHandler = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -11,20 +12,13 @@ export const useAuthStateHandler = () => {
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
   const { handleOAuthProfile } = useOAuthProfileHandler();
+  const { trackSignUp, trackLogin } = useGTM();
 
   // Use ref to track if component is mounted
   const mountedRef = useRef(true);
-
-  const trackSignUp = useCallback(() => {
-    // Track sign up with GTM
-    if (typeof window !== 'undefined' && window.dataLayer) {
-      window.dataLayer.push({ 
-        event: 'sign_up',
-        method: 'email',
-        event_category: 'auth'
-      });
-    }
-  }, []);
+  
+  // Track processed sessions to prevent duplicate tracking
+  const processedSessionsRef = useRef(new Set<string>());
 
   const checkIfUserIsAdmin = useCallback(async (userId: string) => {
     try {
@@ -54,15 +48,23 @@ export const useAuthStateHandler = () => {
     });
 
     try {
+      const sessionId = session.access_token;
 
-      // Track sign up for new users
-      const userCreatedAt = new Date(user.created_at);
-      const now = new Date();
-      const timeDiff = now.getTime() - userCreatedAt.getTime();
-      const isNewUser = timeDiff < 60000; // Less than 1 minute ago = new user
+      // Track authentication only once per session
+      if (!processedSessionsRef.current.has(sessionId)) {
+        processedSessionsRef.current.add(sessionId);
+        
+        // Track sign up for new users, login for returning users
+        const userCreatedAt = new Date(user.created_at);
+        const now = new Date();
+        const timeDiff = now.getTime() - userCreatedAt.getTime();
+        const isNewUser = timeDiff < 60000; // Less than 1 minute ago = new user
 
-      if (isNewUser) {
-        trackSignUp();
+        if (isNewUser) {
+          trackSignUp('email');
+        } else {
+          trackLogin('email');
+        }
       }
 
       // Skip redirects for callback and admin login pages
@@ -164,7 +166,7 @@ export const useAuthStateHandler = () => {
         window.location.href = '/';
       }
     }
-  }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin]);
+  }, [trackSignUp, trackLogin, handleOAuthProfile, checkIfUserIsAdmin]);
 
   useEffect(() => {
     mountedRef.current = true;
