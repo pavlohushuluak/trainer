@@ -235,6 +235,58 @@ const MyPetTraining = () => {
   const handlePaymentSuccess = useCallback((sessionId: string, paymentType: string | null, isGuest: boolean) => {
     console.log('🎉 Processing payment success:', { sessionId, paymentType, isGuest });
     
+    // Get payment data from session storage for GTM tracking
+    const pendingPaymentData = sessionStorage.getItem('pendingPaymentSuccess');
+    if (pendingPaymentData) {
+      try {
+        const paymentData = JSON.parse(pendingPaymentData);
+        console.log('Payment data for GTM tracking:', paymentData);
+        
+        // Create items array for GTM tracking
+        const amount = paymentData.amountEuros || (paymentData.amount ? paymentData.amount / 100 : 9.99);
+        const items = [{
+          item_id: paymentData.planType || paymentData.planId || 'subscription',
+          item_name: paymentData.planName || 'Subscription Plan',
+          category: 'subscription',
+          quantity: 1,
+          price: amount
+        }];
+        
+        // Track payment success
+        trackPaymentSuccess(amount, sessionId, items, paymentData.planType);
+        
+      } catch (error) {
+        console.error('Error tracking payment success:', error);
+        
+        // Fallback tracking with basic data
+        const items = [{
+          item_id: 'subscription',
+          item_name: 'Subscription Plan',
+          category: 'subscription',
+          quantity: 1,
+          price: 9.99
+        }];
+        trackPaymentSuccess(9.99, sessionId, items, 'subscription');
+      }
+    } else {
+      // Fallback: Try to reconstruct payment data from current pricing config
+      console.log('No pending payment data, attempting to reconstruct from pricing config');
+      
+      const planId = paymentType || '1tier'; // Default fallback
+      const plan = getPlanById(planId);
+      const price = plan ? getPrice(planId, false) : 9.99; // Default to monthly
+      
+      const items = [{
+        item_id: planId,
+        item_name: plan?.name || 'Subscription Plan',
+        category: 'subscription',
+        quantity: 1,
+        price: price
+      }];
+      
+      trackPaymentSuccess(price, sessionId, items, planId);
+    }
+    
     // Show success message
     toast({
       title: "Payment Successful!",
@@ -247,7 +299,7 @@ const MyPetTraining = () => {
     
     // Clear URL parameters
     window.history.replaceState({}, document.title, '/mein-tiertraining');
-  }, [toast, refetchSubscription]);
+  }, [toast, refetchSubscription, trackPaymentSuccess]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);

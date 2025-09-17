@@ -12,9 +12,43 @@ export const usePaymentSuccess = () => {
     const sessionId = urlParams.get('session_id');
 
     if (success === 'true' && sessionId) {
-      // Track payment success - default amount, could be enhanced to get actual amount
-      const amount = 9.99; // This could be improved to get the actual amount from the session
-      trackPaymentSuccess(amount, sessionId);
+      // Get payment data from session storage
+      const pendingPaymentData = sessionStorage.getItem('pendingPaymentSuccess');
+      let amount = 9.99; // Default fallback
+      let items = [{
+        item_id: 'subscription',
+        item_name: 'Subscription Plan',
+        category: 'subscription',
+        quantity: 1,
+        price: amount
+      }];
+      let planType = 'subscription';
+
+      if (pendingPaymentData) {
+        try {
+          const paymentData = JSON.parse(pendingPaymentData);
+          console.log('Payment success data found:', paymentData);
+          
+          if (paymentData.amount) {
+            amount = paymentData.amount / 100; // Convert from cents to euros
+          }
+          if (paymentData.planName && paymentData.planType) {
+            items = [{
+              item_id: paymentData.planType,
+              item_name: paymentData.planName,
+              category: 'subscription',
+              quantity: 1,
+              price: amount
+            }];
+            planType = paymentData.planType;
+          }
+        } catch (error) {
+          console.error('Error parsing payment data:', error);
+        }
+      }
+
+      // Track payment success with proper items array
+      trackPaymentSuccess(amount, sessionId, items, planType);
       
       // Clean up URL parameters
       const newUrl = window.location.pathname;
