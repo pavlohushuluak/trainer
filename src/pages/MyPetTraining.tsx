@@ -228,63 +228,6 @@ const MyPetTraining = () => {
   const handlePaymentSuccess = useCallback((sessionId: string, paymentType: string | null, isGuest: boolean) => {
     console.log('🎉 Processing payment success:', { sessionId, paymentType, isGuest });
     
-    // Track payment success in GTM
-    try {
-      // Get checkout data from sessionStorage
-      const checkoutData = sessionStorage.getItem('pendingPaymentSuccess');
-      let amount = 990; // Default fallback in cents (9.90 EUR)
-      let planType = 'plan1-monthly'; // Default fallback
-      let planName = '1 Tier Monthly Plan'; // Default fallback
-      let planId = 'plan1'; // Default fallback
-      
-      if (checkoutData) {
-        try {
-          const data = JSON.parse(checkoutData);
-          // Amount should already be in cents from CheckoutButton
-          amount = data.amount || amount;
-          planType = data.planType || planType;
-          planName = data.planName || planName;
-          planId = data.planId || planId;
-          
-          console.log('💰 Payment success data from handlePaymentSuccess:', { 
-            amount, planType, planName, planId, sessionId 
-          });
-        } catch (error) {
-          console.warn('Error parsing checkout data for GTM:', error);
-        }
-      } else if (paymentType) {
-        // Fallback: try to reconstruct from paymentType
-        const [reconstructedPlanId, billingCycle] = paymentType.split('-');
-        if (reconstructedPlanId && billingCycle) {
-          const plan = getPlanById(reconstructedPlanId);
-          const isHalfYearly = billingCycle === 'halfyearly';
-          if (plan) {
-            planId = reconstructedPlanId;
-            planType = paymentType;
-            amount = Math.round(getPrice(reconstructedPlanId, isHalfYearly) * 100); // Convert to cents
-            planName = `${plan.name} ${isHalfYearly ? 'Half-Yearly' : 'Monthly'} Plan`;
-          }
-        }
-      }
-
-      // Track payment success with proper items array
-      const items = [{
-        item_id: planId,
-        item_name: planName,
-        category: 'subscription_plan',
-        quantity: 1,
-        price: amount
-      }];
-
-      console.log('🏷️ Tracking payment success:', { amount, sessionId, items, planType });
-      trackPaymentSuccess(amount, sessionId, items, planType);
-      
-      // Clean up checkout data
-      sessionStorage.removeItem('pendingPaymentSuccess');
-    } catch (error) {
-      console.error('Error tracking payment success:', error);
-    }
-    
     // Show success message
     toast({
       title: "Payment Successful!",
@@ -297,7 +240,7 @@ const MyPetTraining = () => {
     
     // Clear URL parameters
     window.history.replaceState({}, document.title, '/mein-tiertraining');
-  }, [toast, refetchSubscription, trackPaymentSuccess]);
+  }, [toast, refetchSubscription]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);

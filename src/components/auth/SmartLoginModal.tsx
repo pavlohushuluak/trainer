@@ -27,6 +27,7 @@ import { AGBModal } from '@/components/legal/AGBModal';
 import { ImpressumModal } from '@/components/legal/ImpressumModal';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useEmailNotifications } from "@/hooks/useEmailNotifications";
+import { useGTM } from '@/hooks/useGTM';
 
 interface SmartLoginModalProps {
   isOpen: boolean;
@@ -48,6 +49,7 @@ export const SmartLoginModal = ({
   const { sendWelcomeEmail } = useEmailNotifications();
   const { t } = useTranslations();
   const { toast } = useToast();
+  const { trackLogin, trackSignUp } = useGTM();
   
   // Form states
   const [email, setEmail] = useState('');
@@ -129,6 +131,9 @@ export const SmartLoginModal = ({
           }
         }
         
+        // Track successful login
+        trackLogin('email');
+        
         // Show login success toast
         toast({
           title: t('auth.smartLogin.welcomeToast.title'),
@@ -173,6 +178,9 @@ export const SmartLoginModal = ({
           setError(error.message);
         }
       } else {
+        // Track successful signup
+        trackSignUp('email');
+        
         // Set localStorage to indicate user has signed up
         localStorage.setItem('alreadySignedUp', 'true');
         

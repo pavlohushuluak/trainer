@@ -28,6 +28,7 @@ export const AuthForm = ({ onAuthSuccess }: AuthFormProps) => {
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { trackLogin, trackSignUp } = useGTM();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +40,9 @@ export const AuthForm = ({ onAuthSuccess }: AuthFormProps) => {
       if (isLogin) {
         const { error, data } = await signIn(email, password);
         if (error) throw error;
+        
+        // Track successful login
+        trackLogin('email');
         
         toast({
           title: t('auth.form.toasts.loginSuccess'),
@@ -62,6 +66,9 @@ export const AuthForm = ({ onAuthSuccess }: AuthFormProps) => {
         const language = localStorage.getItem('i18nextLng') || 'de';
         const { error, data } = await signUp(email, password, firstName, lastName, language);
         if (error) throw error;
+        
+        // Track successful signup
+        trackSignUp('email');
         
         if (data?.user && !data.user.email_confirmed_at) {
           toast({
