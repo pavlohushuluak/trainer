@@ -1,10 +1,15 @@
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useGTM } from './useGTM';
 import { supabase } from '@/integrations/supabase/client';
 
+// Global cache to prevent duplicate API calls
+const paymentDataCache = new Map<string, any>();
+const pendingRequests = new Map<string, Promise<any>>();
+
 export const usePaymentSuccess = () => {
   const { trackPaymentSuccess } = useGTM();
+  const processedSessionsRef = useRef(new Set<string>());
 
   useEffect(() => {
     const handlePaymentSuccess = async () => {
@@ -14,13 +19,55 @@ export const usePaymentSuccess = () => {
       const sessionId = urlParams.get('session_id');
 
       if (success === 'true' && sessionId) {
+        // Check if this session was already processed
+        if (processedSessionsRef.current.has(sessionId)) {
+          console.log('🔄 Payment success already processed for session:', sessionId);
+          return;
+        }
+
+        // Mark session as being processed
+        processedSessionsRef.current.add(sessionId);
+
         console.log('🎉 Payment success detected, fetching payment data from Stripe...', { sessionId });
         
         try {
-          // Fetch actual payment data from Stripe via Supabase function
-          const { data, error } = await supabase.functions.invoke('get-payment-data', {
+          // Check cache first
+          if (paymentDataCache.has(sessionId)) {
+            console.log('📦 Using cached payment data for session:', sessionId);
+            const cachedData = paymentDataCache.get(sessionId);
+            trackPaymentSuccess(
+              cachedData.amountEuros,
+              cachedData.transactionId,
+              cachedData.items,
+              cachedData.planType
+            );
+            return;
+          }
+
+          // Check if there's already a pending request for this session
+          if (pendingRequests.has(sessionId)) {
+            console.log('⏳ Waiting for existing request for session:', sessionId);
+            const existingRequest = pendingRequests.get(sessionId);
+            const result = await existingRequest;
+            if (result?.data?.success && result?.data?.data) {
+              const paymentData = result.data.data;
+              trackPaymentSuccess(
+                paymentData.amountEuros,
+                paymentData.transactionId,
+                paymentData.items,
+                paymentData.planType
+              );
+            }
+            return;
+          }
+
+          // Create new request and cache it
+          const requestPromise = supabase.functions.invoke('get-payment-data', {
             body: { sessionId }
           });
+          
+          pendingRequests.set(sessionId, requestPromise);
+          const { data, error } = await requestPromise;
 
           if (error) {
             console.error('Error fetching payment data:', error);
@@ -29,9 +76,15 @@ export const usePaymentSuccess = () => {
             return;
           }
 
+          // Clean up pending request
+          pendingRequests.delete(sessionId);
+
           if (data?.success && data?.data) {
             const paymentData = data.data;
             console.log('✅ Payment data fetched successfully:', paymentData);
+            
+            // Cache the payment data
+            paymentDataCache.set(sessionId, paymentData);
             
             // Track payment success with real Stripe data
             trackPaymentSuccess(
@@ -46,6 +99,8 @@ export const usePaymentSuccess = () => {
           }
         } catch (error) {
           console.error('Error calling get-payment-data function:', error);
+          // Clean up pending request on error
+          pendingRequests.delete(sessionId);
           await handlePaymentSuccessFallback(sessionId);
         }
         

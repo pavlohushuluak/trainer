@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { usePetProfiles } from '@/hooks/usePetProfiles';
@@ -20,7 +20,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getCheckoutInformation } from '@/utils/checkoutSessionStorage';
 import { useGTM } from '@/hooks/useGTM';
 import { getPlanById, getPrice } from '@/config/pricing';
-import { usePaymentSuccess } from '@/hooks/usePaymentSuccess';
+import { usePurchaseCancel } from '@/hooks/usePurchaseCancel';
 
 // Add custom CSS for floating animation
 const floatingAnimation = `
@@ -113,8 +113,11 @@ const MyPetTraining = () => {
   const { toast } = useToast();
   const { trackPaymentSuccess } = useGTM();
   
-  // Initialize payment success tracking hook as backup
-  usePaymentSuccess();
+  // Initialize purchase cancellation tracking
+  usePurchaseCancel();
+  
+  // Track processed payment sessions to prevent duplicates
+  const processedPaymentSessionsRef = useRef(new Set<string>());
 
   // State for congratulations modal
   const [showCongratulations, setShowCongratulations] = useState(false);
@@ -234,6 +237,15 @@ const MyPetTraining = () => {
   // CRITICAL FIX: Move handlePaymentSuccess outside useEffect to make it accessible
   const handlePaymentSuccess = useCallback(async (sessionId: string, paymentType: string | null, isGuest: boolean) => {
     console.log('🎉 Processing payment success:', { sessionId, paymentType, isGuest });
+    
+    // Check if this payment session was already processed
+    if (processedPaymentSessionsRef.current.has(sessionId)) {
+      console.log('🔄 Payment success already processed for session:', sessionId);
+      return;
+    }
+    
+    // Mark session as processed
+    processedPaymentSessionsRef.current.add(sessionId);
     
     // Fetch actual payment data from Stripe via Supabase function
     try {

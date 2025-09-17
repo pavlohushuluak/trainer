@@ -651,6 +651,7 @@ export const useGTM = () => {
     trackChangePassword,
     trackChangeDark,
     trackPaymentSuccess,
+    trackPurchaseCancel,
     trackSignUp,
     trackAddToCart,
     trackBeginCheckout,

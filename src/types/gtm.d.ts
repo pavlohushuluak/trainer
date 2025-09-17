@@ -23,7 +23,7 @@ export interface GTMCustomEvent extends GTMEvent {
 }
 
 export interface GTMEcommerceEvent extends GTMEvent {
-  event: 'purchase' | 'add_to_cart' | 'begin_checkout' | 'view_item' | 'subscription_upgrade' | 'subscription_upgrade_monthly' | 'subscription_upgrade_halfyearly';
+  event: 'purchase' | 'purchase_cancel' | 'add_to_cart' | 'begin_checkout' | 'view_item' | 'subscription_upgrade' | 'subscription_upgrade_monthly' | 'subscription_upgrade_halfyearly';
   transaction_id?: string;
   value?: number;
   currency?: string;
@@ -42,6 +42,8 @@ export interface GTMEcommerceEvent extends GTMEvent {
     upgrade_amount?: number;
     billing_cycle?: 'monthly' | 'halfyearly';
     payment_method?: string;
+    amount?: number;
+    cancel_reason?: string;
     timestamp?: string;
   };
 }
