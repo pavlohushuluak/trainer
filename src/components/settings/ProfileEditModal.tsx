@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useTranslations } from '@/hooks/useTranslations';
 import { Loader2, User, Mail, Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { useGTM } from '@/hooks/useGTM';
 
 interface ProfileEditModalProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ interface EmailChangeData {
 export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => {
   const { user } = useAuth();
   const { t } = useTranslations();
+  const { trackEditProfile } = useGTM();
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailChangeLoading, setIsEmailChangeLoading] = useState(false);
   const [isEmailChangeOpen, setIsEmailChangeOpen] = useState(false);
@@ -111,6 +113,16 @@ export const ProfileEditModal = ({ isOpen, onClose }: ProfileEditModalProps) => 
         });
         return;
       }
+
+      // Track profile edit
+      const changedFields = [];
+      if (profileData.first_name.trim() !== (user.user_metadata?.first_name || '')) {
+        changedFields.push('first_name');
+      }
+      if (profileData.last_name.trim() !== (user.user_metadata?.last_name || '')) {
+        changedFields.push('last_name');
+      }
+      trackEditProfile(changedFields);
 
       toast({
         title: t('settings.profile.success.title'),

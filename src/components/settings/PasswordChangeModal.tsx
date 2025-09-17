@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useTranslations } from '@/hooks/useTranslations';
 import { Loader2, Shield, Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { useGTM } from '@/hooks/useGTM';
 
 interface PasswordChangeModalProps {
   isOpen: boolean;
@@ -32,6 +33,7 @@ interface PasswordValidation {
 export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProps) => {
   const { user } = useAuth();
   const { t } = useTranslations();
+  const { trackChangePassword } = useGTM();
   const [isLoading, setIsLoading] = useState(false);
   const [showPasswords, setShowPasswords] = useState({
     current: false,
@@ -205,6 +207,9 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
         return;
       }
 
+      // Track password change (email verification method)
+      trackChangePassword('email_verification');
+
       toast({
         title: t('settings.security.success.title'),
         description: t('settings.security.success.description')
@@ -281,6 +286,9 @@ export const PasswordChangeModal = ({ isOpen, onClose }: PasswordChangeModalProp
         });
         return;
       }
+
+      // Track password change (current password method)
+      trackChangePassword('current_password');
 
       toast({
         title: t('settings.security.success.title'),

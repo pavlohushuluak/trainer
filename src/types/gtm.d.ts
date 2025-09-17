@@ -146,8 +146,23 @@ export interface GTMImageAnalysisEvent extends GTMEvent {
   };
 }
 
+export interface GTMSettingsEvent extends GTMEvent {
+  event: 'edit_profile' | 'change_language' | 'change_password' | 'change_dark';
+  event_category: 'settings';
+  event_label?: string;
+  custom_parameter?: {
+    fields_changed?: string;
+    from_language?: string;
+    to_language?: string;
+    change_method?: 'current_password' | 'email_verification';
+    from_theme?: string;
+    to_theme?: string;
+    timestamp?: string;
+  };
+}
+
 // Union type for all GTM events
-export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent | GTMTrainingEvent | GTMPetManagementEvent | GTMImageAnalysisEvent;
+export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent | GTMTrainingEvent | GTMPetManagementEvent | GTMImageAnalysisEvent | GTMSettingsEvent;
 
 // GTM DataLayer Interface
 export interface GTMDataLayer extends Array<GTMEvent> {

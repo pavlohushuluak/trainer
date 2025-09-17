@@ -4,6 +4,7 @@ import { Moon, Sun, Monitor } from 'lucide-react';
 import { useThemeContext } from '@/hooks/ThemeProvider';
 import { cn } from '@/lib/utils';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useGTM } from '@/hooks/useGTM';
 
 interface ThemeToggleProps {
   className?: string;
@@ -20,6 +21,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
 }) => {
   const { theme, resolvedTheme, toggleTheme } = useThemeContext();
   const { t } = useTranslations();
+  const { trackChangeDark } = useGTM();
 
   const getIcon = () => {
     return resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />;
@@ -27,6 +29,17 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
 
   const getLabel = () => {
     return resolvedTheme === 'dark' ? t('settings.appearance.light') : t('settings.appearance.dark');
+  };
+
+  const handleThemeToggle = () => {
+    const currentTheme = resolvedTheme;
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    // Track theme change
+    trackChangeDark(currentTheme, newTheme);
+    
+    // Toggle theme
+    toggleTheme();
   };
 
   const getTooltip = () => {
@@ -39,7 +52,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
     <Button
       variant={variant}
       size={size}
-      onClick={toggleTheme}
+      onClick={handleThemeToggle}
       className={cn(
         'transition-all duration-200 hover:scale-105 active:scale-95',
         'relative overflow-hidden group',

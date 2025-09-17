@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ProfileEditModal } from '@/components/settings/ProfileEditModal';
 import { PasswordChangeModal } from '@/components/settings/PasswordChangeModal';
 import { useState } from 'react';
+import { useGTM } from '@/hooks/useGTM';
 
 const SettingsPage = () => {
   const { user } = useAuth();
@@ -19,6 +20,7 @@ const SettingsPage = () => {
   const { changeLanguage, currentLanguage } = useLanguagePersistence();
   const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
   const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] = useState(false);
+  const { trackChangeLanguage, trackChangeDark } = useGTM();
 
   if (!user) {
     return (
@@ -37,7 +39,11 @@ const SettingsPage = () => {
   ];
 
   const handleLanguageChange = (languageCode: "de" | "en") => {
+    const previousLanguage = currentLanguage;
     changeLanguage(languageCode);
+    
+    // Track language change
+    trackChangeLanguage(previousLanguage, languageCode);
   };
 
   return (

@@ -487,6 +487,57 @@ export const useGTM = () => {
     });
   };
 
+  // Settings tracking functions
+  const trackEditProfile = (fieldsChanged?: string[]) => {
+    trackEvent({
+      event: 'edit_profile',
+      event_category: 'settings',
+      event_label: 'profile_updated',
+      custom_parameter: {
+        fields_changed: fieldsChanged?.join(',') || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackChangeLanguage = (fromLanguage?: string, toLanguage?: string) => {
+    trackEvent({
+      event: 'change_language',
+      event_category: 'settings',
+      event_label: toLanguage || 'unknown',
+      custom_parameter: {
+        from_language: fromLanguage || 'unknown',
+        to_language: toLanguage || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackChangePassword = (method?: 'current_password' | 'email_verification') => {
+    trackEvent({
+      event: 'change_password',
+      event_category: 'settings',
+      event_label: method || 'unknown',
+      custom_parameter: {
+        change_method: method || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackChangeDark = (fromTheme?: string, toTheme?: string) => {
+    trackEvent({
+      event: 'change_dark',
+      event_category: 'settings',
+      event_label: toTheme || 'unknown',
+      custom_parameter: {
+        from_theme: fromTheme || 'unknown',
+        to_theme: toTheme || 'unknown',
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
   const trackChatMessage = (messageType: 'user' | 'assistant', messageLength?: number) => {
     trackEvent({
       event: 'chat_message',
@@ -595,6 +646,10 @@ export const useGTM = () => {
     trackPlanCompleted,
     trackPlanStarted,
     trackPlanDeleted,
+    trackEditProfile,
+    trackChangeLanguage,
+    trackChangePassword,
+    trackChangeDark,
     trackPaymentSuccess,
     trackSignUp,
     trackAddToCart,
