@@ -4,11 +4,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
+import { useGTM } from '@/hooks/useGTM';
 
 export const useSubscriptionManager = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { trackSubscriptionCancel } = useGTM();
   const [subscription, setSubscription] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -179,6 +181,15 @@ export const useSubscriptionManager = () => {
       const { error } = await supabase.functions.invoke('cancel-subscription');
       
       if (error) throw error;
+      
+      // Track subscription cancellation
+      trackSubscriptionCancel(
+        subscription?.subscription_tier || 'unknown',
+        subscription?.subscription_tier || 'unknown',
+        'user_initiated',
+        false, // Regular cancellation (end of period)
+        0 // No refund for regular cancellation
+      );
       
       toast({
         title: t('training.toasts.subscription.cancellationStarted.title'),

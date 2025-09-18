@@ -163,8 +163,23 @@ export interface GTMSettingsEvent extends GTMEvent {
   };
 }
 
+export interface GTMSubscriptionEvent extends GTMEvent {
+  event: 'subscription_cancel' | 'subscription_reactivate' | 'subscription_pause';
+  event_category: 'subscription';
+  event_label?: string;
+  custom_parameter?: {
+    subscription_tier?: string;
+    plan_type?: string;
+    cancel_reason?: string;
+    cancellation_type?: 'immediate' | 'end_of_period';
+    refund_amount?: number;
+    has_refund?: boolean;
+    timestamp?: string;
+  };
+}
+
 // Union type for all GTM events
-export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent | GTMTrainingEvent | GTMPetManagementEvent | GTMImageAnalysisEvent | GTMSettingsEvent;
+export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent | GTMTrainingEvent | GTMPetManagementEvent | GTMImageAnalysisEvent | GTMSettingsEvent | GTMSubscriptionEvent;
 
 // GTM DataLayer Interface
 export interface GTMDataLayer extends Array<GTMEvent> {

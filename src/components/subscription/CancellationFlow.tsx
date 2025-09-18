@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Heart, Gift, TrendingDown, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useGTM } from '@/hooks/useGTM';
 
 interface CancellationFlowProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ export const CancellationFlow = ({
   const [feedbackReason, setFeedbackReason] = useState('');
   const [feedbackText, setFeedbackText] = useState('');
   const { toast } = useToast();
+  const { trackSubscriptionCancel } = useGTM();
   const { t } = useTranslations();
 
   const handleGratismonthAccept = () => {
@@ -47,6 +49,15 @@ export const CancellationFlow = ({
   };
 
   const handleFinalCancellation = () => {
+    // Track subscription cancellation with feedback reason
+    trackSubscriptionCancel(
+      'unknown', // We don't have subscription tier info in this context
+      'unknown', // We don't have plan type info in this context
+      feedbackReason || 'user_initiated',
+      false, // Regular cancellation (end of period)
+      0 // No refund for regular cancellation
+    );
+
     onCancelSubscription();
     toast({
       title: t('admin.cancellationFlow.toasts.subscriptionCancelled.title'),

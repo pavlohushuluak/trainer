@@ -4,6 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslations } from '@/hooks/useTranslations';
 import { useCancellationEmail } from '../cancellation/CancellationConfirmationEmail';
+import { useGTM } from '@/hooks/useGTM';
 
 interface UseEnhancedCancellationFlowProps {
   isWithinMoneyBackPeriod: boolean;
@@ -23,6 +24,7 @@ export const useEnhancedCancellationFlow = ({
   const { toast } = useToast();
   const { t } = useTranslations();
   const { sendCancellationConfirmation } = useCancellationEmail();
+  const { trackSubscriptionCancel } = useGTM();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const logCancellationAttempt = async (success: boolean, error?: string) => {
@@ -78,6 +80,15 @@ export const useEnhancedCancellationFlow = ({
 
 
       await logCancellationAttempt(true);
+
+      // Track subscription cancellation
+      trackSubscriptionCancel(
+        'unknown', // We don't have subscription tier info in this context
+        'unknown', // We don't have plan type info in this context  
+        isWithinMoneyBackPeriod ? 'money_back_guarantee' : 'user_initiated',
+        isWithinMoneyBackPeriod, // Immediate cancellation for money-back
+        data?.refundAmount || 0
+      );
 
       // Deactivate all premium features
       await deactivateAllPremiumFeatures();

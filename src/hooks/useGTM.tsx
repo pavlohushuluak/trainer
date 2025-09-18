@@ -87,6 +87,29 @@ export const useGTM = () => {
     });
   };
 
+  const trackSubscriptionCancel = (
+    subscriptionTier?: string,
+    planType?: string,
+    cancelReason?: string,
+    isImmediate?: boolean,
+    refundAmount?: number
+  ) => {
+    trackEvent({
+      event: 'subscription_cancel',
+      event_category: 'subscription',
+      event_label: isImmediate ? 'immediate_cancellation' : 'end_of_period_cancellation',
+      custom_parameter: {
+        subscription_tier: subscriptionTier || 'unknown',
+        plan_type: planType || 'unknown',
+        cancel_reason: cancelReason || 'user_initiated',
+        cancellation_type: isImmediate ? 'immediate' : 'end_of_period',
+        refund_amount: refundAmount || 0,
+        has_refund: (refundAmount || 0) > 0,
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
   const trackSignUp = (method?: string) => {
     trackEvent({
       event: 'sign_up',
@@ -670,6 +693,7 @@ export const useGTM = () => {
     trackChangeDark,
     trackPaymentSuccess,
     trackPurchaseCancel,
+    trackSubscriptionCancel,
     trackSignUp,
     trackAddToCart,
     trackBeginCheckout,
