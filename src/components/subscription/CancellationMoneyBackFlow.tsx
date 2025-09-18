@@ -9,6 +9,7 @@ import { RegularCancellationCard } from './cancellation/RegularCancellationCard'
 import { CancellationActions } from './cancellation/CancellationActions';
 import { CancellationErrorMessages } from './cancellation/CancellationErrorMessages';
 import { hasMoneyBackGuarantee } from '../pricing/planData';
+import { Plan1MoneyBackModal } from './Plan1MoneyBackModal';
 
 interface CancellationMoneyBackFlowProps {
   isOpen: boolean;
@@ -37,6 +38,9 @@ export const CancellationMoneyBackFlow = ({
     ? differenceInDays(new Date(), new Date(subscriptionStart)) < 14
     : false;
 
+  // Check if this is specifically plan1 within money-back period
+  const isPlan1WithinMoneyBack = subscriptionTier === 'plan1' && isWithinMoneyBackPeriod;
+
   const daysSinceStart = subscriptionStart 
     ? differenceInDays(new Date(), new Date(subscriptionStart))
     : 0;
@@ -52,6 +56,21 @@ export const CancellationMoneyBackFlow = ({
   // Show error message only if the tier had guarantee but it's expired
   const showExpiredWarning = subscriptionStart && tierHasGuarantee && daysSinceStart >= 14;
 
+  // For plan1 users within money-back period, show the special two-option modal
+  if (isPlan1WithinMoneyBack) {
+    return (
+      <Plan1MoneyBackModal
+        isOpen={isOpen}
+        onClose={onClose}
+        subscriptionStart={subscriptionStart}
+        subscriptionTier={subscriptionTier}
+        userEmail={user?.email}
+        onCancelSubscription={onCancelSubscription}
+      />
+    );
+  }
+
+  // For all other cases, show the regular cancellation flow
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">

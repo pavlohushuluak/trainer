@@ -5756,6 +5756,54 @@
       "manageSubscription": "Manage Subscription",
       "cancelSubscription": "Cancel Subscription"
     },
+    "plan1MoneyBack": {
+      "title": "14-Day Money-Back Guarantee",
+      "guarantee": {
+        "title": "Full Refund Available",
+        "description": "You have {{days}} days remaining for a full refund",
+        "fullRefund": "💳 Complete refund",
+        "processTime": "⚡ Processed in 3-5 business days",
+        "emailConfirmation": "📧 Email confirmation"
+      },
+      "options": {
+        "continue": {
+          "title": "Continue Using TierTrainer24",
+          "description": "Keep your subscription and continue training"
+        },
+        "refund": {
+          "title": "Request Full Refund",
+          "description": "Cancel subscription and get money back"
+        }
+      },
+      "buttons": {
+        "continueUsing": "Continue Using",
+        "requestRefund": "Request Refund",
+        "processing": "Processing..."
+      },
+      "continueUsing": {
+        "title": "Great Choice!",
+        "description": "You can continue using all premium features. You can always cancel later."
+      },
+      "refund": {
+        "success": {
+          "title": "💰 Refund Processed",
+          "description": "Your refund of €{{refundAmount}} will be processed within 3-5 business days. You'll receive a confirmation email."
+        }
+      },
+      "error": {
+        "notEligible": {
+          "title": "Not Eligible",
+          "description": "Money-back guarantee is only available for plan1 users within 14 days."
+        },
+        "refund": {
+          "title": "Refund Error",
+          "description": "There was an error processing your refund. Please contact support."
+        }
+      },
+      "warning": {
+        "refundFinal": "⚠️ Requesting a refund will immediately cancel your subscription and cannot be undone."
+      }
+    },
     "requiredWarning": {
       "title": "Premium Feature Required",
       "description": "To create and manage pet profiles, you need a premium subscription",

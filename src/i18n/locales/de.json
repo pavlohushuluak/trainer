@@ -5754,6 +5754,54 @@
       "manageSubscription": "Abonnement verwalten",
       "cancelSubscription": "Abonnement kündigen"
     },
+    "plan1MoneyBack": {
+      "title": "14-Tage-Geld-zurück-Garantie",
+      "guarantee": {
+        "title": "Vollständige Rückerstattung verfügbar",
+        "description": "Sie haben noch {{days}} Tage für eine vollständige Rückerstattung",
+        "fullRefund": "💳 Komplette Rückerstattung",
+        "processTime": "⚡ Bearbeitung in 3-5 Werktagen",
+        "emailConfirmation": "📧 E-Mail-Bestätigung"
+      },
+      "options": {
+        "continue": {
+          "title": "TierTrainer24 weiter nutzen",
+          "description": "Abo behalten und weiter trainieren"
+        },
+        "refund": {
+          "title": "Vollständige Rückerstattung anfordern",
+          "description": "Abo kündigen und Geld zurückbekommen"
+        }
+      },
+      "buttons": {
+        "continueUsing": "Weiter nutzen",
+        "requestRefund": "Rückerstattung anfordern",
+        "processing": "Wird bearbeitet..."
+      },
+      "continueUsing": {
+        "title": "Großartige Entscheidung!",
+        "description": "Sie können alle Premium-Funktionen weiter nutzen. Sie können jederzeit später kündigen."
+      },
+      "refund": {
+        "success": {
+          "title": "💰 Rückerstattung bearbeitet",
+          "description": "Ihre Rückerstattung von €{{refundAmount}} wird innerhalb von 3-5 Werktagen bearbeitet. Sie erhalten eine Bestätigungs-E-Mail."
+        }
+      },
+      "error": {
+        "notEligible": {
+          "title": "Nicht berechtigt",
+          "description": "Die Geld-zurück-Garantie ist nur für Plan1-Nutzer innerhalb von 14 Tagen verfügbar."
+        },
+        "refund": {
+          "title": "Rückerstattungsfehler",
+          "description": "Bei der Bearbeitung Ihrer Rückerstattung ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Support."
+        }
+      },
+      "warning": {
+        "refundFinal": "⚠️ Die Anforderung einer Rückerstattung wird Ihr Abo sofort kündigen und kann nicht rückgängig gemacht werden."
+      }
+    },
     "requiredWarning": {
       "title": "Premium-Feature erforderlich",
       "description": "Um Haustierprofile zu erstellen und zu verwalten, benötigen Sie ein Premium-Abonnement",
