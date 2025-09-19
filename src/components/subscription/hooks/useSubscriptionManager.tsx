@@ -182,14 +182,23 @@ export const useSubscriptionManager = () => {
       
       if (error) throw error;
       
-      // Track subscription cancellation
+      // Track subscription cancellation (plan2-plan5 have no refund)
+      const planTier = subscription?.subscription_tier || 'unknown';
+      const isRegularCancellation = true; // This hook only handles regular cancellations
+      
       trackSubscriptionCancel(
-        subscription?.subscription_tier || 'unknown',
-        subscription?.subscription_tier || 'unknown',
+        planTier,
+        planTier,
         'user_initiated',
-        false, // Regular cancellation (end of period)
-        0 // No refund for regular cancellation
+        false, // Always end-of-period for regular cancellations
+        0 // No refund for plan2-plan5 or regular cancellations
       );
+      
+      console.log('📊 Regular subscription cancellation tracked:', {
+        planTier,
+        cancelType: 'end_of_period',
+        refund: false
+      });
       
       toast({
         title: t('training.toasts.subscription.cancellationStarted.title'),

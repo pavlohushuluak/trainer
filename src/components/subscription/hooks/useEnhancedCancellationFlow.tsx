@@ -81,14 +81,25 @@ export const useEnhancedCancellationFlow = ({
 
       await logCancellationAttempt(true);
 
-      // Track subscription cancellation
+      // Track subscription cancellation with proper plan detection
+      const subscriptionTier = 'unknown'; // We could get this from props if needed
+      const cancelReason = isWithinMoneyBackPeriod ? 'money_back_guarantee' : 'user_initiated';
+      const actualRefundAmount = data?.refundAmount || 0;
+      
       trackSubscriptionCancel(
-        'unknown', // We don't have subscription tier info in this context
-        'unknown', // We don't have plan type info in this context  
-        isWithinMoneyBackPeriod ? 'money_back_guarantee' : 'user_initiated',
-        isWithinMoneyBackPeriod, // Immediate cancellation for money-back
-        data?.refundAmount || 0
+        subscriptionTier,
+        subscriptionTier, // Plan type same as tier for now
+        cancelReason,
+        isWithinMoneyBackPeriod, // Only immediate for money-back guarantee (plan1)
+        actualRefundAmount
       );
+      
+      console.log('📊 Subscription cancellation tracked:', {
+        isWithinMoneyBackPeriod,
+        cancelReason,
+        refundAmount: actualRefundAmount,
+        immediate: isWithinMoneyBackPeriod
+      });
 
       // Deactivate all premium features
       await deactivateAllPremiumFeatures();

@@ -49,14 +49,20 @@ export const CancellationFlow = ({
   };
 
   const handleFinalCancellation = () => {
-    // Track subscription cancellation with feedback reason
+    // Track subscription cancellation with feedback reason (plan2-plan5 no refund)
     trackSubscriptionCancel(
       'unknown', // We don't have subscription tier info in this context
       'unknown', // We don't have plan type info in this context
       feedbackReason || 'user_initiated',
-      false, // Regular cancellation (end of period)
-      0 // No refund for regular cancellation
+      false, // Always end-of-period for this flow (no immediate cancellation)
+      0 // No refund for plan2-plan5 or feedback-based cancellations
     );
+    
+    console.log('📊 Feedback-based cancellation tracked:', {
+      feedbackReason,
+      cancelType: 'end_of_period',
+      refund: false
+    });
 
     onCancelSubscription();
     toast({
