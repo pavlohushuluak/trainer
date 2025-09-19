@@ -774,37 +774,37 @@
     "stories": [
       {
         "animal": "🐕",
-        "name": "Bella (Golden Retriever)",
-        "owner": "Maria S.",
-        "story": "Bella hatte ständig Trennungsangst und zerstörte die Wohnung. TierTrainer gab mir konkrete Schritte und nach 2 Wochen war sie viel entspannter. Unglaublich!",
+        "name": "Luna (Golden Retriever)",
+        "owner": "Maria Stevens",
+        "story": "Luna hatte Probleme mit Trennungsangst und zerstörte oft Dinge zu Hause. Nach den Ratschlägen von TierTrainer ist sie jetzt viel entspannter. Die Veränderung war schon nach zwei Wochen spürbar!",
         "rating": 5
       },
       {
         "animal": "🐱",
-        "name": "Whiskers (Hauskatze)",
-        "owner": "Thomas K.",
-        "story": "Meine Katze hörte plötzlich auf, das Katzenklo zu benutzen. Die 24/7 Verfügbarkeit war perfekt - um 23 Uhr bekam ich sofort Hilfe und das Problem war gelöst.",
+        "name": "Mittens (Hauskatze)",
+        "owner": "Thomas Kline",
+        "story": "Mittens hörte plötzlich auf, das Katzenklo zu benutzen. Ich kontaktierte TierTrainer spät in der Nacht, und bis zum Morgen war das Problem gelöst. Die schnelle Antwort war fantastisch!",
         "rating": 5
       },
       {
         "animal": "🐎",
-        "name": "Thunder (Warmblut)",
-        "owner": "Lisa M.",
-        "story": "Thunder war beim Reiten sehr schreckhaft. Die personalisierten Übungen halfen uns beiden, Vertrauen aufzubauen. Jetzt sind wir ein gut koordiniertes Team!",
+        "name": "Max (Warmblut)",
+        "owner": "Lisa Miller",
+        "story": "Max war immer nervös während unserer Ausritte. Dank TierTrainers Übungen haben wir jetzt mehr Vertrauen und eine bessere Verbindung. Unsere Ausritte sind viel entspannter!",
         "rating": 5
       },
       {
         "animal": "🐦",
-        "name": "Charlie (Wellensittich)",
-        "owner": "Stefan R.",
-        "story": "Charlie rupfte sich die Federn und war sehr unruhig. TierTrainer erkannte schnell Stresssignale und half mir, seine Umgebung zu verbessern. Er ist jetzt viel ruhiger.",
+        "name": "Oliver (Wellensittich)",
+        "owner": "Stefan Richards",
+        "story": "Oliver rupfte seine Federn und schien sehr gestresst. TierTrainer half mir, seine Umgebung anzupassen, und jetzt ist er ruhiger und glücklicher!",
         "rating": 5
       },
       {
         "animal": "🐰",
-        "name": "Hoppel (Zwergkaninchen)",
-        "owner": "Anna T.",
-        "story": "Hoppel war sehr aggressiv gegenüber meinem zweiten Kaninchen. Die Schritt-für-Schritt-Anleitung für die Vergesellschaftung war perfekt - jetzt kuscheln sie sogar!",
+        "name": "Coco (Zwergkaninchen)",
+        "owner": "Anna Thompson",
+        "story": "Coco war aggressiv gegenüber meinem anderen Kaninchen, aber nach TierTrainers Vergesellschaftungsanleitung sind sie jetzt Freunde und kuscheln sogar zusammen!",
         "rating": 5
       }
     ]

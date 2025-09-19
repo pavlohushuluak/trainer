@@ -773,37 +773,37 @@
     "stories": [
       {
         "animal": "🐕",
-        "name": "Bella (Golden Retriever)",
-        "owner": "Maria S.",
-        "story": "Bella constantly had separation anxiety and destroyed the apartment. TierTrainer gave me concrete steps and after 2 weeks she was much more relaxed. Incredible!",
+        "name": "Luna (Golden Retriever)",
+        "owner": "Maria Stevens",
+        "story": "Luna struggled with separation anxiety and often destroyed things at home. After following TierTrainer's advice, she's much more relaxed now. The change was noticeable in just two weeks!",
         "rating": 5
       },
       {
         "animal": "🐱",
-        "name": "Whiskers (House Cat)",
-        "owner": "Thomas K.",
-        "story": "My cat suddenly stopped using the litter box. The 24/7 availability was perfect - at 11 PM I got immediate help and the problem was solved.",
+        "name": "Mittens (Domestic Shorthair)",
+        "owner": "Thomas Kline",
+        "story": "Mittens suddenly stopped using the litter box. I reached out to TierTrainer late at night, and by morning, the issue was fixed. The quick response was amazing!",
         "rating": 5
       },
       {
         "animal": "🐎",
-        "name": "Thunder (Warmblood)",
-        "owner": "Lisa M.",
-        "story": "Thunder was very skittish while riding. The personalized exercises helped both of us build trust. Now we're a well-coordinated team!",
+        "name": "Max (Warmblood)",
+        "owner": "Lisa Miller",
+        "story": "Max was always nervous during our rides. Thanks to TierTrainer's exercises, we now have more trust and a better connection. Our rides are much smoother!",
         "rating": 5
       },
       {
         "animal": "🐦",
-        "name": "Charlie (Budgerigar)",
-        "owner": "Stefan R.",
-        "story": "Charlie was plucking his feathers and was very restless. TierTrainer quickly recognized stress signals and helped me improve his environment. He's much calmer now.",
+        "name": "Oliver (Budgerigar)",
+        "owner": "Stefan Richards",
+        "story": "Oliver was plucking his feathers and seemed very stressed. TierTrainer helped me adjust his environment, and now he's calmer and happier!",
         "rating": 5
       },
       {
         "animal": "🐰",
-        "name": "Hoppel (Dwarf Rabbit)",
-        "owner": "Anna T.",
-        "story": "Hoppel was very aggressive towards my second rabbit. The step-by-step guide for bonding was perfect - now they even cuddle!",
+        "name": "Coco (Dwarf Rabbit)",
+        "owner": "Anna Thompson",
+        "story": "Coco was aggressive with my other rabbit, but after using TierTrainer's bonding guide, they're now friends and even cuddle together!",
         "rating": 5
       }
     ]
