@@ -600,31 +600,6 @@ const LoginPage = () => {
             </CardContent>
           </Card>
 
-          {/* Account Switch Link */}
-          <div className="text-center text-xs sm:text-sm text-muted-foreground px-2">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-1">
-              <span>
-                {activeTab === 'signin'
-                  ? t('auth.dontHaveAccountText')
-                  : t('auth.alreadyHaveAccountText')
-                }
-              </span>
-              <button
-                onClick={() => {
-                  const targetTab = activeTab === 'signin' ? 'signup' : 'signin';
-                  const tabElement = document.querySelector(`[data-value="${targetTab}"]`) as HTMLElement;
-                  tabElement?.click();
-                  setActiveTab(targetTab);
-                }}
-                className="text-primary hover:underline font-medium transition-colors"
-              >
-                {activeTab === 'signin'
-                  ? t('auth.createAccount')
-                  : t('auth.loginNow')
-                }
-              </button>
-            </div>
-          </div>
 
           {/* Legal Modals */}
           <AGBModal isOpen={showTermsModal} onClose={() => setShowTermsModal(false)} />
