@@ -134,20 +134,34 @@ export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) =
     }
   };
 
+  // Special styling for Google provider
+  const isGoogle = provider === "google";
+  
   return (
     <Button
       type="button"
-      variant="outline"
-      className="w-full"
+      variant={isGoogle ? "default" : "outline"}
+      className={`w-full ${
+        isGoogle 
+          ? "bg-gradient-to-br from-purple-500 via-purple-600 to-indigo-600 hover:from-purple-600 hover:via-purple-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 border-0 py-4 text-base font-medium rounded-xl backdrop-blur-sm relative overflow-hidden group" 
+          : "py-2"
+      }`}
       onClick={handleOAuthSignIn}
       disabled={loading}
     >
-      {loading ? (
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-      ) : (
-        <span className="mr-2">{getProviderIcon()}</span>
+      {/* Soft glow effect for Google button */}
+      {isGoogle && (
+        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
       )}
-      {loading ? t('auth.oauth.loading') : getProviderLabel()}
+      
+      {loading ? (
+        <Loader2 className={`mr-3 ${isGoogle ? "h-5 w-5" : "h-4 w-4"} animate-spin relative z-10`} />
+      ) : (
+        <span className={`mr-3 ${isGoogle ? "text-xl relative z-10" : ""}`}>{getProviderIcon()}</span>
+      )}
+      <span className={`${isGoogle ? "relative z-10" : ""}`}>
+        {loading ? t('auth.oauth.loading') : getProviderLabel()}
+      </span>
     </Button>
   );
 };
