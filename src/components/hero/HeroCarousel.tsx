@@ -419,27 +419,6 @@ export const HeroCarousel = () => {
           ))}
         </div>
       </div>
-
-      {/* Enhanced Mobile Content Section - Below Carousel */}
-      {/* <div className="block sm:hidden mt-6">
-        <div className="bg-gradient-to-br from-background via-background/95 to-background/90 backdrop-blur-xl border border-border/30 rounded-2xl shadow-2xl">
-          <div className="p-6">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className={cn(
-                "transform transition-all duration-1000 delay-300",
-                "opacity-100 translate-y-0 scale-100"
-              )}>
-                <h3 className="text-2xl sm:text-3xl font-bold mb-4 leading-tight text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                  {carouselImages[currentIndex]?.title}
-                </h3>
-                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto font-medium">
-                  {carouselImages[currentIndex]?.subtitle}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 }; 

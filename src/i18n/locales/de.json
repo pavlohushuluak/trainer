@@ -421,6 +421,19 @@
     "startPremium": "Jetzt Premium starten",
     "toImageAnalysis": "Zur Bildanalyse",
     "chatWithTrainer": "Chat mit Trainer",
+    "freeTier": {
+      "title": "Kostenlos starten",
+      "subtitle": "TierTrainer kostenlos ausprobieren",
+      "features": {
+        "chats": "10 kostenlose Chats",
+        "imageAnalysis": "2 kostenlose Bildanalysen",
+        "chatsDescription": "Experten-Trainingsberatung",
+        "imageAnalysisDescription": "Professionelle Verhaltensbewertung"
+      },
+      "description": "Erleben Sie unser professionelles Tiertraining ohne Verpflichtung",
+      "cta": "Kostenlos starten",
+      "noCreditCard": "Keine Kreditkarte erforderlich"
+    },
     "features": {
       "trainerAvailable": "🕒 24/7 Trainer verfügbar",
       "customized": "🐾 Angepasst für Ihr Haustier",

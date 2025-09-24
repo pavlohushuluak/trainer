@@ -10,6 +10,7 @@ import { HeroContent } from "./hero/HeroContent";
 import { HeroCarousel } from "./hero/HeroCarousel";
 import { HeroFeatures } from "./hero/HeroFeatures";
 import { HeroButtons } from "./hero/HeroButtons";
+import { FreeTierSection } from "./hero/FreeTierSection";
 import { SocialProof } from "./hero/SocialProof";
 import { BottomWave } from "./hero/BottomWave";
 import { ThemeLogo } from "@/components/ui/theme-logo-home";
@@ -94,6 +95,12 @@ export const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 sm:mb-12 animate-fade-in-up delay-400 px-4">
             <HeroButtons handleGoToTraining={handleGoToTraining} />
           </div>
+          
+          {/* Free Tier Section */}
+          <div className="animate-fade-in-up delay-500">
+            <FreeTierSection />
+          </div>
+          
           <SocialProof />
         </div>
 

@@ -420,6 +420,19 @@
     "startPremium": "Start Premium Now",
     "toImageAnalysis": "To Image Analysis",
     "chatWithTrainer": "Chat with Trainer",
+    "freeTier": {
+      "title": "Start Free Today",
+      "subtitle": "Try TierTrainer at no cost",
+      "features": {
+        "chats": "10 Free Chats",
+        "imageAnalysis": "2 Free Image Analyses",
+        "chatsDescription": "Expert training guidance",
+        "imageAnalysisDescription": "Professional behavior assessment"
+      },
+      "description": "Experience our professional pet training with no commitment",
+      "cta": "Start Free Trial",
+      "noCreditCard": "No credit card required"
+    },
     "features": {
       "trainerAvailable": "🕒 24/7 Trainer Available",
       "customized": "🐾 Customized for Your Pet",
