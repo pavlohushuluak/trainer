@@ -178,8 +178,25 @@ export interface GTMSubscriptionEvent extends GTMEvent {
   };
 }
 
+export interface GTMFreeUsageEvent extends GTMEvent {
+  event: 'free_user_chat' | 'free_user_image_analysis';
+  event_category: 'free_usage';
+  event_label?: 'chat_used' | 'analysis_used' | 'limit_reached';
+  custom_parameter?: {
+    questions_used?: number;
+    questions_remaining?: number;
+    analyses_used?: number;
+    analyses_remaining?: number;
+    has_reached_limit?: boolean;
+    max_questions?: number;
+    max_analyses?: number;
+    usage_percentage?: number;
+    timestamp?: string;
+  };
+}
+
 // Union type for all GTM events
-export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent | GTMTrainingEvent | GTMPetManagementEvent | GTMImageAnalysisEvent | GTMSettingsEvent | GTMSubscriptionEvent;
+export type GTMEvent = GTMPageViewEvent | GTMEcommerceEvent | GTMAuthEvent | GTMEngagementEvent | GTMCommunityEvent | GTMSupportEvent | GTMTrainingEvent | GTMPetManagementEvent | GTMImageAnalysisEvent | GTMSettingsEvent | GTMSubscriptionEvent | GTMFreeUsageEvent;
 
 // GTM DataLayer Interface
 export interface GTMDataLayer extends Array<GTMEvent> {

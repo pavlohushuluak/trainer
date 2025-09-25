@@ -110,6 +110,38 @@ export const useGTM = () => {
     });
   };
 
+  const trackFreeUserChat = (questionsUsed: number, questionsRemaining: number, hasReachedLimit: boolean) => {
+    trackEvent({
+      event: 'free_user_chat',
+      event_category: 'free_usage',
+      event_label: hasReachedLimit ? 'limit_reached' : 'chat_used',
+      custom_parameter: {
+        questions_used: questionsUsed,
+        questions_remaining: questionsRemaining,
+        has_reached_limit: hasReachedLimit,
+        max_questions: 10,
+        usage_percentage: Math.round((questionsUsed / 10) * 100),
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
+  const trackFreeUserImageAnalysis = (analysesUsed: number, analysesRemaining: number, hasReachedLimit: boolean) => {
+    trackEvent({
+      event: 'free_user_image_analysis',
+      event_category: 'free_usage',
+      event_label: hasReachedLimit ? 'limit_reached' : 'analysis_used',
+      custom_parameter: {
+        analyses_used: analysesUsed,
+        analyses_remaining: analysesRemaining,
+        has_reached_limit: hasReachedLimit,
+        max_analyses: 2,
+        usage_percentage: Math.round((analysesUsed / 2) * 100),
+        timestamp: new Date().toISOString()
+      }
+    });
+  };
+
   const trackSignUp = (method?: string) => {
     trackEvent({
       event: 'sign_up',
@@ -702,5 +734,7 @@ export const useGTM = () => {
     trackLogin,
     trackSubscriptionUpgrade,
     trackFeatureUsage,
+    trackFreeUserChat,
+    trackFreeUserImageAnalysis,
   };
 };

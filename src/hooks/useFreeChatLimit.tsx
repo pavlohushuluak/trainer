@@ -3,6 +3,7 @@ import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useEffect } from 'react';
+import { useGTM } from '@/hooks/useGTM';
 
 // Constants for free user limits
 export const FREE_CHAT_LIMIT = 10; // Match the database migration limit
@@ -24,6 +25,7 @@ export const useFreeChatLimit = () => {
   const { user } = useAuth();
   const { hasActiveSubscription } = useSubscriptionStatus();
   const queryClient = useQueryClient();
+  const { trackFreeUserChat } = useGTM();
 
   // Create a consistent query key
   const queryKey = ['free-chat-usage', user?.id];
@@ -287,6 +289,13 @@ export const useFreeChatLimit = () => {
       }
 
       console.log('✅ incrementUsage successful:', { newUsage: data?.questions_num });
+
+      // Track GTM event for free user chat usage
+      const newQuestionsUsed = data?.questions_num || 0;
+      const newQuestionsRemaining = Math.max(0, FREE_CHAT_LIMIT - newQuestionsUsed);
+      const newHasReachedLimit = newQuestionsUsed >= FREE_CHAT_LIMIT;
+      
+      trackFreeUserChat(newQuestionsUsed, newQuestionsRemaining, newHasReachedLimit);
 
       // Force an immediate refetch to ensure data consistency
       await queryClient.refetchQueries({ queryKey });

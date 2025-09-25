@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
+import { useGTM } from '@/hooks/useGTM';
 
 // Constants for free user limits
 export const FREE_IMAGE_ANALYSES_LIMIT = 1;
@@ -19,6 +20,7 @@ export const useImageAnalysisLimit = () => {
   const { user } = useAuth();
   const { hasActiveSubscription, subscriptionMode } = useSubscriptionStatus();
   const queryClient = useQueryClient();
+  const { trackFreeUserImageAnalysis } = useGTM();
 
   console.log('🔍 useImageAnalysisLimit - User:', user?.id);
   console.log('🔍 useImageAnalysisLimit - Has active subscription:', hasActiveSubscription);
@@ -116,6 +118,13 @@ export const useImageAnalysisLimit = () => {
       }
 
       console.log('✅ useImageAnalysisLimit - Successfully updated usage to', newUsage);
+
+      // Track GTM event for free user image analysis usage
+      const newAnalysesUsed = newUsage;
+      const newAnalysesRemaining = Math.max(0, FREE_IMAGE_ANALYSES_LIMIT - newAnalysesUsed);
+      const newHasReachedLimit = newAnalysesUsed >= FREE_IMAGE_ANALYSES_LIMIT;
+      
+      trackFreeUserImageAnalysis(newAnalysesUsed, newAnalysesRemaining, newHasReachedLimit);
 
       // Invalidate and refetch usage data
       await queryClient.invalidateQueries({ queryKey: ['image-analysis-usage', user.id] });
