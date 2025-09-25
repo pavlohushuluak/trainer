@@ -313,6 +313,49 @@ export const useFreeChatLimit = () => {
     }
   };
 
+  // Function to track GTM event without incrementing database (for when backend already incremented)
+  const trackGTMUsage = async (): Promise<void> => {
+    if (!user || hasActiveSubscription) return;
+    
+    console.log('🎯 trackGTMUsage called for GTM tracking only');
+    
+    try {
+      // Fetch current usage from database (backend may have already incremented)
+      const { data: currentData, error: fetchError } = await supabase
+        .from('subscribers')
+        .select('questions_num')
+        .eq('user_id', user.id)
+        .single();
+
+      if (fetchError) {
+        console.error('❌ trackGTMUsage - Error fetching current usage:', fetchError);
+        return;
+      }
+
+      const currentQuestionsUsed = currentData?.questions_num || 0;
+      const questionsRemaining = Math.max(0, FREE_CHAT_LIMIT - currentQuestionsUsed);
+      const hasReachedLimit = currentQuestionsUsed >= FREE_CHAT_LIMIT;
+      
+      console.log('🎯 trackGTMUsage - Current usage:', {
+        questionsUsed: currentQuestionsUsed,
+        questionsRemaining,
+        hasReachedLimit
+      });
+      
+      // Track GTM event for free user chat usage
+      trackFreeUserChat(currentQuestionsUsed, questionsRemaining, hasReachedLimit);
+      
+      // Update local cache to reflect current database state
+      queryClient.setQueryData(queryKey, {
+        ...usageData,
+        questions_num: currentQuestionsUsed
+      });
+      
+    } catch (error) {
+      console.error('❌ trackGTMUsage - Unexpected error:', error);
+    }
+  };
+
   // Function to reset usage (for testing or admin purposes)
   const resetUsage = async (): Promise<boolean> => {
     if (!user) return false;
@@ -365,6 +408,7 @@ export const useFreeChatLimit = () => {
     loading: isLoading,
     error,
     incrementUsage,
+    trackGTMUsage,
     resetUsage,
     refetch
   };

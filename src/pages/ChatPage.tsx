@@ -99,7 +99,7 @@ export const ChatPage = () => {
   const { pets } = usePetProfiles();
   const { i18n } = useI18n();
   const { hasActiveSubscription } = useSubscriptionStatus();
-  const { usage, incrementUsage, refetch: refetchUsage } = useFreeChatLimit();
+  const { usage, incrementUsage, trackGTMUsage, refetch: refetchUsage } = useFreeChatLimit();
   const { checkSubscriptionStatus } = useSubscriptionStatusChecker();
   const { trackEvent } = useAnalytics();
   const { trackChatStart, trackChatContinue, trackPlanCreatedByChat } = useGTM();
@@ -595,8 +595,10 @@ export const ChatPage = () => {
         .update({ updated_at: new Date().toISOString() })
         .eq('id', selectedSession.id);
 
-      // Note: Usage tracking is handled by the backend edge function
-      // No need to increment here to avoid double counting
+      // Track GTM usage for free users (backend already incremented database)
+      if (!hasActiveSubscription) {
+        await trackGTMUsage();
+      }
 
       // Refresh usage data for free users to show updated question count
       if (!hasActiveSubscription) {
@@ -732,8 +734,10 @@ export const ChatPage = () => {
         .update({ updated_at: new Date().toISOString() })
         .eq('id', selectedSession.id);
 
-      // Note: Usage tracking is handled by the backend edge function
-      // No need to increment here to avoid double counting
+      // Track GTM usage for free users (backend already incremented database)
+      if (!hasActiveSubscription) {
+        await trackGTMUsage();
+      }
 
       // Refresh usage data for free users to show updated question count
       if (!hasActiveSubscription) {
