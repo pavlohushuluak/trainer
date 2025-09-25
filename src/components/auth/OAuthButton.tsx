@@ -26,7 +26,8 @@ export const OAuthButton = ({ provider, onSuccess, source }: OAuthButtonProps) =
       // Set sign_in_google flag if this is Google OAuth from login page
       if (provider === 'google' && source === 'loginpage') {
         sessionStorage.setItem('sign_in_google', 'true');
-        console.log('🔐 OAuth button: Set sign_in_google flag for login page Google OAuth');
+        sessionStorage.setItem('user_login_on_login_page', 'true'); // Added this line
+        console.log('🔐 OAuth button: Set sign_in_google and user_login_on_login_page flags for login page Google OAuth');
         
         // Also store in localStorage as backup
         localStorage.setItem('sign_in_google_backup', 'true');

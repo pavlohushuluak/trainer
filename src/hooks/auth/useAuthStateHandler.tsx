@@ -158,16 +158,36 @@ export const useAuthStateHandler = () => {
         console.log('🔐 Redirecting non-admin away from admin area to /mein-tiertraining');
         window.location.href = '/mein-tiertraining';
       } else {
-        // CRITICAL FIX: Redirect to homepage instead of mein-tiertraining after signup
-        window.location.href = '/';
-        console.log('🔐 Redirecting to homepage after signup');
+        // Check if login was initiated from login page
+        const loginOnLoginPage = sessionStorage.getItem('user_login_on_login_page');
+        
+        if (loginOnLoginPage === 'true') {
+          // Clear the flag and redirect to mein-tiertraining
+          sessionStorage.removeItem('user_login_on_login_page');
+          window.location.href = '/mein-tiertraining';
+          console.log('🔐 Redirecting to mein-tiertraining after login from login page');
+        } else {
+          // CRITICAL FIX: Redirect to homepage instead of mein-tiertraining after signup
+          window.location.href = '/';
+          console.log('🔐 Redirecting to homepage after signup');
+        }
       }
 
     } catch (error) {
       console.warn('Error in handleSignedIn:', error);
       // CRITICAL FIX: Fallback redirect to homepage instead of mein-tiertraining
       if (!window.location.pathname.includes('/auth/callback')) {
-        window.location.href = '/';
+        // Check if login was initiated from login page for fallback redirect too
+        const loginOnLoginPage = sessionStorage.getItem('user_login_on_login_page');
+        
+        if (loginOnLoginPage === 'true') {
+          sessionStorage.removeItem('user_login_on_login_page');
+          window.location.href = '/mein-tiertraining';
+          console.log('🔐 Fallback redirect to mein-tiertraining after login from login page');
+        } else {
+          window.location.href = '/';
+          console.log('🔐 Fallback redirect to homepage');
+        }
       }
     }
   }, [trackSignUp, handleOAuthProfile, checkIfUserIsAdmin]);

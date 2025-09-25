@@ -180,6 +180,9 @@ const LoginPage = () => {
       return;
     }
 
+    // Set sessionStorage flag to indicate login was initiated from login page
+    sessionStorage.setItem('user_login_on_login_page', 'true');
+
     setTimeout(async () => {
       await upsertLanguageSupport(email, language);
     }, 1000);
