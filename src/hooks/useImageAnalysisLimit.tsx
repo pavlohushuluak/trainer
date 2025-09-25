@@ -6,7 +6,7 @@ import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import { useGTM } from '@/hooks/useGTM';
 
 // Constants for free user limits
-export const FREE_IMAGE_ANALYSES_LIMIT = 1;
+export const FREE_IMAGE_ANALYSES_LIMIT = 2;
 
 interface ImageAnalysisUsage {
   imageAnalysesUsed: number;

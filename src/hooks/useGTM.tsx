@@ -20,13 +20,19 @@ export const useGTM = () => {
   // Helper function to check if analytics consent is given
   const hasAnalyticsConsent = (): boolean => {
     const consent = getStoredConsent();
-    return consent?.analytics === true;
+    console.log('🔍 hasAnalyticsConsent - consent:', consent);
+    const hasConsent = consent?.analytics === true;
+    console.log('🔍 hasAnalyticsConsent - result:', hasConsent);
+    return hasConsent;
   };
 
   const trackEvent = (event: GTMEvent) => {
     try {
       // Check if analytics consent is given before tracking
-      if (!hasAnalyticsConsent()) {
+      const hasConsent = hasAnalyticsConsent();
+      console.log('🔍 GTM trackEvent - hasAnalyticsConsent:', hasConsent);
+      
+      if (!hasConsent) {
         console.log('GTM tracking skipped - no analytics consent');
         return;
       }
@@ -34,6 +40,8 @@ export const useGTM = () => {
       if (window.dataLayer) {
         window.dataLayer.push(event);
         console.log('GTM Event tracked:', event);
+      } else {
+        console.warn('GTM trackEvent - window.dataLayer not available');
       }
     } catch (error) {
       console.warn('GTM trackEvent failed:', error);
@@ -111,6 +119,13 @@ export const useGTM = () => {
   };
 
   const trackFreeUserChat = (questionsUsed: number, questionsRemaining: number, hasReachedLimit: boolean) => {
+    console.log('🎯 trackFreeUserChat called:', {
+      questionsUsed,
+      questionsRemaining,
+      hasReachedLimit,
+      timestamp: new Date().toISOString()
+    });
+    
     trackEvent({
       event: 'free_user_chat',
       event_category: 'free_usage',
@@ -127,6 +142,13 @@ export const useGTM = () => {
   };
 
   const trackFreeUserImageAnalysis = (analysesUsed: number, analysesRemaining: number, hasReachedLimit: boolean) => {
+    console.log('🎯 trackFreeUserImageAnalysis called:', {
+      analysesUsed,
+      analysesRemaining,
+      hasReachedLimit,
+      timestamp: new Date().toISOString()
+    });
+    
     trackEvent({
       event: 'free_user_image_analysis',
       event_category: 'free_usage',
