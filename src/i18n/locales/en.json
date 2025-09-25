@@ -602,7 +602,7 @@
     "contact": "Contact",
     "email": "Email: support@tiertrainer24.com",
     "website": "Web: www.tiertrainer24.com",
-    "copyright": "© 2024 Shopping-Guru GmbH. All rights reserved."
+    "copyright": "© {{year}} Shopping-Guru GmbH. All rights reserved."
   },
   "cookies": {
     "title": "🍪 Cookie Settings",
