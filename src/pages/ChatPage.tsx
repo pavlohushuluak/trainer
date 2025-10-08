@@ -1140,233 +1140,348 @@ export const ChatPage = () => {
                 </div>
               ) : (
                 <>
-                  {/* Chat Header */}
-                  <CardHeader className="pb-3 sm:pb-4 border-b border-border/50">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                      <div className="flex items-center space-x-3">
-                        <Avatar className="h-8 w-8 bg-gradient-to-br from-blue-200 to-indigo-200 p-1 py-0.5">
-                          <AvatarImage src="/favicon.ico" />
-                          <AvatarFallback className="bg-primary/10 text-primary">
-                            <img src="/favicon.ico" alt="Placeholder" className="h-5 w-5" />
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0 flex-1">
-                          <CardTitle className="text-base sm:text-lg truncate">{selectedSession.title}</CardTitle>
-                          {selectedSession.pet_profiles && (
-                            <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                              {selectedSession.pet_profiles.name} • {selectedSession.pet_profiles.species}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        {/* Show usage indicator for free users */}
-                        {!hasActiveSubscription && (
-                          <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 border border-orange-200 dark:border-orange-800 rounded-lg px-3 py-2">
-                            <div className="flex items-center space-x-2">
-                              <MessageSquare className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                              <div className="text-sm">
-                                <span className="font-medium text-orange-900 dark:text-orange-100">
-                                  {usage.questionsUsed}/{usage.maxQuestions}
-                                </span>
-                                <span className="text-orange-600 dark:text-orange-400 ml-1">
-                                  {usage.hasReachedLimit ? t('chat.usage.limitReached') : t('chat.usage.questionsRemaining')}
-                                </span>
-                              </div>
-                            </div>
+                  {messages.length === 0 && !hasStartedChat ? (
+                    // Centered beautiful input for new chats with no history
+                    <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+                      <div className="w-full max-w-3xl">
+                        {/* Welcome Section */}
+                        <div className="text-center mb-8 sm:mb-10">
+                          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 dark:from-blue-900/30 dark:via-indigo-900/30 dark:to-purple-900/30 rounded-full mb-4 sm:mb-6 shadow-lg">
+                            <MessageSquare className="h-8 w-8 sm:h-10 sm:w-10 text-blue-600 dark:text-blue-400" />
                           </div>
-                        )}
-                        {selectedSession.pet_profiles && (
-                          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2">
-                            <div className="flex items-center space-x-2">
-                              <PawPrint className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                              <div className="text-sm">
-                                <span className="font-medium text-blue-900 dark:text-blue-100">
+                          <h2 className="text-2xl sm:text-3xl font-bold mb-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
+                            {t('chat.page.welcome.title')}
+                          </h2>
+                          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                            {t('chat.page.welcome.description')}
+                          </p>
+                          
+                          {/* Trainer and Pet Info */}
+                          <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+                            <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-200 dark:border-blue-800 rounded-full px-4 py-2 shadow-sm">
+                              <Avatar className="h-6 w-6 bg-gradient-to-br from-blue-200 to-indigo-200 p-1">
+                                <AvatarImage src="/favicon.ico" />
+                                <AvatarFallback className="bg-primary/10 text-primary">
+                                  <img src="/favicon.ico" alt="Trainer" className="h-4 w-4" />
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                {selectedSession.title}
+                              </span>
+                            </div>
+                            {selectedSession.pet_profiles && (
+                              <div className="flex items-center space-x-2 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border border-green-200 dark:border-green-800 rounded-full px-4 py-2 shadow-sm">
+                                <PawPrint className="h-4 w-4 text-green-600 dark:text-green-400" />
+                                <span className="text-sm font-medium text-green-900 dark:text-green-100">
                                   {selectedSession.pet_profiles.name}
                                 </span>
-                                <span className="text-blue-600 dark:text-blue-400 ml-1">
+                                <span className="text-xs text-green-600 dark:text-green-400">
                                   • {selectedSession.pet_profiles.species}
                                 </span>
                               </div>
-                            </div>
-                          </div>
-                        )}
-                        {/* Show Create Plan button when user can chat (either active chat or new chat ready to start) */}
-                        {(hasStartedChat || messages.length === 0) && (
-                          <Button
-                            onClick={() => setCreatePlanModalOpen(true)}
-                            variant="outline"
-                            size="sm"
-                            disabled={isSending || isCreatingPlan || !hasActiveSubscription || (!hasActiveSubscription && usage.hasReachedLimit)}
-                            className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/40 dark:hover:to-emerald-900/40 text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            <FileText className="h-4 w-4 mr-2" />
-                            {isCreatingPlan ? (
-                              t('chat.createPlan.modal.loading')
-                            ) : (
-                              t('chat.createPlan.button')
                             )}
-                          </Button>
-                        )}
+                            {!hasActiveSubscription && (
+                              <div className="flex items-center space-x-2 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 border border-orange-200 dark:border-orange-800 rounded-full px-4 py-2 shadow-sm">
+                                <MessageSquare className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                                <span className="text-sm font-medium text-orange-900 dark:text-orange-100">
+                                  {usage.questionsUsed}/{usage.maxQuestions} {t('chat.usage.questionsRemaining')}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Input Section */}
+                        <div className="space-y-4">
+                          {/* Free Chat Limit Display */}
+                          {!hasActiveSubscription && (
+                            <div className="mb-4">
+                              <FreeChatLimitDisplay
+                                questionsUsed={usage.questionsUsed}
+                                maxQuestions={usage.maxQuestions}
+                                hasReachedLimit={usage.hasReachedLimit}
+                                onUpgrade={() => navigate('/#pricing')}
+                              />
+                            </div>
+                          )}
+                          
+                          {/* Input Box */}
+                          <div className="flex space-x-2">
+                            <Input
+                              ref={inputRef}
+                              placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
+                              value={message}
+                              onChange={(e) => setMessage(e.target.value)}
+                              onKeyPress={handleKeyPress}
+                              disabled={isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
+                              className="flex-1 text-sm"
+                              autoFocus
+                            />
+                            <Button
+                              onClick={sendMessage}
+                              disabled={!message.trim() || isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
+                              className="px-3 sm:px-6"
+                            >
+                              {isSending ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Send className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
+                            <Button
+                              onClick={() => setCreatePlanModalOpen(true)}
+                              variant="outline"
+                              size="lg"
+                              disabled={isSending || isCreatingPlan || !hasActiveSubscription || (!hasActiveSubscription && usage.hasReachedLimit)}
+                              className="w-full sm:w-auto bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/40 dark:hover:to-emerald-900/40 text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <FileText className="h-5 w-5 mr-2" />
+                              {t('chat.createPlan.button')}
+                            </Button>
+                          </div>
+
+                          {/* Helper Text */}
+                          <p className="text-center text-xs sm:text-sm text-muted-foreground mt-4">
+                            Press <kbd className="px-2 py-1 bg-muted rounded text-xs font-semibold">Enter</kbd> to send your message
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </CardHeader>
-
-                  {/* Messages */}
-                  <div className="flex-1 overflow-hidden">
-                    <ScrollArea className="h-full p-3 sm:p-4">
-                      {isLoading ? (
-                        <div className="flex items-center justify-center h-32">
-                          <Loader2 className="h-6 w-6 animate-spin" />
-                          <span className="ml-2 text-sm text-muted-foreground">
-                            <AnimatedDots text={t('chat.loading.messages')} />
-                          </span>
-                        </div>
-                      ) : messages.length === 0 ? (
-                        <div className="text-center py-8 sm:py-12">
-                          <MessageSquare className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-                          <h3 className="text-base sm:text-lg font-semibold mb-2">{t('chat.page.welcome.title')}</h3>
-                          <p className="text-sm sm:text-base text-muted-foreground">{t('chat.page.welcome.description')}</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-3 sm:space-y-4">
-                          {messages.map((msg) => (
-                            <div
-                              key={msg.id}
-                              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                            >
-                              <div
-                                className={`max-w-[85%] sm:max-w-[80%] rounded-lg p-2 sm:p-3 ${msg.role === 'user'
-                                  ? 'bg-primary text-primary-foreground'
-                                  : 'bg-muted'
-                                  }`}
-                              >
-                                <div className="flex items-start space-x-2">
-                                  {msg.role === 'user' ? (
-                                    <Avatar className="h-6 w-6 sm:h-7 sm:w-7 mt-0.5 flex-shrink-0 bg-gradient-to-br from-blue-500 to-indigo-600 shadow-sm">
-                                      <AvatarFallback className="text-xs text-white font-medium bg-gradient-to-br from-blue-500 to-indigo-600">
-                                        <User className="h-3 w-3 sm:h-4 sm:w-4" />
-                                      </AvatarFallback>
-                                    </Avatar>
-                                  ) : (
-                                    <Avatar className="h-5 w-5 sm:h-6 sm:w-6 mt-0.5 flex-shrink-0 bg-gradient-to-br from-blue-200 to-indigo-200 p-0.5">
-                                      <AvatarImage src="/favicon.ico" />
-                                      <AvatarFallback className="text-xs">
-                                        <img src="/favicon.ico" alt="Placeholder" className="h-3 w-3" />
-                                      </AvatarFallback>
-                                    </Avatar>
-                                  )}
-                                  <div className="flex-1 min-w-0">
-                                    <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">
-                                      {msg.content.startsWith('💭') ? (
-                                        <ThinkingAnimation trainerName="Trainer" />
-                                      ) : (
-                                        <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{msg.content}</div>
-                                      )}
-                                    </div>
-                                    <div className="flex items-center space-x-1 mt-1 text-xs opacity-70">
-                                      <Clock className="h-3 w-3" />
-                                      <span>{formatDate(msg.created_at)}</span>
-                                    </div>
+                  ) : (
+                    <>
+                      {/* Chat Header */}
+                      <CardHeader className="pb-3 sm:pb-4 border-b border-border/50">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                          <div className="flex items-center space-x-3">
+                            <Avatar className="h-8 w-8 bg-gradient-to-br from-blue-200 to-indigo-200 p-1 py-0.5">
+                              <AvatarImage src="/favicon.ico" />
+                              <AvatarFallback className="bg-primary/10 text-primary">
+                                <img src="/favicon.ico" alt="Placeholder" className="h-5 w-5" />
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0 flex-1">
+                              <CardTitle className="text-base sm:text-lg truncate">{selectedSession.title}</CardTitle>
+                              {selectedSession.pet_profiles && (
+                                <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                                  {selectedSession.pet_profiles.name} • {selectedSession.pet_profiles.species}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {/* Show usage indicator for free users */}
+                            {!hasActiveSubscription && (
+                              <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 border border-orange-200 dark:border-orange-800 rounded-lg px-3 py-2">
+                                <div className="flex items-center space-x-2">
+                                  <MessageSquare className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                                  <div className="text-sm">
+                                    <span className="font-medium text-orange-900 dark:text-orange-100">
+                                      {usage.questionsUsed}/{usage.maxQuestions}
+                                    </span>
+                                    <span className="text-orange-600 dark:text-orange-400 ml-1">
+                                      {usage.hasReachedLimit ? t('chat.usage.limitReached') : t('chat.usage.questionsRemaining')}
+                                    </span>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          ))}
-                          <div ref={messagesEndRef} />
+                            )}
+                            {selectedSession.pet_profiles && (
+                              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2">
+                                <div className="flex items-center space-x-2">
+                                  <PawPrint className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                  <div className="text-sm">
+                                    <span className="font-medium text-blue-900 dark:text-blue-100">
+                                      {selectedSession.pet_profiles.name}
+                                    </span>
+                                    <span className="text-blue-600 dark:text-blue-400 ml-1">
+                                      • {selectedSession.pet_profiles.species}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            {/* Show Create Plan button when user can chat (either active chat or new chat ready to start) */}
+                            {(hasStartedChat || messages.length === 0) && (
+                              <Button
+                                onClick={() => setCreatePlanModalOpen(true)}
+                                variant="outline"
+                                size="sm"
+                                disabled={isSending || isCreatingPlan || !hasActiveSubscription || (!hasActiveSubscription && usage.hasReachedLimit)}
+                                className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border-green-200 dark:border-green-800 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/40 dark:hover:to-emerald-900/40 text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                <FileText className="h-4 w-4 mr-2" />
+                                {isCreatingPlan ? (
+                                  t('chat.createPlan.modal.loading')
+                                ) : (
+                                  t('chat.createPlan.button')
+                                )}
+                              </Button>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </ScrollArea>
-                  </div>
+                      </CardHeader>
 
-                  {/* Input Area */}
-                  <div className="p-3 sm:p-4 border-t border-border/50">
-                    {/* Show free chat limit display for free users */}
-                    {!hasActiveSubscription && (
-                      <FreeChatLimitDisplay
-                        questionsUsed={usage.questionsUsed}
-                        maxQuestions={usage.maxQuestions}
-                        hasReachedLimit={usage.hasReachedLimit}
-                        onUpgrade={() => navigate('/#pricing')}
-                      />
-                    )}
-                    {hasStartedChat && messages.length > 0 ? (
-                      <div className="flex space-x-2">
-                        <Input
-                          ref={inputRef}
-                          placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                          onKeyPress={handleKeyPress}
-                          disabled={isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
-                          className="flex-1 text-sm"
-                        />
-                        <Button
-                          onClick={sendMessage}
-                          disabled={!message.trim() || isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
-                          className="px-3 sm:px-6"
-                        >
-                          {isSending ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
+                      {/* Messages */}
+                      <div className="flex-1 overflow-hidden">
+                        <ScrollArea className="h-full p-3 sm:p-4">
+                          {isLoading ? (
+                            <div className="flex items-center justify-center h-32">
+                              <Loader2 className="h-6 w-6 animate-spin" />
+                              <span className="ml-2 text-sm text-muted-foreground">
+                                <AnimatedDots text={t('chat.loading.messages')} />
+                              </span>
+                            </div>
+                          ) : messages.length === 0 ? (
+                            <div className="text-center py-8 sm:py-12">
+                              <MessageSquare className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+                              <h3 className="text-base sm:text-lg font-semibold mb-2">{t('chat.page.welcome.title')}</h3>
+                              <p className="text-sm sm:text-base text-muted-foreground">{t('chat.page.welcome.description')}</p>
+                            </div>
                           ) : (
-                            <Send className="h-4 w-4" />
+                            <div className="space-y-3 sm:space-y-4">
+                              {messages.map((msg) => (
+                                <div
+                                  key={msg.id}
+                                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                                >
+                                  <div
+                                    className={`max-w-[85%] sm:max-w-[80%] rounded-lg p-2 sm:p-3 ${msg.role === 'user'
+                                      ? 'bg-primary text-primary-foreground'
+                                      : 'bg-muted'
+                                      }`}
+                                  >
+                                    <div className="flex items-start space-x-2">
+                                      {msg.role === 'user' ? (
+                                        <Avatar className="h-6 w-6 sm:h-7 sm:w-7 mt-0.5 flex-shrink-0 bg-gradient-to-br from-blue-500 to-indigo-600 shadow-sm">
+                                          <AvatarFallback className="text-xs text-white font-medium bg-gradient-to-br from-blue-500 to-indigo-600">
+                                            <User className="h-3 w-3 sm:h-4 sm:w-4" />
+                                          </AvatarFallback>
+                                        </Avatar>
+                                      ) : (
+                                        <Avatar className="h-5 w-5 sm:h-6 sm:w-6 mt-0.5 flex-shrink-0 bg-gradient-to-br from-blue-200 to-indigo-200 p-0.5">
+                                          <AvatarImage src="/favicon.ico" />
+                                          <AvatarFallback className="text-xs">
+                                            <img src="/favicon.ico" alt="Placeholder" className="h-3 w-3" />
+                                          </AvatarFallback>
+                                        </Avatar>
+                                      )}
+                                      <div className="flex-1 min-w-0">
+                                        <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">
+                                          {msg.content.startsWith('💭') ? (
+                                            <ThinkingAnimation trainerName="Trainer" />
+                                          ) : (
+                                            <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">{msg.content}</div>
+                                          )}
+                                        </div>
+                                        <div className="flex items-center space-x-1 mt-1 text-xs opacity-70">
+                                          <Clock className="h-3 w-3" />
+                                          <span>{formatDate(msg.created_at)}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                              <div ref={messagesEndRef} />
+                            </div>
                           )}
-                        </Button>
+                        </ScrollArea>
                       </div>
-                    ) : messages.length > 0 ? (
-                      // Show Continue Chat button only when there are existing messages
-                      <div className="text-center">
-                        <Button
-                          onClick={continueChat}
-                          disabled={isContinuingChat || (!hasActiveSubscription && usage.hasReachedLimit)}
-                          className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-                          size="lg"
-                        >
-                          {isContinuingChat ? (
-                            <>
-                              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                              <AnimatedDots text={t('chat.page.continueChat.loading')} />
-                            </>
-                          ) : (
-                            <>
-                              <MessageSquare className="h-5 w-5 mr-2" />
-                              {t('chat.page.continueChat.button')}
-                            </>
-                          )}
-                        </Button>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          {t('chat.page.continueChat.description')}
-                        </p>
-                        <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                          {t('chat.page.continueChat.createPlanHint')}
-                        </p>
+
+                      {/* Input Area */}
+                      <div className="p-3 sm:p-4 border-t border-border/50">
+                        {/* Show free chat limit display for free users */}
+                        {!hasActiveSubscription && (
+                          <FreeChatLimitDisplay
+                            questionsUsed={usage.questionsUsed}
+                            maxQuestions={usage.maxQuestions}
+                            hasReachedLimit={usage.hasReachedLimit}
+                            onUpgrade={() => navigate('/#pricing')}
+                          />
+                        )}
+                        {hasStartedChat && messages.length > 0 ? (
+                          <div className="flex space-x-2">
+                            <Input
+                              ref={inputRef}
+                              placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
+                              value={message}
+                              onChange={(e) => setMessage(e.target.value)}
+                              onKeyPress={handleKeyPress}
+                              disabled={isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
+                              className="flex-1 text-sm"
+                            />
+                            <Button
+                              onClick={sendMessage}
+                              disabled={!message.trim() || isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
+                              className="px-3 sm:px-6"
+                            >
+                              {isSending ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Send className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                        ) : messages.length > 0 ? (
+                          // Show Continue Chat button only when there are existing messages
+                          <div className="text-center">
+                            <Button
+                              onClick={continueChat}
+                              disabled={isContinuingChat || (!hasActiveSubscription && usage.hasReachedLimit)}
+                              className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                              size="lg"
+                            >
+                              {isContinuingChat ? (
+                                <>
+                                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                                  <AnimatedDots text={t('chat.page.continueChat.loading')} />
+                                </>
+                              ) : (
+                                <>
+                                  <MessageSquare className="h-5 w-5 mr-2" />
+                                  {t('chat.page.continueChat.button')}
+                                </>
+                              )}
+                            </Button>
+                            <p className="text-xs text-muted-foreground mt-2">
+                              {t('chat.page.continueChat.description')}
+                            </p>
+                            <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                              {t('chat.page.continueChat.createPlanHint')}
+                            </p>
+                          </div>
+                        ) : (
+                          // Show normal input for new chats (no existing messages)
+                          <div className="flex space-x-2">
+                            <Input
+                              ref={inputRef}
+                              placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
+                              value={message}
+                              onChange={(e) => setMessage(e.target.value)}
+                              onKeyPress={handleKeyPress}
+                              disabled={isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
+                              className="flex-1 text-sm"
+                            />
+                            <Button
+                              onClick={sendMessage}
+                              disabled={!message.trim() || isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
+                              className="px-3 sm:px-6"
+                            >
+                              {isSending ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Send className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                        )}
                       </div>
-                    ) : (
-                      // Show normal input for new chats (no existing messages)
-                      <div className="flex space-x-2">
-                        <Input
-                          ref={inputRef}
-                          placeholder={!hasActiveSubscription && usage.hasReachedLimit ? t('chat.freeChatLimit.limitReached.inputPlaceholder') : t('chat.page.input.placeholder')}
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                          onKeyPress={handleKeyPress}
-                          disabled={isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
-                          className="flex-1 text-sm"
-                        />
-                        <Button
-                          onClick={sendMessage}
-                          disabled={!message.trim() || isSending || (!hasActiveSubscription && usage.hasReachedLimit)}
-                          className="px-3 sm:px-6"
-                        >
-                          {isSending ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Send className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                    )}
-                  </div>
+                    </>
+                  )}
                 </>
               )}
             </Card>
