@@ -2737,8 +2737,117 @@
     "payments": "Payments",
     "support": "Support",
     "system": "System",
+    "finance": "Finanzen",
     "settings": "Settings",
     "logout": "Logout"
+  },
+  "adminFinance": {
+    "title": "Finanzverwaltung",
+    "subtitle": "Alle Benutzer und ihre Rechnungen anzeigen",
+    "loading": "Finanzdaten werden geladen...",
+    "refresh": "Aktualisieren",
+    "error": {
+      "title": "Fehler beim Laden der Finanzdaten",
+      "failed": "Rechnungen konnten nicht geladen werden",
+      "retry": "Erneut versuchen"
+    },
+    "globalStats": {
+      "title": "Globale Statistiken",
+      "totalRevenue": {
+        "label": "Gesamtumsatz",
+        "from": "Aus {{count}} Rechnungen",
+        "avgPerUser": "Durchschnitt pro Benutzer: {{amount}}"
+      },
+      "monthlyRevenue": {
+        "label": "Monatlicher Umsatz",
+        "currentMonth": "Aktueller Monat"
+      },
+      "pendingAmount": {
+        "label": "Ausstehender Betrag",
+        "unpaid": "Unbezahlte Rechnungen",
+        "requiresAttention": "Erfordert Aufmerksamkeit"
+      },
+      "totalUsers": {
+        "label": "Benutzer gesamt",
+        "withInvoices": "Mit Rechnungen",
+        "totalInvoices": "{{count}} Rechnungen gesamt"
+      }
+    },
+    "search": {
+      "placeholder": "Nach E-Mail oder Benutzer-ID suchen..."
+    },
+    "sort": {
+      "label": "Sortieren nach",
+      "revenue": "Höchster Umsatz",
+      "invoices": "Meiste Rechnungen",
+      "pending": "Höchster ausstehender Betrag",
+      "email": "E-Mail (A-Z)"
+    },
+    "userList": {
+      "title": "Alle Benutzer ({{count}})",
+      "clickToView": "Klicken Sie auf einen Benutzer, um seine Rechnungen anzuzeigen",
+      "noUsers": "Keine Benutzer mit Rechnungen gefunden",
+      "noResults": "Keine Benutzer gefunden, die Ihrer Suche entsprechen"
+    },
+    "userCard": {
+      "userId": "Benutzer-ID",
+      "totalRevenue": "Gesamtumsatz",
+      "paidInvoices": "{{count}} bezahlte Rechnungen",
+      "average": "Durchschn.",
+      "pendingAmount": "Ausstehender Betrag",
+      "pending": "{{count}} ausstehende Rechnungen",
+      "totalInvoices": "Rechnungen gesamt",
+      "paid": "{{count}} Bezahlt",
+      "pendingBadge": "{{count}} Ausstehend",
+      "noInvoices": "Keine Rechnungen"
+    },
+    "modal": {
+      "title": "Rechnungen für {{email}}",
+      "subtitle": "Alle Rechnungen und Zahlungshistorie für diesen Benutzer anzeigen",
+      "close": "Schließen",
+      "exportCsv": "CSV exportieren",
+      "stats": {
+        "totalPaid": "Gesamt bezahlt",
+        "paidCount": "{{count}} bezahlte Rechnungen",
+        "pending": "Ausstehend",
+        "pendingCount": "{{count}} ausstehende Rechnungen",
+        "totalInvoices": "Rechnungen gesamt",
+        "allTime": "Gesamt",
+        "average": "Durchschnitt",
+        "perInvoice": "Pro Rechnung"
+      },
+      "search": {
+        "placeholder": "Nach Rechnungsnummer suchen..."
+      },
+      "filter": {
+        "label": "Nach Status filtern",
+        "all": "Alle Status",
+        "paid": "Bezahlt",
+        "open": "Offen",
+        "pending": "Ausstehend",
+        "draft": "Entwurf",
+        "void": "Storniert"
+      },
+      "table": {
+        "invoiceNumber": "Rechnungs-Nr.",
+        "amount": "Betrag",
+        "status": "Status",
+        "created": "Erstellt",
+        "paidAt": "Bezahlt am",
+        "actions": "Aktionen",
+        "view": "Ansehen",
+        "pdf": "PDF",
+        "noInvoices": "Keine Rechnungen gefunden"
+      },
+      "status": {
+        "paid": "Bezahlt",
+        "open": "Offen",
+        "pending": "Ausstehend",
+        "draft": "Entwurf",
+        "void": "Storniert",
+        "uncollectible": "Uneinbringlich"
+      }
+    }
   },
   "adminDetails": {
     "title": "Benutzerdetails: {{email}}",

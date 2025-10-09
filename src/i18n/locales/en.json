@@ -2735,8 +2735,117 @@
     "payments": "Payments",
     "support": "Support",
     "system": "System",
+    "finance": "Finance",
     "settings": "Settings",
     "logout": "Logout"
+  },
+  "adminFinance": {
+    "title": "Finance Management",
+    "subtitle": "View all users and their invoices",
+    "loading": "Loading finance data...",
+    "refresh": "Refresh",
+    "error": {
+      "title": "Error Loading Finance Data",
+      "failed": "Failed to load invoices",
+      "retry": "Retry"
+    },
+    "globalStats": {
+      "title": "Global Statistics",
+      "totalRevenue": {
+        "label": "Total Revenue",
+        "from": "From {{count}} invoices",
+        "avgPerUser": "Avg per user: {{amount}}"
+      },
+      "monthlyRevenue": {
+        "label": "Monthly Revenue",
+        "currentMonth": "Current month"
+      },
+      "pendingAmount": {
+        "label": "Pending Amount",
+        "unpaid": "Unpaid invoices",
+        "requiresAttention": "Requires attention"
+      },
+      "totalUsers": {
+        "label": "Total Users",
+        "withInvoices": "With invoices",
+        "totalInvoices": "{{count}} total invoices"
+      }
+    },
+    "search": {
+      "placeholder": "Search by email or user ID..."
+    },
+    "sort": {
+      "label": "Sort by",
+      "revenue": "Highest Revenue",
+      "invoices": "Most Invoices",
+      "pending": "Highest Pending",
+      "email": "Email (A-Z)"
+    },
+    "userList": {
+      "title": "All Users ({{count}})",
+      "clickToView": "Click on a user to view their invoices",
+      "noUsers": "No users with invoices found",
+      "noResults": "No users found matching your search"
+    },
+    "userCard": {
+      "userId": "User ID",
+      "totalRevenue": "Total Revenue",
+      "paidInvoices": "{{count}} paid invoices",
+      "average": "Avg",
+      "pendingAmount": "Pending Amount",
+      "pending": "{{count}} pending invoices",
+      "totalInvoices": "Total Invoices",
+      "paid": "{{count}} Paid",
+      "pendingBadge": "{{count}} Pending",
+      "noInvoices": "No Invoices"
+    },
+    "modal": {
+      "title": "Invoices for {{email}}",
+      "subtitle": "View all invoices and payment history for this user",
+      "close": "Close",
+      "exportCsv": "Export CSV",
+      "stats": {
+        "totalPaid": "Total Paid",
+        "paidCount": "{{count}} paid invoices",
+        "pending": "Pending",
+        "pendingCount": "{{count}} pending invoices",
+        "totalInvoices": "Total Invoices",
+        "allTime": "All time",
+        "average": "Average",
+        "perInvoice": "Per invoice"
+      },
+      "search": {
+        "placeholder": "Search by invoice number..."
+      },
+      "filter": {
+        "label": "Filter by status",
+        "all": "All Statuses",
+        "paid": "Paid",
+        "open": "Open",
+        "pending": "Pending",
+        "draft": "Draft",
+        "void": "Void"
+      },
+      "table": {
+        "invoiceNumber": "Invoice #",
+        "amount": "Amount",
+        "status": "Status",
+        "created": "Created",
+        "paidAt": "Paid At",
+        "actions": "Actions",
+        "view": "View",
+        "pdf": "PDF",
+        "noInvoices": "No invoices found"
+      },
+      "status": {
+        "paid": "Paid",
+        "open": "Open",
+        "pending": "Pending",
+        "draft": "Draft",
+        "void": "Void",
+        "uncollectible": "Uncollectible"
+      }
+    }
   },
   "adminDetails": {
     "title": "User Details: {{email}}",

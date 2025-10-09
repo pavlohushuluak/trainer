@@ -10,6 +10,7 @@ import { SystemMonitoring } from '@/components/admin/SystemMonitoring';
 import { AdminSettings } from '@/components/admin/AdminSettings';
 import { AnalyticsDashboard } from '@/components/admin/AnalyticsDashboard';
 import { NetworkDiagnostics } from '@/components/admin/NetworkDiagnostics';
+import { FinanceManagement } from '@/components/admin/FinanceManagement';
 
 const AdminDashboard = () => {
   console.log('AdminDashboard: Rendering dashboard');
@@ -25,6 +26,7 @@ const AdminDashboard = () => {
           <Route path="payments" element={<PaymentManagement />} />
           <Route path="support" element={<SupportManagement />} />
           <Route path="system" element={<SystemMonitoring />} />
+          <Route path="finance" element={<FinanceManagement />} />
           <Route path="network" element={<NetworkDiagnostics />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>

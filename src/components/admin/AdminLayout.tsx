@@ -9,7 +9,8 @@ import {
   LogOut,
   MessageCircle,
   Menu,
-  X
+  X,
+  Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
@@ -55,6 +56,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
     // { name: t('adminLayout.payments'), href: 'payments', icon: CreditCard },
     { name: t('adminLayout.support'), href: 'support', icon: HeadphonesIcon },
     { name: t('adminLayout.system'), href: 'system', icon: Monitor },
+    { name: t('adminLayout.finance'), href: 'finance', icon: Wallet },
     { name: t('adminLayout.settings'), href: 'settings', icon: Settings },
   ];
 
