@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   AlertTriangle, 
   Users, 
@@ -15,8 +16,10 @@ import {
   CheckCircle,
   XCircle,
   Plus,
-  Search
+  Search,
+  Mail
 } from 'lucide-react';
+import { ManualSupportManagement } from './ManualSupportManagement';
 import {
   Select,
   SelectContent,
@@ -200,6 +203,33 @@ export const SupportManagement = () => {
             {t('adminSupport.description')}
           </p>
         </div>
+      </div>
+
+      {/* Support Tabs */}
+      <Tabs defaultValue="manual" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="manual" className="flex items-center gap-2">
+            <Mail className="h-4 w-4" />
+            <span className="hidden sm:inline">Manual Support</span>
+            <span className="sm:hidden">Manual</span>
+          </TabsTrigger>
+          <TabsTrigger value="notifications" className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4" />
+            <span className="hidden sm:inline">System Notifications</span>
+            <span className="sm:hidden">Notifications</span>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Manual Support Tab */}
+        <TabsContent value="manual" className="mt-6">
+          <ManualSupportManagement />
+        </TabsContent>
+
+        {/* System Notifications Tab */}
+        <TabsContent value="notifications" className="mt-6">
+          <div className="space-y-4 sm:space-y-6">
+            {/* Create Notification Button */}
+            <div className="flex justify-end">
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button className="w-full sm:w-auto">
@@ -409,6 +439,9 @@ export const SupportManagement = () => {
           </div>
         </CardContent>
       </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

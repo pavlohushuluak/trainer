@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, History, HelpCircle, Heart, Home, ArrowLeft, Shield } from 'lucide-react';
+import { MessageCircle, History, HelpCircle, Heart, Home, ArrowLeft, Shield, Mail } from 'lucide-react';
 import { TicketHistory } from '@/components/support/TicketHistory';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,6 +11,7 @@ import { AuthErrorDisplay } from '@/components/auth/AuthErrorDisplay';
 import { useStickyHeader } from '@/hooks/useStickyHeader';
 import { cn } from '@/lib/utils';
 import { SupportChat } from '@/components/support/SupportChat';
+import { ManualSupportModal } from '@/components/support/ManualSupportModal';
 import { useTranslations } from '@/hooks/useTranslations';
 import { usePetProfiles } from '@/hooks/usePetProfiles';
 import { useSupportTickets } from '@/hooks/useSupportTickets';
@@ -24,6 +25,7 @@ const Support = () => {
   const { isScrolled } = useStickyHeader();
   const { t } = useTranslations();
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isManualSupportOpen, setIsManualSupportOpen] = useState(false);
   const { fetchTickets } = useSupportTickets();
   const { trackSupportChatStart, trackSupportFAQClick } = useGTM();
   
@@ -88,7 +90,7 @@ const Support = () => {
           </div>
 
           {/* Support Options */}
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
             <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-gradient-to-br from-background to-muted/5">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-3">
@@ -180,6 +182,13 @@ const Support = () => {
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
         onTicketChange={refreshTickets}
+        onManualSupportClick={() => setIsManualSupportOpen(true)}
+      />
+
+      {/* Manual Support Modal */}
+      <ManualSupportModal
+        isOpen={isManualSupportOpen}
+        onClose={() => setIsManualSupportOpen(false)}
       />
     </div>
   );

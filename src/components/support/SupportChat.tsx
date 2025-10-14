@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 
-import { Loader2, HelpCircle, Plus } from 'lucide-react';
+import { Loader2, HelpCircle, Plus, Mail } from 'lucide-react';
 import { useSupportChat } from '@/hooks/useSupportChat';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
@@ -19,9 +19,10 @@ interface SupportChatProps {
   isOpen: boolean;
   onClose: () => void;
   onTicketChange?: () => void;
+  onManualSupportClick?: () => void;
 }
 
-export const SupportChat = ({ isOpen, onClose, onTicketChange }: SupportChatProps) => {
+export const SupportChat = ({ isOpen, onClose, onTicketChange, onManualSupportClick }: SupportChatProps) => {
   const { t } = useTranslations();
   const [showNewTicketDialog, setShowNewTicketDialog] = useState(false);
   const { trackSupportTicketCreate, trackSupportMessage, trackSupportFeedback } = useGTM();
@@ -128,6 +129,21 @@ export const SupportChat = ({ isOpen, onClose, onTicketChange }: SupportChatProp
               <CardTitle className="text-lg">{t('support.chat.title')}</CardTitle>
             </div>
             <div className="flex items-center gap-2">
+              {onManualSupportClick && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => {
+                    onClose();
+                    onManualSupportClick();
+                  }}
+                  className="text-xs bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/20 dark:hover:bg-purple-900/30 border-purple-200 dark:border-purple-700 text-purple-700 dark:text-purple-300 hover:text-purple-800 dark:hover:text-purple-200 transition-all duration-200"
+                >
+                  <Mail className="h-3 w-3 mr-1" />
+                  <span className="hidden sm:inline">Manual Support</span>
+                  <span className="sm:hidden">Manual</span>
+                </Button>
+              )}
               <Button 
                 variant="outline" 
                 size="sm" 
