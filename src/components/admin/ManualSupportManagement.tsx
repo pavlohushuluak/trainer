@@ -105,7 +105,17 @@ export const ManualSupportManagement = () => {
   // Respond to message and mark as completed
   const respondMutation = useMutation({
     mutationFn: async ({ messageId, response }: { messageId: string; response: string }) => {
-      const { error } = await supabase
+      // Get the message details for email
+      const { data: messageData, error: fetchError } = await supabase
+        .from('manual_support_messages')
+        .select('*')
+        .eq('id', messageId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Update the message in database
+      const { error: updateError } = await supabase
         .from('manual_support_messages')
         .update({
           admin_response: response,
@@ -115,7 +125,39 @@ export const ManualSupportManagement = () => {
         })
         .eq('id', messageId);
 
-      if (error) throw error;
+      if (updateError) throw updateError;
+
+      // Send email notification to user
+      try {
+        const { data: emailData, error: emailError } = await supabase.functions.invoke('send-manual-support-response', {
+          body: {
+            userEmail: messageData.user_email,
+            userName: messageData.user_name,
+            subject: messageData.subject,
+            userMessage: messageData.message,
+            adminResponse: response,
+            priority: messageData.priority,
+            requestId: messageId,
+          }
+        });
+
+        if (emailError) {
+          console.error('Error sending email notification:', emailError);
+          // Don't fail the whole operation if email fails
+          toast({
+            title: "Response Saved",
+            description: "Response saved, but email notification failed to send.",
+            variant: "default",
+          });
+        } else {
+          console.log('Email notification sent successfully:', emailData);
+        }
+      } catch (emailException) {
+        console.error('Email notification exception:', emailException);
+        // Continue even if email fails
+      }
+
+      return messageData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-manual-support'] });
@@ -123,11 +165,13 @@ export const ManualSupportManagement = () => {
       setSelectedMessage(null);
       setAdminResponse('');
       toast({
-        title: "Response Sent",
-        description: "Your response has been sent to the user.",
+        title: "Response Sent Successfully",
+        description: "Your response has been sent to the user via email and in-app notification.",
+        duration: 5000,
       });
     },
     onError: (error) => {
+      console.error('Error responding to support request:', error);
       toast({
         title: "Error",
         description: "Failed to send response. Please try again.",

@@ -384,9 +384,9 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
                           <Label htmlFor="priority" className="text-xs sm:text-sm font-medium">Priority Level</Label>
                           <Select value={priority} onValueChange={(value) => setPriority(value as SupportMessagePriority)}>
                             <SelectTrigger id="priority" className="mt-1.5 h-10 text-sm">
-                              <SelectValue />
+                              <SelectValue placeholder="Select priority level" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent position="popper" sideOffset={5} className="z-[200]">
                               <SelectItem value="low">Low - General question</SelectItem>
                               <SelectItem value="normal">Normal - Regular support</SelectItem>
                               <SelectItem value="high">High - Important issue</SelectItem>
