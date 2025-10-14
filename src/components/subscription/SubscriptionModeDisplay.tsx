@@ -84,12 +84,12 @@ export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: Su
     <Badge 
       variant={display.variant}
       className={cn(
-        "flex items-center gap-1 text-xs font-medium transition-colors",
+        "flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-medium transition-colors max-w-full",
         display.className
       )}
     >
-      {display.icon}
-      {display.label}
+      <span className="flex-shrink-0">{display.icon}</span>
+      <span className="truncate max-w-[150px] sm:max-w-none">{display.label}</span>
     </Badge>
   );
 };

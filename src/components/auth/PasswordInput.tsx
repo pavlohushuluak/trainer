@@ -61,7 +61,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
           minLength={minLength}
           aria-describedby={error ? `${id}-error` : showHint ? `${id}-hint` : undefined}
           className={cn(
-            "pr-10",
+            "pr-10 text-sm",
             error && "border-red-500 focus:border-red-500 focus:ring-red-500"
           )}
         />

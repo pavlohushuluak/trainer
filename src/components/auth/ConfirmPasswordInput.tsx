@@ -70,7 +70,7 @@ export const ConfirmPasswordInput: React.FC<ConfirmPasswordInputProps> = ({
           onChange={(e) => onChange(e.target.value)}
           required={required}
           className={cn(
-            "pr-10",
+            "pr-10 text-sm",
             (error || (value && !validation.isValid)) && "border-red-500 focus:border-red-500 focus:ring-red-500",
             value && validation.isValid && !error && "border-green-500 focus:border-green-500 focus:ring-green-500"
           )}

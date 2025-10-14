@@ -44,14 +44,14 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
   };
 
   return (
-    <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 via-secondary to-accent/5">
-      <CardContent className="p-4 sm:p-6">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+    <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 via-secondary to-accent/5 mb-4 sm:mb-6 lg:mb-8">
+      <CardContent className="p-3 sm:p-4 lg:p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
           <div className="min-w-0 flex-1">
-            <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-foreground mb-2 sm:mb-3">
+            <h1 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-foreground mb-1.5 sm:mb-2 lg:mb-3">
               {t('training.heroStory.title')}
             </h1>
-            <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 leading-relaxed">
+            <p className="text-xs sm:text-sm lg:text-base text-muted-foreground mb-2 sm:mb-3 lg:mb-4 leading-relaxed">
               {primaryPetName
                 ? `${t('training.heroStory.description.withPet')} ${primaryPetName}`
                 : t('training.heroStory.description.withoutPet')
@@ -62,13 +62,13 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-shrink-0">
             <Button
               onClick={handleChatClick}
-              className="bg-primary hover:bg-primary/90 text-white w-full sm:w-auto text-sm sm:text-base py-2.5 sm:py-3 px-4 sm:px-6"
+              className="bg-primary hover:bg-primary/90 text-white w-full sm:w-auto text-xs sm:text-sm lg:text-base py-2 sm:py-2.5 lg:py-3 px-3 sm:px-4 lg:px-6 min-h-[44px] touch-manipulation"
               size="lg"
             >
-              <MessageCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+              <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
               <span className="truncate">{t('training.heroStory.buttons.chatWithTrainer')}</span>
               {!hasActiveSubscription && hasPets && (
-                <span className="ml-2 text-xs bg-green-500 px-2 py-1 rounded-full flex-shrink-0">
+                <span className="ml-1.5 sm:ml-2 text-[10px] sm:text-xs bg-green-500 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full flex-shrink-0">
                   {t('training.heroStory.buttons.freeQuestions')}
                 </span>
               )}
@@ -78,29 +78,29 @@ export const HeroStorySection = ({ onChatOpen }: HeroStorySectionProps) => {
               variant="outline"
               onClick={() => document.getElementById('pet-section')?.scrollIntoView({ behavior: 'smooth' })}
               size="lg"
-              className="w-full sm:w-auto text-sm sm:text-base py-2.5 sm:py-3 px-4 sm:px-6"
+              className="w-full sm:w-auto text-xs sm:text-sm lg:text-base py-2 sm:py-2.5 lg:py-3 px-3 sm:px-4 lg:px-6 min-h-[44px] touch-manipulation"
             >
-              <User className="h-4 w-4 mr-2 flex-shrink-0" />
+              <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
               <span className="truncate">{t('training.heroStory.buttons.managePetProfile')}</span>
             </Button>
           </div>
         </div>
-        <div className="flex flex-wrap gap-1.5 sm:gap-3 lg:gap-6 text-xs sm:text-sm text-muted-foreground mt-3 lg:mt-0">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 lg:gap-4 text-[10px] sm:text-xs lg:text-sm text-muted-foreground mt-2 sm:mt-3 lg:mt-4">
           <span className="inline-flex items-center">
-            <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
+            <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-primary/60 rounded-full mr-1 sm:mr-1.5 lg:mr-2 flex-shrink-0"></span>
             {t('training.heroStory.features.instantAnswers')}
           </span>
           <span className="inline-flex items-center">
-            <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
+            <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-primary/60 rounded-full mr-1 sm:mr-1.5 lg:mr-2 flex-shrink-0"></span>
             {t('training.heroStory.features.individualTraining')}
           </span>
           <span className="inline-flex items-center">
-            <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
+            <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-primary/60 rounded-full mr-1 sm:mr-1.5 lg:mr-2 flex-shrink-0"></span>
             {t('training.heroStory.features.behaviorAnalysis')}
           </span>
           {!hasActiveSubscription && (
             <span className="inline-flex items-center">
-              <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-1.5 sm:mr-2 flex-shrink-0"></span>
+              <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-primary/60 rounded-full mr-1 sm:mr-1.5 lg:mr-2 flex-shrink-0"></span>
               {t('training.heroStory.features.detailedPlans')}
             </span>
           )}

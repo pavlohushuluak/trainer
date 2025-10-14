@@ -69,6 +69,9 @@ const LoginPage = () => {
 
   // Check localStorage for alreadySignedUp value on component mount and handle URL parameters
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     const alreadySignedUp = localStorage.getItem('alreadySignedUp') === 'true';
     setActiveTab(alreadySignedUp ? 'signin' : 'signup');
     
@@ -425,7 +428,7 @@ const LoginPage = () => {
                       {/* Name Fields */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
                         <div className="space-y-1 sm:space-y-2">
-                          <Label htmlFor="firstName" className="text-xs sm:text-sm font-medium">
+                          <Label htmlFor="firstName" className="text-sm font-medium">
                             {t('auth.firstName')} <span className="text-red-500">*</span>
                           </Label>
                           <Input
@@ -437,7 +440,7 @@ const LoginPage = () => {
                               setFirstName(e.target.value);
                               handleFieldChange('firstName', e.target.value);
                             }}
-                            className={`bg-background focus:border-primary focus:ring-primary text-xs sm:text-sm py-2 sm:py-2.5 ${fieldErrors.firstName
+                            className={`bg-background focus:border-primary focus:ring-primary text-sm py-2 sm:py-2.5 ${fieldErrors.firstName
                               ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                               : 'border-border'
                               }`}
@@ -450,7 +453,7 @@ const LoginPage = () => {
                           )}
                         </div>
                         <div className="space-y-1 sm:space-y-2">
-                          <Label htmlFor="lastName" className="text-xs sm:text-sm font-medium">
+                          <Label htmlFor="lastName" className="text-sm font-medium">
                             {t('auth.lastName')} <span className="text-red-500">*</span>
                           </Label>
                           <Input
@@ -462,7 +465,7 @@ const LoginPage = () => {
                               setLastName(e.target.value);
                               handleFieldChange('lastName', e.target.value);
                             }}
-                            className={`bg-background focus:border-primary focus:ring-primary text-xs sm:text-sm py-2 sm:py-2.5 ${fieldErrors.lastName
+                            className={`bg-background focus:border-primary focus:ring-primary text-sm py-2 sm:py-2.5 ${fieldErrors.lastName
                               ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                               : 'border-border'
                               }`}

@@ -32,28 +32,28 @@ const PetProfilesSection = ({ shouldOpenPetModal = false }: PetProfilesSectionPr
     <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
       <Card className="card-enhanced shadow-lg border-border/50 bg-gradient-to-br from-white via-green-50/30 to-blue-50/30 dark:from-gray-900 dark:via-green-900/20 dark:to-blue-900/20 overflow-hidden">
         <CollapsibleTrigger asChild>
-          <CardHeader className={`header-enhanced bg-gradient-to-r from-green-100/80 dark:from-green-900/40 via-blue-100/80 dark:via-blue-900/40 to-green-100/80 dark:to-green-900/40 rounded-t-lg ${isExpanded ? null : 'rounded-b-lg'} cursor-pointer transition-all duration-300 ease-out group px-6 py-5`}>
-            <CardTitle className="text-xl font-semibold flex items-center gap-3 justify-between text-green-900 dark:text-green-100">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-blue-500 shadow-lg">
-                  <User className="h-5 w-5 text-white" />
+          <CardHeader className={`header-enhanced bg-gradient-to-r from-green-100/80 dark:from-green-900/40 via-blue-100/80 dark:via-blue-900/40 to-green-100/80 dark:to-green-900/40 rounded-t-lg ${isExpanded ? null : 'rounded-b-lg'} cursor-pointer transition-all duration-300 ease-out group px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-5 touch-manipulation`}>
+            <CardTitle className="text-base sm:text-lg lg:text-xl font-semibold flex items-center gap-2 sm:gap-3 justify-between text-green-900 dark:text-green-100">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full bg-gradient-to-br from-green-500 to-blue-500 shadow-lg flex-shrink-0">
+                  <User className="h-4 w-4 sm:h-4.5 sm:w-4.5 lg:h-5 lg:w-5 text-white" />
                 </div>
-                <span className="font-bold">{t('training.petProfilesSection.title')}</span>
+                <span className="font-bold truncate">{t('training.petProfilesSection.title')}</span>
               </div>
               <ChevronDown 
-                className={`h-5 w-5 text-green-600 dark:text-green-300 transition-all duration-300 ease-out group-hover:scale-110 ${
+                className={`h-4 w-4 sm:h-5 sm:w-5 text-green-600 dark:text-green-300 transition-all duration-300 ease-out group-hover:scale-110 flex-shrink-0 ${
                   isExpanded ? 'rotate-180' : ''
                 }`} 
               />
             </CardTitle>
-            <CardDescription className="text-green-700 dark:text-green-300 text-base mt-2 font-medium">
+            <CardDescription className="text-green-700 dark:text-green-300 text-xs sm:text-sm lg:text-base mt-1.5 sm:mt-2 font-medium leading-relaxed">
               {t('training.petProfilesSection.description')}
             </CardDescription>
           </CardHeader>
         </CollapsibleTrigger>
         
         <CollapsibleContent className="animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
-          <CardContent className="p-8 bg-gradient-to-br from-white/50 to-green-50/30 dark:from-gray-900/50 dark:to-green-900/10">
+          <CardContent className="p-3 sm:p-4 lg:p-6 xl:p-8 bg-gradient-to-br from-white/50 to-green-50/30 dark:from-gray-900/50 dark:to-green-900/10">
             <div className="animate-fade-in-up">
               <PetProfileManager shouldOpenPetModal={shouldOpenPetModal} />
             </div>

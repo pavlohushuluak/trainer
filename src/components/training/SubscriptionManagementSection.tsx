@@ -30,18 +30,18 @@ export const SubscriptionManagementSection = () => {
   // Show error state if there's an error
   if (error) {
     return (
-      <div className="mt-6 sm:mt-8 subscription-management-section">
-              <Card className="shadow-sm border-red-200/50 bg-red-50/50 dark:border-red-400/30 dark:bg-red-950/20">
-        <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400 flex-shrink-0" />
-            <CardTitle className="text-red-800 dark:text-red-200 text-lg sm:text-xl">{t('training.subscriptionManagement.error.title')}</CardTitle>
-          </div>
-          <CardDescription className="text-red-700 dark:text-red-300 text-sm">
-            {t('training.subscriptionManagement.error.description')}
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <div className="mt-4 sm:mt-6 lg:mt-8 subscription-management-section">
+        <Card className="shadow-sm border-red-200/50 bg-red-50/50 dark:border-red-400/30 dark:bg-red-950/20">
+          <CardHeader className="px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-500 dark:text-red-400 flex-shrink-0" />
+              <CardTitle className="text-red-800 dark:text-red-200 text-base sm:text-lg lg:text-xl truncate">{t('training.subscriptionManagement.error.title')}</CardTitle>
+            </div>
+            <CardDescription className="text-red-700 dark:text-red-300 text-xs sm:text-sm mt-1.5 sm:mt-2">
+              {t('training.subscriptionManagement.error.description')}
+            </CardDescription>
+          </CardHeader>
+        </Card>
       </div>
     );
   }
@@ -49,15 +49,15 @@ export const SubscriptionManagementSection = () => {
   // Show loading state while subscription data is being fetched
   if (isLoading) {
     return (
-      <div className="mt-6 sm:mt-8 subscription-management-section">
+      <div className="mt-4 sm:mt-6 lg:mt-8 subscription-management-section">
         <Card className="shadow-sm border-gray-100 dark:border-gray-800">
-          <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
-            <div className="flex items-center gap-2">
-              <Crown className="h-5 w-5 text-yellow-500 flex-shrink-0" />
-              <CardTitle className="text-lg sm:text-xl">{t('training.subscriptionManagement.title')}</CardTitle>
+          <CardHeader className="px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-500 flex-shrink-0" />
+              <CardTitle className="text-base sm:text-lg lg:text-xl truncate">{t('training.subscriptionManagement.title')}</CardTitle>
             </div>
-            <CardDescription className="flex items-center gap-2 text-sm">
-              <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" />
+            <CardDescription className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm mt-1.5 sm:mt-2">
+              <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin flex-shrink-0" />
               {t('training.subscriptionManagement.loading')}
             </CardDescription>
           </CardHeader>
@@ -67,25 +67,25 @@ export const SubscriptionManagementSection = () => {
   }
 
   return (
-    <div className="mt-6 sm:mt-8 subscription-management-section">
+    <div className="mt-4 sm:mt-6 lg:mt-8 subscription-management-section">
       <Card className="card-enhanced shadow-lg border-border/50 bg-gradient-to-br from-white via-yellow-50/30 to-orange-50/30 dark:from-gray-900 dark:via-yellow-900/20 dark:to-orange-900/20 overflow-hidden">
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>
             <CardHeader 
-              className={`header-enhanced bg-gradient-to-r from-yellow-100/80 dark:from-yellow-900/40 via-orange-100/80 dark:via-orange-900/40 to-yellow-100/80 dark:to-yellow-900/40 rounded-t-lg ${isOpen ? null : 'rounded-b-lg'} cursor-pointer transition-all duration-300 ease-out group px-6 py-5`}
+              className={`header-enhanced bg-gradient-to-r from-yellow-100/80 dark:from-yellow-900/40 via-orange-100/80 dark:via-orange-900/40 to-yellow-100/80 dark:to-yellow-900/40 rounded-t-lg ${isOpen ? null : 'rounded-b-lg'} cursor-pointer transition-all duration-300 ease-out group px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-5 touch-manipulation`}
               aria-label={isOpen ? t('training.subscriptionManagement.collapseDetails') : t('training.subscriptionManagement.expandDetails')}
             >
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 shadow-lg">
-                    <Crown className="h-5 w-5 text-white" />
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                  <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 shadow-lg flex-shrink-0">
+                    <Crown className="h-4 w-4 sm:h-4.5 sm:w-4.5 lg:h-5 lg:w-5 text-white" />
                   </div>
-                  <CardTitle className="text-xl font-semibold text-yellow-900 dark:text-yellow-100">{t('training.subscriptionManagement.title')}</CardTitle>
+                  <CardTitle className="text-base sm:text-lg lg:text-xl font-semibold text-yellow-900 dark:text-yellow-100 truncate">{t('training.subscriptionManagement.title')}</CardTitle>
                 </div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1.5 sm:gap-2 self-start sm:self-auto">
                   {hasActiveSubscription && subscriptionTierName && (
-                    <div className="flex items-start sm:items-center gap-2 w-full sm:w-auto">
-                      <span className={`text-xs sm:text-sm px-2 py-1 rounded-full whitespace-nowrap ${
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+                      <span className={`text-[10px] sm:text-xs lg:text-sm px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full whitespace-nowrap ${
                         isExpired 
                           ? 'bg-red-100 text-red-800 dark:bg-red-950/30 dark:text-red-300' 
                           : 'bg-green-100 text-green-800 dark:bg-green-950/30 dark:text-green-300'
@@ -93,21 +93,22 @@ export const SubscriptionManagementSection = () => {
                         {subscriptionTierName} {isExpired ? t('training.subscriptionManagement.expired') : t('training.subscriptionManagement.active')}
                       </span>
                       {tierLimit && tierLimit > 1 && (
-                        <span className="text-xs sm:text-sm bg-blue-100 text-blue-800 dark:bg-blue-950/30 dark:text-blue-300 px-2 py-1 rounded-full flex items-center gap-1 whitespace-nowrap">
-                          <Users className="h-3 w-3 flex-shrink-0" />
-                          {tierLimit === 999 ? t('training.subscriptionManagement.unlimitedAnimals') : tierLimit} {t('training.subscriptionManagement.animals')}
+                        <span className="text-[10px] sm:text-xs lg:text-sm bg-blue-100 text-blue-800 dark:bg-blue-950/30 dark:text-blue-300 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full flex items-center gap-1 whitespace-nowrap">
+                          <Users className="h-2.5 w-2.5 sm:h-3 sm:w-3 flex-shrink-0" />
+                          <span className="hidden xs:inline">{tierLimit === 999 ? t('training.subscriptionManagement.unlimitedAnimals') : tierLimit} {t('training.subscriptionManagement.animals')}</span>
+                          <span className="xs:hidden">{tierLimit === 999 ? '∞' : tierLimit}</span>
                         </span>
                       )}
                     </div>
                   )}
                   {isOpen ? (
-                    <ChevronUp className="h-5 w-5 text-yellow-600 dark:text-yellow-300 transition-all duration-300 ease-out group-hover:scale-110 flex-shrink-0" />
+                    <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600 dark:text-yellow-300 transition-all duration-300 ease-out group-hover:scale-110 flex-shrink-0" />
                   ) : (
-                    <ChevronDown className="h-5 w-5 text-yellow-600 dark:text-yellow-300 transition-all duration-300 ease-out group-hover:scale-110 flex-shrink-0" />
+                    <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600 dark:text-yellow-300 transition-all duration-300 ease-out group-hover:scale-110 flex-shrink-0" />
                   )}
                 </div>
               </div>
-              <CardDescription className="text-yellow-700 dark:text-yellow-300 text-base mt-2 font-medium">
+              <CardDescription className="text-yellow-700 dark:text-yellow-300 text-xs sm:text-sm lg:text-base mt-1.5 sm:mt-2 font-medium leading-relaxed">
                 {hasActiveSubscription 
                   ? (() => {
                       const planName = subscriptionTierName;
@@ -145,7 +146,7 @@ export const SubscriptionManagementSection = () => {
             </CardHeader>
           </CollapsibleTrigger>
           <CollapsibleContent className="animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
-            <CardContent className="p-8 bg-gradient-to-br from-white/50 to-yellow-50/30 dark:from-gray-900/50 dark:to-yellow-900/10">
+            <CardContent className="p-3 sm:p-4 lg:p-6 xl:p-8 bg-gradient-to-br from-white/50 to-yellow-50/30 dark:from-gray-900/50 dark:to-yellow-900/10">
               <div className="animate-fade-in-up">
                 <SubscriptionManager />
               </div>

@@ -82,43 +82,42 @@ export const PetProfileHeader = ({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-      <div className="space-y-2 flex-1">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
+      <div className="space-y-2 flex-1 min-w-0">
         <PetLimitDisplay 
           currentPetCount={currentPetCount}
           maxPetsAllowed={maxPetsAllowed}
           subscriptionTier={subscriptionTier}
         />
         {pets.length > 0 && (
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
             {t('training.petProfilesSection.description')}
           </p>
         )}
       </div>
       
-
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button 
-              onClick={handleCreateNew} 
-              size="sm"
-              className={`${canAddMore ? 'bg-green-600 hover:bg-green-700' : 'bg-orange-500 hover:bg-orange-600'} text-white w-fit sm:w-auto min-h-[44px] shrink-0`}
-              disabled={!canCreatePet}
-            >
-              <PlusCircle className="mr-2 h-4 w-4 flex-shrink-0" />
-              <span>
-                {canAddMore ? t('pets.addPet') : t('common.upgrade')}
-              </span>
-            </Button>
-          </DialogTrigger>
-          {(canAddMore || editingPet) && (
-            <PetProfileForm
-              editingPet={editingPet}
-              onPetSaved={onPetSaved}
-              onClose={() => setIsDialogOpen(false)}
-            />
-          )}
-        </Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button 
+            onClick={handleCreateNew} 
+            size="sm"
+            className={`${canAddMore ? 'bg-green-600 hover:bg-green-700' : 'bg-orange-500 hover:bg-orange-600'} text-white w-full sm:w-auto min-h-[44px] shrink-0 touch-manipulation`}
+            disabled={!canCreatePet}
+          >
+            <PlusCircle className="mr-2 h-4 w-4 flex-shrink-0" />
+            <span className="text-sm sm:text-base">
+              {canAddMore ? t('pets.addPet') : t('common.upgrade')}
+            </span>
+          </Button>
+        </DialogTrigger>
+        {(canAddMore || editingPet) && (
+          <PetProfileForm
+            editingPet={editingPet}
+            onPetSaved={onPetSaved}
+            onClose={() => setIsDialogOpen(false)}
+          />
+        )}
+      </Dialog>
     </div>
   );
 };

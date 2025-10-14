@@ -36,6 +36,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   const isIndexPage = location.pathname === '/';
   // Check if we're on the Chat page
   const isChatPage = location.pathname === '/chat';
+  // Check if we're on the Login page
+  const isLoginPage = location.pathname === '/login';
 
   // Direct admin check without React Query to avoid hanging issues
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>(undefined);
@@ -343,7 +345,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       </div>
       
       {/* Footer */}
-      {showFooter && !isChatPage && <Footer />}
+      {showFooter && !isChatPage && !isLoginPage && <Footer />}
       
       {/* Support Button - Show on all pages for premium users */}
       <SupportButton />

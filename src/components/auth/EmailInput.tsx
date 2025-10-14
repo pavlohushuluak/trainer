@@ -78,7 +78,8 @@ export const EmailInput: React.FC<EmailInputProps> = ({
         required={required}
         className={cn(
           showValidation && !emailValidation.isValid && "border-red-500 focus:border-red-500 focus:ring-red-500",
-          showValidation && emailValidation.isValid && "border-green-500 focus:border-green-500 focus:ring-green-500"
+          showValidation && emailValidation.isValid && "border-green-500 focus:border-green-500 focus:ring-green-500",
+          "text-sm"
         )}
       />
 
