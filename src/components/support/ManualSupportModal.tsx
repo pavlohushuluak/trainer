@@ -58,6 +58,7 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<'new' | 'messages'>('new');
+  const [isPollingActive, setIsPollingActive] = useState(false);
 
   // Reset to messages tab when modal opens
   useEffect(() => {
@@ -82,7 +83,32 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
       return data as ManualSupportMessage[];
     },
     enabled: !!user && isOpen,
-    refetchInterval: isOpen ? 3 * 60 * 1000 : false, // Refetch every 3 minutes when modal is open
+    refetchInterval: (query) => {
+      if (!isOpen) {
+        setIsPollingActive(false);
+        return false;
+      }
+      
+      // Check if there are any active or in_progress messages
+      const messages = query.state.data as ManualSupportMessage[] | undefined;
+      const hasActiveMessages = messages?.some(
+        m => m.status === 'active' || m.status === 'in_progress'
+      );
+      
+      // Update polling state
+      if (hasActiveMessages !== isPollingActive) {
+        setIsPollingActive(hasActiveMessages || false);
+        
+        if (hasActiveMessages) {
+          console.log('📡 Manual Support: Started polling for active messages (every 20 seconds)');
+        } else {
+          console.log('✅ Manual Support: Stopped polling - all messages completed');
+        }
+      }
+      
+      // Poll every 20 seconds if there are active messages, otherwise stop polling
+      return hasActiveMessages ? 20 * 1000 : false;
+    },
   });
 
   // Statistics
@@ -97,6 +123,50 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
       unviewed: allMessages.filter(m => m.status === 'completed' && !m.viewed_by_user).length,
     };
   }, [allMessages]);
+
+  // Track previous messages to detect new responses
+  const [previousMessages, setPreviousMessages] = useState<ManualSupportMessage[]>([]);
+
+  // Notify user when admin responds
+  useEffect(() => {
+    if (!allMessages || !previousMessages.length) {
+      if (allMessages) setPreviousMessages(allMessages);
+      return;
+    }
+
+    // Check for newly completed messages
+    const newlyCompleted = allMessages.filter(msg => {
+      const prevMsg = previousMessages.find(pm => pm.id === msg.id);
+      return prevMsg && 
+             prevMsg.status !== 'completed' && 
+             msg.status === 'completed' &&
+             msg.admin_response;
+    });
+
+    // Show notification for each newly completed message
+    newlyCompleted.forEach(msg => {
+      console.log('🎉 Manual Support: New response received!', {
+        subject: msg.subject,
+        respondedAt: msg.admin_responded_at,
+        previousStatus: previousMessages.find(pm => pm.id === msg.id)?.status,
+        newStatus: msg.status
+      });
+
+      toast({
+        title: "✅ Support Response Received!",
+        description: `Your request "${msg.subject}" has been answered by our support team.`,
+        duration: 8000,
+      });
+
+      // Auto-switch to messages tab if user is on new request tab
+      if (activeTab === 'new') {
+        setActiveTab('messages');
+      }
+    });
+
+    // Update previous messages
+    setPreviousMessages(allMessages);
+  }, [allMessages, previousMessages, toast, activeTab]);
 
   // Handle escape key
   useEffect(() => {
@@ -440,6 +510,16 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
             <TabsContent value="messages" className="flex-1 overflow-hidden m-0 data-[state=active]:flex data-[state=active]:flex-col">
               <ScrollArea className="flex-1 min-h-0">
                 <div className="p-4 sm:p-5 lg:p-6 min-h-full">
+                  {/* Polling Indicator */}
+                  {isPollingActive && (
+                    <Alert className="mb-4 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+                      <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400 animate-pulse" />
+                      <AlertDescription className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">
+                        Checking for updates every 20 seconds...
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
                   {isLoading ? (
                     <div className="flex items-center justify-center py-12">
                       <Loader2 className="h-8 w-8 animate-spin text-primary" />
