@@ -106,6 +106,8 @@
       "resolvingPreviousTicket": "Löse vorheriges Ticket auf...",
       "activeTicket": "Aktives Ticket",
       "readyToStart": "Bereit zum Starten",
+      "manualSupport": "Manueller Support",
+      "manualSupportShort": "Manuell",
       "newTicketCreated": {
         "title": "Neues Ticket erstellt",
         "description": "Du kannst jetzt eine neue Support-Konversation beginnen."
@@ -155,6 +157,83 @@
         },
         "retry": "Entschuldige, beim Erstellen des Trainingsplans gab es ein kleines Problem. Lass mich das nochmal für dich versuchen - magst du mir kurz sagen, woran ihr arbeiten möchtet?"
       }
+    },
+    "manualSupport": {
+      "title": "Manueller Support",
+      "modalTitle": "Manuelles Support-Center",
+      "statistics": {
+        "total": "Gesamt",
+        "active": "Aktiv",
+        "inProgress": "In Bearbeitung",
+        "completed": "Abgeschlossen"
+      },
+      "tabs": {
+        "newRequest": "Neue Anfrage",
+        "myMessages": "Meine Nachrichten"
+      },
+      "newRequest": {
+        "title": "Neue Anfrage stellen",
+        "description": "Unser Support-Team antwortet innerhalb von 24 Stunden",
+        "subject": "Betreff",
+        "subjectPlaceholder": "Kurze Beschreibung deines Anliegens",
+        "subjectRequired": "Betreff *",
+        "priority": "Prioritätsstufe",
+        "priorityPlaceholder": "Priorität auswählen",
+        "message": "Deine Nachricht",
+        "messageRequired": "Deine Nachricht *",
+        "messagePlaceholder": "Bitte beschreibe dein Anliegen detailliert...",
+        "characterCount": "{{count}}/2000 Zeichen",
+        "submitButton": "Support-Anfrage absenden",
+        "submitting": "Anfrage wird gesendet...",
+        "priorityLevels": {
+          "low": "Niedrig - Allgemeine Frage",
+          "normal": "Normal - Regulärer Support",
+          "high": "Hoch - Wichtiges Anliegen",
+          "urgent": "Dringend - Kritisches Problem"
+        }
+      },
+      "messages": {
+        "pollingIndicator": "Prüfe alle 20 Sekunden auf Aktualisierungen...",
+        "emptyState": {
+          "title": "Noch keine Support-Anfragen",
+          "description": "Du hast noch keine Support-Anfragen gestellt. Erstelle deine erste Anfrage, um Hilfe von unserem Team zu erhalten.",
+          "button": "Erste Anfrage erstellen"
+        },
+        "statusBadges": {
+          "active": "Aktiv",
+          "inProgress": "In Bearbeitung",
+          "completed": "Abgeschlossen"
+        },
+        "priorityBadges": {
+          "low": "NIEDRIG",
+          "normal": "NORMAL",
+          "high": "HOCH",
+          "urgent": "DRINGEND"
+        },
+        "newResponse": "Neue Antwort",
+        "submittedOn": "Eingereicht am",
+        "yourMessage": "Deine Nachricht:",
+        "statusAlerts": {
+          "active": "Anfrage ist aktiv. Unser Team antwortet bald.",
+          "inProgress": "Das Support-Team bearbeitet deine Anfrage.",
+          "completed": "Deine Anfrage wurde abgeschlossen."
+        },
+        "responseTitle": "Antwort des Support-Teams",
+        "respondedOn": "Beantwortet am",
+        "toggleRead": "Als gelesen markieren",
+        "toggleUnread": "Als ungelesen markieren",
+        "expand": "Aufklappen",
+        "collapse": "Zuklappen"
+      },
+      "notifications": {
+        "submittedSuccess": "Anfrage erfolgreich eingereicht",
+        "submittedDescription": "Deine Support-Anfrage wurde eingereicht. Du wirst benachrichtigt, wenn unser Team antwortet.",
+        "submittedError": "Anfrage konnte nicht eingereicht werden",
+        "submittedErrorDescription": "Bitte versuche es erneut. Falls das Problem weiterhin besteht, kontaktiere bitte direkt den Support.",
+        "responseReceived": "Support-Antwort erhalten!",
+        "responseReceivedDescription": "Deine Anfrage \"{{subject}}\" wurde von unserem Support-Team beantwortet."
+      },
+      "unreadBadge": "{{count}} ungelesen"
     },
     "page": {
       "title": "Chat mit Trainer",
@@ -2731,15 +2810,76 @@
     }
   },
   "adminLayout": {
-    "analytics": "Analytics",
-    "users": "Users",
+    "analytics": "Analytik",
+    "users": "Benutzer",
     "chats": "Chats",
-    "payments": "Payments",
+    "payments": "Zahlungen",
     "support": "Support",
     "system": "System",
     "finance": "Finanzen",
-    "settings": "Settings",
-    "logout": "Logout"
+    "settings": "Einstellungen",
+    "logout": "Abmelden"
+  },
+  "adminManualSupport": {
+    "title": "Manuelles Support-Management",
+    "subtitle": "Benutzer-Support-Anfragen anzeigen und beantworten",
+    "statistics": {
+      "active": "Aktiv",
+      "inProgress": "In Bearbeitung"
+    },
+    "filters": {
+      "searchPlaceholder": "Suche nach Betreff, Nachricht, E-Mail oder Name...",
+      "all": "Alle",
+      "active": "Aktiv",
+      "inProgress": "In Bearbeitung",
+      "inProgressShort": "Läuft",
+      "completed": "Abgeschlossen",
+      "completedShort": "Fertig"
+    },
+    "statusBadges": {
+      "active": "Aktiv",
+      "inProgress": "In Bearbeitung",
+      "completed": "Abgeschlossen"
+    },
+    "buttons": {
+      "startWorking": "Bearbeitung starten",
+      "startWorkingShort": "Starten",
+      "respond": "Antworten",
+      "cancel": "Abbrechen",
+      "sendResponse": "Antwort senden",
+      "sending": "Wird gesendet..."
+    },
+    "labels": {
+      "userMessage": "Benutzernachricht:",
+      "yourResponse": "Deine Antwort:",
+      "responded": "Beantwortet:",
+      "characterCount": "{{count}}/2000 Zeichen"
+    },
+    "dialog": {
+      "title": "Auf Support-Anfrage antworten",
+      "description": "Antwort senden an {{userName}}",
+      "userRequestLabel": "Anfrage des Benutzers:",
+      "responseLabel": "Deine Antwort",
+      "responsePlaceholder": "Gib hier deine Antwort ein...",
+      "alert": "Diese Antwort wird an den Benutzer gesendet und die Support-Anfrage als abgeschlossen markiert."
+    },
+    "emptyState": {
+      "title": "Keine Support-Nachrichten",
+      "noResults": "Keine Nachrichten entsprechen deiner Suche.",
+      "noMessages": "Keine Support-Nachrichten für den ausgewählten Filter gefunden."
+    },
+    "notifications": {
+      "statusUpdated": "Status aktualisiert",
+      "statusUpdatedDescription": "Nachricht als 'In Bearbeitung' markiert.",
+      "responseSaved": "Antwort gespeichert",
+      "responseSavedNoEmail": "Antwort gespeichert, aber E-Mail-Benachrichtigung konnte nicht gesendet werden.",
+      "responseSuccess": "Antwort erfolgreich gesendet",
+      "responseSuccessDescription": "Deine Antwort wurde per E-Mail und In-App-Benachrichtigung an den Benutzer gesendet.",
+      "responseError": "Fehler",
+      "responseErrorDescription": "Antwort konnte nicht gesendet werden. Bitte versuche es erneut.",
+      "missingResponse": "Fehlende Antwort",
+      "missingResponseDescription": "Bitte gib eine Antwortnachricht ein."
+    }
   },
   "adminFinance": {
     "title": "Finanzverwaltung",

@@ -39,6 +39,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from '@/hooks/useTranslations';
 import { ManualSupportMessage, CreateManualSupportMessage, SupportMessagePriority, SupportMessageStatus } from '@/types/manualSupport';
 import { format } from 'date-fns';
 
@@ -51,6 +52,7 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { t } = useTranslations();
 
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
@@ -153,8 +155,8 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
       });
 
       toast({
-        title: "✅ Support Response Received!",
-        description: `Your request "${msg.subject}" has been answered by our support team.`,
+        title: `✅ ${t('support.manualSupport.notifications.responseReceived')}`,
+        description: t('support.manualSupport.notifications.responseReceivedDescription', { subject: msg.subject }),
         duration: 8000,
       });
 
@@ -276,14 +278,14 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
       setActiveTab('messages'); // Switch to messages tab after submission
 
       toast({
-        title: "Support Request Submitted",
-        description: "Your request has been submitted. An admin will respond shortly.",
+        title: t('support.manualSupport.notifications.submittedSuccess'),
+        description: t('support.manualSupport.notifications.submittedDescription'),
       });
     } catch (error) {
       console.error('Error submitting support request:', error);
       toast({
-        title: "Submission Failed",
-        description: "Failed to submit your support request. Please try again.",
+        title: t('support.manualSupport.notifications.submittedError'),
+        description: t('support.manualSupport.notifications.submittedErrorDescription'),
         variant: "destructive",
       });
     } finally {
@@ -299,19 +301,26 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
       urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 animate-pulse',
     };
 
+    const labels = {
+      low: t('support.manualSupport.messages.priorityBadges.low'),
+      normal: t('support.manualSupport.messages.priorityBadges.normal'),
+      high: t('support.manualSupport.messages.priorityBadges.high'),
+      urgent: t('support.manualSupport.messages.priorityBadges.urgent'),
+    };
+
     return (
       <Badge className={`${colors[priority]} text-xs`}>
         <Flag className="h-3 w-3 mr-1" />
-        {priority.toUpperCase()}
+        {labels[priority]}
       </Badge>
     );
   };
 
   const getStatusBadge = (status: SupportMessageStatus) => {
     const config = {
-      active: { icon: Clock, color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200', label: 'Active' },
-      in_progress: { icon: Loader2, color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'In Progress' },
-      completed: { icon: CheckCircle2, color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200', label: 'Completed' },
+      active: { icon: Clock, color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200', label: t('support.manualSupport.messages.statusBadges.active') },
+      in_progress: { icon: Loader2, color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: t('support.manualSupport.messages.statusBadges.inProgress') },
+      completed: { icon: CheckCircle2, color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200', label: t('support.manualSupport.messages.statusBadges.completed') },
     };
 
     const { icon: Icon, color, label } = config[status];
@@ -347,17 +356,17 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
               </div>
               <div className="min-w-0">
                 <CardTitle className="text-lg sm:text-xl font-bold truncate bg-gradient-to-r from-purple-700 to-pink-700 dark:from-purple-300 dark:to-pink-300 bg-clip-text text-transparent">
-                  Manual Support Center
+                  {t('support.manualSupport.modalTitle')}
                 </CardTitle>
                 <CardDescription className="text-xs sm:text-sm text-muted-foreground">
-                  Get personalized responses from our team
+                  {t('support.manualSupport.newRequest.description')}
                 </CardDescription>
               </div>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               {stats.unviewed > 0 && (
                 <Badge className="bg-red-500 text-white text-xs animate-pulse shadow-lg">
-                  {stats.unviewed} New
+                  {t('support.manualSupport.unreadBadge', { count: stats.unviewed })}
                 </Badge>
               )}
               <Button 
@@ -376,24 +385,24 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
             <div className="flex flex-wrap gap-2 mt-3">
               <Badge variant="outline" className="bg-white/50 dark:bg-gray-800/50">
                 <MessageSquare className="h-3 w-3 mr-1" />
-                {stats.total} Total
+                {stats.total} {t('support.manualSupport.statistics.total')}
               </Badge>
               {stats.active > 0 && (
                 <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
                   <Clock className="h-3 w-3 mr-1" />
-                  {stats.active} Active
+                  {stats.active} {t('support.manualSupport.statistics.active')}
                 </Badge>
               )}
               {stats.inProgress > 0 && (
                 <Badge className="bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300">
                   <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                  {stats.inProgress} In Progress
+                  {stats.inProgress} {t('support.manualSupport.statistics.inProgress')}
                 </Badge>
               )}
               {stats.completed > 0 && (
                 <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
                   <CheckCircle2 className="h-3 w-3 mr-1" />
-                  {stats.completed} Completed
+                  {stats.completed} {t('support.manualSupport.statistics.completed')}
                 </Badge>
               )}
             </div>
@@ -406,11 +415,11 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="new" className="text-xs sm:text-sm">
                   <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-                  New Request
+                  {t('support.manualSupport.tabs.newRequest')}
                 </TabsTrigger>
                 <TabsTrigger value="messages" className="text-xs sm:text-sm">
                   <History className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-                  My Messages
+                  {t('support.manualSupport.tabs.myMessages')}
                   {allMessages && allMessages.length > 0 && (
                     <Badge className="ml-2 bg-purple-500 text-white text-[10px] h-4 px-1">
                       {allMessages.length}
@@ -423,27 +432,27 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
             {/* New Request Tab */}
             <TabsContent value="new" className="flex-1 overflow-hidden m-0 data-[state=active]:flex data-[state=active]:flex-col">
               <ScrollArea className="flex-1 min-h-0">
-                <div className="p-4 sm:p-5 lg:p-6 min-h-full">
+                <div className="p-4 sm:p-5 lg:p-6 min-h-full max-h-[60vh]">
                   {/* New Request Form */}
                   <Card className="border-2 border-purple-200 dark:border-purple-800 bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-950/20 dark:to-pink-950/20">
                     <CardHeader className="pb-3 px-3 py-3 sm:px-4 sm:py-4">
                       <CardTitle className="text-base sm:text-lg flex items-center gap-2">
                         <Send className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
-                        Submit New Request
+                        {t('support.manualSupport.newRequest.title')}
                       </CardTitle>
                       <CardDescription className="text-xs sm:text-sm">
-                        Our support team will respond within 24 hours
+                        {t('support.manualSupport.newRequest.description')}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="px-3 pb-3 sm:px-4 sm:pb-4">
                       <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                          <Label htmlFor="subject" className="text-xs sm:text-sm font-medium">Subject *</Label>
+                          <Label htmlFor="subject" className="text-xs sm:text-sm font-medium">{t('support.manualSupport.newRequest.subjectRequired')}</Label>
                           <Input
                             id="subject"
                             value={subject}
                             onChange={(e) => setSubject(e.target.value)}
-                            placeholder="Brief description of your issue"
+                            placeholder={t('support.manualSupport.newRequest.subjectPlaceholder')}
                             required
                             maxLength={200}
                             className="mt-1.5 text-sm h-10"
@@ -451,34 +460,34 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
                         </div>
 
                         <div>
-                          <Label htmlFor="priority" className="text-xs sm:text-sm font-medium">Priority Level</Label>
+                          <Label htmlFor="priority" className="text-xs sm:text-sm font-medium">{t('support.manualSupport.newRequest.priority')}</Label>
                           <Select value={priority} onValueChange={(value) => setPriority(value as SupportMessagePriority)}>
                             <SelectTrigger id="priority" className="mt-1.5 h-10 text-sm">
-                              <SelectValue placeholder="Select priority level" />
+                              <SelectValue placeholder={t('support.manualSupport.newRequest.priorityPlaceholder')} />
                             </SelectTrigger>
                             <SelectContent position="popper" sideOffset={5} className="z-[200]">
-                              <SelectItem value="low">Low - General question</SelectItem>
-                              <SelectItem value="normal">Normal - Regular support</SelectItem>
-                              <SelectItem value="high">High - Important issue</SelectItem>
-                              <SelectItem value="urgent">Urgent - Critical problem</SelectItem>
+                              <SelectItem value="low">{t('support.manualSupport.newRequest.priorityLevels.low')}</SelectItem>
+                              <SelectItem value="normal">{t('support.manualSupport.newRequest.priorityLevels.normal')}</SelectItem>
+                              <SelectItem value="high">{t('support.manualSupport.newRequest.priorityLevels.high')}</SelectItem>
+                              <SelectItem value="urgent">{t('support.manualSupport.newRequest.priorityLevels.urgent')}</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
 
                         <div>
-                          <Label htmlFor="message" className="text-xs sm:text-sm font-medium">Your Message *</Label>
+                          <Label htmlFor="message" className="text-xs sm:text-sm font-medium">{t('support.manualSupport.newRequest.messageRequired')}</Label>
                           <Textarea
                             id="message"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            placeholder="Please describe your issue in detail..."
+                            placeholder={t('support.manualSupport.newRequest.messagePlaceholder')}
                             required
                             rows={6}
                             maxLength={2000}
                             className="mt-1.5 resize-none text-sm"
                           />
                           <p className="text-[10px] text-muted-foreground mt-1">
-                            {message.length}/2000 characters
+                            {t('support.manualSupport.newRequest.characterCount', { count: message.length })}
                           </p>
                         </div>
 
@@ -490,12 +499,12 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
                           {isSubmitting ? (
                             <>
                               <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 animate-spin" />
-                              Submitting Request...
+                              {t('support.manualSupport.newRequest.submitting')}
                             </>
                           ) : (
                             <>
                               <Send className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                              Submit Support Request
+                              {t('support.manualSupport.newRequest.submitButton')}
                             </>
                           )}
                         </Button>
@@ -509,13 +518,13 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
             {/* Messages Tab */}
             <TabsContent value="messages" className="flex-1 overflow-hidden m-0 data-[state=active]:flex data-[state=active]:flex-col">
               <ScrollArea className="flex-1 min-h-0">
-                <div className="p-4 sm:p-5 lg:p-6 min-h-full">
+                <div className="p-4 sm:p-5 lg:p-6 min-h-full max-h-[60vh]">
                   {/* Polling Indicator */}
                   {isPollingActive && (
                     <Alert className="mb-4 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
                       <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400 animate-pulse" />
                       <AlertDescription className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">
-                        Checking for updates every 20 seconds...
+                        {t('support.manualSupport.messages.pollingIndicator')}
                       </AlertDescription>
                     </Alert>
                   )}
@@ -548,7 +557,7 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
                                       {getPriorityBadge(msg.priority)}
                                       {!msg.viewed_by_user && msg.status === 'completed' && (
                                         <Badge className="bg-red-500 text-white text-[10px] animate-pulse">
-                                          New Response
+                                          {t('support.manualSupport.messages.newResponse')}
                                         </Badge>
                                       )}
                                     </div>
@@ -595,7 +604,7 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
                               <Separator />
                               <CardContent className="px-4 py-4 space-y-4">
                                 <div>
-                                  <Label className="text-xs font-medium text-muted-foreground">Your Message</Label>
+                                  <Label className="text-xs font-medium text-muted-foreground">{t('support.manualSupport.messages.yourMessage')}</Label>
                                   <div className="mt-1.5 p-3 bg-muted/50 rounded-lg border">
                                     <p className="text-sm leading-relaxed whitespace-pre-wrap">
                                       {msg.message}
@@ -607,7 +616,7 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
                                   <Alert className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
                                     <Clock className="h-4 w-4 text-green-600 dark:text-green-400" />
                                     <AlertDescription className="text-xs sm:text-sm text-green-700 dark:text-green-300">
-                                      Your request is waiting for admin review.
+                                      {t('support.manualSupport.messages.statusAlerts.active')}
                                     </AlertDescription>
                                   </Alert>
                                 )}
@@ -616,7 +625,7 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
                                   <Alert className="bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
                                     <Loader2 className="h-4 w-4 animate-spin text-yellow-600 dark:text-yellow-400" />
                                     <AlertDescription className="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300">
-                                      An admin is currently working on your request.
+                                      {t('support.manualSupport.messages.statusAlerts.inProgress')}
                                     </AlertDescription>
                                   </Alert>
                                 )}
@@ -626,7 +635,7 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
                                     <div className="flex items-center justify-between mb-2">
                                       <Label className="text-xs sm:text-sm font-semibold text-purple-700 dark:text-purple-300 flex items-center gap-2">
                                         <CheckCircle2 className="h-4 w-4" />
-                                        Admin Response
+                                        {t('support.manualSupport.messages.responseTitle')}
                                       </Label>
                                       {msg.admin_responded_at && (
                                         <span className="text-[10px] sm:text-xs text-muted-foreground">
@@ -649,16 +658,16 @@ export const ManualSupportModal = ({ isOpen, onClose }: ManualSupportModalProps)
                     <Card>
                       <CardContent className="py-12 text-center">
                         <MessageSquare className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-muted-foreground/50 mb-4" />
-                        <h3 className="text-base sm:text-lg font-semibold mb-2">No Messages Yet</h3>
+                        <h3 className="text-base sm:text-lg font-semibold mb-2">{t('support.manualSupport.messages.emptyState.title')}</h3>
                         <p className="text-xs sm:text-sm text-muted-foreground mb-4">
-                          You haven't submitted any support requests yet.
+                          {t('support.manualSupport.messages.emptyState.description')}
                         </p>
                         <Button
                           onClick={() => setActiveTab('new')}
                           className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
                         >
                           <Plus className="h-4 w-4 mr-2" />
-                          Create Your First Request
+                          {t('support.manualSupport.messages.emptyState.button')}
                         </Button>
                       </CardContent>
                     </Card>

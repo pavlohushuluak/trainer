@@ -75,13 +75,13 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
 
         {/* Sidebar */}
         <div className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 w-64 sm:w-72 lg:w-64 bg-card border-r border-border transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}>
-          <div className="flex items-center justify-between h-16 border-b border-border px-4">
-            <Link to="/" className="flex items-center" onClick={closeSidebar}>
+          <div className="flex items-center justify-between h-14 sm:h-16 border-b border-border px-3 sm:px-4 shrink-0">
+            <Link to="/" className="flex items-center min-w-0" onClick={closeSidebar}>
               <ThemeLogo 
-                className="h-8 w-auto cursor-pointer hover:opacity-80 transition-opacity"
+                className="h-7 sm:h-8 w-auto cursor-pointer hover:opacity-80 transition-opacity"
                 alt="TierTrainer24 Admin"
               />
             </Link>
@@ -89,13 +89,13 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
               variant="ghost"
               size="sm"
               onClick={closeSidebar}
-              className="lg:hidden"
+              className="lg:hidden h-8 w-8 p-0 flex-shrink-0 touch-manipulation"
             >
               <X className="h-4 w-4" />
             </Button>
           </div>
           
-          <nav className="flex-1 p-4 space-y-2">
+          <nav className="flex-1 p-3 sm:p-4 space-y-1.5 sm:space-y-2 overflow-y-auto">
             {navigation.map((item) => {
               const isActive = location.pathname.endsWith(item.href) || 
                               (item.href === 'analytics' && location.pathname.endsWith('/admin/analytics'));
@@ -105,51 +105,52 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
                   to={item.href}
                   onClick={closeSidebar}
                   className={cn(
-                    "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                    "flex items-center px-3 py-2.5 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-colors min-h-[44px] sm:min-h-[40px] touch-manipulation",
                     isActive
                       ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-accent"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                   )}
                 >
-                  <item.icon className="w-5 h-5 mr-3" />
-                  {item.name}
+                  <item.icon className="w-4 h-4 sm:w-5 sm:h-5 mr-2.5 sm:mr-3 flex-shrink-0" />
+                  <span className="truncate">{item.name}</span>
                 </Link>
               );
             })}
           </nav>
 
-          <div className="p-4 border-t border-border">
+          <div className="p-3 sm:p-4 border-t border-border shrink-0">
             <Button
               variant="outline"
-              className="w-full justify-start"
+              className="w-full justify-start text-xs sm:text-sm min-h-[44px] sm:min-h-[40px] px-3 touch-manipulation"
               onClick={() => signOut()}
             >
-              <LogOut className="w-4 h-4 mr-2" />
-              {t('adminLayout.logout')}
+              <LogOut className="w-4 h-4 mr-2 flex-shrink-0" />
+              <span className="truncate">{t('adminLayout.logout')}</span>
             </Button>
           </div>
         </div>
 
         {/* Main content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden min-w-0">
           {/* Mobile header */}
-          <div className="lg:hidden flex items-center justify-between p-4 border-b border-border bg-card">
+          <div className="lg:hidden flex items-center justify-between px-3 py-3 sm:px-4 sm:py-4 border-b border-border bg-card shrink-0">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setSidebarOpen(true)}
+              className="h-9 w-9 p-0 flex-shrink-0 touch-manipulation hover:bg-accent"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
             <ThemeLogo 
-              className="h-6 w-auto"
+              className="h-6 sm:h-7 w-auto cursor-pointer hover:opacity-80 transition-opacity"
               alt="TierTrainer24 Admin"
               onClick={() => navigate('/')}
             />
-            <div className="w-10" /> {/* Spacer for centering */}
+            <div className="w-9 flex-shrink-0" /> {/* Spacer for centering */}
           </div>
 
-          <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+          <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6">
             {children}
           </main>
         </div>
@@ -157,10 +158,10 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
 
       {/* Debug panel for development */}
       {process.env.NODE_ENV === 'development' && (
-        <div className="fixed bottom-4 left-4 bg-black text-white p-2 rounded text-xs z-50 max-w-xs">
-          <div>Admin Layout Debug:</div>
-          <div>Path: {location.pathname}</div>
-          <div>User: {user?.email || 'None'}</div>
+        <div className="fixed bottom-3 sm:bottom-4 left-3 sm:left-4 bg-black/90 text-white p-2 sm:p-3 rounded-md text-[10px] sm:text-xs z-50 max-w-[250px] sm:max-w-xs backdrop-blur-sm">
+          <div className="font-semibold mb-1">Admin Layout Debug:</div>
+          <div className="truncate">Path: {location.pathname}</div>
+          <div className="truncate">User: {user?.email || 'None'}</div>
           <div>Auth Loading: {authLoading ? 'Yes' : 'No'}</div>
           <div>Sidebar: {sidebarOpen ? 'Open' : 'Closed'}</div>
           <div>Load Time: {pageLoadTime ? Date.now() - pageLoadTime + 'ms' : 'N/A'}</div>

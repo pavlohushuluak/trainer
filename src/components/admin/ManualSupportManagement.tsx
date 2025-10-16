@@ -33,6 +33,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from '@/hooks/useTranslations';
 import { ManualSupportMessage, SupportMessageStatus, SupportMessagePriority } from '@/types/manualSupport';
 import { format } from 'date-fns';
 
@@ -40,6 +41,7 @@ export const ManualSupportManagement = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { t } = useTranslations();
   
   const [statusFilter, setStatusFilter] = useState<'all' | SupportMessageStatus>('active');
   const [searchQuery, setSearchQuery] = useState('');
@@ -96,8 +98,8 @@ export const ManualSupportManagement = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-manual-support'] });
       toast({
-        title: "Status Updated",
-        description: "Message marked as in progress.",
+        title: t('adminManualSupport.notifications.statusUpdated'),
+        description: t('adminManualSupport.notifications.statusUpdatedDescription'),
       });
     },
   });
@@ -145,8 +147,8 @@ export const ManualSupportManagement = () => {
           console.error('Error sending email notification:', emailError);
           // Don't fail the whole operation if email fails
           toast({
-            title: "Response Saved",
-            description: "Response saved, but email notification failed to send.",
+            title: t('adminManualSupport.notifications.responseSaved'),
+            description: t('adminManualSupport.notifications.responseSavedNoEmail'),
             variant: "default",
           });
         } else {
@@ -165,16 +167,16 @@ export const ManualSupportManagement = () => {
       setSelectedMessage(null);
       setAdminResponse('');
       toast({
-        title: "Response Sent Successfully",
-        description: "Your response has been sent to the user via email and in-app notification.",
+        title: t('adminManualSupport.notifications.responseSuccess'),
+        description: t('adminManualSupport.notifications.responseSuccessDescription'),
         duration: 5000,
       });
     },
     onError: (error) => {
       console.error('Error responding to support request:', error);
       toast({
-        title: "Error",
-        description: "Failed to send response. Please try again.",
+        title: t('adminManualSupport.notifications.responseError'),
+        description: t('adminManualSupport.notifications.responseErrorDescription'),
         variant: "destructive",
       });
     },
@@ -189,8 +191,8 @@ export const ManualSupportManagement = () => {
   const handleSubmitResponse = () => {
     if (!selectedMessage || !adminResponse.trim()) {
       toast({
-        title: "Missing Response",
-        description: "Please enter a response message.",
+        title: t('adminManualSupport.notifications.missingResponse'),
+        description: t('adminManualSupport.notifications.missingResponseDescription'),
         variant: "destructive",
       });
       return;
@@ -214,9 +216,9 @@ export const ManualSupportManagement = () => {
 
   const getStatusBadge = (status: SupportMessageStatus) => {
     const config = {
-      active: { icon: Clock, color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200', label: 'Active' },
-      in_progress: { icon: Loader2, color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'In Progress' },
-      completed: { icon: CheckCircle2, color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200', label: 'Completed' },
+      active: { icon: Clock, color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200', label: t('adminManualSupport.statusBadges.active') },
+      in_progress: { icon: Loader2, color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: t('adminManualSupport.statusBadges.inProgress') },
+      completed: { icon: CheckCircle2, color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200', label: t('adminManualSupport.statusBadges.completed') },
     };
 
     const { icon: Icon, color, label } = config[status];
@@ -235,22 +237,22 @@ export const ManualSupportManagement = () => {
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-        <div>
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold">Manual Support Management</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:items-start justify-between gap-3 sm:gap-4">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold truncate">{t('adminManualSupport.title')}</h2>
           <p className="text-muted-foreground mt-1 text-xs sm:text-sm lg:text-base">
-            View and respond to user support requests
+            {t('adminManualSupport.subtitle')}
           </p>
         </div>
         
-        <div className="flex gap-1.5 sm:gap-2">
-          <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-xs sm:text-sm">
-            <Clock className="h-3 w-3 mr-1" />
-            {activeCount} Active
+        <div className="flex gap-1.5 sm:gap-2 flex-shrink-0 flex-wrap">
+          <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-xs sm:text-sm flex-shrink-0">
+            <Clock className="h-3 w-3 mr-1 flex-shrink-0" />
+            {activeCount} {t('adminManualSupport.statistics.active')}
           </Badge>
-          <Badge variant="outline" className="bg-yellow-50 dark:bg-yellow-900/20 text-xs sm:text-sm">
-            <Loader2 className="h-3 w-3 mr-1" />
-            {inProgressCount} In Progress
+          <Badge variant="outline" className="bg-yellow-50 dark:bg-yellow-900/20 text-xs sm:text-sm flex-shrink-0">
+            <Loader2 className="h-3 w-3 mr-1 flex-shrink-0" />
+            {inProgressCount} {t('adminManualSupport.statistics.inProgress')}
           </Badge>
         </div>
       </div>
@@ -263,7 +265,7 @@ export const ManualSupportManagement = () => {
               <div className="relative">
                 <Search className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search by subject, message, user email or name..."
+                  placeholder={t('adminManualSupport.filters.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-8 sm:pl-10 text-sm h-9 sm:h-10"
@@ -276,35 +278,35 @@ export const ManualSupportManagement = () => {
                 variant={statusFilter === 'all' ? 'default' : 'outline'}
                 onClick={() => setStatusFilter('all')}
                 size="sm"
-                className="text-xs sm:text-sm"
+                className="text-xs sm:text-sm min-h-[36px] touch-manipulation"
               >
-                All
+                {t('adminManualSupport.filters.all')}
               </Button>
               <Button
                 variant={statusFilter === 'active' ? 'default' : 'outline'}
                 onClick={() => setStatusFilter('active')}
                 size="sm"
-                className="text-xs sm:text-sm"
+                className="text-xs sm:text-sm min-h-[36px] touch-manipulation"
               >
-                Active
+                {t('adminManualSupport.filters.active')}
               </Button>
               <Button
                 variant={statusFilter === 'in_progress' ? 'default' : 'outline'}
                 onClick={() => setStatusFilter('in_progress')}
                 size="sm"
-                className="text-xs sm:text-sm"
+                className="text-xs sm:text-sm min-h-[36px] touch-manipulation"
               >
-                <span className="hidden sm:inline">In Progress</span>
-                <span className="sm:hidden">Progress</span>
+                <span className="hidden sm:inline">{t('adminManualSupport.filters.inProgress')}</span>
+                <span className="sm:hidden">{t('adminManualSupport.filters.inProgressShort')}</span>
               </Button>
               <Button
                 variant={statusFilter === 'completed' ? 'default' : 'outline'}
                 onClick={() => setStatusFilter('completed')}
                 size="sm"
-                className="text-xs sm:text-sm"
+                className="text-xs sm:text-sm min-h-[36px] touch-manipulation"
               >
-                <span className="hidden sm:inline">Completed</span>
-                <span className="sm:hidden">Done</span>
+                <span className="hidden sm:inline">{t('adminManualSupport.filters.completed')}</span>
+                <span className="sm:hidden">{t('adminManualSupport.filters.completedShort')}</span>
               </Button>
             </div>
           </div>
@@ -352,14 +354,14 @@ export const ManualSupportManagement = () => {
                         variant="outline"
                         onClick={() => markAsInProgressMutation.mutate(message.id)}
                         disabled={markAsInProgressMutation.isPending}
-                        className="text-xs sm:text-sm h-8 sm:h-9"
+                        className="text-xs sm:text-sm h-9 sm:h-9 min-h-[36px] touch-manipulation"
                       >
                         {markAsInProgressMutation.isPending ? (
-                          <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
+                          <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin flex-shrink-0" />
                         ) : (
                           <>
-                            <span className="hidden sm:inline">Start Working</span>
-                            <span className="sm:hidden">Start</span>
+                            <span className="hidden sm:inline">{t('adminManualSupport.buttons.startWorking')}</span>
+                            <span className="sm:hidden">{t('adminManualSupport.buttons.startWorkingShort')}</span>
                           </>
                         )}
                       </Button>
@@ -368,10 +370,10 @@ export const ManualSupportManagement = () => {
                       <Button
                         size="sm"
                         onClick={() => handleRespond(message)}
-                        className="text-xs sm:text-sm h-8 sm:h-9"
+                        className="text-xs sm:text-sm h-9 sm:h-9 min-h-[36px] touch-manipulation"
                       >
-                        <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                        Respond
+                        <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+                        {t('adminManualSupport.buttons.respond')}
                       </Button>
                     )}
                   </div>
@@ -381,17 +383,17 @@ export const ManualSupportManagement = () => {
               <CardContent className="px-3 sm:px-4 lg:px-6 pb-3 sm:pb-4 lg:pb-6">
                 <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-1">User Message:</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-1">{t('adminManualSupport.labels.userMessage')}</p>
                     <p className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">{message.message}</p>
                   </div>
 
                   {message.admin_response && (
                     <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 sm:p-4">
-                      <p className="text-xs sm:text-sm text-primary font-medium mb-1">Your Response:</p>
+                      <p className="text-xs sm:text-sm text-primary font-medium mb-1">{t('adminManualSupport.labels.yourResponse')}</p>
                       <p className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">{message.admin_response}</p>
                       {message.admin_responded_at && (
                         <p className="text-[10px] sm:text-xs text-muted-foreground mt-2">
-                          Responded: {format(new Date(message.admin_responded_at), 'PPp')}
+                          {t('adminManualSupport.labels.responded')} {format(new Date(message.admin_responded_at), 'PPp')}
                         </p>
                       )}
                     </div>
@@ -405,10 +407,10 @@ export const ManualSupportManagement = () => {
         <Card>
           <CardContent className="py-12">
             <div className="text-center">
-              <Mail className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No Support Messages</h3>
-              <p className="text-muted-foreground">
-                {searchQuery ? 'No messages match your search.' : 'No support messages found for the selected filter.'}
+              <Mail className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-base sm:text-lg font-semibold mb-2">{t('adminManualSupport.emptyState.title')}</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                {searchQuery ? t('adminManualSupport.emptyState.noResults') : t('adminManualSupport.emptyState.noMessages')}
               </p>
             </div>
           </CardContent>
@@ -419,39 +421,39 @@ export const ManualSupportManagement = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl mx-4 sm:mx-auto">
           <DialogHeader>
-            <DialogTitle className="text-base sm:text-lg">Respond to Support Request</DialogTitle>
+            <DialogTitle className="text-base sm:text-lg">{t('adminManualSupport.dialog.title')}</DialogTitle>
             <DialogDescription className="text-xs sm:text-sm">
-              Send a response to {selectedMessage?.user_name || selectedMessage?.user_email}
+              {t('adminManualSupport.dialog.description', { userName: selectedMessage?.user_name || selectedMessage?.user_email })}
             </DialogDescription>
           </DialogHeader>
 
           {selectedMessage && (
             <div className="space-y-3 sm:space-y-4">
               <div className="bg-muted p-3 sm:p-4 rounded-lg">
-                <p className="text-xs sm:text-sm font-medium mb-1">User's Request:</p>
+                <p className="text-xs sm:text-sm font-medium mb-1">{t('adminManualSupport.dialog.userRequestLabel')}</p>
                 <p className="text-xs sm:text-sm text-muted-foreground mb-2">{selectedMessage.subject}</p>
                 <p className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">{selectedMessage.message}</p>
               </div>
 
               <div>
-                <label className="text-xs sm:text-sm font-medium mb-2 block">Your Response</label>
+                <label className="text-xs sm:text-sm font-medium mb-2 block">{t('adminManualSupport.dialog.responseLabel')}</label>
                 <Textarea
                   value={adminResponse}
                   onChange={(e) => setAdminResponse(e.target.value)}
-                  placeholder="Type your response here..."
+                  placeholder={t('adminManualSupport.dialog.responsePlaceholder')}
                   rows={8}
                   maxLength={2000}
                   className="resize-none text-sm"
                 />
                 <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
-                  {adminResponse.length}/2000 characters
+                  {t('adminManualSupport.labels.characterCount', { count: adminResponse.length })}
                 </p>
               </div>
 
               <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription className="text-xs sm:text-sm">
-                  This response will be sent to the user and the support request will be marked as completed.
+                  {t('adminManualSupport.dialog.alert')}
                 </AlertDescription>
               </Alert>
             </div>
@@ -465,24 +467,24 @@ export const ManualSupportManagement = () => {
                 setSelectedMessage(null);
                 setAdminResponse('');
               }}
-              className="w-full sm:w-auto text-sm"
+              className="w-full sm:w-auto text-sm min-h-[44px] sm:min-h-[40px] touch-manipulation"
             >
-              Cancel
+              {t('adminManualSupport.buttons.cancel')}
             </Button>
             <Button
               onClick={handleSubmitResponse}
               disabled={!adminResponse.trim() || respondMutation.isPending}
-              className="w-full sm:w-auto text-sm"
+              className="w-full sm:w-auto text-sm min-h-[44px] sm:min-h-[40px] touch-manipulation"
             >
               {respondMutation.isPending ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Sending...
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin flex-shrink-0" />
+                  {t('adminManualSupport.buttons.sending')}
                 </>
               ) : (
                 <>
-                  <Send className="h-4 w-4 mr-2" />
-                  Send Response
+                  <Send className="h-4 w-4 mr-2 flex-shrink-0" />
+                  {t('adminManualSupport.buttons.sendResponse')}
                 </>
               )}
             </Button>

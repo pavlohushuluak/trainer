@@ -107,6 +107,8 @@
       "resolvingPreviousTicket": "Resolving previous ticket...",
       "activeTicket": "Active ticket",
       "readyToStart": "Ready to start",
+      "manualSupport": "Manual Support",
+      "manualSupportShort": "Manual",
       "newTicketCreated": {
         "title": "New Ticket Created",
         "description": "You can now start a new support conversation."
@@ -156,6 +158,83 @@
         },
         "retry": "Sorry, there was a small problem creating the training plan. Let me try again for you - could you briefly tell me what you'd like to work on?"
       }
+    },
+    "manualSupport": {
+      "title": "Manual Support",
+      "modalTitle": "Manual Support Center",
+      "statistics": {
+        "total": "Total",
+        "active": "Active",
+        "inProgress": "In Progress",
+        "completed": "Completed"
+      },
+      "tabs": {
+        "newRequest": "New Request",
+        "myMessages": "My Messages"
+      },
+      "newRequest": {
+        "title": "Submit New Request",
+        "description": "Our support team will respond within 24 hours",
+        "subject": "Subject",
+        "subjectPlaceholder": "Brief description of your issue",
+        "subjectRequired": "Subject *",
+        "priority": "Priority Level",
+        "priorityPlaceholder": "Select priority level",
+        "message": "Your Message",
+        "messageRequired": "Your Message *",
+        "messagePlaceholder": "Please describe your issue in detail...",
+        "characterCount": "{{count}}/2000 characters",
+        "submitButton": "Submit Support Request",
+        "submitting": "Submitting Request...",
+        "priorityLevels": {
+          "low": "Low - General question",
+          "normal": "Normal - Regular support",
+          "high": "High - Important issue",
+          "urgent": "Urgent - Critical problem"
+        }
+      },
+      "messages": {
+        "pollingIndicator": "Checking for updates every 20 seconds...",
+        "emptyState": {
+          "title": "No Support Requests Yet",
+          "description": "You haven't submitted any support requests. Create your first request to get help from our team.",
+          "button": "Create First Request"
+        },
+        "statusBadges": {
+          "active": "Active",
+          "inProgress": "In Progress",
+          "completed": "Completed"
+        },
+        "priorityBadges": {
+          "low": "LOW",
+          "normal": "NORMAL",
+          "high": "HIGH",
+          "urgent": "URGENT"
+        },
+        "newResponse": "New Response",
+        "submittedOn": "Submitted on",
+        "yourMessage": "Your Message:",
+        "statusAlerts": {
+          "active": "Request is active. Our team will respond soon.",
+          "inProgress": "Support team is working on your request.",
+          "completed": "Your request has been completed."
+        },
+        "responseTitle": "Support Team Response",
+        "respondedOn": "Responded on",
+        "toggleRead": "Mark as read",
+        "toggleUnread": "Mark as unread",
+        "expand": "Expand",
+        "collapse": "Collapse"
+      },
+      "notifications": {
+        "submittedSuccess": "Request Submitted Successfully",
+        "submittedDescription": "Your support request has been submitted. You'll be notified when our team responds.",
+        "submittedError": "Request could not be submitted",
+        "submittedErrorDescription": "Please try again. If the problem persists, please contact support directly.",
+        "responseReceived": "Support Response Received!",
+        "responseReceivedDescription": "Your request \"{{subject}}\" has been answered by our support team."
+      },
+      "unreadBadge": "{{count}} unread"
     },
     "page": {
       "title": "Chat with Trainer",
@@ -2738,6 +2817,67 @@
     "finance": "Finance",
     "settings": "Settings",
     "logout": "Logout"
+  },
+  "adminManualSupport": {
+    "title": "Manual Support Management",
+    "subtitle": "View and respond to user support requests",
+    "statistics": {
+      "active": "Active",
+      "inProgress": "In Progress"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by subject, message, user email or name...",
+      "all": "All",
+      "active": "Active",
+      "inProgress": "In Progress",
+      "inProgressShort": "Progress",
+      "completed": "Completed",
+      "completedShort": "Done"
+    },
+    "statusBadges": {
+      "active": "Active",
+      "inProgress": "In Progress",
+      "completed": "Completed"
+    },
+    "buttons": {
+      "startWorking": "Start Working",
+      "startWorkingShort": "Start",
+      "respond": "Respond",
+      "cancel": "Cancel",
+      "sendResponse": "Send Response",
+      "sending": "Sending..."
+    },
+    "labels": {
+      "userMessage": "User Message:",
+      "yourResponse": "Your Response:",
+      "responded": "Responded:",
+      "characterCount": "{{count}}/2000 characters"
+    },
+    "dialog": {
+      "title": "Respond to Support Request",
+      "description": "Send a response to {{userName}}",
+      "userRequestLabel": "User's Request:",
+      "responseLabel": "Your Response",
+      "responsePlaceholder": "Type your response here...",
+      "alert": "This response will be sent to the user and the support request will be marked as completed."
+    },
+    "emptyState": {
+      "title": "No Support Messages",
+      "noResults": "No messages match your search.",
+      "noMessages": "No support messages found for the selected filter."
+    },
+    "notifications": {
+      "statusUpdated": "Status Updated",
+      "statusUpdatedDescription": "Message marked as in progress.",
+      "responseSaved": "Response Saved",
+      "responseSavedNoEmail": "Response saved, but email notification failed to send.",
+      "responseSuccess": "Response Sent Successfully",
+      "responseSuccessDescription": "Your response has been sent to the user via email and in-app notification.",
+      "responseError": "Error",
+      "responseErrorDescription": "Failed to send response. Please try again.",
+      "missingResponse": "Missing Response",
+      "missingResponseDescription": "Please enter a response message."
+    }
   },
   "adminFinance": {
     "title": "Finance Management",
