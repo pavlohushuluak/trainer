@@ -53,30 +53,17 @@ export const useSubscriptionStatusChecker = () => {
       const periodEnd = subscriber.current_period_end ? new Date(subscriber.current_period_end) : null;
       const isExpired = subscriber.subscribed && periodEnd && periodEnd < now;
 
-      // If subscription is expired, update it to inactive
+      // REMOVED: Frontend subscription expiration
+      // Subscription expiration is now handled ONLY by server-side functions
+      // This prevents:
+      // - Premature expiration of trials
+      // - Race conditions between frontend and backend
+      // - Data corruption from concurrent updates
+      // The frontend only CHECKS and DISPLAYS status, it doesn't modify it
+      
       if (isExpired) {
-        console.log('Subscription expired, updating to inactive');
-        
-        const { error: updateError } = await supabase
-          .from('subscribers')
-          .update({
-            subscribed: false,
-            updated_at: now.toISOString(),
-            admin_notes: `Subscription expired on ${now.toISOString()} - automatically deactivated via frontend check`
-          })
-          .eq('user_id', user.id);
-
-        if (updateError) {
-          console.error('Error updating expired subscription:', updateError);
-        } else {
-          console.log('Successfully updated expired subscription to inactive');
-          // Update local state
-          subscriber.subscribed = false;
-          
-          // Invalidate subscription queries to refresh the UI
-          // Note: This requires access to queryClient, which we don't have in this hook
-          // The UI will refresh on next query or page reload
-        }
+        console.log('⚠️ Subscription appears expired - will be handled by server-side check-subscription-status function');
+        // Don't update here - let the server handle it
       }
 
       return {

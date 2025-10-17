@@ -139,7 +139,36 @@ serve(async (req) => {
       refunded: refundAmount > 0 
     });
 
-    // Update database
+    // Check if user has an active free trial BEFORE updating
+    const { data: existingSubscriber } = await supabaseClient
+      .from('subscribers')
+      .select('trial_start, trial_end, subscription_status')
+      .eq('email', targetUserEmail)
+      .maybeSingle();
+
+    const hasActiveTrial = existingSubscriber &&
+      existingSubscriber.trial_start &&
+      existingSubscriber.trial_end &&
+      existingSubscriber.subscription_status === 'trialing' &&
+      new Date(existingSubscriber.trial_end) > new Date();
+
+    if (hasActiveTrial) {
+      logStep("Active trial detected - cannot cancel trial via Stripe subscription", {
+        email: targetUserEmail,
+        trialEnd: existingSubscriber.trial_end
+      });
+      
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'Cannot cancel during active free trial. Trial will expire naturally.',
+        trial_end: existingSubscriber.trial_end
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Update database (only if no active trial)
     await supabaseClient
       .from('subscribers')
       .update({

@@ -153,41 +153,10 @@ export const useSubscriptionStatus = () => {
   // Get tier limit from subscription
   const tierLimit = subscription?.tier_limit || 1;
 
-  // Automatically update expired trials in the database
-  useEffect(() => {
-    const updateExpiredTrial = async () => {
-      if (!subscription || !user) return;
-      
-      // Only process if status is 'trial_expired'
-      if (subscriptionMode === 'trial_expired') {
-        console.log('🔄 Trial expired, updating database to free plan...');
-        
-        try {
-          const { error } = await supabase
-            .from('subscribers')
-            .update({
-              subscribed: false,
-              subscription_status: 'inactive',
-              subscription_tier: null,
-              updated_at: new Date().toISOString()
-            })
-            .eq('user_id', user.id);
-
-          if (error) {
-            console.error('❌ Error updating expired trial:', error);
-          } else {
-            console.log('✅ Expired trial updated successfully, refreshing subscription data...');
-            // Refresh subscription data to reflect changes
-            refetch();
-          }
-        } catch (error) {
-          console.error('❌ Exception updating expired trial:', error);
-        }
-      }
-    };
-
-    updateExpiredTrial();
-  }, [subscriptionMode, subscription, user, refetch]);
+  // REMOVED: Automatic trial expiration on frontend
+  // Trial expiration is now handled ONLY by the server-side expire-trials function
+  // This prevents race conditions and ensures trials are never expired prematurely
+  // The frontend only DISPLAYS the trial status, it doesn't modify it
 
   return {
     subscription,
