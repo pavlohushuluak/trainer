@@ -88,7 +88,7 @@ export const SubscriptionGuard = ({
                   <SubscriptionModeDisplay 
                     mode={subscriptionMode}
                     subscriptionTier={subscription?.subscription_tier}
-                    trialEnd={subscription?.trial_end}
+                    trialStart={subscription?.trial_start}
                   />
                 </CardTitle>
               </CardHeader>
@@ -142,7 +142,7 @@ export const SubscriptionGuard = ({
           <SubscriptionModeDisplay 
             mode={subscriptionMode}
             subscriptionTier={subscription?.subscription_tier}
-            trialEnd={subscription?.trial_end}
+            trialStart={subscription?.trial_start}
           />
         </CardTitle>
       </CardHeader>

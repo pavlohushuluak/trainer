@@ -30,9 +30,16 @@ export const SubscriptionOverview = ({ subscription, onManageSubscription }: Sub
   const [isCancellationFlowOpen, setIsCancellationFlowOpen] = useState(false);
   
   const isTrialing = subscription.subscription_status === 'trialing';
-  const trialEndsAt = subscription.trial_end ? new Date(subscription.trial_end) : null;
   
-  // Check if trial has expired
+  // Calculate trial end from trial_start + 7 days
+  const trialEndsAt = subscription.trial_start ? (() => {
+    const trialStart = new Date(subscription.trial_start);
+    const trialEnd = new Date(trialStart);
+    trialEnd.setDate(trialEnd.getDate() + 7);
+    return trialEnd;
+  })() : null;
+  
+  // Check if trial has expired using calculated date
   const now = new Date();
   const isTrialExpired = isTrialing && trialEndsAt && trialEndsAt < now;
   

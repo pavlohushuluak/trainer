@@ -7,11 +7,19 @@ import { cn } from "@/lib/utils";
 interface SubscriptionModeDisplayProps {
   mode: string;
   subscriptionTier?: string;
-  trialEnd?: string;
+  trialStart?: string; // Changed from trialEnd to trialStart
 }
 
-export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialEnd }: SubscriptionModeDisplayProps) => {
+export const SubscriptionModeDisplay = ({ mode, subscriptionTier, trialStart }: SubscriptionModeDisplayProps) => {
   const { t, currentLanguage } = useTranslations();
+  
+  // Calculate trial end from trial_start + 7 days
+  const trialEnd = trialStart ? (() => {
+    const start = new Date(trialStart);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 7);
+    return end.toISOString();
+  })() : undefined;
   
   const getModeDisplay = () => {
     switch (mode) {

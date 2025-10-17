@@ -28,7 +28,7 @@ export const PetLimitDisplay = ({ currentPetCount, maxPetsAllowed, subscriptionT
       <SubscriptionModeDisplay 
         mode={subscriptionMode}
         subscriptionTier={subscription?.subscription_tier}
-        trialEnd={subscription?.trial_end}
+        trialStart={subscription?.trial_start}
       />
     </div>
   );

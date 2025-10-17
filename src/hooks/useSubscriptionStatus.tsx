@@ -176,6 +176,17 @@ export const useSubscriptionStatus = () => {
   // This prevents race conditions and ensures trials are never expired prematurely
   // The frontend only DISPLAYS the trial status, it doesn't modify it
 
+  // Calculate trial end date from trial_start + 7 days
+  const getTrialEndDate = () => {
+    if (!subscription?.trial_start) return null;
+    
+    const trialStart = new Date(subscription.trial_start);
+    const trialEnd = new Date(trialStart);
+    trialEnd.setDate(trialEnd.getDate() + 7);
+    
+    return trialEnd.toISOString();
+  };
+
   return {
     subscription,
     subscriptionMode,
@@ -186,6 +197,7 @@ export const useSubscriptionStatus = () => {
     isExpired,
     subscriptionTierName: getSubscriptionTierName(),
     tierLimit,
+    trialEndDate: getTrialEndDate(), // Calculated trial end date (trial_start + 7 days)
     refetch,
     forceRefresh,
     error: queryError

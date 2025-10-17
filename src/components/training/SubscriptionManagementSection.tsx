@@ -18,13 +18,13 @@ export const SubscriptionManagementSection = () => {
     isExpired,
     subscriptionMode,
     isTrialing,
+    trialEndDate, // Calculated trial end date (trial_start + 7 days)
     error 
   } = useSubscriptionStatus();
   const [isOpen, setIsOpen] = useState(false);
   
-  // Check if trial has expired (more reliable than isExpired for trials)
-  const now = new Date();
-  const trialEnd = subscription?.trial_end ? new Date(subscription.trial_end) : null;
+  // Calculate trial end from trial_start + 7 days
+  const trialEnd = trialEndDate ? new Date(trialEndDate) : null;
   const isTrialActive = subscriptionMode === 'trial';
   const isTrialExpired = subscriptionMode === 'trial_expired';
   
