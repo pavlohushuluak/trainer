@@ -32,8 +32,22 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
   const getPlans = (): PricingPlan[] => {
     const allPlans = isYearly ? getSixMonthPlans(t) : getMonthlyPlans(t);
     
-    // If user already has premium subscription, only show larger packages
-    if (subscription.subscribed && maxPetsAllowed) {
+    // Check if user has an ACTIVE subscription (not expired trial)
+    // For expired trials, show ALL plans including Plan 1
+    const hasActiveSubscription = subscription.subscribed && 
+      subscription.subscription_status !== 'inactive' &&
+      subscription.subscription_status !== 'expired' &&
+      subscription.subscription_status !== 'trialing';
+    
+    // If user has active premium subscription, only show upgrade options (larger packages)
+    if (hasActiveSubscription && maxPetsAllowed) {
+      console.log('🔍 Filtering plans for active subscriber:', {
+        subscribed: subscription.subscribed,
+        status: subscription.subscription_status,
+        maxPetsAllowed,
+        showingUpgradesOnly: true
+      });
+      
       return allPlans.filter(plan => {
         // Extract the number of allowed pets from the plan
         const planPets = getPlanMaxPets(plan.id);
@@ -41,6 +55,15 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
       });
     }
     
+    console.log('🔍 Showing all plans:', {
+      subscribed: subscription.subscribed,
+      status: subscription.subscription_status,
+      maxPetsAllowed,
+      showingAllPlans: true,
+      plansCount: allPlans.length
+    });
+    
+    // Show all plans for free users, expired trials, and inactive subscriptions
     return allPlans;
   };
 
@@ -57,8 +80,13 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
   const plans = getPlans();
   const currentPlanId = getCurrentPlanId(subscription);
 
-  // Wenn keine Upgrades verfügbar sind
-  if (subscription.subscribed && plans.length === 0) {
+  // Check if user has active subscription and no upgrade options
+  const hasActiveSubscription = subscription.subscribed && 
+    subscription.subscription_status !== 'inactive' &&
+    subscription.subscription_status !== 'expired';
+  
+  // Only show "max plan reached" if user has ACTIVE subscription and no upgrades
+  if (hasActiveSubscription && plans.length === 0) {
     return (
       <div className="text-center py-8">
         <div className="mb-4">
@@ -78,7 +106,7 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
     <div className="space-y-6">
       <PricingToggle isYearly={isYearly} onToggle={setIsYearly} />
       
-      {subscription.subscribed && (
+      {hasActiveSubscription && (
         <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">
           <h3 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">
             📈 {t('subscription.availableUpgrades')}
