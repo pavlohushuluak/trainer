@@ -31,6 +31,22 @@ export const SubscriptionOverview = ({ subscription, onManageSubscription }: Sub
   
   const isTrialing = subscription.subscription_status === 'trialing';
   const trialEndsAt = subscription.trial_end ? new Date(subscription.trial_end) : null;
+  
+  // Check if trial has expired
+  const now = new Date();
+  const isTrialExpired = isTrialing && trialEndsAt && trialEndsAt < now;
+  
+  // Get formatted tier name
+  const getTierDisplayName = (tier?: string) => {
+    switch (tier) {
+      case 'plan1': return t('subscription.modeDisplay.onePet');
+      case 'plan2': return t('subscription.modeDisplay.twoPets');
+      case 'plan3': return t('subscription.modeDisplay.threeFourPets');
+      case 'plan4': return t('subscription.modeDisplay.fiveEightPets');
+      case 'plan5': return t('subscription.modeDisplay.unlimited');
+      default: return tier || t('subscription.overview.plan');
+    }
+  };
 
   const handleCancelSubscription = async () => {
     setIsCancellationFlowOpen(false);
@@ -73,15 +89,18 @@ export const SubscriptionOverview = ({ subscription, onManageSubscription }: Sub
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span>{t('subscription.overview.status')}:</span>
-                    <Badge variant={subscription.subscribed ? "default" : "secondary"}>
-                      {isTrialing ? t('subscription.overview.sevenDayTrial') : subscription.subscribed ? t('subscription.overview.active') : t('subscription.overview.inactive')}
+                    <Badge variant={subscription.subscribed && !isTrialExpired ? "default" : "secondary"}>
+                      {isTrialExpired ? t('subscription.overview.inactive') : isTrialing ? t('subscription.overview.sevenDayTrial') : subscription.subscribed ? t('subscription.overview.active') : t('subscription.overview.inactive')}
                     </Badge>
                   </div>
                   
-                  {subscription.subscription_tier && (
+                  {subscription.subscription_tier && !isTrialExpired && (
                     <div className="flex items-center justify-between">
                       <span>{t('subscription.overview.plan')}:</span>
-                      <Badge variant="outline">{subscription.subscription_tier}</Badge>
+                      <Badge variant="outline" className="flex items-center gap-1">
+                        {getTierDisplayName(subscription.subscription_tier)}
+                        {isTrialing && <span className="text-xs text-muted-foreground ml-1">({t('subscription.trial')})</span>}
+                      </Badge>
                     </div>
                   )}
                   
@@ -123,9 +142,15 @@ export const SubscriptionOverview = ({ subscription, onManageSubscription }: Sub
                       ⚠️ {t('subscription.overview.cancellationWarning')}
                     </div>
                   )}
+                  
+                  {isTrialExpired && (
+                    <div className="text-sm text-blue-600 bg-blue-50 dark:bg-blue-950/20 dark:text-blue-400 p-3 rounded border border-blue-200 dark:border-blue-800">
+                      ℹ️ {t('subscription.trialExpiredMessage', 'Your trial has ended. Upgrade to continue using premium features.')}
+                    </div>
+                  )}
                 </div>
                 
-                {subscription.subscribed && !subscription.cancel_at_period_end && (
+                {subscription.subscribed && !subscription.cancel_at_period_end && !isTrialExpired && (
                   <div className="mt-6 space-y-3">
                     {/* "Subscription verwalten" Button temporär ausgeblendet */}
                     {/* <Button onClick={onManageSubscription} variant="outline" className="w-full">

@@ -2,6 +2,7 @@
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useEffect } from 'react';
 
 export const useSubscriptionStatus = () => {
   const { user, loading: authLoading } = useAuth();
@@ -60,18 +61,42 @@ export const useSubscriptionStatus = () => {
     if (isLoading) return 'loading';
     if (!subscription) return 'free';
     
-    const isActiveSubscription = subscription?.subscribed === true && 
-      (subscription?.subscription_status === 'active' || subscription?.subscription_status === 'trialing');
+    const now = new Date();
     
-    const isExpired = subscription?.subscription_end ? 
-      new Date(subscription.subscription_end) < new Date() : false;
-    
+    // Check if it's a trialing subscription
     if (subscription.subscription_status === 'trialing') {
-      return isExpired ? 'trial_expired' : 'trial';
+      // For trials, check trial_end, not subscription_end
+      const trialEnd = subscription.trial_end ? new Date(subscription.trial_end) : null;
+      const isTrialExpired = trialEnd ? trialEnd < now : false;
+      
+      console.log('🔍 Trial expiration check:', {
+        trial_end: subscription.trial_end,
+        trialEnd,
+        now,
+        isTrialExpired
+      });
+      
+      if (isTrialExpired) {
+        // Trial has expired - user should be free
+        return 'trial_expired';
+      }
+      return 'trial';
     }
     
-    if (isActiveSubscription && !isExpired) {
+    // For paid subscriptions, check subscription_end
+    const isActiveSubscription = subscription?.subscribed === true && 
+      subscription?.subscription_status === 'active';
+    
+    const subscriptionEnd = subscription?.subscription_end ? new Date(subscription.subscription_end) : null;
+    const isSubscriptionExpired = subscriptionEnd ? subscriptionEnd < now : false;
+    
+    if (isActiveSubscription && !isSubscriptionExpired) {
       return 'premium';
+    }
+    
+    // If subscription is marked as active but expired, or status is inactive
+    if (isSubscriptionExpired || subscription?.subscription_status === 'inactive' || subscription?.subscription_status === 'expired') {
+      return 'free';
     }
     
     return 'free';
@@ -127,6 +152,42 @@ export const useSubscriptionStatus = () => {
 
   // Get tier limit from subscription
   const tierLimit = subscription?.tier_limit || 1;
+
+  // Automatically update expired trials in the database
+  useEffect(() => {
+    const updateExpiredTrial = async () => {
+      if (!subscription || !user) return;
+      
+      // Only process if status is 'trial_expired'
+      if (subscriptionMode === 'trial_expired') {
+        console.log('🔄 Trial expired, updating database to free plan...');
+        
+        try {
+          const { error } = await supabase
+            .from('subscribers')
+            .update({
+              subscribed: false,
+              subscription_status: 'inactive',
+              subscription_tier: null,
+              updated_at: new Date().toISOString()
+            })
+            .eq('user_id', user.id);
+
+          if (error) {
+            console.error('❌ Error updating expired trial:', error);
+          } else {
+            console.log('✅ Expired trial updated successfully, refreshing subscription data...');
+            // Refresh subscription data to reflect changes
+            refetch();
+          }
+        } catch (error) {
+          console.error('❌ Exception updating expired trial:', error);
+        }
+      }
+    };
+
+    updateExpiredTrial();
+  }, [subscriptionMode, subscription, user, refetch]);
 
   return {
     subscription,

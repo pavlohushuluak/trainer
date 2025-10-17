@@ -16,9 +16,20 @@ export const SubscriptionManagementSection = () => {
     subscriptionTierName, 
     tierLimit, 
     isExpired,
+    subscriptionMode,
+    isTrialing,
     error 
   } = useSubscriptionStatus();
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Check if trial has expired (more reliable than isExpired for trials)
+  const now = new Date();
+  const trialEnd = subscription?.trial_end ? new Date(subscription.trial_end) : null;
+  const isTrialActive = subscriptionMode === 'trial';
+  const isTrialExpired = subscriptionMode === 'trial_expired';
+  
+  // For display: show expired only if it's actually expired (not active trial)
+  const showAsExpired = isExpired && !isTrialActive;
 
   // Update isOpen state when subscription status changes
   useEffect(() => {
@@ -86,11 +97,13 @@ export const SubscriptionManagementSection = () => {
                   {hasActiveSubscription && subscriptionTierName && (
                     <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
                       <span className={`text-[10px] sm:text-xs lg:text-sm px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full whitespace-nowrap ${
-                        isExpired 
+                        showAsExpired 
                           ? 'bg-red-100 text-red-800 dark:bg-red-950/30 dark:text-red-300' 
+                          : isTrialActive
+                          ? 'bg-blue-100 text-blue-800 dark:bg-blue-950/30 dark:text-blue-300'
                           : 'bg-green-100 text-green-800 dark:bg-green-950/30 dark:text-green-300'
                       }`}>
-                        {subscriptionTierName} {isExpired ? t('training.subscriptionManagement.expired') : t('training.subscriptionManagement.active')}
+                        {subscriptionTierName} {showAsExpired ? t('training.subscriptionManagement.expired') : isTrialActive ? t('subscription.trial') : t('training.subscriptionManagement.active')}
                       </span>
                       {tierLimit && tierLimit > 1 && (
                         <span className="text-[10px] sm:text-xs lg:text-sm bg-blue-100 text-blue-800 dark:bg-blue-950/30 dark:text-blue-300 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full flex items-center gap-1 whitespace-nowrap">
@@ -112,15 +125,28 @@ export const SubscriptionManagementSection = () => {
                 {hasActiveSubscription 
                   ? (() => {
                       const planName = subscriptionTierName;
-                      const status = isExpired ? t('training.subscriptionManagement.expired') : t('training.subscriptionManagement.active');
+                      const status = showAsExpired 
+                        ? t('training.subscriptionManagement.expired') 
+                        : isTrialActive 
+                        ? t('subscription.trial')
+                        : t('training.subscriptionManagement.active');
                       
                       if (tierLimit && tierLimit > 1) {
-                        if (isExpired) {
+                        if (showAsExpired) {
                           return t('training.subscriptionManagement.planWithLimitAndStatus', {
                             plan: planName,
                             limit: tierLimit === 999 ? t('training.subscriptionManagement.unlimitedAnimals') : tierLimit,
                             animals: t('training.subscriptionManagement.animals'),
                             status: status
+                          });
+                        } else if (isTrialActive) {
+                          // Show trial with end date
+                          const trialEndDate = trialEnd ? trialEnd.toLocaleDateString(currentLanguage === 'de' ? 'de-DE' : 'en-US') : '';
+                          return t('training.subscriptionManagement.trialWithLimit', {
+                            plan: planName,
+                            limit: tierLimit === 999 ? t('training.subscriptionManagement.unlimitedAnimals') : tierLimit,
+                            animals: t('training.subscriptionManagement.animals'),
+                            endDate: trialEndDate
                           });
                         } else {
                           return t('training.subscriptionManagement.planWithLimit', {
@@ -130,10 +156,17 @@ export const SubscriptionManagementSection = () => {
                           });
                         }
                       } else {
-                        if (isExpired) {
+                        if (showAsExpired) {
                           return t('training.subscriptionManagement.planWithStatus', {
                             plan: planName,
                             status: status
+                          });
+                        } else if (isTrialActive) {
+                          // Show trial with end date
+                          const trialEndDate = trialEnd ? trialEnd.toLocaleDateString(currentLanguage === 'de' ? 'de-DE' : 'en-US') : '';
+                          return t('training.subscriptionManagement.trialPlan', {
+                            plan: planName,
+                            endDate: trialEndDate
                           });
                         } else {
                           return `${t('training.subscriptionManagement.currentPlan')}: ${planName}`;

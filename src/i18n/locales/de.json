@@ -3500,6 +3500,8 @@
       "planWithLimit": "{{plan}} ({{limit}} {{animals}})",
       "planWithLimitAndStatus": "{{plan}} ({{limit}} {{animals}}) - {{status}}",
       "planWithStatus": "{{plan}} - {{status}}",
+      "trialPlan": "{{plan}} - Testphase endet am {{endDate}}",
+      "trialWithLimit": "{{plan}} ({{limit}} {{animals}}) - Testphase endet am {{endDate}}",
       "unlimitedAnimals": "unbegrenzt",
       "expandDetails": "Details erweitern",
       "collapseDetails": "Details reduzieren",
@@ -6207,6 +6209,7 @@
       "unlimited": "Unbegrenzte Haustiere",
       "unknown": "Unbekannt"
     },
+    "trialExpiredMessage": "Ihre Testphase ist abgelaufen. Upgraden Sie, um weiterhin Premium-Funktionen zu nutzen.",
     "refreshButton": {
       "updated": "✅ Aktualisiert",
       "successfullyUpdated": "Ihre Abonnement-Daten wurden erfolgreich aktualisiert.",
@@ -6823,6 +6826,52 @@
     "deleteError": {
       "title": "Fehler",
       "description": "Spracheinstellung konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
+    }
+  },
+  "trial": {
+    "modal": {
+      "title": "Starten Sie Ihre kostenlose Testphase",
+      "subtitle": "Testen Sie Plan 1 7 Tage kostenlos - Keine Kreditkarte erforderlich",
+      "duration": "7 Tage kostenloser Zugang",
+      "featuresTitle": "Was Sie erhalten:",
+      "howItWorksTitle": "So funktioniert es:",
+      "step1": "Klicken Sie unten auf \"Kostenlose Testphase starten\"",
+      "step2": "Genießen Sie 7 Tage vollen Zugriff auf alle Plan 1 Funktionen",
+      "step3": "Entscheiden Sie nach Ablauf der Testphase, ob Sie ein Abo abschließen möchten",
+      "cancel": "Vielleicht später",
+      "start": "Kostenlose Testphase starten",
+      "starting": "Testphase wird gestartet...",
+      "terms": "Mit dem Start der Testphase akzeptieren Sie unsere Nutzungsbedingungen und Datenschutzrichtlinie.",
+      "notice": {
+        "title": "Keine automatischen Abbuchungen",
+        "description": "Nach 7 Tagen kehren Sie automatisch zum kostenlosen Plan zurück. Keine Kreditkarte erforderlich, keine automatische Abrechnung."
+      }
+    },
+    "features": {
+      "unlimitedChat": {
+        "title": "Unbegrenzter KI-Chat",
+        "description": "Stellen Sie so viele Trainingsfragen wie Sie möchten"
+      },
+      "trainingPlans": {
+        "title": "Personalisierte Trainingspläne",
+        "description": "Erhalten Sie maßgeschneiderte Trainingspläne für Ihr Haustier"
+      },
+      "imageAnalysis": {
+        "title": "Bildanalyse",
+        "description": "Laden Sie Fotos zur Verhaltensanalyse hoch"
+      },
+      "progressTracking": {
+        "title": "Fortschrittsverfolgung",
+        "description": "Überwachen Sie die Entwicklung Ihres Haustiers im Laufe der Zeit"
+      }
+    },
+    "success": {
+      "title": "Testphase gestartet!",
+      "description": "Ihre 7-tägige kostenlose Testphase wurde aktiviert. Viel Spaß mit allen Plan 1 Funktionen!"
+    },
+    "error": {
+      "title": "Fehler",
+      "description": "Die Testphase konnte nicht gestartet werden. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support."
     }
   },
   "upgrade": {

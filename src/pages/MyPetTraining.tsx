@@ -21,6 +21,7 @@ import { getCheckoutInformation } from '@/utils/checkoutSessionStorage';
 import { useGTM } from '@/hooks/useGTM';
 import { getPlanById, getPrice } from '@/config/pricing';
 import { usePurchaseCancel } from '@/hooks/usePurchaseCancel';
+import { FreeTrialModal } from '@/components/subscription/FreeTrialModal';
 
 // Add custom CSS for floating animation
 const floatingAnimation = `
@@ -124,6 +125,9 @@ const MyPetTraining = () => {
   const [upgradeDetails, setUpgradeDetails] = useState<any>(null);
   const [isAutoLoggingIn, setIsAutoLoggingIn] = useState(false);
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
+  
+  // State for free trial modal
+  const [showFreeTrialModal, setShowFreeTrialModal] = useState(false);
 
   // Use Redux for pet profiles data
   const {
@@ -136,7 +140,7 @@ const MyPetTraining = () => {
   } = usePetProfiles();
 
   // Use subscription status for checkout success handling
-  const { refetch: refetchSubscription, subscription, subscriptionTierName, tierLimit } = useSubscriptionStatus();
+  const { refetch: refetchSubscription, subscription, subscriptionTierName, tierLimit, subscriptionMode } = useSubscriptionStatus();
 
   // Check if we should open the pet modal from URL parameter
   const shouldOpenPetModal = new URLSearchParams(location.search).get('openPetModal') === 'true';
@@ -214,6 +218,45 @@ const MyPetTraining = () => {
       document.head.removeChild(style);
     };
   }, []);
+
+  // Check if user is eligible for free trial and show modal
+  useEffect(() => {
+    // Wait for subscription data to load
+    if (!user || !subscription) return;
+    
+    // Check if user is free and hasn't used trial yet
+    const isFreeUser = subscriptionMode === 'free';
+    const hasNotUsedTrial = subscription?.trial_used === false || subscription?.trial_used === null;
+    
+    // Don't show modal if trial has expired (they used it but it expired)
+    const isTrialExpired = subscriptionMode === 'trial_expired';
+    
+    console.log('🎁 Free trial check:', {
+      isFreeUser,
+      hasNotUsedTrial,
+      isTrialExpired,
+      subscriptionMode,
+      trial_used: subscription?.trial_used,
+      trial_end: subscription?.trial_end,
+      subscription
+    });
+    
+    // Show modal if user is free, hasn't used trial, and trial hasn't expired
+    // Use a small delay to ensure page is loaded
+    if (isFreeUser && hasNotUsedTrial && !isTrialExpired) {
+      const timer = setTimeout(() => {
+        setShowFreeTrialModal(true);
+      }, 1500); // Show modal after 1.5 seconds
+      
+      return () => clearTimeout(timer);
+    }
+  }, [user, subscription, subscriptionMode]);
+
+  // Handle trial started - refresh subscription data
+  const handleTrialStarted = useCallback(() => {
+    console.log('✅ Trial started, refreshing subscription data');
+    refetchSubscription();
+  }, [refetchSubscription]);
 
   // Page refresh effect - refresh the page only once when user navigates to it
   useEffect(() => {
@@ -1307,6 +1350,13 @@ const MyPetTraining = () => {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Free Trial Modal */}
+        <FreeTrialModal
+          isOpen={showFreeTrialModal}
+          onClose={() => setShowFreeTrialModal(false)}
+          onTrialStarted={handleTrialStarted}
+        />
       </MainLayout>
     </ProtectedRoute>
   );

@@ -3498,6 +3498,8 @@
       "planWithLimit": "{{plan}} ({{limit}} {{animals}})",
       "planWithLimitAndStatus": "{{plan}} ({{limit}} {{animals}}) - {{status}}",
       "planWithStatus": "{{plan}} - {{status}}",
+      "trialPlan": "{{plan}} - Trial ends {{endDate}}",
+      "trialWithLimit": "{{plan}} ({{limit}} {{animals}}) - Trial ends {{endDate}}",
       "unlimitedAnimals": "unlimited",
       "expandDetails": "Expand details",
       "collapseDetails": "Collapse details",
@@ -6209,6 +6211,7 @@
       "unlimited": "Unlimited Pets",
       "unknown": "Unknown"
     },
+    "trialExpiredMessage": "Your trial has ended. Upgrade to continue using premium features.",
     "refreshButton": {
       "updated": "✅ Updated",
       "successfullyUpdated": "Your subscription data has been successfully updated.",
@@ -6825,6 +6828,52 @@
     "deleteError": {
       "title": "Error",
       "description": "Failed to delete language preference. Please try again."
+    }
+  },
+  "trial": {
+    "modal": {
+      "title": "Start Your Free Trial",
+      "subtitle": "Try Plan 1 free for 7 days - No credit card required",
+      "duration": "7 Days Free Access",
+      "featuresTitle": "What You Get:",
+      "howItWorksTitle": "How It Works:",
+      "step1": "Click \"Start Free Trial\" below",
+      "step2": "Enjoy full access to Plan 1 features for 7 days",
+      "step3": "Decide if you want to subscribe after the trial ends",
+      "cancel": "Maybe Later",
+      "start": "Start Free Trial",
+      "starting": "Starting Trial...",
+      "terms": "By starting the trial, you agree to our Terms of Service and Privacy Policy.",
+      "notice": {
+        "title": "No automatic charges",
+        "description": "After 7 days, you'll return to the free plan. No credit card required, no automatic billing."
+      }
+    },
+    "features": {
+      "unlimitedChat": {
+        "title": "Unlimited AI Chat",
+        "description": "Ask as many training questions as you need"
+      },
+      "trainingPlans": {
+        "title": "Personalized Training Plans",
+        "description": "Get custom training plans for your pet"
+      },
+      "imageAnalysis": {
+        "title": "Image Analysis",
+        "description": "Upload photos for behavior analysis"
+      },
+      "progressTracking": {
+        "title": "Progress Tracking",
+        "description": "Monitor your pets development over time"
+      }
+    },
+    "success": {
+      "title": "Trial Started!",
+      "description": "Your 7-day free trial has been activated. Enjoy all Plan 1 features!"
+    },
+    "error": {
+      "title": "Error",
+      "description": "Failed to start trial. Please try again or contact support."
     }
   },
   "upgrade": {
