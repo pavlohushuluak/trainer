@@ -28,6 +28,7 @@ import { ImpressumModal } from '@/components/legal/ImpressumModal';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useEmailNotifications } from "@/hooks/useEmailNotifications";
 import { useGTM } from '@/hooks/useGTM';
+import { useDeviceBinding } from '@/hooks/useDeviceBinding';
 
 interface SmartLoginModalProps {
   isOpen: boolean;
@@ -50,6 +51,7 @@ export const SmartLoginModal = ({
   const { t } = useTranslations();
   const { toast } = useToast();
   const { trackLogin, trackSignUp } = useGTM();
+  const { getDeviceAccount, bindDevice } = useDeviceBinding();
   
   // Form states
   const [email, setEmail] = useState('');
@@ -64,6 +66,37 @@ export const SmartLoginModal = ({
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(true);
+  const [attemptingAutoLogin, setAttemptingAutoLogin] = useState(false);
+
+  // Check for device binding when modal opens
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const checkDeviceBinding = async () => {
+      if (attemptingAutoLogin) return;
+
+      try {
+        setAttemptingAutoLogin(true);
+        console.log('🔐 Checking for device binding in SmartLogin modal...');
+
+        const deviceAccount = await getDeviceAccount();
+
+        if (deviceAccount.bound && deviceAccount.email) {
+          console.log('✅ Device bound to account, pre-filling email...');
+          
+          setEmail(deviceAccount.email);
+          setActiveTab('signin');
+          setMessage(`Welcome back! This device is registered to ${deviceAccount.email}.`);
+        }
+      } catch (error) {
+        console.error('❌ Error checking device binding:', error);
+      } finally {
+        setAttemptingAutoLogin(false);
+      }
+    };
+
+    checkDeviceBinding();
+  }, [isOpen]);
 
   // Check localStorage for alreadySignedUp value on component mount
   useEffect(() => {
@@ -118,16 +151,22 @@ export const SmartLoginModal = ({
           ? t('auth.invalidCredentials')
           : error.message);
       } else {
+        // Bind device after successful login
+        if (data?.user) {
+          console.log('🔐 SmartLogin successful, binding device to account...');
+          await bindDevice(email, data.user.id);
+        }
+        
         // Send welcome email for returning users
         if (data?.user?.email) {
-      try {
-        await sendWelcomeEmail(
+          try {
+            await sendWelcomeEmail(
               data.user.email,
               data.user.user_metadata?.full_name || data.user.email.split('@')[0],
-          "TierTrainer"
-        );
-      } catch (error) {
-        console.error('Error sending welcome email:', error);
+              "TierTrainer"
+            );
+          } catch (error) {
+            console.error('Error sending welcome email:', error);
           }
         }
         
@@ -183,6 +222,12 @@ export const SmartLoginModal = ({
         
         // Set localStorage to indicate user has signed up
         localStorage.setItem('alreadySignedUp', 'true');
+        
+        // Bind device to this account after successful signup
+        if (data?.user) {
+          console.log('🔐 SmartLogin signup successful, binding device to account...');
+          await bindDevice(email, data.user.id);
+        }
         
         // CRITICAL FIX: Auto-confirm user email and create session immediately
         if (data?.user) {

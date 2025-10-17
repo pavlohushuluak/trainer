@@ -24,6 +24,7 @@ import { AGBModal } from '@/components/legal/AGBModal';
 import { ImpressumModal } from '@/components/legal/ImpressumModal';
 import { VerificationCodeModal } from '@/components/auth/VerificationCodeModal';
 import { useVerificationCode } from '@/hooks/auth/useVerificationCode';
+import { useDeviceBinding } from '@/hooks/useDeviceBinding';
 
 const LoginPage = () => {
   const { signIn, signUp, user } = useAuth();
@@ -31,6 +32,7 @@ const LoginPage = () => {
   const location = useLocation();
   const { isScrolled } = useStickyHeader();
   const { t } = useTranslations();
+  const { getDeviceAccount, bindDevice } = useDeviceBinding();
 
   // Form states
   const [email, setEmail] = useState('');
@@ -48,15 +50,29 @@ const LoginPage = () => {
   const [showVerificationCode, setShowVerificationCode] = useState(false);
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
+  const [attemptingAutoLogin, setAttemptingAutoLogin] = useState(false);
   
   // Verification code hook
   const { verifyCode, resendCode, loading: verificationLoading, error: verificationError } = useVerificationCode({
     email: signupEmail,
     password: signupPassword, // Use the stored password
-    onSuccess: () => {
+    onSuccess: async () => {
       setShowVerificationCode(false);
+      const userEmail = signupEmail;
       setSignupEmail('');
       setMessage(t('auth.verificationCode.success'));
+      
+      // Bind device after successful signup verification
+      try {
+        const { data } = await supabase.auth.getUser();
+        if (data.user) {
+          console.log('🔐 Signup successful, binding device to account...');
+          await bindDevice(userEmail, data.user.id);
+        }
+      } catch (error) {
+        console.error('❌ Error binding device after signup:', error);
+      }
+      
       // User will be automatically logged in by the verification code hook
       setTimeout(() => {
         navigate('/mein-tiertraining');
@@ -94,6 +110,53 @@ const LoginPage = () => {
       window.history.replaceState({}, document.title, newUrl);
     }
   }, [location.search]);
+
+  // Check for device binding on mount and attempt auto-login
+  useEffect(() => {
+    const checkDeviceBinding = async () => {
+      // Skip if already logged in
+      if (user) {
+        navigate('/mein-tiertraining');
+        return;
+      }
+
+      // Skip if already attempting auto-login
+      if (attemptingAutoLogin) return;
+
+      try {
+        setAttemptingAutoLogin(true);
+        console.log('🔐 Checking for device binding...');
+
+        const deviceAccount = await getDeviceAccount();
+
+        if (deviceAccount.bound && deviceAccount.email) {
+          console.log('✅ Device bound to account, attempting auto-login...');
+          
+          setMessage(`Welcome back! Logging you in as ${deviceAccount.email}...`);
+          setEmail(deviceAccount.email);
+          setActiveTab('signin');
+
+          // Get user session via magic link or stored credentials
+          // Note: We can't auto-login without password, so we'll pre-fill email
+          // User still needs to enter password or use magic link
+          
+          // Show message that account is bound
+          setTimeout(() => {
+            setMessage(`This device is registered to ${deviceAccount.email}. Please enter your password to continue.`);
+          }, 1500);
+        } else {
+          console.log('ℹ️ No device binding found - showing normal login');
+        }
+      } catch (error) {
+        console.error('❌ Error checking device binding:', error);
+      } finally {
+        setAttemptingAutoLogin(false);
+      }
+    };
+
+    // Only run once on mount
+    checkDeviceBinding();
+  }, []); // Empty deps - only run on mount
 
   // Form validation with detailed error tracking
   const [fieldErrors, setFieldErrors] = useState<{
@@ -193,11 +256,22 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const { error } = await signIn(email, password);
-      if (error) {
-        setError(error.message === 'Invalid login credentials'
+      const result = await signIn(email, password);
+      if (result.error) {
+        setError(result.error.message === 'Invalid login credentials'
           ? t('auth.invalidCredentials')
-          : error.message);
+          : result.error.message);
+      } else {
+        // Bind device to this account after successful login
+        try {
+          const { data } = await supabase.auth.getUser();
+          if (data.user) {
+            console.log('🔐 Login successful, binding device to account...');
+            await bindDevice(email, data.user.id);
+          }
+        } catch (bindError) {
+          console.error('❌ Error binding device after login:', bindError);
+        }
       }
     } catch (err) {
       setError(t('auth.generalError'));

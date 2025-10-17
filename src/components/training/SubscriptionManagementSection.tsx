@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { useSubscriptionStatus } from '@/hooks/useSubscriptionStatus';
 import SubscriptionManager from '@/components/SubscriptionManager';
 import { useTranslations } from '@/hooks/useTranslations';
+import { SubscriptionDebugPanel } from '@/components/debug/SubscriptionDebugPanel';
 
 export const SubscriptionManagementSection = () => {
   const { t, currentLanguage } = useTranslations();
@@ -79,6 +80,13 @@ export const SubscriptionManagementSection = () => {
 
   return (
     <div className="mt-4 sm:mt-6 lg:mt-8 subscription-management-section">
+      {/* Debug Panel - Only visible in development */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="mb-4">
+          <SubscriptionDebugPanel />
+        </div>
+      )}
+      
       <Card className="card-enhanced shadow-lg border-border/50 bg-gradient-to-br from-white via-yellow-50/30 to-orange-50/30 dark:from-gray-900 dark:via-yellow-900/20 dark:to-orange-900/20 overflow-hidden">
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>

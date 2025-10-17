@@ -80,13 +80,15 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
   const plans = getPlans();
   const currentPlanId = getCurrentPlanId(subscription);
 
-  // Check if user has active subscription and no upgrade options
-  const hasActiveSubscription = subscription.subscribed && 
+  // Check if user has active PAID subscription (not trial, not expired, not inactive)
+  // This must match the check in getPlans() for consistency
+  const hasActivePaidSubscription = subscription.subscribed && 
     subscription.subscription_status !== 'inactive' &&
-    subscription.subscription_status !== 'expired';
+    subscription.subscription_status !== 'expired' &&
+    subscription.subscription_status !== 'trialing';
   
-  // Only show "max plan reached" if user has ACTIVE subscription and no upgrades
-  if (hasActiveSubscription && plans.length === 0) {
+  // Only show "max plan reached" if user has ACTIVE PAID subscription and no upgrades
+  if (hasActivePaidSubscription && plans.length === 0) {
     return (
       <div className="text-center py-8">
         <div className="mb-4">
@@ -106,7 +108,7 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
     <div className="space-y-6">
       <PricingToggle isYearly={isYearly} onToggle={setIsYearly} />
       
-      {hasActiveSubscription && (
+      {hasActivePaidSubscription && (
         <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">
           <h3 className="font-semibold text-blue-900 dark:text-blue-200 mb-2">
             📈 {t('subscription.availableUpgrades')}
@@ -134,7 +136,7 @@ export const SubscriptionPlans = ({ subscription, checkingOut, onCheckout }: Sub
               checkingOut={checkingOut}
               onCheckout={onCheckout}
               isSubscribed={subscription.subscribed}
-              showUpgradeBadge={subscription.subscribed}
+              showUpgradeBadge={hasActivePaidSubscription}
             />
           );
         })}
