@@ -112,10 +112,18 @@ serve(async (req) => {
     const { data: updatedRecords, error: updateError } = await supabaseClient
       .from("subscribers")
       .update({
-        subscribed: false,
-        subscription_status: 'inactive',
-        subscription_tier: null,
-        updated_at: now.toISOString()
+        subscribed: false,                    // Set to free user
+        subscription_status: 'inactive',      // Mark as inactive
+        subscription_tier: null,              // Remove tier (free plan)
+        tier_limit: null,                     // Remove tier limit
+        current_period_start: null,           // Clear subscription period
+        current_period_end: null,             // Clear subscription period
+        subscription_end: null,               // Clear subscription end
+        cancel_at_period_end: false,          // Reset cancellation flag
+        billing_cycle: null,                  // Clear billing cycle
+        stripe_customer_id: null,             // Clear Stripe customer (they can subscribe again)
+        updated_at: now.toISOString(),
+        admin_notes: `Trial expired on ${now.toISOString()} - automatically converted to free plan`
       })
       .in('user_id', userIds)
       .select();
