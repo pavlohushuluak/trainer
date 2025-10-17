@@ -92,9 +92,6 @@ export const Hero = () => {
           </div>
           
           <HeroFeatures />
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 sm:mb-12 animate-fade-in-up delay-400 px-4">
-            <HeroButtons handleGoToTraining={handleGoToTraining} />
-          </div>
           
           {/* Free Tier Section */}
           <div className="animate-fade-in-up delay-500">

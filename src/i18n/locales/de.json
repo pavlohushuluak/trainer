@@ -501,17 +501,21 @@
     "toImageAnalysis": "Zur Bildanalyse",
     "chatWithTrainer": "Chat mit Trainer",
     "freeTier": {
-      "title": "Kostenlos starten",
-      "subtitle": "TierTrainer kostenlos ausprobieren",
+      "title": "7 Tage Premium Kostenlos Testen",
+      "subtitle": "Voller Zugriff auf Plan 1 – Keine Zahlungsdaten erforderlich",
+      "trial": {
+        "badge": "7-Tage Testphase",
+        "description": "Erhalten Sie vollen Zugriff auf alle Plan 1 Funktionen für 7 Tage. Keine automatische Verlängerung, keine versteckten Kosten."
+      },
       "features": {
-        "chats": "10 kostenlose Chats",
-        "imageAnalysis": "2 kostenlose Bildanalysen",
-        "chatsDescription": "Experten-Trainingsberatung",
+        "chats": "Unbegrenzte Chats",
+        "imageAnalysis": "Bildanalyse inklusive",
+        "chatsDescription": "KI-gestützte Trainingsberatung",
         "imageAnalysisDescription": "Professionelle Verhaltensbewertung"
       },
-      "description": "Erleben Sie unser professionelles Tiertraining ohne Verpflichtung",
-      "cta": "Kostenlos starten",
-      "noCreditCard": "Keine Kreditkarte erforderlich"
+      "description": "Testen Sie alle Premium-Funktionen risikofrei und unverbindlich",
+      "cta": "Jetzt 7 Tage kostenlos testen",
+      "noCreditCard": "Keine Kreditkarte • Keine Verpflichtung"
     },
     "features": {
       "trainerAvailable": "🕒 24/7 Trainer verfügbar",

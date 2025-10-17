@@ -73,53 +73,53 @@ const Support = () => {
       <AuthErrorDisplay />
 
       {/* Main Content */}
-      <div className="flex-1 p-4 sm:p-6 lg:p-8">
-        <div className="max-w-5xl mx-auto space-y-8">
+      <div className="flex-1 p-3 sm:p-4 lg:p-6 xl:p-8">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
 
           {/* Hero Section */}
-          <div className="text-center space-y-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
-              <Shield className="h-8 w-8 text-primary" />
+          <div className="text-center space-y-2 sm:space-y-3 lg:space-y-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-primary/10 rounded-full mb-2 sm:mb-3 lg:mb-4">
+              <Shield className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-primary" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
               {t('support.title')}
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-3 sm:px-0">
               {t('support.subtitle')}
             </p>
           </div>
 
           {/* Support Options */}
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-            <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-gradient-to-br from-background to-muted/5">
-              <CardHeader className="pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                    <MessageCircle className="h-6 w-6 text-primary" />
+          <div className="grid md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 xl:gap-8">
+            <Card className="group hover:shadow-xl transition-all duration-300 border hover:border-primary/20 bg-gradient-to-br from-background to-muted/5">
+              <CardHeader className="pb-3 sm:pb-4 px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
+                <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3">
+                  <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors flex-shrink-0">
+                    <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-xl font-semibold text-foreground">
+                  <CardTitle className="text-base sm:text-lg lg:text-xl font-semibold text-foreground truncate">
                     {t('support.chatSupport.title')}
                   </CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground leading-relaxed">
+              <CardContent className="px-3 pb-3 sm:px-4 sm:pb-4 lg:px-6 lg:pb-6 space-y-3 sm:space-y-4">
+                <p className="text-xs sm:text-sm lg:text-base text-muted-foreground leading-relaxed">
                   {t('support.chatSupport.description')}
                 </p>
                 <Button
-                  className="w-full h-12 text-base font-medium bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all duration-200 shadow-lg hover:shadow-xl"
+                  className="w-full min-h-[44px] sm:h-11 lg:h-12 text-xs sm:text-sm lg:text-base font-medium bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all duration-200 shadow-md hover:shadow-lg touch-manipulation"
                   onClick={() => {
                     trackSupportChatStart();
                     setIsChatOpen(true);
                   }}
                 >
-                  <MessageCircle className="h-5 w-5 mr-2" />
-                  {t('support.chatSupport.button')}
+                  <MessageCircle className="h-4 w-4 sm:h-4.5 sm:w-4.5 lg:h-5 lg:w-5 mr-1.5 sm:mr-2 flex-shrink-0" />
+                  <span>{t('support.chatSupport.button')}</span>
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-gradient-to-br from-background to-muted/5 cursor-pointer"
+            <Card className="group hover:shadow-xl transition-all duration-300 border hover:border-primary/20 bg-gradient-to-br from-background to-muted/5 cursor-pointer touch-manipulation"
               onClick={() => {
                 trackSupportFAQClick();
                 navigate('/#faq');
@@ -131,41 +131,41 @@ const Support = () => {
                   }
                 }, 100);
               }}>
-              <CardHeader className="pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                    <HelpCircle className="h-6 w-6 text-primary" />
+              <CardHeader className="pb-3 sm:pb-4 px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
+                <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3">
+                  <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors flex-shrink-0">
+                    <HelpCircle className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-xl font-semibold text-foreground">
+                  <CardTitle className="text-base sm:text-lg lg:text-xl font-semibold text-foreground truncate">
                     {t('support.faq.title')}
                   </CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground leading-relaxed">
+              <CardContent className="px-3 pb-3 sm:px-4 sm:pb-4 lg:px-6 lg:pb-6 space-y-3 sm:space-y-4">
+                <p className="text-xs sm:text-sm lg:text-base text-muted-foreground leading-relaxed">
                   {t('support.faq.description')}
                 </p>
                 <Button
                   variant="outline"
-                  className="w-full h-12 text-base font-medium border-2 hover:border-primary hover:bg-primary/5 transition-all duration-200"
+                  className="w-full min-h-[44px] sm:h-11 lg:h-12 text-xs sm:text-sm lg:text-base font-medium border hover:border-primary hover:bg-primary/5 transition-all duration-200 touch-manipulation"
                 >
-                  <HelpCircle className="h-5 w-5 mr-2" />
-                  {t('support.faq.button')}
+                  <HelpCircle className="h-4 w-4 sm:h-4.5 sm:w-4.5 lg:h-5 lg:w-5 mr-1.5 sm:mr-2 flex-shrink-0" />
+                  <span>{t('support.faq.button')}</span>
                 </Button>
               </CardContent>
             </Card>
           </div>
 
           {/* Motivational Section */}
-          <Card className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border-primary/20 shadow-lg">
-            <CardContent className="p-8 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/20 rounded-full mb-6">
-                <Heart className="h-8 w-8 text-primary" />
+          <Card className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border-primary/20 shadow-md hover:shadow-lg transition-shadow">
+            <CardContent className="p-4 sm:p-6 lg:p-8 text-center">
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-primary/20 rounded-full mb-3 sm:mb-4 lg:mb-6">
+                <Heart className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-foreground">
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 lg:mb-4 text-foreground">
                 {t('support.motivation.title')}
               </h3>
-              <p className="text-muted-foreground text-lg leading-relaxed max-w-3xl mx-auto">
+              <p className="text-xs sm:text-sm lg:text-base xl:text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto px-2 sm:px-0">
                 {t('support.motivation.description')}
               </p>
             </CardContent>

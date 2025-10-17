@@ -500,17 +500,21 @@
     "toImageAnalysis": "To Image Analysis",
     "chatWithTrainer": "Chat with Trainer",
     "freeTier": {
-      "title": "Start Free Today",
-      "subtitle": "Try TierTrainer at no cost",
+      "title": "Try Premium Free for 7 Days",
+      "subtitle": "Full access to Plan 1 – No payment details required",
+      "trial": {
+        "badge": "7-Day Free Trial",
+        "description": "Get full access to all Plan 1 features for 7 days. No automatic renewal, no hidden costs."
+      },
       "features": {
-        "chats": "10 Free Chats",
-        "imageAnalysis": "2 Free Image Analyses",
-        "chatsDescription": "Expert training guidance",
+        "chats": "Unlimited Chats",
+        "imageAnalysis": "Image Analysis Included",
+        "chatsDescription": "AI-powered training guidance",
         "imageAnalysisDescription": "Professional behavior assessment"
       },
-      "description": "Experience our professional pet training with no commitment",
-      "cta": "Start Free Trial",
-      "noCreditCard": "No credit card required"
+      "description": "Test all premium features risk-free with no commitment",
+      "cta": "Start 7-Day Free Trial",
+      "noCreditCard": "No Credit Card • No Commitment"
     },
     "features": {
       "trainerAvailable": "🕒 24/7 Trainer Available",
