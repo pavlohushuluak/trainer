@@ -106,7 +106,7 @@ export const FreeTrialModal = ({ isOpen, onClose, onTrialStarted }: FreeTrialMod
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[95vh] overflow-y-auto p-0">
+      <DialogContent className="max-w-2xl max-h-[95vh] overflow-y-auto p-6">
         <div className="relative w-full">
           {/* Gradient background */}
           <div className="absolute inset-0"></div>
