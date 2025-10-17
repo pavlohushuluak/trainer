@@ -71,34 +71,68 @@ serve(async (req) => {
     logStep('Found expired subscriptions', { count: expiredSubscriptions?.length || 0 });
 
     if (expiredSubscriptions && expiredSubscriptions.length > 0) {
-      // Update expired subscriptions to inactive
-      const { error: updateError } = await supabase
-        .from('subscribers')
-        .update({
-          subscribed: false,
-          updated_at: now.toISOString(),
-          admin_notes: `Subscription expired on ${now.toISOString()} - automatically deactivated`
-        })
-        .in('id', expiredSubscriptions.map(s => s.id));
-
-      if (updateError) {
-        logStep('Error updating expired subscriptions', { error: updateError });
-        return new Response(
-          JSON.stringify({ 
-            error: 'Failed to update expired subscriptions',
-            success: false 
-          }),
-          { 
-            status: 500, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-          }
-        );
+      // Filter out users who have active free trials
+      const subscribersToExpire = [];
+      
+      for (const sub of expiredSubscriptions) {
+        // Check if this subscriber has an active free trial
+        const { data: trialCheck } = await supabase
+          .from('subscribers')
+          .select('trial_start, trial_end, subscription_status')
+          .eq('id', sub.id)
+          .maybeSingle();
+        
+        const hasActiveTrial = trialCheck &&
+          trialCheck.trial_start &&
+          trialCheck.trial_end &&
+          trialCheck.subscription_status === 'trialing' &&
+          new Date(trialCheck.trial_end) > now;
+        
+        if (!hasActiveTrial) {
+          subscribersToExpire.push(sub.id);
+        } else {
+          logStep('Skipping subscription expiration - active trial detected', {
+            email: sub.email,
+            trialEnd: trialCheck.trial_end
+          });
+        }
       }
+      
+      // Only update subscribers without active trials
+      if (subscribersToExpire.length > 0) {
+        const { error: updateError } = await supabase
+          .from('subscribers')
+          .update({
+            subscribed: false,
+            updated_at: now.toISOString(),
+            admin_notes: `Subscription expired on ${now.toISOString()} - automatically deactivated`
+          })
+          .in('id', subscribersToExpire);
 
-      logStep('Successfully updated expired subscriptions', { 
-        count: expiredSubscriptions.length,
-        emails: expiredSubscriptions.map(s => s.email)
-      });
+        if (updateError) {
+          logStep('Error updating expired subscriptions', { error: updateError });
+          return new Response(
+            JSON.stringify({ 
+              error: 'Failed to update expired subscriptions',
+              success: false 
+            }),
+            { 
+              status: 500, 
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+            }
+          );
+        }
+
+        logStep('Successfully updated expired subscriptions', { 
+          count: subscribersToExpire.length,
+          emails: expiredSubscriptions.filter(s => subscribersToExpire.includes(s.id)).map(s => s.email),
+          skippedDueToTrial: expiredSubscriptions.length - subscribersToExpire.length
+        });
+      } else {
+        logStep('No subscriptions to expire - all have active trials', {
+          count: expiredSubscriptions.length
+        });
+      }
     }
 
     // Return success response

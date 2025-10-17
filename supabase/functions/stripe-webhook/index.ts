@@ -316,13 +316,56 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
     }
   }
 
-  // Update subscribers table for successful payments
-  const { error, data } = await supabaseClient.from("subscribers").update(subscriptionData).eq("email", subscriptionData.email);
+  // Check if user has an active free trial BEFORE updating
+  const { data: existingSubscriber } = await supabaseClient
+    .from("subscribers")
+    .select("trial_start, trial_end, trial_used, subscription_status, subscription_tier")
+    .eq("email", customer.email)
+    .maybeSingle();
+
+  // Check if user has an active free trial (our 7-day trial, not Stripe trial)
+  const hasActiveTrial = existingSubscriber && 
+    existingSubscriber.trial_start && 
+    existingSubscriber.trial_end && 
+    existingSubscriber.subscription_status === 'trialing' &&
+    new Date(existingSubscriber.trial_end) > new Date();
+
+  logStep("Checking for active free trial", {
+    hasActiveTrial,
+    trialEnd: existingSubscriber?.trial_end,
+    subscriptionStatus: existingSubscriber?.subscription_status
+  });
+
+  // If user has active free trial, DON'T update subscription data from Stripe
+  // Preserve the trial and skip Stripe webhook update
+  if (hasActiveTrial) {
+    logStep("Active free trial detected - skipping Stripe webhook update to preserve trial", {
+      email: customer.email,
+      trialEnd: existingSubscriber.trial_end,
+      trialTier: existingSubscriber.subscription_tier
+    });
+    
+    // Don't update the subscriber data at all - preserve the trial
+    // The trial will naturally expire via the expire-trials function
+    logStep("Trial data preserved - no database update", {
+      email: customer.email
+    });
+    
+    return; // Exit early without updating
+  }
+
+  // Update subscribers table for Stripe subscriptions (no active trial)
+  const { error, data } = await supabaseClient
+    .from("subscribers")
+    .update(subscriptionData)
+    .eq("email", customer.email);
+    
   if (error) {
     console.error("Update failed:", error.message);
   } else {
     console.log("Update success:", data);
   }
+  
   logStep("Subscription data updated in database", {
     email: customer.email,
     status: subscription.status,
