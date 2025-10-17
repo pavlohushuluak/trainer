@@ -74,6 +74,10 @@ export const useDeviceBinding = () => {
     }
 
     try {
+      // Wait for session to be ready (RLS requires authenticated session)
+      console.log('⏳ [Device Binding] Waiting 1 second for session...');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       const deviceData = {
         user_id: effectiveUserId,
         device_fingerprint: deviceFingerprint,
@@ -92,7 +96,7 @@ export const useDeviceBinding = () => {
       const { data, error } = await supabase
         .from('device_bindings' as any)
         .upsert(deviceData, {
-          onConflict: 'device_fingerprint'
+          onConflict: 'user_id,device_fingerprint'  // CRITICAL: Must match UNIQUE constraint in migration!
         })
         .select();
 
@@ -105,17 +109,32 @@ export const useDeviceBinding = () => {
           errorHint: error.hint
         });
         
-        // Check if it's a table not found error
+        // Detailed error handling with solutions
         if (error.message?.includes('relation') && error.message?.includes('does not exist')) {
-          console.error('💡 [Device Binding] IMPORTANT: The device_bindings table does not exist!');
-          console.error('💡 [Device Binding] Please run the migration from: supabase/migrations/20251017120000_create_device_bindings.sql');
-          console.error('💡 [Device Binding] Or copy and run the SQL from APPLY_THESE_MIGRATIONS.sql in your Supabase SQL Editor');
+          console.error('💡 [Device Binding] TABLE DOES NOT EXIST!');
+          console.error('💡 Run this SQL in Supabase Dashboard → SQL Editor:');
+          console.error('💡 Copy lines 120-189 from APPLY_THESE_MIGRATIONS.sql');
+        } else if (error.code === '42501' || error.message?.includes('policy') || error.message?.includes('permission denied')) {
+          console.error('💡 [Device Binding] RLS POLICY BLOCKING INSERT!');
+          console.error('💡 Possible causes:');
+          console.error('   1. Session not established yet (wait a bit)');
+          console.error('   2. User not authenticated');
+          console.error('   3. JWT token doesn\'t match user_id');
+          console.error('💡 Try: Refresh page and login again');
+        } else if (error.message?.includes('violates unique constraint')) {
+          console.error('💡 [Device Binding] Unique constraint error');
+          console.error('💡 This might mean onConflict clause is wrong');
+          console.error('💡 Migration has: UNIQUE(user_id, device_fingerprint)');
+          console.error('💡 Code should use: onConflict: "user_id,device_fingerprint"');
         }
       } else {
-        console.log('✅ [Device Binding] Saved successfully!', {
-          savedData: data,
+        console.log('✅✅✅ [Device Binding] SAVED SUCCESSFULLY! ✅✅✅');
+        console.log('🎉 Data saved to database:', {
+          recordCount: data?.length || 0,
+          deviceData: data,
           timestamp: new Date().toISOString()
         });
+        console.log('🔍 Check: Supabase Dashboard → Table Editor → device_bindings');
       }
     } catch (error: any) {
       console.error('❌ [Device Binding] Exception:', {

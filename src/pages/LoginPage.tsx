@@ -32,16 +32,7 @@ const LoginPage = () => {
   const location = useLocation();
   const { isScrolled } = useStickyHeader();
   const { t } = useTranslations();
-  const { checkDeviceBinding, saveDeviceBinding, deviceFingerprint } = useDeviceBinding();
-  
-  console.log('🔐 [LoginPage] Component rendered', {
-    hasUser: !!user,
-    userId: user?.id,
-    hasSaveDeviceBinding: !!saveDeviceBinding,
-    saveDeviceBindingType: typeof saveDeviceBinding,
-    deviceFingerprint: deviceFingerprint ? deviceFingerprint.substring(0, 20) + '...' : null,
-    timestamp: new Date().toISOString()
-  });
+  const { checkDeviceBinding, deviceFingerprint } = useDeviceBinding();
 
   // Form states
   const [email, setEmail] = useState('');
@@ -69,16 +60,8 @@ const LoginPage = () => {
       setSignupEmail('');
       setMessage(t('auth.verificationCode.success'));
       
-      // Save device binding after successful signup
-      console.log('✅ Signup successful, saving device binding...');
-      if (userData?.user?.id) {
-        await saveDeviceBinding(userData.user.id);
-      } else {
-        console.warn('⚠️ No user ID in verification response, trying with context user');
-        await saveDeviceBinding();
-      }
-      
       // User will be automatically logged in by the verification code hook
+      // Device binding will be saved on dashboard page
       setTimeout(() => {
         navigate('/mein-tiertraining');
       }, 1000);
@@ -263,33 +246,8 @@ const LoginPage = () => {
           ? t('auth.invalidCredentials')
           : error.message);
       } else {
-        // Save device binding after successful login
-        console.log('✅ [LoginPage] Login successful! Now attempting to save device binding...');
-        console.log('🔐 [LoginPage] Before saveDeviceBinding call - checking function:', {
-          saveDeviceBindingExists: !!saveDeviceBinding,
-          saveDeviceBindingType: typeof saveDeviceBinding,
-          deviceFingerprint: deviceFingerprint ? deviceFingerprint.substring(0, 20) + '...' : null,
-          userId: data?.user?.id
-        });
-        
-        if (data?.user?.id) {
-          console.log('🔐 [LoginPage] Path A: Calling saveDeviceBinding WITH user ID:', data.user.id);
-          try {
-            await saveDeviceBinding(data.user.id);
-            console.log('🔐 [LoginPage] Path A: saveDeviceBinding call completed');
-          } catch (bindingError) {
-            console.error('❌ [LoginPage] Path A: saveDeviceBinding threw error:', bindingError);
-          }
-        } else {
-          console.warn('⚠️ [LoginPage] Path B: No user ID in login response, calling saveDeviceBinding WITHOUT user ID');
-          try {
-            await saveDeviceBinding();
-            console.log('🔐 [LoginPage] Path B: saveDeviceBinding call completed');
-          } catch (bindingError) {
-            console.error('❌ [LoginPage] Path B: saveDeviceBinding threw error:', bindingError);
-          }
-        }
-        console.log('✅ [LoginPage] Device binding save attempt finished');
+        console.log('✅ [LoginPage] Login successful!');
+        // Device binding will be saved on dashboard page (/mein-tiertraining)
       }
     } catch (err: any) {
       console.error('❌ [LoginPage] Sign in exception:', err);

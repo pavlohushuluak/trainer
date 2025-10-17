@@ -51,14 +51,7 @@ export const SmartLoginModal = ({
   const { t } = useTranslations();
   const { toast } = useToast();
   const { trackLogin, trackSignUp } = useGTM();
-  const { checkDeviceBinding, saveDeviceBinding, deviceFingerprint } = useDeviceBinding();
-  
-  console.log('🔐 [SmartLoginModal] Component rendered', {
-    isOpen,
-    hasSaveDeviceBinding: !!saveDeviceBinding,
-    deviceFingerprint: deviceFingerprint ? deviceFingerprint.substring(0, 20) + '...' : null,
-    timestamp: new Date().toISOString()
-  });
+  const { checkDeviceBinding, deviceFingerprint } = useDeviceBinding();
   
   // Form states
   const [email, setEmail] = useState('');
@@ -158,33 +151,8 @@ export const SmartLoginModal = ({
           ? t('auth.invalidCredentials')
           : error.message);
       } else {
-        // Save device binding after successful login
-        console.log('✅ [SmartLoginModal] Login successful! Now attempting to save device binding...');
-        console.log('🔐 [SmartLoginModal] Before saveDeviceBinding call - checking function:', {
-          saveDeviceBindingExists: !!saveDeviceBinding,
-          saveDeviceBindingType: typeof saveDeviceBinding,
-          deviceFingerprint: deviceFingerprint ? deviceFingerprint.substring(0, 20) + '...' : null,
-          userId: data?.user?.id
-        });
-        
-        if (data?.user?.id) {
-          console.log('🔐 [SmartLoginModal] Path A: Calling saveDeviceBinding WITH user ID:', data.user.id);
-          try {
-            await saveDeviceBinding(data.user.id);
-            console.log('🔐 [SmartLoginModal] Path A: saveDeviceBinding call completed');
-          } catch (bindingError) {
-            console.error('❌ [SmartLoginModal] Path A: saveDeviceBinding threw error:', bindingError);
-          }
-        } else {
-          console.warn('⚠️ [SmartLoginModal] Path B: No user ID in login response, calling saveDeviceBinding WITHOUT user ID');
-          try {
-            await saveDeviceBinding();
-            console.log('🔐 [SmartLoginModal] Path B: saveDeviceBinding call completed');
-          } catch (bindingError) {
-            console.error('❌ [SmartLoginModal] Path B: saveDeviceBinding threw error:', bindingError);
-          }
-        }
-        console.log('✅ [SmartLoginModal] Device binding save attempt finished');
+        console.log('✅ [SmartLoginModal] Login successful!');
+        // Device binding will be saved on dashboard page (/mein-tiertraining)
         
         // Send welcome email for returning users
         if (data?.user?.email) {
@@ -295,12 +263,7 @@ export const SmartLoginModal = ({
             if (confirmData?.success && confirmData?.action_link) {
               console.log('Auto-confirm successful, redirecting to action link:', confirmData.action_link);
               
-              // Save device binding before redirect
-              if (data?.user?.id) {
-                await saveDeviceBinding(data.user.id);
-              } else {
-                console.warn('⚠️ No user ID in signup response, device binding will be saved after redirect');
-              }
+              // Device binding will be saved on dashboard page (/mein-tiertraining)
               
               // Store user data for after login
               sessionStorage.setItem('tempUserData', JSON.stringify({

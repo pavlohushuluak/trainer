@@ -22,6 +22,7 @@ import { useGTM } from '@/hooks/useGTM';
 import { getPlanById, getPrice } from '@/config/pricing';
 import { usePurchaseCancel } from '@/hooks/usePurchaseCancel';
 import { FreeTrialModal } from '@/components/subscription/FreeTrialModal';
+import { useDeviceBinding } from '@/hooks/useDeviceBinding';
 
 // Add custom CSS for floating animation
 const floatingAnimation = `
@@ -113,6 +114,7 @@ const MyPetTraining = () => {
   const { t } = useTranslations();
   const { toast } = useToast();
   const { trackPaymentSuccess } = useGTM();
+  const { saveDeviceBinding } = useDeviceBinding();
   
   // Initialize purchase cancellation tracking
   usePurchaseCancel();
@@ -218,6 +220,14 @@ const MyPetTraining = () => {
       document.head.removeChild(style);
     };
   }, []);
+
+  // Save device binding when user lands on dashboard
+  useEffect(() => {
+    if (user?.id) {
+      console.log('🔐 [Dashboard] User logged in, saving device binding...');
+      saveDeviceBinding(user.id);
+    }
+  }, [user?.id, saveDeviceBinding]);
 
   // Check if user is eligible for free trial and show modal
   useEffect(() => {
