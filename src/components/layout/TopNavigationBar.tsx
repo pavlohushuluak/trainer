@@ -81,7 +81,7 @@ export const TopNavigationBar = ({
     }
   };
 
-  
+
 
   const getMenuItems = () => {
     if (isAuthenticated) {
@@ -151,8 +151,7 @@ export const TopNavigationBar = ({
       className={cn(
         'fixed top-0 left-0 right-0 z-[40] border-b border-border backdrop-blur-md',
         'transform translate-3d will-change-transform transition-all duration-200',
-        isScrolled ? 'bg-background/95 shadow-sm' : 'bg-background/90',
-        'mb-[50px]'
+        isScrolled ? 'bg-background/95 shadow-sm' : 'bg-background/90'
       )}
     >
       <div className="max-w-7xl mx-auto px-4 py-3">

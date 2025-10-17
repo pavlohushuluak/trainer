@@ -1100,7 +1100,7 @@ const MyPetTraining = () => {
   return (
     <ProtectedRoute>
       <MainLayout showFooter={false} showSupportButton={false}>
-        <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 mt-[-50px]">
                      {/* Enhanced Confetti for congratulations */}
            {showCongratulations && (
              <>

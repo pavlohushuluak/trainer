@@ -15,7 +15,7 @@ const MainContentGrid = React.memo(({ pets }: MainContentGridProps) => {
   const isNewUser = pets.length === 0;
   const isMobile = useIsMobile();
   return (
-    <div className={`grid grid-cols-1 ${isMobile ? 'gap-2' : 'gap-4'} ${isMobile ? 'mb-2' : 'mb-4'}`}>
+    <div className={`grid grid-cols-1 ${isMobile ? 'gap-2' : 'gap-4'}`}>
       {/* First Steps Guide for new users */}
       <FirstStepsGuide pets={pets} />
     </div>
