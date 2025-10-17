@@ -302,20 +302,20 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   return (
     <>
-      <Card className="hover:shadow-md transition-shadow">
-        <CardHeader className="pb-3">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
-              <Avatar className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
-                <AvatarFallback>
-                  <User className="h-3 w-3 sm:h-4 sm:w-4" />
+      <Card className="hover:shadow-lg hover:border-primary/20 transition-all duration-200">
+        <CardHeader className="pb-2 sm:pb-3 px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-5">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+              <Avatar className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 flex-shrink-0">
+                <AvatarFallback className="bg-primary/10">
+                  <User className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 text-primary" />
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
-                  <span className="font-medium text-foreground text-sm sm:text-base truncate">{authorName}</span>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 mb-1">
+                  <span className="font-medium text-foreground text-xs sm:text-sm lg:text-base truncate">{authorName}</span>
                   {post.pet_profiles && (
-                    <span className="text-xs sm:text-sm text-muted-foreground truncate">
+                    <span className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground truncate">
                       {(() => {
                         // Handle both array and object cases
                         const petProfile = Array.isArray(post.pet_profiles) 
@@ -332,8 +332,8 @@ export const PostCard = ({ post }: PostCardProps) => {
                     </span>
                   )}
                 </div>
-                <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground">
-                  <Clock className="h-3 w-3" />
+                <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-muted-foreground">
+                  <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3 flex-shrink-0" />
                   <span className="truncate">
                     {formatDistanceToNow(new Date(post.created_at), { 
                       addSuffix: true, 
@@ -341,36 +341,36 @@ export const PostCard = ({ post }: PostCardProps) => {
                     })}
                   </span>
                   {post.is_solved && (
-                    <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                      <CheckCircle className="h-3 w-3" />
-                      <span className="text-xs">{t('community.postCard.solved')}</span>
+                    <div className="flex items-center gap-0.5 sm:gap-1 text-green-600 dark:text-green-400 flex-shrink-0">
+                      <CheckCircle className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                      <span className="text-[10px] sm:text-xs font-medium">{t('community.postCard.solved')}</span>
                     </div>
                   )}
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-              <Badge variant="outline" className={`text-xs ${getCategoryColor(post.category)}`}>
+            <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+              <Badge variant="outline" className={`text-[10px] sm:text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 ${getCategoryColor(post.category)}`}>
                 <span className="hidden sm:inline">{getCategoryLabel(post.category, t)}</span>
                 <span className="sm:hidden">{getCategoryLabel(post.category, t).split(' ')[0]}</span>
               </Badge>
-              <span className="text-base sm:text-lg">{getPostTypeIcon(post.post_type)}</span>
+              <span className="text-sm sm:text-base lg:text-lg">{getPostTypeIcon(post.post_type)}</span>
               
               {/* Post Actions Menu - only show for post owner (real users only) */}
               {isPostOwner && post.user_id && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <MoreVertical className="h-4 w-4" />
+                    <Button variant="ghost" size="sm" className="h-7 w-7 sm:h-8 sm:w-8 p-0 touch-manipulation" aria-label={t('common.open')}>
+                      <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+                  <DropdownMenuContent align="end" className="min-w-[160px]">
                     <DropdownMenuItem
                       onClick={() => setShowDeleteDialog(true)}
-                      className="text-red-600 focus:text-red-600"
+                      className="text-red-600 focus:text-red-600 dark:text-red-400 dark:focus:text-red-300 cursor-pointer"
                     >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      {t('community.postCard.deletePost')}
+                      <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm">{t('community.postCard.deletePost')}</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -379,22 +379,22 @@ export const PostCard = ({ post }: PostCardProps) => {
           </div>
         </CardHeader>
 
-        <CardContent>
-          <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">{post.title}</h3>
-          <p className="text-sm sm:text-base text-muted-foreground mb-4 whitespace-pre-wrap">{post.content}</p>
+        <CardContent className="px-3 pb-3 sm:px-4 sm:pb-4 lg:px-6 lg:pb-6">
+          <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-foreground mb-1.5 sm:mb-2 leading-snug">{post.title}</h3>
+          <p className="text-xs sm:text-sm lg:text-base text-muted-foreground mb-3 sm:mb-4 whitespace-pre-wrap leading-relaxed">{post.content}</p>
 
           {/* Enhanced Video Section with Thumbnail */}
           {post.video_url && (
-            <div className="mb-4">
+            <div className="mb-3 sm:mb-4">
               <div 
-                className="relative bg-black rounded-lg overflow-hidden cursor-pointer w-full max-w-md mx-auto group"
+                className="relative bg-black rounded-lg overflow-hidden cursor-pointer w-full max-w-md mx-auto group touch-manipulation"
                 onClick={handleVideoToggle}
               >
                 {/* Video with poster (thumbnail) */}
                 <video
                   src={post.video_url}
                   poster={post.video_thumbnail_url || undefined}
-                  className="w-full h-auto max-h-64 sm:max-h-96 object-cover"
+                  className="w-full h-auto max-h-48 sm:max-h-64 lg:max-h-96 object-cover"
                   controls={false}
                   onPlay={() => setIsVideoPlaying(true)}
                   onPause={() => setIsVideoPlaying(false)}
@@ -405,8 +405,8 @@ export const PostCard = ({ post }: PostCardProps) => {
                 {/* Play Overlay */}
                 {!isVideoPlaying && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-all">
-                    <div className="bg-white bg-opacity-90 dark:bg-gray-800 dark:bg-opacity-90 rounded-full p-2 sm:p-4 group-hover:scale-110 transition-transform">
-                      <Play className="h-6 w-6 sm:h-8 sm:w-8 text-gray-800 dark:text-gray-200" />
+                    <div className="bg-white bg-opacity-90 dark:bg-gray-800 dark:bg-opacity-90 rounded-full p-2.5 sm:p-3 lg:p-4 group-hover:scale-110 transition-transform">
+                      <Play className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-gray-800 dark:text-gray-200" />
                     </div>
                   </div>
                 )}
@@ -416,62 +416,61 @@ export const PostCard = ({ post }: PostCardProps) => {
                   variant="ghost"
                   size="icon"
                   onClick={handleFullWindowVideo}
-                  className="absolute top-2 right-2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white border border-white border-opacity-20 z-10"
-                  aria-label={'community.postCard.openFullScreen'}
+                  className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 h-7 w-7 sm:h-8 sm:w-8 bg-black bg-opacity-50 hover:bg-opacity-70 text-white border border-white border-opacity-20 z-10 touch-manipulation"
+                  aria-label={t('community.postCard.openFullScreen')}
                 >
-                  <Maximize2 className="h-4 w-4" />
+                  <Maximize2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
                 </Button>
 
                 {/* Video Info */}
                 {post.video_duration && (
-                  <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 bg-black bg-opacity-70 text-white text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded">
+                  <div className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5 lg:bottom-2 lg:right-2 bg-black bg-opacity-70 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                     {Math.floor(post.video_duration / 60)}:{(post.video_duration % 60).toString().padStart(2, '0')}
                   </div>
                 )}
 
                 {/* Thumbnail indicator */}
                 {post.video_thumbnail_url && (
-                  <div className="absolute top-1 sm:top-2 left-1 sm:left-2 bg-black bg-opacity-70 text-white text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded flex items-center gap-1">
-                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></div>
+                  <div className="absolute top-1 left-1 sm:top-1.5 sm:left-1.5 lg:top-2 lg:left-2 bg-black bg-opacity-70 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded flex items-center gap-0.5 sm:gap-1">
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full animate-pulse"></div>
                     <span className="hidden sm:inline">{t('community.postCard.video.preview')}</span>
-                    <span className="sm:hidden">Preview</span>
                   </div>
                 )}
               </div>
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-4 border-t border-border">
-            <div className="flex items-center space-x-2 sm:space-x-4">
+          <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-border">
+            <div className="flex items-center gap-1 sm:gap-2 lg:gap-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => likeMutation.mutate()}
                 disabled={!user || likeMutation.isPending}
-                className={`flex items-center gap-1 sm:gap-2 text-xs sm:text-sm ${userLike ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'}`}
-                aria-label={userLike ? 'community.postCard.unlike' : 'community.postCard.like'}
+                className={`flex items-center gap-1 sm:gap-1.5 min-h-[36px] sm:min-h-[32px] px-2 sm:px-3 text-xs sm:text-sm touch-manipulation ${userLike ? 'text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300' : 'text-muted-foreground hover:text-foreground'}`}
+                aria-label={userLike ? t('community.postCard.unlike') : t('community.postCard.like')}
               >
-                <Heart className={`h-3 w-3 sm:h-4 sm:w-4 ${userLike ? 'fill-current' : ''}`} />
-                <span className="hidden sm:inline">{post.likes_count || 0}</span>
-                <span className="sm:hidden">{post.likes_count || 0}</span>
+                <Heart className={`h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 ${userLike ? 'fill-current' : ''}`} />
+                <span className="font-medium">{post.likes_count || 0}</span>
               </Button>
 
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowComments(!showComments)}
-                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground"
-                aria-label={'community.postCard.toggleComments'}
+                className="flex items-center gap-1 sm:gap-1.5 min-h-[36px] sm:min-h-[32px] px-2 sm:px-3 text-xs sm:text-sm text-muted-foreground hover:text-foreground touch-manipulation"
+                aria-label={t('community.postCard.toggleComments')}
               >
-                <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">{post.comments_count || 0}</span>
-                <span className="sm:hidden">{post.comments_count || 0}</span>
+                <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+                <span className="font-medium">{post.comments_count || 0}</span>
               </Button>
             </div>
           </div>
 
           {showComments && (
-            <CommentSection postId={post.id} />
+            <div className="mt-3 sm:mt-4">
+              <CommentSection postId={post.id} />
+            </div>
           )}
         </CardContent>
       </Card>
@@ -488,26 +487,29 @@ export const PostCard = ({ post }: PostCardProps) => {
       {/* Delete Confirmation Dialog - only for real users */}
       {post.user_id && (
         <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <AlertDialogContent>
+          <AlertDialogContent className="max-w-[90vw] sm:max-w-md">
             <AlertDialogHeader>
-              <AlertDialogTitle>{t('community.postCard.deleteDialog.title')}</AlertDialogTitle>
-              <AlertDialogDescription>
+              <AlertDialogTitle className="text-base sm:text-lg">{t('community.postCard.deleteDialog.title')}</AlertDialogTitle>
+              <AlertDialogDescription className="text-xs sm:text-sm leading-relaxed">
                 {t('community.postCard.deleteDialog.description')}
                 {post.video_url && (
-                  <span className="block mt-2 text-sm">
+                  <span className="block mt-2 text-xs sm:text-sm font-medium">
                     {t('community.postCard.deleteDialog.videoWarning')}
                   </span>
                 )}
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={deletePostMutation.isPending}>
+            <AlertDialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0">
+              <AlertDialogCancel 
+                disabled={deletePostMutation.isPending}
+                className="min-h-[44px] sm:min-h-[40px] text-xs sm:text-sm w-full sm:w-auto touch-manipulation"
+              >
                 {t('community.postCard.deleteDialog.cancel')}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => deletePostMutation.mutate()}
                 disabled={deletePostMutation.isPending}
-                className="bg-red-600 hover:bg-red-700"
+                className="min-h-[44px] sm:min-h-[40px] text-xs sm:text-sm w-full sm:w-auto bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 touch-manipulation"
               >
                 {deletePostMutation.isPending ? t('community.postCard.deleteDialog.deleting') : t('community.postCard.deleteDialog.delete')}
               </AlertDialogAction>

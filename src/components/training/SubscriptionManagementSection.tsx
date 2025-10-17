@@ -179,7 +179,7 @@ export const SubscriptionManagementSection = () => {
             </CardHeader>
           </CollapsibleTrigger>
           <CollapsibleContent className="animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
-            <CardContent className="p-3 sm:p-4 lg:p-6 xl:p-8 bg-gradient-to-br from-white/50 to-yellow-50/30 dark:from-gray-900/50 dark:to-yellow-900/10">
+            <CardContent className="py-3 sm:p-4 lg:p-6 xl:p-8 bg-gradient-to-br from-white/50 to-yellow-50/30 dark:from-gray-900/50 dark:to-yellow-900/10">
               <div className="animate-fade-in-up">
                 <SubscriptionManager />
               </div>

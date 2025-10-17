@@ -1027,7 +1027,7 @@ export const ChatPage = () => {
               </CardHeader>
 
               <CardContent className="p-0 flex-1">
-                <ScrollArea className="h-[calc(100vh-9rem)] sm:h-[calc(100vh-10rem)] lg:h-[calc(100vh-16rem)]">
+                <ScrollArea className="h-[calc(100vh-5rem)] sm:h-[calc(100vh-6rem)] lg:h-[calc(100vh-12rem)]">
                   {isLoadingSessions ? (
                     <div className="flex items-center justify-center p-8">
                       <Loader2 className="h-6 w-6 animate-spin" />

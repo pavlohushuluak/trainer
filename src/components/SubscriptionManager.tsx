@@ -47,7 +47,7 @@ const SubscriptionManager = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div>
       
       {/* Loading info */}
       {loading && (

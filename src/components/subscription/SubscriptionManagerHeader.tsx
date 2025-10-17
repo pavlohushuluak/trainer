@@ -7,8 +7,7 @@ interface SubscriptionManagerHeaderProps {
 
 export const SubscriptionManagerHeader = ({ onRefresh }: SubscriptionManagerHeaderProps) => {
   return (
-    <div className="mb-6">
-      <h2 className="text-2xl font-bold">Subscription Management</h2>
+    <div className="mb-2">
     </div>
   );
 };

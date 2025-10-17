@@ -176,21 +176,21 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
   }
 
   return (
-    <Card className="w-full bg-gradient-to-r from-blue-50/50 via-purple-50/30 to-pink-50/30 dark:from-blue-950/20 dark:via-purple-950/10 dark:to-pink-950/10 border-2 border-blue-100/50 dark:border-blue-800/30 shadow-lg hover:shadow-xl transition-all duration-300">
+    <Card className="w-full bg-gradient-to-r from-blue-50/50 via-purple-50/30 to-pink-50/30 dark:from-blue-950/20 dark:via-purple-950/10 dark:to-pink-950/10 border border-blue-100/50 dark:border-blue-800/30 shadow-md hover:shadow-lg transition-all duration-300">
       <CardContent className="p-3 sm:p-4 lg:p-6">
-        <div className="space-y-4 sm:space-y-5 lg:space-y-6">
+        <div className="space-y-3 sm:space-y-4 lg:space-y-5">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 lg:gap-4">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-              <div className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg flex-shrink-0">
-                <Filter className="h-5 w-5 sm:h-5.5 sm:w-5.5 lg:h-6 lg:w-6 text-white" />
+              <div className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg flex-shrink-0">
+                <Filter className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-1.5 sm:gap-2">
+                <h3 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-gray-100 flex items-center gap-1.5 sm:gap-2">
                   <span className="truncate">{t('petFilter.title')}</span>
-                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-500 animate-pulse flex-shrink-0" />
+                  <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-yellow-500 animate-pulse flex-shrink-0" />
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">
+                <p className="text-[10px] sm:text-xs lg:text-sm text-gray-600 dark:text-gray-400 truncate leading-relaxed">
                   {t('petFilter.description')}
                 </p>
               </div>
@@ -198,8 +198,8 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
             
             {/* Plans Count Badge */}
             {plansCount > 0 && (
-              <Badge variant="outline" className={`${getFilterBadgeColor(selectedPlanType)} px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-2 text-xs sm:text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap flex-shrink-0`}>
-                <Target className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <Badge variant="outline" className={`${getFilterBadgeColor(selectedPlanType)} px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-2 text-[10px] sm:text-xs lg:text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap flex-shrink-0`}>
+                <Target className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 mr-1 sm:mr-1.5 lg:mr-2 flex-shrink-0" />
                 <span className="hidden sm:inline">{plansCount} {plansCount === 1 ? t('petFilter.plansCount.plan') : t('petFilter.plansCount.plans')}</span>
                 <span className="sm:hidden">{plansCount}</span>
               </Badge>
@@ -207,12 +207,12 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
           </div>
 
           {/* Plan Type Filter Buttons */}
-          <div className="space-y-2 sm:space-y-3">
+          <div className="space-y-2 sm:space-y-2.5 lg:space-y-3">
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-yellow-500 flex-shrink-0" />
-              <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">{t('petFilter.planTypes.label')}</span>
+              <Zap className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 text-yellow-500 flex-shrink-0" />
+              <span className="text-[10px] sm:text-xs lg:text-sm font-medium text-gray-700 dark:text-gray-300">{t('petFilter.planTypes.label')}</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5 lg:gap-3">
               {planFilters.map((filter) => {
                 const Icon = filter.icon;
                 const isActive = selectedPlanType === filter.value;
@@ -223,18 +223,16 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
                     variant={isActive ? "default" : "outline"}
                     size="lg"
                     onClick={() => handlePlanTypeChange(filter.value)}
-                    className={`h-auto p-3 sm:p-4 transition-all duration-200 touch-manipulation ${
+                    className={`h-auto min-h-[64px] sm:min-h-[72px] lg:min-h-[80px] p-2.5 sm:p-3 lg:p-4 transition-all duration-200 touch-manipulation ${
                       isActive 
                         ? `bg-gradient-to-r from-${filter.color}-500 to-${filter.color}-600 text-white shadow-md hover:shadow-lg` 
                         : `hover:bg-${filter.color}-50 dark:hover:bg-${filter.color}-950/30 border-${filter.color}-200 dark:border-${filter.color}-600/50`
                     }`}
                   >
-                    <div className="flex flex-col items-center gap-1.5 sm:gap-2 text-center w-full">
-                      <Icon className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0" />
-                      <div>
-                        <div className="font-medium text-xs sm:text-sm">{filter.label}</div>
-                      </div>
-                      {isActive && <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
+                    <div className="flex flex-col items-center justify-center gap-1 sm:gap-1.5 lg:gap-2 text-center w-full">
+                      <Icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 flex-shrink-0" />
+                      <div className="font-medium text-[10px] sm:text-xs lg:text-sm leading-tight">{filter.label}</div>
+                      {isActive && <CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 flex-shrink-0" />}
                     </div>
                   </Button>
                 );
@@ -243,41 +241,42 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
           </div>
 
           {/* Pet-Specific Filter Section */}
-          <div className="space-y-3 sm:space-y-4">
+          <div className="space-y-2 sm:space-y-2.5 lg:space-y-3">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                <HandHeart className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-purple-500 flex-shrink-0" />
-                <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 truncate">{t('petFilter.petSpecific.label')}</span>
+                <HandHeart className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 text-purple-500 flex-shrink-0" />
+                <span className="text-[10px] sm:text-xs lg:text-sm font-medium text-gray-700 dark:text-gray-300 truncate">{t('petFilter.petSpecific.label')}</span>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="text-[10px] sm:text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 whitespace-nowrap flex-shrink-0 h-8"
+                className="text-[10px] sm:text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 whitespace-nowrap flex-shrink-0 h-7 sm:h-8 px-2 sm:px-3 touch-manipulation"
               >
                 {showAdvanced ? t('petFilter.petSpecific.toggle.hide') : t('petFilter.petSpecific.toggle.show')}
               </Button>
             </div>
 
             {showAdvanced && (
-              <div className="space-y-2 sm:space-y-3 p-3 sm:p-4 bg-white/50 dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+              <div className="space-y-2 sm:space-y-2.5 lg:space-y-3 p-2.5 sm:p-3 lg:p-4 bg-white/50 dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
                 {/* Search Input */}
                 <div className="relative">
-                  <Search className="absolute left-2.5 sm:left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400" />
+                  <Search className="absolute left-2.5 sm:left-3 top-1/2 transform -translate-y-1/2 h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 text-gray-400 flex-shrink-0" />
                   <Input
                     placeholder={t('petFilter.petSpecific.search.placeholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-8 sm:pl-10 pr-8 sm:pr-10 bg-white/80 dark:bg-gray-800/80 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 text-sm h-9 sm:h-10"
+                    className="pl-8 sm:pl-9 lg:pl-10 pr-8 sm:pr-9 lg:pr-10 bg-white/80 dark:bg-gray-800/80 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 text-xs sm:text-sm min-h-[44px] sm:h-10 lg:h-11"
                   />
                   {searchTerm && (
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setSearchTerm("")}
-                      className="absolute right-1.5 sm:right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 text-gray-400 hover:text-gray-600 touch-manipulation"
+                      className="absolute right-1.5 sm:right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 sm:h-6 sm:w-6 p-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 touch-manipulation"
+                      aria-label={t('common.close')}
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                     </Button>
                   )}
                 </div>
@@ -288,21 +287,21 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
                   <Button
                     variant={selectedPetId === "all" ? "default" : "outline"}
                     onClick={() => handlePetChange("all")}
-                    className={`w-full justify-start transition-all duration-200 min-h-[44px] touch-manipulation ${
+                    className={`w-full justify-start transition-all duration-200 min-h-[44px] sm:min-h-[40px] p-2 sm:p-2.5 lg:p-3 touch-manipulation ${
                       selectedPetId === "all" 
                         ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md hover:shadow-lg" 
                         : "hover:bg-blue-50 dark:hover:bg-blue-950/30 border-blue-200 dark:border-blue-600/50"
                     }`}
                   >
-                    <div className="flex items-center gap-2 sm:gap-3 w-full min-w-0">
+                    <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3 w-full min-w-0">
                       <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-600 dark:text-blue-400 flex-shrink-0">
-                        <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                        <Users className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
                       </div>
                       <div className="flex flex-col items-start flex-1 min-w-0">
-                        <span className="font-medium text-sm sm:text-base truncate">{t('petFilter.petSpecific.showAll.label')}</span>
-                        <span className="text-[10px] sm:text-xs opacity-75 truncate">{t('petFilter.petSpecific.showAll.description')}</span>
+                        <span className="font-medium text-xs sm:text-sm lg:text-base truncate w-full">{t('petFilter.petSpecific.showAll.label')}</span>
+                        <span className="text-[10px] sm:text-xs opacity-75 truncate w-full">{t('petFilter.petSpecific.showAll.description')}</span>
                       </div>
-                      {selectedPetId === "all" && <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 ml-1 sm:ml-2 flex-shrink-0" />}
+                      {selectedPetId === "all" && <CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 ml-1 sm:ml-2 flex-shrink-0" />}
                     </div>
                   </Button>
 
@@ -314,28 +313,28 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
                           key={pet.id}
                           variant={selectedPetId === pet.id ? "default" : "outline"}
                           onClick={() => handlePetChange(pet.id)}
-                          className={`w-full justify-start transition-all duration-200 min-h-[44px] touch-manipulation ${
+                          className={`w-full justify-start transition-all duration-200 min-h-[44px] sm:min-h-[40px] p-2 sm:p-2.5 lg:p-3 touch-manipulation ${
                             selectedPetId === pet.id 
                               ? "bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-md hover:shadow-lg" 
                               : "hover:bg-purple-50 dark:hover:bg-purple-950/30 border-purple-200 dark:border-purple-600/50"
                           }`}
                         >
-                          <div className="flex items-center gap-2 sm:gap-3 w-full min-w-0">
+                          <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3 w-full min-w-0">
                             <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-600 dark:text-purple-400 flex-shrink-0">
-                              <span className="text-base sm:text-lg">{getPetIcon(pet.species)}</span>
+                              <span className="text-sm sm:text-base lg:text-lg">{getPetIcon(pet.species)}</span>
                             </div>
                             <div className="flex flex-col items-start flex-1 min-w-0">
-                              <span className="font-medium text-sm sm:text-base truncate w-full">{pet.name}</span>
+                              <span className="font-medium text-xs sm:text-sm lg:text-base truncate w-full">{pet.name}</span>
                               <span className="text-[10px] sm:text-xs opacity-75 truncate w-full">{pet.species}</span>
                             </div>
-                            {selectedPetId === pet.id && <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 ml-1 sm:ml-2 flex-shrink-0" />}
+                            {selectedPetId === pet.id && <CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 ml-1 sm:ml-2 flex-shrink-0" />}
                           </div>
                         </Button>
                       );
                     })
                     ) : (
-                    <div className="text-center py-3 sm:py-4 text-gray-500 dark:text-gray-400">
-                      <Search className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-1.5 sm:mb-2 opacity-50" />
+                    <div className="text-center py-3 sm:py-4 lg:py-5 text-gray-500 dark:text-gray-400">
+                      <Search className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 mx-auto mb-1.5 sm:mb-2 opacity-50" />
                       <p className="text-xs sm:text-sm">{t('petFilter.petSpecific.search.noResults', { searchTerm })}</p>
                     </div>
                   )}
@@ -346,27 +345,27 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
             {/* Traditional Dropdown (Fallback) */}
             {!showAdvanced && (
               <Select value={selectedPetId} onValueChange={handlePetChange}>
-                <SelectTrigger className="w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-2 border-blue-200 hover:border-blue-300 dark:border-blue-600/50 dark:hover:border-blue-500 transition-all duration-200 shadow-md hover:shadow-lg min-h-[44px] h-auto py-2">
+                <SelectTrigger className="w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-blue-200 hover:border-blue-300 dark:border-blue-600/50 dark:hover:border-blue-500 transition-all duration-200 shadow-sm hover:shadow-md min-h-[44px] sm:min-h-[40px] h-auto py-2 sm:py-2.5">
                   <SelectValue>
-                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3 min-w-0">
                       <div className={`flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 ${getFilterColor(selectedPetId)} flex-shrink-0`}>
                         {getFilterIcon(selectedPetId)}
                       </div>
-                      <span className="font-medium truncate text-gray-900 dark:text-gray-100 text-sm sm:text-base">
+                      <span className="font-medium truncate text-gray-900 dark:text-gray-100 text-xs sm:text-sm lg:text-base">
                         {getFilterDisplayName(selectedPetId, validPets, t)}
                       </span>
                     </div>
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-2 border-blue-200 dark:border-blue-600/50 shadow-xl z-50 max-h-80">
+                <SelectContent className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-blue-200 dark:border-blue-600/50 shadow-xl z-50 max-h-[60vh] sm:max-h-80">
                   {/* Show All Pets Option */}
-                  <SelectItem key="all" value="all" className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-950/30 dark:hover:to-purple-950/30 transition-all duration-200">
-                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 py-1.5 sm:py-2">
+                  <SelectItem key="all" value="all" className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-950/30 dark:hover:to-purple-950/30 transition-all duration-200 cursor-pointer">
+                    <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3 min-w-0 py-1 sm:py-1.5">
                       <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-600 dark:text-blue-400 flex-shrink-0">
-                        <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                        <Users className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
                       </div>
                       <div className="flex flex-col min-w-0">
-                        <span className="font-medium truncate text-gray-900 dark:text-gray-100 text-sm sm:text-base">
+                        <span className="font-medium truncate text-gray-900 dark:text-gray-100 text-xs sm:text-sm lg:text-base">
                           {t('petFilter.petSpecific.showAll.label')}
                         </span>
                         <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 truncate">
@@ -376,13 +375,13 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
                     </div>
                   </SelectItem>
                   {validPets.map(pet => (
-                    <SelectItem key={pet.id} value={pet.id} className="hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-purple-950/30 dark:hover:to-pink-950/30 transition-all duration-200">
-                      <div className="flex items-center gap-2 sm:gap-3 min-w-0 py-1.5 sm:py-2">
+                    <SelectItem key={pet.id} value={pet.id} className="hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-purple-950/30 dark:hover:to-pink-950/30 transition-all duration-200 cursor-pointer">
+                      <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3 min-w-0 py-1 sm:py-1.5">
                         <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-purple-600 dark:text-purple-400 flex-shrink-0">
-                          <span className="text-base sm:text-lg">{getPetIcon(pet.species)}</span>
+                          <span className="text-sm sm:text-base lg:text-lg">{getPetIcon(pet.species)}</span>
                         </div>
                         <div className="flex flex-col min-w-0">
-                          <span className="font-medium truncate text-gray-900 dark:text-gray-100 text-sm sm:text-base">
+                          <span className="font-medium truncate text-gray-900 dark:text-gray-100 text-xs sm:text-sm lg:text-base">
                             {pet.name}
                           </span>
                           <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 truncate">
@@ -398,9 +397,9 @@ export const PetFilter = ({ pets, selectedPlanType, selectedPetId, onPlanTypeCha
           </div>
 
           {/* Description */}
-          <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-3 py-2 sm:px-4 sm:py-3 bg-white/50 dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+          <div className="text-[10px] sm:text-xs lg:text-sm text-gray-600 dark:text-gray-400 px-2.5 py-2 sm:px-3 sm:py-2.5 lg:px-4 lg:py-3 bg-white/50 dark:bg-gray-800/50 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
             <div className="flex items-start gap-1.5 sm:gap-2">
-              <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+              <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 text-blue-500 mt-0.5 flex-shrink-0" />
               <span className="leading-relaxed">
                 {selectedPlanType === "all" && selectedPetId === "all" && t('petFilter.descriptions.allPlans')}
                 {selectedPlanType === "supported" && selectedPetId === "all" && t('petFilter.descriptions.supportedPlans')}

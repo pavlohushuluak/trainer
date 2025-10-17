@@ -90,13 +90,13 @@ export const AnimalImageUpload = ({ onUploadComplete, disabled, createPlan = fal
 
   if (disabled) {
     return (
-      <Card className="border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-900/20">
-        <CardContent className="p-6 text-center">
-          <AlertCircle className="h-12 w-12 text-orange-600 dark:text-orange-400 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-orange-800 dark:text-orange-200 mb-2">
+      <Card className="border-orange-200/50 dark:border-orange-800 bg-orange-50/50 dark:bg-orange-900/20">
+        <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+          <AlertCircle className="h-10 w-10 sm:h-12 sm:w-12 text-orange-600 dark:text-orange-400 mx-auto mb-3 sm:mb-4" />
+          <h3 className="text-base sm:text-lg font-semibold text-orange-800 dark:text-orange-200 mb-1.5 sm:mb-2">
             {t('imageAnalysis.uploadComponent.disabled.title')}
           </h3>
-          <p className="text-orange-700 dark:text-orange-300 mb-4">
+          <p className="text-xs sm:text-sm text-orange-700 dark:text-orange-300">
             {t('imageAnalysis.uploadComponent.disabled.description')}
           </p>
         </CardContent>
@@ -105,16 +105,16 @@ export const AnimalImageUpload = ({ onUploadComplete, disabled, createPlan = fal
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       <LoadingStateManager
         isLoading={limitLoading && analysesUsed === 0}
         loadingMessage={t('imageAnalysis.usage.loading')}
         hasError={!!limitError}
         errorMessage={limitError?.message}
         fallbackComponent={
-          <Card className="border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-900/20">
-            <CardContent className="p-6 text-center">
-              <p className="text-orange-700 dark:text-orange-300">
+          <Card className="border-orange-200/50 dark:border-orange-800 bg-orange-50/50 dark:bg-orange-900/20">
+            <CardContent className="p-3 sm:p-4 lg:p-6 text-center">
+              <p className="text-xs sm:text-sm text-orange-700 dark:text-orange-300">
                 {t('imageAnalysis.uploadComponent.unavailable.description')}
               </p>
             </CardContent>
@@ -129,12 +129,12 @@ export const AnimalImageUpload = ({ onUploadComplete, disabled, createPlan = fal
           hasActiveSubscription={remainingAnalyses === 'Unbegrenzt'}
         />
 
-        <Card className="border-2 border-dashed border-blue-300 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/20">
-          <CardContent className="p-6">
+        <Card className="border-2 border-dashed border-blue-300/50 dark:border-blue-600/50 bg-blue-50/50 dark:bg-blue-900/20 shadow-sm">
+          <CardContent className="p-3 sm:p-4 lg:p-6">
             <div className="text-center">
-              <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-4 flex items-center justify-center gap-2">
-                <Camera className="h-5 w-5" />
-                {t('imageAnalysis.uploadComponent.uploadTitle')}
+              <h3 className="text-base sm:text-lg font-semibold text-blue-800 dark:text-blue-200 mb-3 sm:mb-4 flex items-center justify-center gap-1.5 sm:gap-2">
+                <Camera className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                <span>{t('imageAnalysis.uploadComponent.uploadTitle')}</span>
               </h3>
               
               {hasReachedLimit ? (
@@ -178,9 +178,9 @@ export const AnimalImageUpload = ({ onUploadComplete, disabled, createPlan = fal
                 />
               )}
               
-              <div className="mt-4 text-xs text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/40 p-3 rounded-lg">
-                <p className="font-medium mb-1">{t('imageAnalysis.uploadComponent.tips.title')}</p>
-                <ul className="text-left space-y-1">
+              <div className="mt-3 sm:mt-4 text-[10px] sm:text-xs text-blue-600 dark:text-blue-400 bg-blue-100/50 dark:bg-blue-900/40 p-2.5 sm:p-3 rounded-lg">
+                <p className="font-medium mb-1 sm:mb-1.5">{t('imageAnalysis.uploadComponent.tips.title')}</p>
+                <ul className="text-left space-y-0.5 sm:space-y-1 leading-relaxed">
                   <li>{t('imageAnalysis.uploadComponent.tips.lighting')}</li>
                   <li>{t('imageAnalysis.uploadComponent.tips.visibility')}</li>
                   <li>{t('imageAnalysis.uploadComponent.tips.recency')}</li>

@@ -11,6 +11,7 @@ import { AuthErrorDisplay } from '../auth/AuthErrorDisplay';
 import { LanguageInitializer } from '../LanguageInitializer';
 import { requestCache } from '@/utils/requestCache';
 import type { Tables } from '@/integrations/supabase/types';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MainLayoutProps {
   showFooter?: boolean;
@@ -31,7 +32,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   const [pets, setPets] = useState<Tables<'pet_profiles'>[]>([]);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
-
+  const isMobile = useIsMobile();
   // Check if we're on the Index page (root path)
   const isIndexPage = location.pathname === '/';
   // Check if we're on the Chat page
@@ -340,7 +341,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       <AuthErrorDisplay />
       
       {/* Main Content */}
-      <div className={`flex-1 mt-16 ${isChatPage ? 'h-[calc(100vh-4rem)]' : ''}`}>
+      <div className={`flex-1 ${isMobile ? 'mt-10' : 'mt-12'} ${isChatPage ? 'h-[calc(100vh-4rem)]' : ''}`}>
         {children || <Outlet />}
       </div>
       
