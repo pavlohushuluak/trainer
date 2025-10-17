@@ -11,7 +11,15 @@ export const FreeTierSection = () => {
   const { user, session } = useAuth();
 
   const handleStartFree = () => {
-    navigate('/login');
+    // If user is already signed in, go to training page
+    // Otherwise, go to login page
+    if (user && session) {
+      console.log('✅ User is signed in, navigating to /mein-tiertraining');
+      navigate('/mein-tiertraining');
+    } else {
+      console.log('📝 User not signed in, navigating to /login');
+      navigate('/login');
+    }
   };
 
   const handleChatClick = () => {
