@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 interface UseVerificationCodeProps {
   email: string;
   password?: string; // Password needed for auto-login after verification
-  onSuccess?: () => void;
+  onSuccess?: (userData?: any) => void;
   onError?: (error: string) => void;
 }
 
@@ -47,10 +47,11 @@ export const useVerificationCode = ({ email, password, onSuccess, onError }: Use
 
       if (data?.success) {
         // Auto-login the user after successful verification
+        let userData = null;
         if (password) {
           try {
             console.log('Auto-logging in user after verification...');
-            const { error: signInError } = await signIn(email, password);
+            const { error: signInError, data: signInData } = await signIn(email, password);
             
             if (signInError) {
               console.error('Auto-login failed:', signInError);
@@ -59,6 +60,7 @@ export const useVerificationCode = ({ email, password, onSuccess, onError }: Use
               return;
             }
             
+            userData = signInData;
             console.log('Auto-login successful after verification');
           } catch (loginError) {
             console.error('Auto-login error:', loginError);
@@ -68,7 +70,7 @@ export const useVerificationCode = ({ email, password, onSuccess, onError }: Use
           }
         }
         
-        onSuccess?.();
+        onSuccess?.(userData);
       } else {
         let errorMessage = t('auth.verificationCode.invalid');
         

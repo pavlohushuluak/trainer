@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from '@/hooks/useTranslations';
 import { getCheckoutFlags, debugCheckoutState, setCheckoutFlags } from '@/utils/checkoutStorage';
+import { getDeviceFingerprint } from '@/utils/deviceFingerprint';
 
 // Import checkout storage constants
 const CHECKOUT_KEY = 'pendingCheckout';
@@ -20,6 +21,42 @@ export const useAuthCallback = () => {
   const { t } = useTranslations();
   const [isRecovery, setIsRecovery] = useState(false);
   const [processed, setProcessed] = useState(false);
+
+  // Helper function to save device binding
+  const saveDeviceBinding = async (userId: string) => {
+    try {
+      const deviceFingerprint = await getDeviceFingerprint();
+      
+      if (!deviceFingerprint) {
+        console.log('⚠️ OAuth callback: No device fingerprint available');
+        return;
+      }
+
+      console.log('💾 OAuth callback: Saving device binding for user:', userId);
+
+      const { error } = await supabase
+        .from('device_bindings' as any)
+        .upsert({
+          user_id: userId,
+          device_fingerprint: deviceFingerprint,
+          device_name: navigator.userAgent.substring(0, 100),
+          user_agent: navigator.userAgent,
+          last_used_at: new Date().toISOString(),
+          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
+          is_active: true
+        }, {
+          onConflict: 'user_id,device_fingerprint'
+        });
+
+      if (error) {
+        console.error('❌ OAuth callback: Error saving device binding:', error);
+      } else {
+        console.log('✅ OAuth callback: Device binding saved successfully');
+      }
+    } catch (error) {
+      console.error('❌ OAuth callback: Exception saving device binding:', error);
+    }
+  };
 
   // Optimized admin check function
   const checkAdminStatus = async (userId: string) => {
@@ -429,6 +466,9 @@ export const useAuthCallback = () => {
           
           console.log('🔐 OAuth callback: Code exchange successful for user:', data.user.email);
           
+          // Save device binding after successful login
+          await saveDeviceBinding(data.user.id);
+          
           // SIMPLIFIED: Always use role-based redirect (which checks for pending checkout)
           await redirectUserBasedOnRole(
             data.user.id, 
@@ -479,6 +519,8 @@ export const useAuthCallback = () => {
             
             if (session?.user) {
               console.log('🔐 OAuth callback: Session established, proceeding with redirect:', session.user.email);
+              // Save device binding after successful OAuth login
+              await saveDeviceBinding(session.user.id);
               await redirectUserBasedOnRole(session.user.id);
               return;
             }
@@ -522,6 +564,8 @@ export const useAuthCallback = () => {
       }
       
       console.log('🔐 OAuth callback: Proceeding with role-based redirect');
+      // Save device binding after successful login
+      await saveDeviceBinding(sessionData.session.user.id);
       await redirectUserBasedOnRole(sessionData.session.user.id);
       
     } catch (error) {

@@ -24,6 +24,7 @@ import { AGBModal } from '@/components/legal/AGBModal';
 import { ImpressumModal } from '@/components/legal/ImpressumModal';
 import { VerificationCodeModal } from '@/components/auth/VerificationCodeModal';
 import { useVerificationCode } from '@/hooks/auth/useVerificationCode';
+import { useDeviceBinding } from '@/hooks/useDeviceBinding';
 
 const LoginPage = () => {
   const { signIn, signUp, user } = useAuth();
@@ -31,6 +32,16 @@ const LoginPage = () => {
   const location = useLocation();
   const { isScrolled } = useStickyHeader();
   const { t } = useTranslations();
+  const { checkDeviceBinding, saveDeviceBinding, deviceFingerprint } = useDeviceBinding();
+  
+  console.log('🔐 [LoginPage] Component rendered', {
+    hasUser: !!user,
+    userId: user?.id,
+    hasSaveDeviceBinding: !!saveDeviceBinding,
+    saveDeviceBindingType: typeof saveDeviceBinding,
+    deviceFingerprint: deviceFingerprint ? deviceFingerprint.substring(0, 20) + '...' : null,
+    timestamp: new Date().toISOString()
+  });
 
   // Form states
   const [email, setEmail] = useState('');
@@ -53,10 +64,20 @@ const LoginPage = () => {
   const { verifyCode, resendCode, loading: verificationLoading, error: verificationError } = useVerificationCode({
     email: signupEmail,
     password: signupPassword, // Use the stored password
-    onSuccess: () => {
+    onSuccess: async (userData) => {
       setShowVerificationCode(false);
       setSignupEmail('');
       setMessage(t('auth.verificationCode.success'));
+      
+      // Save device binding after successful signup
+      console.log('✅ Signup successful, saving device binding...');
+      if (userData?.user?.id) {
+        await saveDeviceBinding(userData.user.id);
+      } else {
+        console.warn('⚠️ No user ID in verification response, trying with context user');
+        await saveDeviceBinding();
+      }
+      
       // User will be automatically logged in by the verification code hook
       setTimeout(() => {
         navigate('/mein-tiertraining');
@@ -66,6 +87,37 @@ const LoginPage = () => {
       setError(error);
     }
   });
+
+  // Check for device binding and auto-login
+  useEffect(() => {
+    const checkForAutoLogin = async () => {
+      // Skip if already logged in
+      if (user) {
+        console.log('✅ User already logged in, redirecting...');
+        navigate('/mein-tiertraining');
+        return;
+      }
+
+      // Skip if device fingerprint not ready
+      if (!deviceFingerprint) {
+        console.log('⏳ Waiting for device fingerprint...');
+        return;
+      }
+
+      console.log('🔍 Checking for device binding auto-login...');
+      const binding = await checkDeviceBinding();
+
+      if (binding.hasBinding && binding.email) {
+        console.log('✅ Device binding found, showing email hint');
+        // Set email field to show user which account will be used
+        setEmail(binding.email);
+        setMessage(`🔐 Welcome back! This device is recognized. Enter your password to continue as ${binding.email}`);
+        setActiveTab('signin');
+      }
+    };
+
+    checkForAutoLogin();
+  }, [user, deviceFingerprint, navigate, checkDeviceBinding]);
 
   // Check localStorage for alreadySignedUp value on component mount and handle URL parameters
   useEffect(() => {
@@ -193,13 +245,54 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const { error } = await signIn(email, password);
+      console.log('🔐 [LoginPage] Attempting sign in for:', email);
+      const { error, data } = await signIn(email, password);
+      
+      console.log('🔐 [LoginPage] Sign in response:', {
+        hasError: !!error,
+        hasData: !!data,
+        hasUser: !!data?.user,
+        userId: data?.user?.id,
+        userEmail: data?.user?.email,
+        error: error?.message
+      });
+      
       if (error) {
+        console.error('❌ [LoginPage] Login failed:', error.message);
         setError(error.message === 'Invalid login credentials'
           ? t('auth.invalidCredentials')
           : error.message);
+      } else {
+        // Save device binding after successful login
+        console.log('✅ [LoginPage] Login successful! Now attempting to save device binding...');
+        console.log('🔐 [LoginPage] Before saveDeviceBinding call - checking function:', {
+          saveDeviceBindingExists: !!saveDeviceBinding,
+          saveDeviceBindingType: typeof saveDeviceBinding,
+          deviceFingerprint: deviceFingerprint ? deviceFingerprint.substring(0, 20) + '...' : null,
+          userId: data?.user?.id
+        });
+        
+        if (data?.user?.id) {
+          console.log('🔐 [LoginPage] Path A: Calling saveDeviceBinding WITH user ID:', data.user.id);
+          try {
+            await saveDeviceBinding(data.user.id);
+            console.log('🔐 [LoginPage] Path A: saveDeviceBinding call completed');
+          } catch (bindingError) {
+            console.error('❌ [LoginPage] Path A: saveDeviceBinding threw error:', bindingError);
+          }
+        } else {
+          console.warn('⚠️ [LoginPage] Path B: No user ID in login response, calling saveDeviceBinding WITHOUT user ID');
+          try {
+            await saveDeviceBinding();
+            console.log('🔐 [LoginPage] Path B: saveDeviceBinding call completed');
+          } catch (bindingError) {
+            console.error('❌ [LoginPage] Path B: saveDeviceBinding threw error:', bindingError);
+          }
+        }
+        console.log('✅ [LoginPage] Device binding save attempt finished');
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.error('❌ [LoginPage] Sign in exception:', err);
       setError(t('auth.generalError'));
     } finally {
       localStorage.setItem('alreadySignedUp', 'true');

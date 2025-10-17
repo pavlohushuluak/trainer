@@ -28,6 +28,7 @@ import { ImpressumModal } from '@/components/legal/ImpressumModal';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useEmailNotifications } from "@/hooks/useEmailNotifications";
 import { useGTM } from '@/hooks/useGTM';
+import { useDeviceBinding } from '@/hooks/useDeviceBinding';
 
 interface SmartLoginModalProps {
   isOpen: boolean;
@@ -50,6 +51,14 @@ export const SmartLoginModal = ({
   const { t } = useTranslations();
   const { toast } = useToast();
   const { trackLogin, trackSignUp } = useGTM();
+  const { checkDeviceBinding, saveDeviceBinding, deviceFingerprint } = useDeviceBinding();
+  
+  console.log('🔐 [SmartLoginModal] Component rendered', {
+    isOpen,
+    hasSaveDeviceBinding: !!saveDeviceBinding,
+    deviceFingerprint: deviceFingerprint ? deviceFingerprint.substring(0, 20) + '...' : null,
+    timestamp: new Date().toISOString()
+  });
   
   // Form states
   const [email, setEmail] = useState('');
@@ -64,6 +73,25 @@ export const SmartLoginModal = ({
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(true);
+
+  // Check for device binding and auto-login when modal opens
+  useEffect(() => {
+    if (!isOpen || !deviceFingerprint) return;
+
+    const checkForAutoLogin = async () => {
+      console.log('🔍 SmartLoginModal: Checking for device binding...');
+      const binding = await checkDeviceBinding();
+
+      if (binding.hasBinding && binding.email) {
+        console.log('✅ SmartLoginModal: Device binding found');
+        setEmail(binding.email);
+        setMessage(`🔐 Welcome back! This device is recognized. Enter your password to continue as ${binding.email}`);
+        setActiveTab('signin');
+      }
+    };
+
+    checkForAutoLogin();
+  }, [isOpen, deviceFingerprint, checkDeviceBinding]);
 
   // Check localStorage for alreadySignedUp value on component mount
   useEffect(() => {
@@ -112,12 +140,52 @@ export const SmartLoginModal = ({
     setError('');
     
     try {
+      console.log('🔐 [SmartLoginModal] Attempting sign in for:', email);
       const { error, data } = await signIn(email, password);
+      
+      console.log('🔐 [SmartLoginModal] Sign in response:', {
+        hasError: !!error,
+        hasData: !!data,
+        hasUser: !!data?.user,
+        userId: data?.user?.id,
+        userEmail: data?.user?.email,
+        error: error?.message
+      });
+      
       if (error) {
+        console.error('❌ [SmartLoginModal] Login failed:', error.message);
         setError(error.message === 'Invalid login credentials' 
           ? t('auth.invalidCredentials')
           : error.message);
       } else {
+        // Save device binding after successful login
+        console.log('✅ [SmartLoginModal] Login successful! Now attempting to save device binding...');
+        console.log('🔐 [SmartLoginModal] Before saveDeviceBinding call - checking function:', {
+          saveDeviceBindingExists: !!saveDeviceBinding,
+          saveDeviceBindingType: typeof saveDeviceBinding,
+          deviceFingerprint: deviceFingerprint ? deviceFingerprint.substring(0, 20) + '...' : null,
+          userId: data?.user?.id
+        });
+        
+        if (data?.user?.id) {
+          console.log('🔐 [SmartLoginModal] Path A: Calling saveDeviceBinding WITH user ID:', data.user.id);
+          try {
+            await saveDeviceBinding(data.user.id);
+            console.log('🔐 [SmartLoginModal] Path A: saveDeviceBinding call completed');
+          } catch (bindingError) {
+            console.error('❌ [SmartLoginModal] Path A: saveDeviceBinding threw error:', bindingError);
+          }
+        } else {
+          console.warn('⚠️ [SmartLoginModal] Path B: No user ID in login response, calling saveDeviceBinding WITHOUT user ID');
+          try {
+            await saveDeviceBinding();
+            console.log('🔐 [SmartLoginModal] Path B: saveDeviceBinding call completed');
+          } catch (bindingError) {
+            console.error('❌ [SmartLoginModal] Path B: saveDeviceBinding threw error:', bindingError);
+          }
+        }
+        console.log('✅ [SmartLoginModal] Device binding save attempt finished');
+        
         // Send welcome email for returning users
         if (data?.user?.email) {
       try {
@@ -181,6 +249,10 @@ export const SmartLoginModal = ({
         // Track successful signup
         trackSignUp('email');
         
+        // Save device binding after successful signup
+        console.log('✅ SmartLoginModal: Signup successful, saving device binding...');
+        // Note: Will save after auto-confirm creates session
+        
         // Set localStorage to indicate user has signed up
         localStorage.setItem('alreadySignedUp', 'true');
         
@@ -222,6 +294,13 @@ export const SmartLoginModal = ({
 
             if (confirmData?.success && confirmData?.action_link) {
               console.log('Auto-confirm successful, redirecting to action link:', confirmData.action_link);
+              
+              // Save device binding before redirect
+              if (data?.user?.id) {
+                await saveDeviceBinding(data.user.id);
+              } else {
+                console.warn('⚠️ No user ID in signup response, device binding will be saved after redirect');
+              }
               
               // Store user data for after login
               sessionStorage.setItem('tempUserData', JSON.stringify({
