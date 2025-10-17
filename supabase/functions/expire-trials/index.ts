@@ -35,22 +35,61 @@ serve(async (req) => {
     const now = new Date();
     logStep("Current time", { now: now.toISOString() });
 
-    // Find all active trials that have expired
-    const { data: expiredTrials, error: fetchError } = await supabaseClient
+    // Find all users with trial_used = true to check expiration
+    // Use trial_start + 7 days instead of trial_end
+    const { data: allTrials, error: fetchError } = await supabaseClient
       .from("subscribers")
-      .select("id, user_id, email, trial_end, trial_start, subscription_tier")
-      .eq("subscription_status", "trialing")
-      .eq("subscribed", true)
-      .lt("trial_end", now.toISOString());
+      .select("id, user_id, email, trial_start, trial_used, subscription_tier")
+      .eq("trial_used", true)
+      .not("trial_start", "is", null);
 
     if (fetchError) {
-      logStep("Error fetching expired trials", { error: fetchError });
-      throw new Error(`Failed to fetch expired trials: ${fetchError.message}`);
+      logStep("Error fetching trials", { error: fetchError });
+      throw new Error(`Failed to fetch trials: ${fetchError.message}`);
     }
 
-    logStep("Found expired trials", { count: expiredTrials?.length || 0 });
+    logStep("Found trials to check", { count: allTrials?.length || 0 });
 
-    if (!expiredTrials || expiredTrials.length === 0) {
+    if (!allTrials || allTrials.length === 0) {
+      logStep("No trials to process");
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: "No trials found",
+          processed: 0
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        }
+      );
+    }
+
+    // Filter trials that have expired (trial_start + 7 days < now)
+    const expiredTrials = allTrials.filter(trial => {
+      if (!trial.trial_start) return false;
+      
+      const trialStart = new Date(trial.trial_start);
+      const trialExpiration = new Date(trialStart);
+      trialExpiration.setDate(trialExpiration.getDate() + 7);
+      
+      const isExpired = now >= trialExpiration;
+      
+      logStep("Checking trial expiration (trial_start + 7 days)", {
+        email: trial.email,
+        trialStart: trial.trial_start,
+        trialExpiration: trialExpiration.toISOString(),
+        now: now.toISOString(),
+        isExpired,
+        daysElapsed: Math.floor((now.getTime() - trialStart.getTime()) / (1000 * 60 * 60 * 24))
+      });
+      
+      return isExpired;
+    });
+
+    logStep("Found expired trials (trial_start + 7 days)", { count: expiredTrials.length });
+
+    if (expiredTrials.length === 0) {
       logStep("No expired trials to process");
       return new Response(
         JSON.stringify({
@@ -93,16 +132,23 @@ serve(async (req) => {
 
     // Track analytics for expired trials
     try {
-      const analyticsEvents = expiredTrials.map(trial => ({
-        user_id: trial.user_id,
-        event_type: 'trial_expired',
-        metadata: {
-          trial_start: trial.trial_start,
-          trial_end: trial.trial_end,
-          subscription_tier: trial.subscription_tier,
-          expired_at: now.toISOString()
-        }
-      }));
+      const analyticsEvents = expiredTrials.map(trial => {
+        const trialStart = new Date(trial.trial_start);
+        const trialExpiration = new Date(trialStart);
+        trialExpiration.setDate(trialExpiration.getDate() + 7);
+        
+        return {
+          user_id: trial.user_id,
+          event_type: 'trial_expired',
+          metadata: {
+            trial_start: trial.trial_start,
+            trial_expiration: trialExpiration.toISOString(),
+            subscription_tier: trial.subscription_tier,
+            expired_at: now.toISOString(),
+            days_elapsed: Math.floor((now.getTime() - trialStart.getTime()) / (1000 * 60 * 60 * 24))
+          }
+        };
+      });
 
       await supabaseClient
         .from('analytics_events')
@@ -119,10 +165,17 @@ serve(async (req) => {
         success: true,
         message: `Successfully expired ${expiredTrials.length} trial(s)`,
         processed: expiredTrials.length,
-        users: expiredTrials.map(t => ({
-          email: t.email,
-          trial_end: t.trial_end
-        }))
+        users: expiredTrials.map(t => {
+          const trialStart = new Date(t.trial_start);
+          const trialExpiration = new Date(trialStart);
+          trialExpiration.setDate(trialExpiration.getDate() + 7);
+          
+          return {
+            email: t.email,
+            trial_start: t.trial_start,
+            trial_expiration: trialExpiration.toISOString()
+          };
+        })
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

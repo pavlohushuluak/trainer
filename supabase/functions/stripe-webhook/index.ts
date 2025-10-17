@@ -319,20 +319,28 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
   // Check if user has an active free trial BEFORE updating
   const { data: existingSubscriber } = await supabaseClient
     .from("subscribers")
-    .select("trial_start, trial_end, trial_used, subscription_status, subscription_tier")
+    .select("trial_start, trial_used, subscription_status, subscription_tier")
     .eq("email", customer.email)
     .maybeSingle();
 
   // Check if user has an active free trial (our 7-day trial, not Stripe trial)
-  const hasActiveTrial = existingSubscriber && 
-    existingSubscriber.trial_start && 
-    existingSubscriber.trial_end && 
-    existingSubscriber.subscription_status === 'trialing' &&
-    new Date(existingSubscriber.trial_end) > new Date();
+  // Use trial_start + 7 days instead of trial_end
+  let hasActiveTrial = false;
+  let trialExpiration: Date | null = null;
+  
+  if (existingSubscriber && existingSubscriber.trial_start && existingSubscriber.trial_used === true) {
+    const trialStart = new Date(existingSubscriber.trial_start);
+    trialExpiration = new Date(trialStart);
+    trialExpiration.setDate(trialExpiration.getDate() + 7);
+    
+    const now = new Date();
+    hasActiveTrial = now < trialExpiration;
+  }
 
-  logStep("Checking for active free trial", {
+  logStep("Checking for active free trial (trial_start + 7 days)", {
     hasActiveTrial,
-    trialEnd: existingSubscriber?.trial_end,
+    trialStart: existingSubscriber?.trial_start,
+    trialExpiration: trialExpiration?.toISOString(),
     subscriptionStatus: existingSubscriber?.subscription_status
   });
 
@@ -341,14 +349,15 @@ async function handleSubscriptionEvent(event, supabaseClient, stripe) {
   if (hasActiveTrial) {
     logStep("Active free trial detected - skipping Stripe webhook update to preserve trial", {
       email: customer.email,
-      trialEnd: existingSubscriber.trial_end,
+      trialExpiration: trialExpiration?.toISOString(),
       trialTier: existingSubscriber.subscription_tier
     });
     
     // Don't update the subscriber data at all - preserve the trial
     // The trial will naturally expire via the expire-trials function
     logStep("Trial data preserved - no database update", {
-      email: customer.email
+      email: customer.email,
+      trialExpiresIn: trialExpiration ? Math.ceil((trialExpiration.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 0
     });
     
     return; // Exit early without updating

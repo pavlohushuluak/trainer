@@ -142,26 +142,35 @@ serve(async (req) => {
     // Check if user has an active free trial BEFORE updating
     const { data: existingSubscriber } = await supabaseClient
       .from('subscribers')
-      .select('trial_start, trial_end, subscription_status')
+      .select('trial_start, trial_used')
       .eq('email', targetUserEmail)
       .maybeSingle();
 
-    const hasActiveTrial = existingSubscriber &&
-      existingSubscriber.trial_start &&
-      existingSubscriber.trial_end &&
-      existingSubscriber.subscription_status === 'trialing' &&
-      new Date(existingSubscriber.trial_end) > new Date();
+    // Calculate trial expiration as trial_start + 7 days
+    let hasActiveTrial = false;
+    let trialExpiration: Date | null = null;
+    
+    if (existingSubscriber && existingSubscriber.trial_start && existingSubscriber.trial_used === true) {
+      const trialStart = new Date(existingSubscriber.trial_start);
+      trialExpiration = new Date(trialStart);
+      trialExpiration.setDate(trialExpiration.getDate() + 7);
+      
+      const now = new Date();
+      hasActiveTrial = now < trialExpiration;
+    }
 
     if (hasActiveTrial) {
-      logStep("Active trial detected - cannot cancel trial via Stripe subscription", {
+      logStep("Active trial detected - cannot cancel trial via Stripe subscription (trial_start + 7 days)", {
         email: targetUserEmail,
-        trialEnd: existingSubscriber.trial_end
+        trialExpiration: trialExpiration?.toISOString(),
+        daysRemaining: trialExpiration ? Math.ceil((trialExpiration.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 0
       });
       
       return new Response(JSON.stringify({
         success: false,
         error: 'Cannot cancel during active free trial. Trial will expire naturally.',
-        trial_end: existingSubscriber.trial_end
+        trial_expiration: trialExpiration?.toISOString(),
+        days_remaining: trialExpiration ? Math.ceil((trialExpiration.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : 0
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

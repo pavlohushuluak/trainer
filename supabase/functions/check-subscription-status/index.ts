@@ -72,28 +72,38 @@ serve(async (req) => {
 
     if (expiredSubscriptions && expiredSubscriptions.length > 0) {
       // Filter out users who have active free trials
-      const subscribersToExpire = [];
+      const subscribersToExpire: string[] = [];
       
       for (const sub of expiredSubscriptions) {
         // Check if this subscriber has an active free trial
         const { data: trialCheck } = await supabase
           .from('subscribers')
-          .select('trial_start, trial_end, subscription_status')
+          .select('trial_start, trial_used')
           .eq('id', sub.id)
           .maybeSingle();
         
-        const hasActiveTrial = trialCheck &&
-          trialCheck.trial_start &&
-          trialCheck.trial_end &&
-          trialCheck.subscription_status === 'trialing' &&
-          new Date(trialCheck.trial_end) > now;
+        // Calculate trial expiration as trial_start + 7 days
+        let hasActiveTrial = false;
+        if (trialCheck && trialCheck.trial_start && trialCheck.trial_used === true) {
+          const trialStart = new Date(trialCheck.trial_start);
+          const trialExpiration = new Date(trialStart);
+          trialExpiration.setDate(trialExpiration.getDate() + 7);
+          
+          hasActiveTrial = now < trialExpiration;
+        }
         
         if (!hasActiveTrial) {
           subscribersToExpire.push(sub.id);
         } else {
-          logStep('Skipping subscription expiration - active trial detected', {
+          const trialStart = new Date(trialCheck.trial_start);
+          const trialExpiration = new Date(trialStart);
+          trialExpiration.setDate(trialExpiration.getDate() + 7);
+          
+          logStep('Skipping subscription expiration - active trial detected (trial_start + 7 days)', {
             email: sub.email,
-            trialEnd: trialCheck.trial_end
+            trialStart: trialCheck.trial_start,
+            trialExpiration: trialExpiration.toISOString(),
+            daysRemaining: Math.ceil((trialExpiration.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
           });
         }
       }

@@ -63,23 +63,35 @@ export const useSubscriptionStatus = () => {
     
     const now = new Date();
     
-    // Check if it's a trialing subscription
-    if (subscription.subscription_status === 'trialing') {
-      // For trials, check trial_end, not subscription_end
-      const trialEnd = subscription.trial_end ? new Date(subscription.trial_end) : null;
-      const isTrialExpired = trialEnd ? trialEnd < now : false;
+    // Check if user has trial_start (our 7-day free trial system)
+    if (subscription.trial_start && subscription.trial_used === true) {
+      // Calculate trial expiration as trial_start + 7 days
+      const trialStart = new Date(subscription.trial_start);
+      const trialExpiration = new Date(trialStart);
+      trialExpiration.setDate(trialExpiration.getDate() + 7);
       
-      console.log('🔍 Trial expiration check:', {
-        trial_end: subscription.trial_end,
-        trialEnd,
-        now,
-        isTrialExpired
+      const isTrialActive = now < trialExpiration;
+      
+      console.log('🔍 Trial validation check (trial_start + 7 days):', {
+        trial_start: subscription.trial_start,
+        trialStart: trialStart.toISOString(),
+        trialExpiration: trialExpiration.toISOString(),
+        now: now.toISOString(),
+        isTrialActive,
+        daysRemaining: isTrialActive ? Math.ceil((trialExpiration.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : 0
       });
       
-      if (isTrialExpired) {
-        // Trial has expired - user should be free
+      if (isTrialActive) {
+        // Trial is still active - user gets Plan 1 access
+        return 'trial';
+      } else {
+        // Trial has expired
         return 'trial_expired';
       }
+    }
+    
+    // Check if it's a trialing subscription (fallback for old data)
+    if (subscription.subscription_status === 'trialing') {
       return 'trial';
     }
     
@@ -138,6 +150,11 @@ export const useSubscriptionStatus = () => {
 
   // Get subscription tier name for display
   const getSubscriptionTierName = () => {
+    // If user is in active trial, manually return Plan 1
+    if (subscriptionMode === 'trial') {
+      return 'Plan 1';
+    }
+    
     if (!subscription?.subscription_tier) return 'Free';
     
     switch (subscription.subscription_tier) {
@@ -151,7 +168,8 @@ export const useSubscriptionStatus = () => {
   };
 
   // Get tier limit from subscription
-  const tierLimit = subscription?.tier_limit || 1;
+  // If user is in active trial, manually set tier limit to 1 (Plan 1)
+  const tierLimit = subscriptionMode === 'trial' ? 1 : (subscription?.tier_limit || 1);
 
   // REMOVED: Automatic trial expiration on frontend
   // Trial expiration is now handled ONLY by the server-side expire-trials function
