@@ -261,13 +261,13 @@ export const Testimonials = () => {
   };
 
   return (
-    <section id="testimonials" className="pt-6 md:pt-10 lg:pt-16 pb-4">
+    <section id="testimonials" className="pt-4 sm:pt-6 md:pt-10 lg:pt-16 pb-3 sm:pb-4">
       <div className="mx-auto px-0">
-        <div className="text-center mb-6 sm:mb-8 md:mb-12">
-          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground pb-4 sm:pb-6 md:pb-8 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent px-2">
+        <div className="text-center mb-4 sm:mb-6 md:mb-8 lg:mb-12">
+          <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground pb-3 sm:pb-4 md:pb-6 lg:pb-8 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent px-3 sm:px-4 leading-tight">
             {t('testimonials.title')}
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4 sm:px-6 leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-3 sm:px-4 md:px-6 leading-relaxed">
             {t('testimonials.subtitle')}
           </p>
         </div>
@@ -308,8 +308,8 @@ export const Testimonials = () => {
             size="icon"
             aria-label={"previousButton"}
             className={cn(
-              "absolute left-4 top-1/2 -translate-y-1/2 bg-background/90 backdrop-blur-xl border border-border/50 hover:bg-background/95 transition-all duration-1000 shadow-2xl hover:shadow-3xl z-30 h-12 w-12 md:h-14 md:w-14",
-              isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-70 -translate-x-2 scale-90"
+              "absolute left-2 sm:left-3 md:left-4 top-1/2 -translate-y-1/2 bg-background/90 backdrop-blur-xl border border-border/50 hover:bg-background/95 transition-all duration-1000 shadow-lg hover:shadow-xl sm:shadow-xl sm:hover:shadow-2xl z-30 h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 touch-manipulation",
+              isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-80 sm:opacity-70 -translate-x-1 sm:-translate-x-2 scale-95 sm:scale-90"
             )}
             style={{
               transform: isMobile
@@ -318,7 +318,7 @@ export const Testimonials = () => {
               transition: 'all 1.0s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
-            <ChevronLeft className="h-6 w-6 md:h-7 md:w-7 transition-transform group-hover:-translate-x-1" />
+            <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 transition-transform group-hover:-translate-x-1 flex-shrink-0" />
           </Button>
 
           {/* Enhanced Next Button */}
@@ -329,8 +329,8 @@ export const Testimonials = () => {
             size="icon"
             aria-label={"nextButton"}
             className={cn(
-              "absolute right-4 top-1/2 -translate-y-1/2 bg-background/90 backdrop-blur-xl border border-border/50 hover:bg-background/95 transition-all duration-1000 shadow-2xl hover:shadow-3xl z-30 h-12 w-12 md:h-14 md:w-14",
-              isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-70 translate-x-2 scale-90"
+              "absolute right-2 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 bg-background/90 backdrop-blur-xl border border-border/50 hover:bg-background/95 transition-all duration-1000 shadow-lg hover:shadow-xl sm:shadow-xl sm:hover:shadow-2xl z-30 h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 touch-manipulation",
+              isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-80 sm:opacity-70 translate-x-1 sm:translate-x-2 scale-95 sm:scale-90"
             )}
             style={{
               transform: isMobile
@@ -339,12 +339,12 @@ export const Testimonials = () => {
               transition: 'all 1.0s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
-            <ChevronRight className="h-6 w-6 md:h-7 md:w-7 transition-transform group-hover:translate-x-1" />
+            <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 transition-transform group-hover:translate-x-1 flex-shrink-0" />
           </Button>
 
           {/* Main 3D Carousel */}
-          <div className="relative overflow-hidden pb-20 pt-8 w-full">
-            <div className="relative h-[450px] md:h-[400px] lg:h-[420px]">
+          <div className="relative overflow-hidden pb-16 sm:pb-20 pt-6 sm:pt-8 w-full">
+            <div className="relative h-[380px] xs:h-[420px] sm:h-[450px] md:h-[400px] lg:h-[420px]">
               {testimonials.map((testimonial, index) => {
                 const screenSize = isMobile ? 'mobile' : window.innerWidth >= 1280 ? 'desktop' : 'tablet';
                 const transform = getCardTransform(index, screenSize);
@@ -353,7 +353,7 @@ export const Testimonials = () => {
                 return (
                   <div
                     key={index}
-                    className="absolute top-0 left-1/2 w-[85%] md:w-[320px] lg:w-[360px] xl:w-[400px] h-full transition-all duration-1600 ease-out cursor-pointer"
+                    className="absolute top-0 left-1/2 w-[88%] xs:w-[85%] sm:w-[80%] md:w-[320px] lg:w-[360px] xl:w-[400px] h-full transition-all duration-1600 ease-out cursor-pointer touch-manipulation"
                     style={{
                       transform: `
                         translateX(-50%) 
@@ -380,36 +380,36 @@ export const Testimonials = () => {
                       {/* Dynamic Gradient Background */}
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 opacity-20" />
 
-                      <CardContent className="h-full flex flex-col justify-center p-6 md:p-8 lg:p-10 relative z-10">
-                        <div className="flex flex-col text-center gap-2 lg:gap-4">
+                      <CardContent className="h-full flex flex-col justify-center p-4 sm:p-6 md:p-8 lg:p-10 relative z-10">
+                        <div className="flex flex-col text-center gap-1.5 sm:gap-2 lg:gap-4">
                           {/* Quote Icon */}
-                          <div className="text-4xl md:text-5xl lg:text-6xl text-primary/30 leading-none">
+                          <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-primary/30 leading-none">
                             "
                           </div>
 
                           {/* Testimonial Content */}
                           <div className="flex-1">
-                            <blockquote className="text-base md:text-lg lg:text-xl text-foreground leading-relaxed mb-4 lg:mb-6 font-medium">
+                            <blockquote className="text-sm sm:text-base md:text-lg lg:text-xl text-foreground leading-relaxed mb-3 sm:mb-4 lg:mb-6 font-medium">
                               "{testimonial.story}"
                             </blockquote>
 
                             {/* Rating */}
-                            <div className="flex justify-center gap-1 mb-6 lg:mb-8">
+                            <div className="flex justify-center gap-0.5 sm:gap-1 mb-4 sm:mb-6 lg:mb-8">
                               {[...Array(testimonial.rating)].map((_, i) => (
-                                <Star key={i} className="w-5 h-5 lg:w-6 lg:h-6 fill-yellow-400 text-yellow-400" />
+                                <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 fill-yellow-400 text-yellow-400 flex-shrink-0" />
                               ))}
                             </div>
 
                             {/* Author Info */}
-                            <div className="flex items-center justify-center gap-3 lg:gap-4">
-                              <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center text-2xl lg:text-3xl">
+                            <div className="flex items-center justify-center gap-2 sm:gap-3 lg:gap-4">
+                              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center text-xl sm:text-2xl lg:text-3xl flex-shrink-0">
                                 {testimonial.animal}
                               </div>
-                              <div className="text-left">
-                                <h3 className="text-lg lg:text-xl font-bold text-foreground">
+                              <div className="text-left min-w-0">
+                                <h3 className="text-base sm:text-lg lg:text-xl font-bold text-foreground truncate">
                                   {testimonial.name}
                                 </h3>
-                                <p className="text-sm lg:text-base text-muted-foreground">
+                                <p className="text-xs sm:text-sm lg:text-base text-muted-foreground truncate">
                                   {t('testimonials.withOwner')} {testimonial.owner}
                                 </p>
                               </div>
@@ -426,17 +426,17 @@ export const Testimonials = () => {
         </div>
 
         {/* Professional Dots Indicator */}
-        <div className="flex justify-center mt-[-40px]">
-          <div className="flex space-x-3 px-4">
+        <div className="flex justify-center mt-[-32px] sm:mt-[-40px]">
+          <div className="flex space-x-2 sm:space-x-3 px-3 sm:px-4">
             {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
                 disabled={isTransitioning}
                 className={cn(
-                  "min-h-0 min-w-0 w-3 h-3 rounded-full transition-all duration-1000 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 relative overflow-hidden",
+                  "min-h-0 min-w-0 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-1000 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 relative overflow-hidden touch-manipulation flex items-center justify-center sm:block",
                   index === currentIndex
-                    ? "bg-gradient-to-r from-primary to-primary/80 scale-150 shadow-xl ring-2 ring-primary/40"
+                    ? "bg-gradient-to-r from-primary to-primary/80 scale-150 shadow-lg sm:shadow-xl ring-2 ring-primary/40"
                     : "bg-gradient-to-r from-muted-foreground/40 to-muted-foreground/30 hover:from-muted-foreground/60 hover:to-muted-foreground/50 hover:scale-125"
                 )}
                 aria-label={`Go to testimonial ${index + 1}`}
@@ -450,15 +450,15 @@ export const Testimonials = () => {
         </div>
 
         {/* Enhanced Rating Section */}
-        <div className="text-center mt-8 sm:mt-12 md:mt-16 px-4">
-          <div className="inline-block bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 backdrop-blur-sm px-6 xs:px-8 sm:px-10 py-4 xs:py-5 sm:py-6 md:py-8 rounded-xl xs:rounded-2xl sm:rounded-3xl border border-primary/20 shadow-lg sm:shadow-xl max-w-full">
-            <div className="flex items-center justify-center gap-3 lg:gap-4">
-              <Star className="w-6 h-6 lg:w-8 lg:h-8 fill-yellow-400 text-yellow-400" />
-              <div className="text-center">
-                <h3 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold text-foreground bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent leading-tight">
+        <div className="text-center mt-6 sm:mt-8 md:mt-12 lg:mt-16 px-3 sm:px-4">
+          <div className="inline-block bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 backdrop-blur-sm px-5 xs:px-6 sm:px-8 md:px-10 py-3 xs:py-4 sm:py-5 md:py-6 lg:py-8 rounded-lg xs:rounded-xl sm:rounded-2xl md:rounded-3xl border border-primary/20 shadow-md hover:shadow-lg sm:shadow-lg sm:hover:shadow-xl transition-shadow duration-300 max-w-full">
+            <div className="flex items-center justify-center gap-2 sm:gap-3 lg:gap-4">
+              <Star className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 fill-yellow-400 text-yellow-400 flex-shrink-0" />
+              <div className="text-center min-w-0">
+                <h3 className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-foreground bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent leading-tight">
                   {t('testimonials.rating')}
                 </h3>
-                <p className="text-sm xs:text-base sm:text-lg text-muted-foreground">
+                <p className="text-xs xs:text-sm sm:text-base md:text-lg text-muted-foreground leading-tight">
                   {t('testimonials.reviews')}
                 </p>
               </div>
