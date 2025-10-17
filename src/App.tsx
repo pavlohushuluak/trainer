@@ -40,6 +40,7 @@ import ImageAnalysisPage from "./pages/ImageAnalysisPage";
 import LoginPage from "./pages/LoginPage";
 import SubscriptionPage from "./pages/SubscriptionPage";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -128,6 +129,9 @@ const App = () => {
                   <PerformanceMonitor />
                   <ResourcePreloader resources={criticalResources} />
                   <PageViewTracker />
+                  
+                  {/* Scroll to top on route changes */}
+                  <ScrollToTop />
                   
                   {/* Centralized pet profiles data manager */}
                   <PetProfilesDataManager />

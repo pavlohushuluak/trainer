@@ -69,8 +69,7 @@ const LoginPage = () => {
 
   // Check localStorage for alreadySignedUp value on component mount and handle URL parameters
   useEffect(() => {
-    // Scroll to top when component mounts
-    window.scrollTo(0, 0);
+    // Note: Scroll to top is now handled globally by ScrollToTop component in App.tsx
     
     const alreadySignedUp = localStorage.getItem('alreadySignedUp') === 'true';
     setActiveTab(alreadySignedUp ? 'signin' : 'signup');
