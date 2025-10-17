@@ -116,14 +116,14 @@ export const useDeviceBinding = () => {
     userEmail: string,
     userId: string
   ): Promise<boolean> => {
+    console.group('🔐 BINDING DEVICE TO ACCOUNT');
+    
     try {
+      console.log('Step 1: Getting device fingerprint...');
       const fingerprint = deviceFingerprint || await getOrCreateDeviceFingerprint();
+      console.log('✅ Fingerprint:', fingerprint.substring(0, 16) + '...');
 
-      console.log('🔐 Binding device to account:', {
-        email: userEmail,
-        fingerprint: fingerprint.substring(0, 16) + '...'
-      });
-
+      console.log('Step 2: Collecting device info...');
       const deviceInfo = {
         userAgent: navigator.userAgent,
         platform: navigator.platform,
@@ -132,27 +132,57 @@ export const useDeviceBinding = () => {
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         timestamp: new Date().toISOString()
       };
+      console.log('✅ Device info collected');
+
+      const requestBody = {
+        deviceFingerprint: fingerprint,
+        userEmail,
+        userId,
+        deviceInfo,
+        action: 'bind'
+      };
+      
+      console.log('Step 3: Calling Edge Function...');
+      console.log('Request body:', requestBody);
 
       const { data, error } = await supabase.functions.invoke('validate-device-binding', {
-        body: {
-          deviceFingerprint: fingerprint,
-          userEmail,
-          userId,
-          deviceInfo,
-          action: 'bind'
-        }
+        body: requestBody
       });
 
+      console.log('Step 4: Processing response...');
+      console.log('Response data:', data);
+      console.log('Response error:', error);
+
       if (error) {
-        console.error('❌ Error binding device:', error);
+        console.error('❌ Edge Function returned error:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
+        console.groupEnd();
         return false;
       }
 
-      console.log('✅ Device bound successfully:', data);
+      if (!data) {
+        console.error('❌ No data returned from Edge Function');
+        console.groupEnd();
+        return false;
+      }
+
+      if (!data.success) {
+        console.error('❌ Edge Function returned success: false');
+        console.error('Reason:', data.reason);
+        console.error('Message:', data.message);
+        console.groupEnd();
+        return false;
+      }
+
+      console.log('✅ DEVICE BOUND SUCCESSFULLY!');
+      console.log('Details:', data);
+      console.groupEnd();
       return true;
 
     } catch (error) {
-      console.error('❌ Exception in device binding:', error);
+      console.error('❌ EXCEPTION in bindDevice:', error);
+      console.error('Stack:', error instanceof Error ? error.stack : 'No stack');
+      console.groupEnd();
       return false;
     }
   }, [deviceFingerprint]);
