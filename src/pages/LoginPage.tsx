@@ -25,6 +25,8 @@ import { ImpressumModal } from '@/components/legal/ImpressumModal';
 import { VerificationCodeModal } from '@/components/auth/VerificationCodeModal';
 import { useVerificationCode } from '@/hooks/auth/useVerificationCode';
 import { useDeviceBinding } from '@/hooks/useDeviceBinding';
+import { useToast } from '@/hooks/use-toast';
+import { AutoLoginOverlay } from '@/components/auth/AutoLoginOverlay';
 
 const LoginPage = () => {
   const { signIn, signUp, user } = useAuth();
@@ -32,7 +34,8 @@ const LoginPage = () => {
   const location = useLocation();
   const { isScrolled } = useStickyHeader();
   const { t } = useTranslations();
-  const { checkDeviceBinding, deviceFingerprint } = useDeviceBinding();
+  const { toast } = useToast();
+  const { checkDeviceBinding, removeDeviceBinding, deviceFingerprint } = useDeviceBinding();
 
   // Form states
   const [email, setEmail] = useState('');
@@ -50,6 +53,10 @@ const LoginPage = () => {
   const [showVerificationCode, setShowVerificationCode] = useState(false);
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
+  const [isDeviceLocked, setIsDeviceLocked] = useState(false);
+  const [lockedEmail, setLockedEmail] = useState('');
+  const [isAutoLoggingIn, setIsAutoLoggingIn] = useState(false);
+  const [magicLinkSent, setMagicLinkSent] = useState(false);
   
   // Verification code hook
   const { verifyCode, resendCode, loading: verificationLoading, error: verificationError } = useVerificationCode({
@@ -88,19 +95,88 @@ const LoginPage = () => {
       }
 
       console.log('🔍 Checking for device binding auto-login...');
-      const binding = await checkDeviceBinding();
+      console.log('🔐 Device fingerprint:', deviceFingerprint?.substring(0, 20) + '...');
+      
+      // Call the auto-login edge function
+      setIsAutoLoggingIn(true);
+      try {
+        console.log('📡 Calling auto-login-device function...');
+        const { data: autoLoginData, error: autoLoginError } = await supabase.functions.invoke('auto-login-device', {
+          body: { deviceFingerprint }
+        });
 
-      if (binding.hasBinding && binding.email) {
-        console.log('✅ Device binding found, showing email hint');
-        // Set email field to show user which account will be used
-        setEmail(binding.email);
-        setMessage(`🔐 Welcome back! This device is recognized. Enter your password to continue as ${binding.email}`);
-        setActiveTab('signin');
+        console.log('🔐 Auto-login response:', {
+          hasData: !!autoLoginData,
+          hasError: !!autoLoginError,
+          data: autoLoginData,
+          error: autoLoginError
+        });
+
+        if (autoLoginError) {
+          console.error('❌ Auto-login function error:', autoLoginError);
+          
+          // Check if function doesn't exist
+          if (autoLoginError.message?.includes('FunctionsRelayError') || autoLoginError.message?.includes('not found')) {
+            console.error('💡 Edge function not deployed! Deploy with: npx supabase functions deploy auto-login-device');
+            toast({
+              title: 'Auto-Login Not Available',
+              description: 'Please contact support or login manually.',
+              variant: 'default'
+            });
+          }
+          
+          setIsAutoLoggingIn(false);
+          return;
+        }
+        
+        // Check if binding was cleared (orphaned user)
+        if (autoLoginData?.error && autoLoginData?.message) {
+          console.log('⚠️ Auto-login returned error:', autoLoginData.error);
+          toast({
+            title: t('auth.deviceLock.accountNotFound', 'Account Not Found'),
+            description: autoLoginData.message,
+            variant: 'default'
+          });
+          setIsAutoLoggingIn(false);
+          return;
+        }
+
+        if (autoLoginData?.hasBinding && autoLoginData?.actionLink) {
+          console.log('✅ Device binding found! Auto-logging in user:', autoLoginData.email);
+          setEmail(autoLoginData.email);
+          setLockedEmail(autoLoginData.email);
+          setIsDeviceLocked(true);
+          
+          // Show loading message
+          setMessage(t('auth.deviceLock.autoLoggingIn', `Welcome back ${autoLoginData.email}! Logging you in automatically...`));
+          
+          // Redirect to action link for automatic login
+          setTimeout(() => {
+            console.log('🚀 Redirecting to auto-login link...');
+            window.location.href = autoLoginData.actionLink;
+          }, 1000);
+          
+        } else if (autoLoginData?.hasBinding && autoLoginData?.email) {
+          // Binding exists but no action link (shouldn't happen)
+          console.log('⚠️ Device binding found but no action link, falling back to manual login');
+          setEmail(autoLoginData.email);
+          setLockedEmail(autoLoginData.email);
+          setIsDeviceLocked(true);
+          setActiveTab('signin');
+          setIsAutoLoggingIn(false);
+        } else {
+          // No device binding - normal flow
+          console.log('ℹ️ No device binding found, showing normal login');
+          setIsAutoLoggingIn(false);
+        }
+      } catch (error) {
+        console.error('❌ Auto-login exception:', error);
+        setIsAutoLoggingIn(false);
       }
     };
 
     checkForAutoLogin();
-  }, [user, deviceFingerprint, navigate, checkDeviceBinding]);
+  }, [user, deviceFingerprint, navigate, checkDeviceBinding, t]);
 
   // Check localStorage for alreadySignedUp value on component mount and handle URL parameters
   useEffect(() => {
@@ -318,16 +394,20 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-indigo-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-blue-300/10 to-purple-300/10 rounded-full blur-3xl"></div>
-      </div>
+    <>
+      {/* Auto-Login Full Screen Overlay */}
+      <AutoLoginOverlay email={lockedEmail} isVisible={isAutoLoggingIn} />
 
-      {/* Auth Error Display */}
-      <AuthErrorDisplay />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-indigo-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-blue-300/10 to-purple-300/10 rounded-full blur-3xl"></div>
+        </div>
+
+        {/* Auth Error Display */}
+        <AuthErrorDisplay />
 
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center p-3 sm:p-4 lg:p-6">
@@ -388,25 +468,64 @@ const LoginPage = () => {
 
               {/* Traditional Login */}
               <div className="space-y-2 sm:space-y-3 lg:space-y-4">
-                <Tabs value={activeTab} onValueChange={(value) => { setActiveTab(value); clearForm(); }} className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl text-xs sm:text-sm shadow-inner">
-                    <TabsTrigger
-                      value="signin"
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-lg data-[state=active]:text-gray-900 dark:data-[state=active]:text-white data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-400 py-2 sm:py-1.5 rounded-lg transition-all duration-200"
-                    >
-                      <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                      <span className="hidden xs:inline">{t('auth.login')}</span>
-                      <span className="xs:hidden">{t('auth.login')}</span>
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="signup"
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-lg data-[state=active]:text-gray-900 dark:data-[state=active]:text-white data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-400 py-2 sm:py-1.5 rounded-lg transition-all duration-200"
-                    >
-                      <Lock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                      <span className="hidden xs:inline">{t('auth.register')}</span>
-                      <span className="xs:hidden">{t('auth.register')}</span>
-                    </TabsTrigger>
-                  </TabsList>
+                <Tabs value={activeTab} onValueChange={(value) => { 
+                  if (!isDeviceLocked) {
+                    setActiveTab(value); 
+                    clearForm(); 
+                  }
+                }} className="w-full">
+                  {/* Device Lock Notice */}
+                  {isDeviceLocked && (
+                    <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-purple-950/30 border-2 border-blue-200 dark:border-blue-800 rounded-xl shadow-lg">
+                      <div className="flex items-start gap-3">
+                        <div className="mt-0.5 p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md">
+                          <Shield className="h-5 w-5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                            {t('auth.deviceLock.title', 'Recognized Device')}
+                          </h4>
+                          <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                            {t('auth.deviceLock.description', `This device is registered to ${lockedEmail}. For security, only this account can be used on this device.`)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Show tabs only if device not locked */}
+                  {!isDeviceLocked && (
+                    <TabsList className="grid w-full grid-cols-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl text-xs sm:text-sm shadow-inner">
+                      <TabsTrigger
+                        value="signin"
+                        className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-lg data-[state=active]:text-gray-900 dark:data-[state=active]:text-white data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-400 py-2 sm:py-1.5 rounded-lg transition-all duration-200"
+                      >
+                        <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                        <span className="hidden xs:inline">{t('auth.login')}</span>
+                        <span className="xs:hidden">{t('auth.login')}</span>
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="signup"
+                        className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:shadow-lg data-[state=active]:text-gray-900 dark:data-[state=active]:text-white data-[state=inactive]:text-gray-600 dark:data-[state=inactive]:text-gray-400 py-2 sm:py-1.5 rounded-lg transition-all duration-200"
+                      >
+                        <Lock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                        <span className="hidden xs:inline">{t('auth.register')}</span>
+                        <span className="xs:hidden">{t('auth.register')}</span>
+                      </TabsTrigger>
+                    </TabsList>
+                  )}
+                  
+                  {/* If device locked, show locked header */}
+                  {isDeviceLocked && (
+                    <div className="text-center mb-4">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                        <Lock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                          {t('auth.deviceLock.loginOnly', 'Login Required')}
+                        </span>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Sign In Tab */}
                   <TabsContent value="signin" className="space-y-2 sm:space-y-3 lg:space-y-4 mt-3 sm:mt-4 lg:mt-6">
@@ -417,12 +536,41 @@ const LoginPage = () => {
                           label={t('auth.email')}
                           value={email}
                           onChange={(value) => {
-                            setEmail(value);
-                            handleFieldChange('email', value);
+                            if (!isDeviceLocked) {
+                              setEmail(value);
+                              handleFieldChange('email', value);
+                            }
                           }}
                           required
                           error={fieldErrors.email}
+                          disabled={isDeviceLocked}
                         />
+                        {isDeviceLocked && (
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-xs text-blue-600 dark:text-blue-400">
+                              <Lock className="h-3 w-3" />
+                              <span>{t('auth.deviceLock.emailLocked', 'Email locked to this device for security')}</span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (window.confirm(t('auth.deviceLock.clearConfirm', `Are you sure you want to remove ${lockedEmail} from this device? You will be able to use a different account.`))) {
+                                  await removeDeviceBinding(lockedEmail);
+                                  setIsDeviceLocked(false);
+                                  setLockedEmail('');
+                                  setEmail('');
+                                  toast({
+                                    title: t('auth.deviceLock.cleared', 'Device Lock Removed'),
+                                    description: t('auth.deviceLock.clearedDesc', 'You can now login or signup with any email.'),
+                                  });
+                                }
+                              }}
+                              className="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline hover:underline"
+                            >
+                              {t('auth.deviceLock.useAnotherAccount', 'Use a different account on this device')}
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       <div className="space-y-1">
@@ -677,7 +825,8 @@ const LoginPage = () => {
           />
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

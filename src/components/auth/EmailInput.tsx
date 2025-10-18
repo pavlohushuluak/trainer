@@ -14,6 +14,7 @@ interface EmailInputProps {
   required?: boolean;
   className?: string;
   error?: string;
+  disabled?: boolean;
 }
 
 export const EmailInput: React.FC<EmailInputProps> = ({
@@ -24,7 +25,8 @@ export const EmailInput: React.FC<EmailInputProps> = ({
   onChange,
   required = false,
   className,
-  error
+  error,
+  disabled = false
 }) => {
   const { t } = useTranslations();
   const [isFocused, setIsFocused] = useState(false);
@@ -76,9 +78,11 @@ export const EmailInput: React.FC<EmailInputProps> = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         required={required}
+        disabled={disabled}
         className={cn(
           showValidation && !emailValidation.isValid && "border-red-500 focus:border-red-500 focus:ring-red-500",
           showValidation && emailValidation.isValid && "border-green-500 focus:border-green-500 focus:ring-green-500",
+          disabled && "bg-blue-50 dark:bg-blue-950/30 cursor-not-allowed opacity-75",
           "text-sm"
         )}
       />

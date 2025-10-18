@@ -29,6 +29,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { useEmailNotifications } from "@/hooks/useEmailNotifications";
 import { useGTM } from '@/hooks/useGTM';
 import { useDeviceBinding } from '@/hooks/useDeviceBinding';
+import { AutoLoginOverlay } from '@/components/auth/AutoLoginOverlay';
 
 interface SmartLoginModalProps {
   isOpen: boolean;
@@ -51,7 +52,7 @@ export const SmartLoginModal = ({
   const { t } = useTranslations();
   const { toast } = useToast();
   const { trackLogin, trackSignUp } = useGTM();
-  const { checkDeviceBinding, deviceFingerprint } = useDeviceBinding();
+  const { checkDeviceBinding, removeDeviceBinding, deviceFingerprint } = useDeviceBinding();
   
   // Form states
   const [email, setEmail] = useState('');
@@ -66,31 +67,104 @@ export const SmartLoginModal = ({
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(true);
+  const [isDeviceLocked, setIsDeviceLocked] = useState(false);
+  const [lockedEmail, setLockedEmail] = useState('');
+  const [isAutoLoggingIn, setIsAutoLoggingIn] = useState(false);
+  const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [showModalContent, setShowModalContent] = useState(false);
 
-  // Check for device binding and auto-login when modal opens
+  // Check for device binding BEFORE opening modal
   useEffect(() => {
     if (!isOpen || !deviceFingerprint) return;
 
     const checkForAutoLogin = async () => {
-      console.log('🔍 SmartLoginModal: Checking for device binding...');
-      const binding = await checkDeviceBinding();
+      console.log('🔍 SmartLoginModal: Checking for device binding auto-login...');
+      
+      // Call the auto-login edge function
+      setIsAutoLoggingIn(true);
+      setShowModalContent(false); // Hide modal content during check
+      
+      try {
+        const { data: autoLoginData, error: autoLoginError } = await supabase.functions.invoke('auto-login-device', {
+          body: { deviceFingerprint }
+        });
 
-      if (binding.hasBinding && binding.email) {
-        console.log('✅ SmartLoginModal: Device binding found');
-        setEmail(binding.email);
-        setMessage(`🔐 Welcome back! This device is recognized. Enter your password to continue as ${binding.email}`);
-        setActiveTab('signin');
+        console.log('🔐 SmartLoginModal auto-login response:', autoLoginData);
+
+        if (autoLoginError) {
+          console.error('❌ SmartLoginModal auto-login function error:', autoLoginError);
+          setIsAutoLoggingIn(false);
+          setShowModalContent(true); // Show modal for manual login
+          return;
+        }
+        
+        // Check if binding was cleared (orphaned user)
+        if (autoLoginData?.error && autoLoginData?.message) {
+          console.log('⚠️ SmartLoginModal auto-login returned error:', autoLoginData.error);
+          toast({
+            title: t('auth.deviceLock.accountNotFound', 'Account Not Found'),
+            description: autoLoginData.message,
+            variant: 'default'
+          });
+          setIsAutoLoggingIn(false);
+          setShowModalContent(true); // Show modal for manual login
+          return;
+        }
+
+        if (autoLoginData?.hasBinding && autoLoginData?.actionLink) {
+          console.log('✅ SmartLoginModal: Device binding found! Auto-logging in user:', autoLoginData.email);
+          setEmail(autoLoginData.email);
+          setLockedEmail(autoLoginData.email);
+          setIsDeviceLocked(true);
+          
+          // DON'T show modal - keep full-screen overlay visible
+          setShowModalContent(false);
+          
+          // Show success toast
+          toast({
+            title: t('auth.deviceLock.loggingIn', 'Welcome Back!'),
+            description: t('auth.deviceLock.autoLoggingIn', `Logging you in automatically as ${autoLoginData.email}...`),
+            duration: 3000
+          });
+          
+          // Redirect to action link for automatic login
+          setTimeout(() => {
+            console.log('🚀 SmartLoginModal: Redirecting to auto-login link...');
+            window.location.href = autoLoginData.actionLink;
+          }, 1500);
+          
+        } else if (autoLoginData?.hasBinding && autoLoginData?.email) {
+          // Binding exists but no action link - show modal for manual login
+          console.log('⚠️ SmartLoginModal: Device binding found but no action link, showing modal for manual login');
+          setEmail(autoLoginData.email);
+          setLockedEmail(autoLoginData.email);
+          setIsDeviceLocked(true);
+          setActiveTab('signin');
+          setIsAutoLoggingIn(false);
+          setShowModalContent(true);
+        } else {
+          // No device binding - show modal for normal flow
+          console.log('ℹ️ SmartLoginModal: No device binding found, showing modal');
+          setIsAutoLoggingIn(false);
+          setShowModalContent(true);
+        }
+      } catch (error) {
+        console.error('❌ SmartLoginModal auto-login exception:', error);
+        setIsAutoLoggingIn(false);
+        setShowModalContent(true);
       }
     };
 
     checkForAutoLogin();
-  }, [isOpen, deviceFingerprint, checkDeviceBinding]);
+  }, [isOpen, deviceFingerprint, checkDeviceBinding, t, toast]);
 
-  // Check localStorage for alreadySignedUp value on component mount
+  // Check localStorage for alreadySignedUp value on component mount (only if device not locked)
   useEffect(() => {
-    const alreadySignedUp = localStorage.getItem('alreadySignedUp') === 'true';
-    setActiveTab(alreadySignedUp ? 'signin' : 'signup');
-  }, []);
+    if (!isDeviceLocked) {
+      const alreadySignedUp = localStorage.getItem('alreadySignedUp') === 'true';
+      setActiveTab(alreadySignedUp ? 'signin' : 'signup');
+    }
+  }, [isDeviceLocked]);
 
   // Form validation
   const isSignUpValid = useMemo(() => {
@@ -344,12 +418,26 @@ export const SmartLoginModal = ({
     setTermsAgreed(true);
   };
 
+  // Reset state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setIsAutoLoggingIn(false);
+      setShowModalContent(false);
+      setIsDeviceLocked(false);
+      setLockedEmail('');
+    }
+  }, [isOpen]);
+
   const defaultTitle = title || t('hero.smartLogin.defaultTitle');
   const defaultDescription = description || t('hero.smartLogin.defaultDescription');
 
   return (
     <>
-    <Dialog open={isOpen} onOpenChange={onClose}>
+      {/* Auto-Login Full Screen Overlay - Shows instead of modal when device is recognized */}
+      <AutoLoginOverlay email={lockedEmail} isVisible={isAutoLoggingIn} />
+      
+      {/* Only show modal if not auto-logging in and modal content should be visible */}
+      <Dialog open={isOpen && showModalContent && !isAutoLoggingIn} onOpenChange={onClose}>
         <DialogContent className="max-w-xl max-h-[95vh] overflow-y-auto p-0">
           <div className="p-6">
             {/* Auth Error Display */}
@@ -431,25 +519,64 @@ export const SmartLoginModal = ({
 
                   {/* Traditional Login */}
                   <div className="space-y-2 sm:space-y-3 lg:space-y-4">
-                    <Tabs value={activeTab} onValueChange={(value) => { setActiveTab(value); clearForm(); }} className="w-full">
-                      <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg text-xs sm:text-sm">
-                        <TabsTrigger 
-                          value="signin" 
-                          className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground py-2 sm:py-1.5"
-                        >
-                          <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                          <span className="hidden xs:inline">{t('auth.login')}</span>
-                          <span className="xs:hidden">{t('auth.login')}</span>
-                        </TabsTrigger>
-                        <TabsTrigger 
-                          value="signup"
-                          className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground py-2 sm:py-1.5"
-                        >
-                          <Lock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                          <span className="hidden xs:inline">{t('auth.register')}</span>
-                          <span className="xs:hidden">{t('auth.register')}</span>
-                        </TabsTrigger>
-                      </TabsList>
+                    <Tabs value={activeTab} onValueChange={(value) => { 
+                      if (!isDeviceLocked) {
+                        setActiveTab(value); 
+                        clearForm(); 
+                      }
+                    }} className="w-full">
+                      {/* Device Lock Notice */}
+                      {isDeviceLocked && (
+                        <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-purple-950/30 border-2 border-blue-200 dark:border-blue-800 rounded-xl shadow-lg">
+                          <div className="flex items-start gap-3">
+                            <div className="mt-0.5 p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md">
+                              <Shield className="h-5 w-5 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                                {t('auth.deviceLock.title', 'Recognized Device')}
+                              </h4>
+                              <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                                {t('auth.deviceLock.description', `This device is registered to ${lockedEmail}. For security, only this account can be used on this device.`)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Show tabs only if device not locked */}
+                      {!isDeviceLocked && (
+                        <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg text-xs sm:text-sm">
+                          <TabsTrigger 
+                            value="signin" 
+                            className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground py-2 sm:py-1.5"
+                          >
+                            <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                            <span className="hidden xs:inline">{t('auth.login')}</span>
+                            <span className="xs:hidden">{t('auth.login')}</span>
+                          </TabsTrigger>
+                          <TabsTrigger 
+                            value="signup"
+                            className="data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground py-2 sm:py-1.5"
+                          >
+                            <Lock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                            <span className="hidden xs:inline">{t('auth.register')}</span>
+                            <span className="xs:hidden">{t('auth.register')}</span>
+                          </TabsTrigger>
+                        </TabsList>
+                      )}
+                      
+                      {/* If device locked, show locked header */}
+                      {isDeviceLocked && (
+                        <div className="text-center mb-4">
+                          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                            <Lock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                              {t('auth.deviceLock.loginOnly', 'Login Required')}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                       
                       {/* Sign In Tab */}
                       <TabsContent value="signin" className="space-y-2 sm:space-y-3 lg:space-y-4 mt-3 sm:mt-4 lg:mt-6">
@@ -458,9 +585,41 @@ export const SmartLoginModal = ({
                             id="signin-email"
                             label={t('auth.email')}
                             value={email}
-                            onChange={setEmail}
+                            onChange={(value) => {
+                              if (!isDeviceLocked) {
+                                setEmail(value);
+                              }
+                            }}
                             required
+                            disabled={isDeviceLocked}
                           />
+                          {isDeviceLocked && (
+                            <div className="space-y-2 -mt-1">
+                              <div className="flex items-center gap-2 text-xs text-blue-600 dark:text-blue-400">
+                                <Lock className="h-3 w-3" />
+                                <span>{t('auth.deviceLock.emailLocked', 'Email locked to this device for security')}</span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={async () => {
+                                  if (window.confirm(t('auth.deviceLock.clearConfirm', `Are you sure you want to remove ${lockedEmail} from this device? You will be able to use a different account.`))) {
+                                    await removeDeviceBinding(lockedEmail);
+                                    setIsDeviceLocked(false);
+                                    setLockedEmail('');
+                                    setEmail('');
+                                    onClose(); // Close modal after clearing
+                                    toast({
+                                      title: t('auth.deviceLock.cleared', 'Device Lock Removed'),
+                                      description: t('auth.deviceLock.clearedDesc', 'You can now login or signup with any email.'),
+                                    });
+                                  }
+                                }}
+                                className="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline hover:underline"
+                              >
+                                {t('auth.deviceLock.useAnotherAccount', 'Use a different account on this device')}
+                              </button>
+                            </div>
+                          )}
                           
                           <PasswordInput
                             id="signin-password"

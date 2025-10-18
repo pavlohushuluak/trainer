@@ -42,25 +42,24 @@ export const useDeviceBinding = () => {
 
   /**
    * Save device binding after successful login
-   * @param userId - Optional user ID to use (from login response). If not provided, uses user from auth context
+   * @param userEmail - Optional user email to use. If not provided, uses user from auth context
    */
-  const saveDeviceBinding = useCallback(async (userId?: string) => {
-    // Use provided userId or fall back to user from context
-    const effectiveUserId = userId || user?.id;
+  const saveDeviceBinding = useCallback(async (userEmail?: string) => {
+    // Use provided userEmail or fall back to user from context
+    const effectiveEmail = userEmail || user?.email;
     
     console.log('🔐 [Device Binding] Starting saveDeviceBinding:', {
-      providedUserId: userId,
-      contextUserId: user?.id,
-      effectiveUserId,
+      providedEmail: userEmail,
+      contextEmail: user?.email,
+      effectiveEmail,
       deviceFingerprint,
       timestamp: new Date().toISOString()
     });
     
-    if (!effectiveUserId) {
-      console.error('❌ [Device Binding] No user ID available!', {
-        providedUserId: userId,
-        contextUserId: user?.id,
-        contextUserEmail: user?.email
+    if (!effectiveEmail) {
+      console.error('❌ [Device Binding] No user email available!', {
+        providedEmail: userEmail,
+        contextEmail: user?.email
       });
       return;
     }
@@ -79,7 +78,7 @@ export const useDeviceBinding = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const deviceData = {
-        user_id: effectiveUserId,
+        user_email: effectiveEmail.toLowerCase().trim(),
         device_fingerprint: deviceFingerprint,
         device_name: navigator.userAgent.substring(0, 100),
         user_agent: navigator.userAgent,
@@ -96,7 +95,7 @@ export const useDeviceBinding = () => {
       const { data, error } = await supabase
         .from('device_bindings' as any)
         .upsert(deviceData, {
-          onConflict: 'user_id,device_fingerprint'  // CRITICAL: Must match UNIQUE constraint in migration!
+          onConflict: 'user_email,device_fingerprint'  // CRITICAL: Must match UNIQUE constraint in migration!
         })
         .select();
 
@@ -124,8 +123,8 @@ export const useDeviceBinding = () => {
         } else if (error.message?.includes('violates unique constraint')) {
           console.error('💡 [Device Binding] Unique constraint error');
           console.error('💡 This might mean onConflict clause is wrong');
-          console.error('💡 Migration has: UNIQUE(user_id, device_fingerprint)');
-          console.error('💡 Code should use: onConflict: "user_id,device_fingerprint"');
+          console.error('💡 Migration has: UNIQUE(user_email, device_fingerprint)');
+          console.error('💡 Code should use: onConflict: "user_email,device_fingerprint"');
         }
       } else {
         console.log('✅✅✅ [Device Binding] SAVED SUCCESSFULLY! ✅✅✅');
@@ -165,7 +164,7 @@ export const useDeviceBinding = () => {
       // Find device binding for this fingerprint
       const { data: binding, error } = await supabase
         .from('device_bindings' as any)
-        .select('user_id, last_used_at, expires_at, is_active')
+        .select('user_email, last_used_at, expires_at, is_active')
         .eq('device_fingerprint', deviceFingerprint)
         .eq('is_active', true)
         .gt('expires_at', new Date().toISOString())
@@ -186,30 +185,18 @@ export const useDeviceBinding = () => {
       // Type assertion for binding data
       const bindingData = binding as any;
 
-      // Found a valid binding - get user email from subscribers table
-      const { data: subscriberData, error: subscriberError } = await supabase
-        .from('subscribers')
-        .select('email')
-        .eq('user_id', bindingData.user_id)
-        .maybeSingle();
-      
-      if (subscriberError || !subscriberData?.email) {
-        console.error('❌ Error fetching user email for device binding:', subscriberError);
-        return { hasBinding: false };
-      }
-
-      console.log('✅ Device binding found for user:', subscriberData.email);
+      console.log('✅ Device binding found for user:', bindingData.user_email);
 
       // Update last_used_at
       await supabase
         .from('device_bindings' as any)
         .update({ last_used_at: new Date().toISOString() })
         .eq('device_fingerprint', deviceFingerprint)
-        .eq('user_id', bindingData.user_id);
+        .eq('user_email', bindingData.user_email);
 
       return {
         hasBinding: true,
-        email: subscriberData.email
+        email: bindingData.user_email
       };
 
     } catch (error) {
@@ -222,21 +209,28 @@ export const useDeviceBinding = () => {
 
   /**
    * Remove device binding (logout from this device)
+   * @param email - Optional email to remove. If not provided, uses current user email
    */
-  const removeDeviceBinding = useCallback(async () => {
-    if (!user || !deviceFingerprint) return;
+  const removeDeviceBinding = useCallback(async (email?: string) => {
+    const targetEmail = email || user?.email;
+    
+    if (!targetEmail || !deviceFingerprint) {
+      console.warn('⚠️ Cannot remove device binding - missing email or fingerprint');
+      return;
+    }
 
     try {
+      console.log('🗑️ Removing device binding for:', targetEmail);
       const { error } = await supabase
         .from('device_bindings' as any)
         .delete()
-        .eq('user_id', user.id)
+        .eq('user_email', targetEmail.toLowerCase().trim())
         .eq('device_fingerprint', deviceFingerprint);
 
       if (error) {
         console.error('❌ Error removing device binding:', error);
       } else {
-        console.log('✅ Device binding removed');
+        console.log('✅ Device binding removed successfully');
         clearDeviceFingerprint();
       }
     } catch (error) {
@@ -248,13 +242,13 @@ export const useDeviceBinding = () => {
    * Remove all device bindings for current user (logout from all devices)
    */
   const removeAllDeviceBindings = useCallback(async () => {
-    if (!user) return;
+    if (!user?.email) return;
 
     try {
       const { error } = await supabase
         .from('device_bindings' as any)
         .delete()
-        .eq('user_id', user.id);
+        .eq('user_email', user.email.toLowerCase().trim());
 
       if (error) {
         console.error('❌ Error removing all device bindings:', error);

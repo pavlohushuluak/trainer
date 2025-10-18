@@ -223,11 +223,11 @@ const MyPetTraining = () => {
 
   // Save device binding when user lands on dashboard
   useEffect(() => {
-    if (user?.id) {
-      console.log('🔐 [Dashboard] User logged in, saving device binding...');
-      saveDeviceBinding(user.id);
+    if (user?.email) {
+      console.log('🔐 [Dashboard] User logged in, saving device binding for:', user.email);
+      saveDeviceBinding(user.email);
     }
-  }, [user?.id, saveDeviceBinding]);
+  }, [user?.email, saveDeviceBinding]);
 
   // Check if user is eligible for free trial and show modal
   useEffect(() => {
