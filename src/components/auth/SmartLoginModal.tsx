@@ -125,13 +125,6 @@ export const SmartLoginModal = ({
           // DON'T show modal - keep full-screen overlay visible
           setShowModalContent(false);
           
-          // Show success toast
-          toast({
-            title: t('auth.deviceLock.loggingIn', 'Welcome Back!'),
-            description: t('auth.deviceLock.autoLoggingIn', `Logging you in automatically as ${autoLoginData.email}...`),
-            duration: 3000
-          });
-          
           // Redirect to action link for automatic login
           setTimeout(() => {
             console.log('🚀 SmartLoginModal: Redirecting to auto-login link...');
