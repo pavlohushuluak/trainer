@@ -4294,6 +4294,31 @@
       "signupSuccess": "Registration successful!",
       "signupSuccessDescription": "Please check your email inbox and confirm your email address. The confirmation link is valid for 1 hour."
     },
+    "deviceCheck": {
+      "title": "Checking Device",
+      "subtitle": "Looking for saved account...",
+      "message": "Checking if your device has an account",
+      "pleaseWait": "This will only take a moment"
+    },
+    "autoLogin": {
+      "title": "Welcome Back!",
+      "recognized": "Device Recognized",
+      "loggingIn": "Logging you in automatically...",
+      "pleaseWait": "Please wait a moment"
+    },
+    "deviceLock": {
+      "title": "Recognized Device",
+      "description": "This device is registered to {{email}}. For security, only this account can be used on this device.",
+      "loginOnly": "Login Required",
+      "emailLocked": "Email locked to this device for security",
+      "useAnotherAccount": "Use a different account on this device",
+      "clearConfirm": "Are you sure you want to remove {{email}} from this device? You will be able to use a different account.",
+      "cleared": "Device Lock Removed",
+      "clearedDesc": "You can now login or signup with any email.",
+      "accountNotFound": "Account Not Found",
+      "autoLoggingIn": "Logging you in automatically as {{email}}...",
+      "loggingIn": "Welcome Back!"
+    },
     "stateHandler": {
       "checkoutError": {
         "title": "Checkout Error",

@@ -3,18 +3,25 @@
  */
 
 import React from 'react';
-import { Loader2, Shield, Sparkles, CheckCircle } from 'lucide-react';
+import { Loader2, Shield, Sparkles, CheckCircle, Search } from 'lucide-react';
 import { useTranslations } from '@/hooks/useTranslations';
 
 interface AutoLoginOverlayProps {
   email: string;
   isVisible: boolean;
+  mode?: 'checking' | 'logging-in'; // New prop to distinguish between checking and logging in
 }
 
-export const AutoLoginOverlay: React.FC<AutoLoginOverlayProps> = ({ email, isVisible }) => {
+export const AutoLoginOverlay: React.FC<AutoLoginOverlayProps> = ({ 
+  email, 
+  isVisible, 
+  mode = 'checking' 
+}) => {
   const { t } = useTranslations();
 
   if (!isVisible) return null;
+
+  const isChecking = mode === 'checking';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-blue-900/95 via-indigo-900/95 to-purple-900/95 backdrop-blur-md animate-fadeIn">
@@ -43,47 +50,83 @@ export const AutoLoginOverlay: React.FC<AutoLoginOverlayProps> = ({ email, isVis
           <div className="relative flex items-center justify-center w-32 h-32">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 to-purple-500/30 rounded-full blur-xl animate-pulse"></div>
             <div className="relative p-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full shadow-2xl">
-              <Shield className="h-8 w-8 text-white animate-pulse" />
+              {isChecking ? (
+                <Search className="h-8 w-8 text-white animate-pulse" />
+              ) : (
+                <Shield className="h-8 w-8 text-white animate-pulse" />
+              )}
             </div>
           </div>
         </div>
 
-        {/* Text content */}
-        <div className="text-center space-y-4">
-          <div className="space-y-2">
-            <div className="flex items-center justify-center gap-2">
-              <Sparkles className="h-5 w-5 text-yellow-400 animate-pulse" />
+        {/* Text content - Different based on mode */}
+        {isChecking ? (
+          // Checking device state
+          <div className="text-center space-y-4">
+            <div className="space-y-2">
               <h2 className="text-3xl font-bold text-white">
-                {t('auth.autoLogin.title', 'Welcome Back!')}
+                {t('auth.deviceCheck.title', 'Checking Device')}
               </h2>
-              <Sparkles className="h-5 w-5 text-yellow-400 animate-pulse" />
+              
+              <div className="flex items-center justify-center gap-2 text-blue-200">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <p className="text-lg font-medium">
+                  {t('auth.deviceCheck.subtitle', 'Looking for saved account...')}
+                </p>
+              </div>
             </div>
-            
-            <div className="flex items-center justify-center gap-2 text-blue-200">
-              <CheckCircle className="h-4 w-4" />
-              <p className="text-lg font-medium">
-                {t('auth.autoLogin.recognized', 'Device Recognized')}
-              </p>
-            </div>
-          </div>
 
-          <div className="space-y-3 pt-4">
-            <div className="px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
-              <p className="text-sm text-white/90 font-medium">
-                {email}
+            <div className="space-y-3 pt-4">
+              <p className="text-base text-blue-100 animate-pulse">
+                {t('auth.deviceCheck.message', 'Checking if your device has an account')}
               </p>
-            </div>
-            
-            <p className="text-base text-blue-100 animate-pulse">
-              {t('auth.autoLogin.loggingIn', 'Logging you in automatically...')}
-            </p>
-            
-            <div className="flex items-center justify-center gap-2 text-xs text-blue-300/80">
-              <Loader2 className="h-3 w-3 animate-spin" />
-              <span>{t('auth.autoLogin.pleaseWait', 'Please wait a moment')}</span>
+              
+              <div className="flex items-center justify-center gap-2 text-xs text-blue-300/80">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                <span>{t('auth.deviceCheck.pleaseWait', 'This will only take a moment')}</span>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          // Logging in state (device found)
+          <div className="text-center space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-center gap-2">
+                <Sparkles className="h-5 w-5 text-yellow-400 animate-pulse" />
+                <h2 className="text-3xl font-bold text-white">
+                  {t('auth.autoLogin.title', 'Welcome Back!')}
+                </h2>
+                <Sparkles className="h-5 w-5 text-yellow-400 animate-pulse" />
+              </div>
+              
+              <div className="flex items-center justify-center gap-2 text-blue-200">
+                <CheckCircle className="h-4 w-4" />
+                <p className="text-lg font-medium">
+                  {t('auth.autoLogin.recognized', 'Device Recognized')}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3 pt-4">
+              {email && (
+                <div className="px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+                  <p className="text-sm text-white/90 font-medium">
+                    {email}
+                  </p>
+                </div>
+              )}
+              
+              <p className="text-base text-blue-100 animate-pulse">
+                {t('auth.autoLogin.loggingIn', 'Logging you in automatically...')}
+              </p>
+              
+              <div className="flex items-center justify-center gap-2 text-xs text-blue-300/80">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                <span>{t('auth.autoLogin.pleaseWait', 'Please wait a moment')}</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Progress dots */}
         <div className="flex gap-2">

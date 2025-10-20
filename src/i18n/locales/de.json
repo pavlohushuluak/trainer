@@ -4296,6 +4296,31 @@
       "signupSuccess": "Registrierung erfolgreich!",
       "signupSuccessDescription": "Bitte überprüfen Sie Ihren E-Mail-Posteingang und bestätigen Sie Ihre E-Mail-Adresse. Der Bestätigungslink ist 1 Stunde gültig."
     },
+    "deviceCheck": {
+      "title": "Gerät wird geprüft",
+      "subtitle": "Suche nach gespeichertem Konto...",
+      "message": "Überprüfe, ob dein Gerät ein Konto hat",
+      "pleaseWait": "Dies dauert nur einen Moment"
+    },
+    "autoLogin": {
+      "title": "Willkommen zurück!",
+      "recognized": "Gerät erkannt",
+      "loggingIn": "Melde dich automatisch an...",
+      "pleaseWait": "Bitte warten Sie einen Moment"
+    },
+    "deviceLock": {
+      "title": "Erkanntes Gerät",
+      "description": "Dieses Gerät ist registriert auf {{email}}. Aus Sicherheitsgründen kann nur dieses Konto auf diesem Gerät verwendet werden.",
+      "loginOnly": "Anmeldung erforderlich",
+      "emailLocked": "E-Mail aus Sicherheitsgründen an dieses Gerät gebunden",
+      "useAnotherAccount": "Anderes Konto auf diesem Gerät verwenden",
+      "clearConfirm": "Sind Sie sicher, dass Sie {{email}} von diesem Gerät entfernen möchten? Sie können dann ein anderes Konto verwenden.",
+      "cleared": "Gerätesperre entfernt",
+      "clearedDesc": "Sie können sich jetzt mit jeder E-Mail anmelden oder registrieren.",
+      "accountNotFound": "Konto nicht gefunden",
+      "autoLoggingIn": "Melde dich automatisch an als {{email}}...",
+      "loggingIn": "Willkommen zurück!"
+    },
     "stateHandler": {
       "checkoutError": {
         "title": "Checkout-Fehler",

@@ -70,6 +70,7 @@ export const SmartLoginModal = ({
   const [isDeviceLocked, setIsDeviceLocked] = useState(false);
   const [lockedEmail, setLockedEmail] = useState('');
   const [isAutoLoggingIn, setIsAutoLoggingIn] = useState(false);
+  const [autoLoginMode, setAutoLoginMode] = useState<'checking' | 'logging-in'>('checking');
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [showModalContent, setShowModalContent] = useState(false);
 
@@ -80,8 +81,9 @@ export const SmartLoginModal = ({
     const checkForAutoLogin = async () => {
       console.log('🔍 SmartLoginModal: Checking for device binding auto-login...');
       
-      // Call the auto-login edge function
+      // Call the auto-login edge function - Start with "checking" mode
       setIsAutoLoggingIn(true);
+      setAutoLoginMode('checking');
       setShowModalContent(false); // Hide modal content during check
       
       try {
@@ -116,6 +118,9 @@ export const SmartLoginModal = ({
           setEmail(autoLoginData.email);
           setLockedEmail(autoLoginData.email);
           setIsDeviceLocked(true);
+          
+          // Switch to "logging-in" mode - Now show "Welcome Back!"
+          setAutoLoginMode('logging-in');
           
           // DON'T show modal - keep full-screen overlay visible
           setShowModalContent(false);
@@ -434,7 +439,11 @@ export const SmartLoginModal = ({
   return (
     <>
       {/* Auto-Login Full Screen Overlay - Shows instead of modal when device is recognized */}
-      <AutoLoginOverlay email={lockedEmail} isVisible={isAutoLoggingIn} />
+      <AutoLoginOverlay 
+        email={lockedEmail} 
+        isVisible={isAutoLoggingIn} 
+        mode={autoLoginMode}
+      />
       
       {/* Only show modal if not auto-logging in and modal content should be visible */}
       <Dialog open={isOpen && showModalContent && !isAutoLoggingIn} onOpenChange={onClose}>

@@ -56,6 +56,7 @@ const LoginPage = () => {
   const [isDeviceLocked, setIsDeviceLocked] = useState(false);
   const [lockedEmail, setLockedEmail] = useState('');
   const [isAutoLoggingIn, setIsAutoLoggingIn] = useState(false);
+  const [autoLoginMode, setAutoLoginMode] = useState<'checking' | 'logging-in'>('checking');
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   
   // Verification code hook
@@ -97,8 +98,9 @@ const LoginPage = () => {
       console.log('🔍 Checking for device binding auto-login...');
       console.log('🔐 Device fingerprint:', deviceFingerprint?.substring(0, 20) + '...');
       
-      // Call the auto-login edge function
+      // Call the auto-login edge function - Start with "checking" mode
       setIsAutoLoggingIn(true);
+      setAutoLoginMode('checking');
       try {
         console.log('📡 Calling auto-login-device function...');
         const { data: autoLoginData, error: autoLoginError } = await supabase.functions.invoke('auto-login-device', {
@@ -147,6 +149,9 @@ const LoginPage = () => {
           setLockedEmail(autoLoginData.email);
           setIsDeviceLocked(true);
           
+          // Switch to "logging-in" mode - Now show "Welcome Back!"
+          setAutoLoginMode('logging-in');
+          
           // Show loading message
           setMessage(t('auth.deviceLock.autoLoggingIn', `Welcome back ${autoLoginData.email}! Logging you in automatically...`));
           
@@ -154,7 +159,7 @@ const LoginPage = () => {
           setTimeout(() => {
             console.log('🚀 Redirecting to auto-login link...');
             window.location.href = autoLoginData.actionLink;
-          }, 1000);
+          }, 1500);
           
         } else if (autoLoginData?.hasBinding && autoLoginData?.email) {
           // Binding exists but no action link (shouldn't happen)
@@ -396,7 +401,11 @@ const LoginPage = () => {
   return (
     <>
       {/* Auto-Login Full Screen Overlay */}
-      <AutoLoginOverlay email={lockedEmail} isVisible={isAutoLoggingIn} />
+      <AutoLoginOverlay 
+        email={lockedEmail} 
+        isVisible={isAutoLoggingIn} 
+        mode={autoLoginMode}
+      />
 
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col relative overflow-hidden">
         {/* Background decorative elements */}
