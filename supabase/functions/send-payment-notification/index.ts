@@ -144,7 +144,7 @@ serve(async (req) => {
     logStep("Sending payment notification", { to: finalRecipient, subject, testMode });
 
     const { data, error } = await resend.emails.send({
-      from: "TierTrainer24 <noreply@send.tiertrainer24.com>",
+      from: "TierTrainer24 <noreply@mail.tiertrainer24.com>",
       to: [finalRecipient],
       subject,
       html,

@@ -152,7 +152,7 @@ serve(async (req) => {
     logStep("Sending support notification", { to: finalRecipient, subject, testMode });
 
     const { data, error } = await resend.emails.send({
-      from: "TierTrainer24 Support <noreply@send.tiertrainer24.com>",
+      from: "TierTrainer24 Support <noreply@mail.tiertrainer24.com>",
       to: [finalRecipient],
       subject,
       html,

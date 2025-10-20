@@ -22,6 +22,7 @@ import { useGTM } from '@/hooks/useGTM';
 import { getPlanById, getPrice } from '@/config/pricing';
 import { usePurchaseCancel } from '@/hooks/usePurchaseCancel';
 import { FreeTrialModal } from '@/components/subscription/FreeTrialModal';
+import { TrialExpiredModal } from '@/components/subscription/TrialExpiredModal';
 import { useDeviceBinding } from '@/hooks/useDeviceBinding';
 
 // Add custom CSS for floating animation
@@ -130,6 +131,9 @@ const MyPetTraining = () => {
   
   // State for free trial modal
   const [showFreeTrialModal, setShowFreeTrialModal] = useState(false);
+  
+  // State for trial expired modal
+  const [showTrialExpiredModal, setShowTrialExpiredModal] = useState(false);
 
   // Use Redux for pet profiles data
   const {
@@ -142,7 +146,7 @@ const MyPetTraining = () => {
   } = usePetProfiles();
 
   // Use subscription status for checkout success handling
-  const { refetch: refetchSubscription, subscription, subscriptionTierName, tierLimit, subscriptionMode } = useSubscriptionStatus();
+  const { refetch: refetchSubscription, subscription, subscriptionTierName, tierLimit, subscriptionMode, trialConfirm } = useSubscriptionStatus();
 
   // Check if we should open the pet modal from URL parameter
   const shouldOpenPetModal = new URLSearchParams(location.search).get('openPetModal') === 'true';
@@ -261,6 +265,36 @@ const MyPetTraining = () => {
       return () => clearTimeout(timer);
     }
   }, [user, subscription, subscriptionMode]);
+
+  // Check if user's trial has expired and trial_confirm is false - show trial expired modal
+  useEffect(() => {
+    // Wait for subscription data to load
+    if (!user || !subscription) return;
+    
+    // Check if trial has expired and trial_confirm is false
+    const isTrialExpired = subscriptionMode === 'trial_expired';
+    const needsConfirmation = trialConfirm === false;
+    
+    console.log('⏰ Trial expired check:', {
+      isTrialExpired,
+      needsConfirmation,
+      trialConfirm,
+      subscriptionMode,
+      trial_start: subscription?.trial_start,
+      trial_used: subscription?.trial_used,
+      subscription
+    });
+    
+    // Show modal if trial has expired and user hasn't confirmed yet
+    // Use a small delay to ensure page is loaded
+    if (isTrialExpired && needsConfirmation) {
+      const timer = setTimeout(() => {
+        setShowTrialExpiredModal(true);
+      }, 2000); // Show modal after 2 seconds
+      
+      return () => clearTimeout(timer);
+    }
+  }, [user, subscription, subscriptionMode, trialConfirm]);
 
   // Handle trial started - refresh subscription data
   const handleTrialStarted = useCallback(() => {
@@ -1366,6 +1400,13 @@ const MyPetTraining = () => {
           isOpen={showFreeTrialModal}
           onClose={() => setShowFreeTrialModal(false)}
           onTrialStarted={handleTrialStarted}
+        />
+
+        {/* Trial Expired Modal */}
+        <TrialExpiredModal
+          isOpen={showTrialExpiredModal}
+          onClose={() => setShowTrialExpiredModal(false)}
+          userEmail={user?.email || ''}
         />
       </MainLayout>
     </ProtectedRoute>

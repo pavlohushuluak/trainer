@@ -698,6 +698,7 @@ export type Database = {
           subscription_status: string | null;
           subscription_tier: string | null;
           tier_limit: number | null;
+          trial_confirm: boolean | null;
           trial_end: string | null;
           trial_start: string | null;
           trial_used: boolean | null;
@@ -726,6 +727,7 @@ export type Database = {
           subscription_status?: string | null;
           subscription_tier?: string | null;
           tier_limit?: number | null;
+          trial_confirm?: boolean | null;
           trial_end?: string | null;
           trial_start?: string | null;
           trial_used?: boolean | null;
@@ -754,6 +756,7 @@ export type Database = {
           subscription_status?: string | null;
           subscription_tier?: string | null;
           tier_limit?: number | null;
+          trial_confirm?: boolean | null;
           trial_end?: string | null;
           trial_start?: string | null;
           trial_used?: boolean | null;

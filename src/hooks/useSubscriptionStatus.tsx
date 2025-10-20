@@ -198,6 +198,7 @@ export const useSubscriptionStatus = () => {
     subscriptionTierName: getSubscriptionTierName(),
     tierLimit,
     trialEndDate: getTrialEndDate(), // Calculated trial end date (trial_start + 7 days)
+    trialConfirm: (subscription as any)?.trial_confirm ?? true, // Default to true if not set (backward compatibility)
     refetch,
     forceRefresh,
     error: queryError
