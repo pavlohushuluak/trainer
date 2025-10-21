@@ -1,6 +1,7 @@
 /**
  * @fileoverview Auto-Login Device - Automatically login user based on device fingerprint
  * This function validates a device fingerprint and creates a session for the associated user
+ * Accepts redirectTo parameter to redirect user to the intended page after login
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
@@ -18,7 +19,7 @@ serve(async (req) => {
   }
 
   try {
-    const { deviceFingerprint } = await req.json();
+    const { deviceFingerprint, redirectTo } = await req.json();
 
     if (!deviceFingerprint) {
       return new Response(
@@ -26,6 +27,10 @@ serve(async (req) => {
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    // Default redirect URL if not provided
+    const finalRedirectUrl = redirectTo || '/mein-tiertraining';
+    console.log('🔐 [Auto-Login] Redirect URL:', finalRedirectUrl);
 
     // Create Supabase admin client
     const supabaseAdmin = createClient(
@@ -126,11 +131,16 @@ serve(async (req) => {
     // Generate magic link for automatic login
     console.log('🔑 [Auto-Login] Generating magic link for verified email:', emailToUse);
     
+    // Build full redirect URL
+    const origin = req.headers.get('origin') || Deno.env.get('SUPABASE_URL') || '';
+    const fullRedirectUrl = `${origin}${finalRedirectUrl}`;
+    console.log('🔑 [Auto-Login] Full redirect URL:', fullRedirectUrl);
+    
     const { data: tokenData, error: tokenError } = await supabaseAdmin.auth.admin.generateLink({
       type: 'magiclink',
       email: emailToUse,
       options: {
-        redirectTo: `${req.headers.get('origin') || Deno.env.get('SUPABASE_URL')}/mein-tiertraining`
+        redirectTo: fullRedirectUrl
       }
     });
 

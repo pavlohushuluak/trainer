@@ -41,6 +41,7 @@ import LoginPage from "./pages/LoginPage";
 import SubscriptionPage from "./pages/SubscriptionPage";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -143,13 +144,29 @@ const App = () => {
                   <Route path="/admin/login" element={<AdminLogin />} />
                   <Route path="/admin/*" element={<AdminDashboard />} />
                   <Route path="/admin/status-test" element={<AdminStatusTestPage />} />
-                  <Route path="chat" element={<ChatPage />} />
+                  <Route path="chat" element={
+                    <ProtectedRoute>
+                      <ChatPage />
+                    </ProtectedRoute>
+                  } />
                   <Route path="/" element={<MainLayout />}>
                     <Route index element={<Index />} />
                     {/* <Route path="dashboard" element={<Dashboard />} /> */}
-                    <Route path="mein-tiertraining" element={<MyPetTraining />} />
-                    <Route path="support" element={<Support />} />
-                    <Route path="community" element={<Community />} />
+                    <Route path="mein-tiertraining" element={
+                      <ProtectedRoute>
+                        <MyPetTraining />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="support" element={
+                      <ProtectedRoute>
+                        <Support />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="community" element={
+                      <ProtectedRoute>
+                        <Community />
+                      </ProtectedRoute>
+                    } />
                     <Route path="auth/callback" element={<AuthCallback />} />
                     <Route path="password-reset" element={<PasswordReset />} />
                     <Route path="agb" element={<AGB />} />
@@ -158,7 +175,11 @@ const App = () => {
                     {/* <Route path="test-email" element={<TestEmail />} />
                     <Route path="test-email-auth" element={<TestEmailAuth />} />
                     <Route path="chat-diagnostics" element={<ChatDiagnosticsPage />} /> */}
-                    <Route path="settings" element={<SettingsPage />} />
+                    <Route path="settings" element={
+                      <ProtectedRoute>
+                        <SettingsPage />
+                      </ProtectedRoute>
+                    } />
                     <Route path="confirm-email-change" element={<ConfirmEmailChangePage />} />
                     {/* <Route path="image-analysis" element={<ImageAnalysisPage />} /> */}
                     <Route path="login" element={<LoginPage />} />
