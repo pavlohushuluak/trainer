@@ -33,6 +33,49 @@
     "language": "Sprache",
     "upgrade": "Upgrade"
   },
+  "trialExpired": {
+    "emailSent": {
+      "title": "E-Mail gesendet!",
+      "description": "Wir haben Ihnen Details zum Fortsetzen Ihrer Trainingsreise mit unseren Experten-Trainern gesendet."
+    },
+    "error": {
+      "title": "Fehler",
+      "description": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut oder kontaktieren Sie unser Support-Team."
+    },
+    "features": {
+      "expertChat": {
+        "title": "Unbegrenzter Experten-Chat",
+        "description": "Erhalten Sie jederzeit professionelle Trainingsberatung von echten Trainern"
+      },
+      "trainingPlans": {
+        "title": "Personalisierte Trainingspläne",
+        "description": "Individuelle Pläne, erstellt von professionellen Trainern für Ihr Haustier"
+      },
+      "imageAnalysis": {
+        "title": "Foto-Analyse",
+        "description": "Senden Sie Fotos und erhalten Sie Experten-Einschätzungen von Trainern"
+      },
+      "progressTracking": {
+        "title": "Fortschrittsverfolgung",
+        "description": "Verfolgen Sie die Entwicklung Ihres Haustiers mit Trainer-Unterstützung"
+      }
+    },
+    "modal": {
+      "title": "Ihre kostenlose Testphase ist beendet",
+      "subtitle": "Setzen Sie die Trainingsreise Ihres Haustiers mit unseren professionellen Trainern fort",
+      "featuresTitle": "Premium-Funktionen, die Sie vermissen werden:",
+      "subscribeTitle": "Jetzt abonnieren und erhalten:",
+      "benefit1": "Unbegrenzter Zugang zu professioneller Trainingsunterstützung",
+      "benefit2": "Personalisierte Trainingspläne, erstellt von Experten-Trainern",
+      "benefit3": "24/7 Zugang zum professionellen Trainer-Chat-Support",
+      "benefit4": "Jederzeit kündbar, keine Verpflichtung",
+      "priceInfo": "Pläne ab",
+      "perMonth": "/ Monat",
+      "maybeLater": "Vielleicht später",
+      "viewPlans": "Abo-Pläne ansehen",
+      "footer": "Setzen Sie das Training mit fachkundiger Anleitung von professionellen Trainern fort. Jederzeit kündbar mit unserer 14-tägigen Geld-zurück-Garantie."
+    }
+  },
   "support": {
     "title": "Hilfe & Support 🐾",
     "subtitle": "Wir sind hier, um Ihnen und Ihrem Haustier zu helfen – mit Herz und Verstand.",

@@ -34,6 +34,49 @@
     "upgrade": "Upgrade",
     "saving": "Saving..."
   },
+  "trialExpired": {
+    "emailSent": {
+      "title": "Email Sent!",
+      "description": "We have sent you details about continuing your training journey with our expert trainers."
+    },
+    "error": {
+      "title": "Error",
+      "description": "Something went wrong. Please try again or contact our support team."
+    },
+    "features": {
+      "expertChat": {
+        "title": "Unlimited Expert Chat",
+        "description": "Get professional training advice from real trainers anytime"
+      },
+      "trainingPlans": {
+        "title": "Personalized Training Plans",
+        "description": "Custom plans created by professional trainers for your pet"
+      },
+      "imageAnalysis": {
+        "title": "Photo Analysis",
+        "description": "Send photos and get expert behavior insights from trainers"
+      },
+      "progressTracking": {
+        "title": "Progress Tracking",
+        "description": "Track your pet's development with trainer guidance"
+      }
+    },
+    "modal": {
+      "title": "Your Free Trial Has Ended",
+      "subtitle": "Continue your pet's training journey with our professional trainers",
+      "featuresTitle": "Premium Features You'll Miss:",
+      "subscribeTitle": "Subscribe Now & Get:",
+      "benefit1": "Unlimited access to professional training support",
+      "benefit2": "Personalized training plans created by expert trainers",
+      "benefit3": "24/7 access to professional trainer chat support",
+      "benefit4": "Cancel anytime, no commitment",
+      "priceInfo": "Plans starting from",
+      "perMonth": "/ month",
+      "maybeLater": "Maybe Later",
+      "viewPlans": "View Subscription Plans",
+      "footer": "Continue training with expert guidance from professional trainers. Cancel anytime with our 14-day money-back guarantee."
+    }
+  },
   "support": {
     "title": "Help & Support 🐾",
     "subtitle": "We are here to help you and your pet – with heart and mind.",
@@ -536,11 +579,11 @@
       "swipeHint": "← Swipe to navigate →"
     },
     "developmentMode": "🧪 Test Mode: Full Access",
-  "checkout": {
-    "autoLogin": {
-      "title": "Setting up your account...",
-      "description": "Please wait while we confirm your payment and log you in automatically."
-    }
+    "checkout": {
+      "autoLogin": {
+        "title": "Setting up your account...",
+        "description": "Please wait while we confirm your payment and log you in automatically."
+      }
     }
   },
   "faq": {
@@ -1667,15 +1710,15 @@
       "comingSoon": "Password management and additional security options will be available in a future version.",
       "changePassword": "Change Password",
       "changePasswordDescription": "Update your password to keep your account secure",
-    "enterCurrentPassword": "Please enter your current password to confirm the change.",
-    "forgotPassword": "Forgot Password?",
-    "enterVerificationCode": "Enter the verification code sent to your email.",
-    "verificationEmailSent": "Verification Email Sent",
-    "verificationEmailDescription": "We've sent a verification code to {{email}}. Please check your email and enter the code below.",
-    "verificationCodePlaceholder": "Enter code",
-    "resendEmail": "Resend Email",
-    "verifying": "Verifying...",
-    "verifyCode": "Verify Code",
+      "enterCurrentPassword": "Please enter your current password to confirm the change.",
+      "forgotPassword": "Forgot Password?",
+      "enterVerificationCode": "Enter the verification code sent to your email.",
+      "verificationEmailSent": "Verification Email Sent",
+      "verificationEmailDescription": "We've sent a verification code to {{email}}. Please check your email and enter the code below.",
+      "verificationCodePlaceholder": "Enter code",
+      "resendEmail": "Resend Email",
+      "verifying": "Verifying...",
+      "verifyCode": "Verify Code",
       "currentPassword": "Current Password",
       "newPassword": "New Password",
       "confirmPassword": "Confirm New Password",
@@ -4151,9 +4194,9 @@
     "termsAgreement": "By signing up, you agree to our",
     "alreadyHaveAccountText": "Already have an account?",
     "dontHaveAccountText": "Don't have an account?",
-      "loginNow": "Login now",
-      "orContinueWith": "Or continue with",
-      "verificationCode": {
+    "loginNow": "Login now",
+    "orContinueWith": "Or continue with",
+    "verificationCode": {
       "title": "Verify Your Email",
       "description": "We sent a 6-digit verification code to",
       "success": "Email verified successfully! You are now logged in.",
