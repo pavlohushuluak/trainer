@@ -37,21 +37,21 @@ export const Testimonials = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setCurrentIndex((prev) => (prev + 1) % totalSlides);
-    setTimeout(() => setIsTransitioning(false), 1600);
+    setTimeout(() => setIsTransitioning(false), 300);
   }, [isTransitioning, totalSlides]);
 
   const prevSlide = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-    setTimeout(() => setIsTransitioning(false), 1600);
+    setTimeout(() => setIsTransitioning(false), 300);
   }, [isTransitioning, totalSlides]);
 
   const goToSlide = useCallback((index: number) => {
     if (isTransitioning || index === currentIndex) return;
     setIsTransitioning(true);
     setCurrentIndex(index);
-    setTimeout(() => setIsTransitioning(false), 1600);
+    setTimeout(() => setIsTransitioning(false), 300);
   }, [currentIndex, isTransitioning]);
 
   // Auto-play functionality

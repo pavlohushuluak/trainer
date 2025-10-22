@@ -16,6 +16,7 @@ export const Benefits = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [buttonClicked, setButtonClicked] = useState<'prev' | 'next' | null>(null);
   const rectRef = useRef<DOMRect | null>(null);
   const rafIdRef = useRef<number | null>(null);
   const pendingEventRef = useRef<React.MouseEvent | null>(null);
@@ -99,26 +100,34 @@ export const Benefits = () => {
 
   const totalSlides = benefits.length;
 
-  // Navigation functions
+  // Navigation functions - optimized for faster response
   const nextSlide = useCallback(() => {
     if (isTransitioning) return;
+    setButtonClicked('next');
     setIsTransitioning(true);
     setCurrentIndex((prev) => (prev + 1) % totalSlides);
-    setTimeout(() => setIsTransitioning(false), 1600);
+    setTimeout(() => {
+      setIsTransitioning(false);
+      setButtonClicked(null);
+    }, 300);
   }, [isTransitioning, totalSlides]);
 
   const prevSlide = useCallback(() => {
     if (isTransitioning) return;
+    setButtonClicked('prev');
     setIsTransitioning(true);
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-    setTimeout(() => setIsTransitioning(false), 1600);
+    setTimeout(() => {
+      setIsTransitioning(false);
+      setButtonClicked(null);
+    }, 300);
   }, [isTransitioning, totalSlides]);
 
   const goToSlide = useCallback((index: number) => {
     if (isTransitioning || index === currentIndex) return;
     setIsTransitioning(true);
     setCurrentIndex(index);
-    setTimeout(() => setIsTransitioning(false), 1600);
+    setTimeout(() => setIsTransitioning(false), 300);
   }, [currentIndex, isTransitioning]);
 
   // Auto-play functionality - only forward
@@ -375,17 +384,12 @@ export const Benefits = () => {
             size="icon"
             aria-label={'benefits.previous'}
             className={cn(
-              "absolute left-4 top-1/2 -translate-y-1/2 bg-background/90 backdrop-blur-xl border border-border/50 hover:bg-background/95 transition-all duration-1000 shadow-2xl hover:shadow-3xl z-30 h-12 w-12 md:h-14 md:w-14",
-              isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-70 -translate-x-2 scale-90"
+              "absolute left-4 top-1/2 -translate-y-1/2 bg-background/90 backdrop-blur-sm border border-border/50 hover:bg-background/95 transition-all duration-200 shadow-lg hover:shadow-xl z-30 h-12 w-12 md:h-14 md:w-14",
+              isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-70 -translate-x-1 scale-95",
+              buttonClicked === 'prev' && "scale-90 bg-primary/20"
             )}
-            style={{
-              transform: isMobile
-                ? 'none'
-                : `translateZ(100px) ${isHovered ? 'translateX(0)' : 'translateX(-8px)'}`,
-              transition: 'all 1.0s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
           >
-            <ChevronLeft className="h-6 w-6 md:h-7 md:w-7 transition-transform group-hover:-translate-x-1" />
+            <ChevronLeft className="h-6 w-6 md:h-7 md:w-7" />
           </Button>
 
           {/* Enhanced Next Button */}
@@ -396,17 +400,12 @@ export const Benefits = () => {
             size="icon"
             aria-label={'benefits.next'}
             className={cn(
-              "absolute right-4 top-1/2 -translate-y-1/2 bg-background/90 backdrop-blur-xl border border-border/50 hover:bg-background/95 transition-all duration-1000 shadow-2xl hover:shadow-3xl z-30 h-12 w-12 md:h-14 md:w-14",
-              isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-70 translate-x-2 scale-90"
+              "absolute right-4 top-1/2 -translate-y-1/2 bg-background/90 backdrop-blur-sm border border-border/50 hover:bg-background/95 transition-all duration-200 shadow-lg hover:shadow-xl z-30 h-12 w-12 md:h-14 md:w-14",
+              isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-70 translate-x-1 scale-95",
+              buttonClicked === 'next' && "scale-90 bg-primary/20"
             )}
-            style={{
-              transform: isMobile
-                ? 'none'
-                : `translateZ(100px) ${isHovered ? 'translateX(0)' : 'translateX(8px)'}`,
-              transition: 'all 1.0s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
           >
-            <ChevronRight className="h-6 w-6 md:h-7 md:w-7 transition-transform group-hover:translate-x-1" />
+            <ChevronRight className="h-6 w-6 md:h-7 md:w-7" />
           </Button>
 
           {/* Main 3D Carousel */}
@@ -421,7 +420,7 @@ export const Benefits = () => {
                 return (
                   <div
                     key={index}
-                    className="absolute top-0 left-1/2 w-[85%] md:w-[280px] lg:w-[350px] h-full transition-all duration-1600 ease-out cursor-pointer"
+                    className="absolute top-0 left-1/2 w-[85%] md:w-[280px] lg:w-[350px] h-full transition-all duration-300 ease-out cursor-pointer"
                     style={{
                       transform: `
                         translateX(-50%) 
@@ -439,13 +438,12 @@ export const Benefits = () => {
                   >
                     <Card
                       className={cn(
-                        "h-full border-2 transition-all duration-1600 ease-out shadow-2xl hover:shadow-3xl relative overflow-hidden",
+                        "h-full border-2 transition-all duration-300 ease-out shadow-lg hover:shadow-xl relative overflow-hidden",
                         `border-gradient-to-r ${benefit.borderGradient}`
                       )}
                       style={{
-                        transform: `rotateY(${transform.rotateY * 0.3}deg)`,
-                        transformStyle: 'preserve-3d',
-                        transition: 'transform 1.6s ease-out'
+                        transform: `rotateY(${transform.rotateY * 0.1}deg)`,
+                        transition: 'transform 0.3s ease-out'
                       }}
                     >
                       {/* Dynamic Gradient Background */}
