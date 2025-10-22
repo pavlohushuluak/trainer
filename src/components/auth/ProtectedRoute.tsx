@@ -1,11 +1,13 @@
 /**
  * @fileoverview Protected Route Component - Handles authentication and device binding auto-login
  * Checks if user is logged in, if not attempts auto-login via device binding, otherwise redirects to login
+ * Supports multi-language display for loading states
  */
 
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslations } from '@/hooks/useTranslations';
 import { getDeviceFingerprint } from '@/utils/deviceFingerprint';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
@@ -16,6 +18,7 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, loading: authLoading } = useAuth();
+  const { t } = useTranslations();
   const location = useLocation();
   const [autoLoginStatus, setAutoLoginStatus] = useState<
     'checking' | 'success' | 'no_binding' | 'error'
@@ -116,7 +119,10 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         <div className="text-center">
           <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
           <p className="text-lg text-muted-foreground">
-            {isAutoLoggingIn ? 'Logging in...' : 'Checking authentication...'}
+            {isAutoLoggingIn 
+              ? t('auth.autoLogin.loggingIn', 'Logging in...') 
+              : t('auth.protectedRoute.checkingAuth', 'Checking authentication...')
+            }
           </p>
         </div>
       </div>

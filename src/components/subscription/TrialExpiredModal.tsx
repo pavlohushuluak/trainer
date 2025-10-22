@@ -99,19 +99,19 @@ export const TrialExpiredModal = ({ isOpen, onClose, userEmail }: TrialExpiredMo
   }, [isOpen, emailSent, userEmail, toast, t]);
 
   const handleViewPlansClick = () => {
-    console.log('📊 User clicked View Subscription Plans button');
+    console.log('📊 User clicked Start Now button');
     
     // Close modal
     onClose();
     
-    // Navigate to homepage pricing section
-    navigate('/#pricing');
+    // Navigate to subscription section on /mein-tiertraining page
+    navigate('/mein-tiertraining#subscription');
     
-    // Scroll to pricing section after navigation
+    // Scroll to subscription section after navigation
     setTimeout(() => {
-      const pricingSection = document.getElementById('pricing');
-      if (pricingSection) {
-        pricingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const subscriptionSection = document.getElementById('subscription');
+      if (subscriptionSection) {
+        subscriptionSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 100);
   };
@@ -260,7 +260,7 @@ export const TrialExpiredModal = ({ isOpen, onClose, userEmail }: TrialExpiredMo
                 className="flex-1 min-h-[44px] sm:min-h-[40px] bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
               >
                 <Crown className="h-5 w-5 mr-2" />
-                {t('trialExpired.modal.viewPlans', 'View Subscription Plans')}
+                {t('trialExpired.modal.startNow', 'Jetzt starten')}
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
             </div>

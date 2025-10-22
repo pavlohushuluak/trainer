@@ -41,7 +41,7 @@ export const SubscriptionManagementSection = () => {
   // Show error state if there's an error
   if (error) {
     return (
-      <div className="mt-4 sm:mt-6 lg:mt-8 subscription-management-section">
+      <div id="subscription" className="mt-4 sm:mt-6 lg:mt-8 subscription-management-section">
         <Card className="shadow-sm border-red-200/50 bg-red-50/50 dark:border-red-400/30 dark:bg-red-950/20">
           <CardHeader className="px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -60,7 +60,7 @@ export const SubscriptionManagementSection = () => {
   // Show loading state while subscription data is being fetched
   if (isLoading) {
     return (
-      <div className="mt-4 sm:mt-6 lg:mt-8 subscription-management-section">
+      <div id="subscription" className="mt-4 sm:mt-6 lg:mt-8 subscription-management-section">
         <Card className="shadow-sm border-gray-100 dark:border-gray-800">
           <CardHeader className="px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -78,7 +78,7 @@ export const SubscriptionManagementSection = () => {
   }
 
   return (
-    <div className="mt-4 sm:mt-6 lg:mt-8 subscription-management-section">
+    <div id="subscription" className="mt-4 sm:mt-6 lg:mt-8 subscription-management-section">
       <Card className="card-enhanced shadow-lg border-border/50 bg-gradient-to-br from-white via-yellow-50/30 to-orange-50/30 dark:from-gray-900 dark:via-yellow-900/20 dark:to-orange-900/20 overflow-hidden">
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>

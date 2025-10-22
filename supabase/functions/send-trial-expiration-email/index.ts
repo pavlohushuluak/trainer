@@ -1,6 +1,12 @@
 /**
  * @fileoverview Send Trial Expiration Email Edge Function
  * Sends professional email notification when user's trial expires
+ * 
+ * Language Detection:
+ * - Queries the language_support table for user's language preference
+ * - Supports 'de' (German) and 'en' (English)
+ * - Defaults to German if no preference is found
+ * 
  * Note: trial_confirm is NOT updated here - only when user clicks "View Subscription Plans" button
  */
 
@@ -15,24 +21,6 @@ const corsHeaders = {
 
 const logStep = (step: string, data?: any) => {
   console.log(`[send-trial-expiration-email] ${step}`, data ? JSON.stringify(data, null, 2) : "");
-};
-
-/**
- * Get user language preference from profile or default to German
- */
-const getUserLanguage = async (userEmail: string, supabaseClient: any): Promise<'de' | 'en'> => {
-  try {
-    const { data: profile } = await supabaseClient
-      .from('profiles')
-      .select('language')
-      .eq('email', userEmail)
-      .single();
-
-    return profile?.language === 'en' ? 'en' : 'de';
-  } catch (error) {
-    logStep("Error getting user language, defaulting to German", { error: error.message });
-    return 'de';
-  }
 };
 
 /**
@@ -60,7 +48,7 @@ const generateEmailHTML = (userName: string, trialEndDate: string, language: 'de
     greeting: `Hallo ${userName},`,
     paragraph1: 'Ihre 7-tägige kostenlose Testphase für TierTrainer24 ist am',
     paragraph2: 'abgelaufen. Wir hoffen, Sie konnten unsere professionellen Trainingsservices genießen!',
-    featuresTitle: 'Was Sie mit einem Abo erhalten:',
+    featuresTitle: 'Was Sie bei uns erhalten:',
     feature1: '✅ Unbegrenzter Chat mit professionellen Trainern',
     feature2: '✅ Personalisierte Trainingspläne von Experten-Trainern',
     feature3: '✅ Foto-Analyse mit Verhaltensbeurteilung durch Trainer',
@@ -78,7 +66,7 @@ const generateEmailHTML = (userName: string, trialEndDate: string, language: 'de
     greeting: `Hello ${userName},`,
     paragraph1: 'Your 7-day free trial for TierTrainer24 ended on',
     paragraph2: 'We hope you enjoyed our professional training services!',
-    featuresTitle: 'What you get with a subscription:',
+    featuresTitle: 'What you get with us:',
     feature1: '✅ Unlimited chat with professional trainers',
     feature2: '✅ Personalized training plans from expert trainers',
     feature3: '✅ Photo analysis with behavior assessment by trainers',
@@ -194,7 +182,7 @@ serve(async (req) => {
 
     logStep("Processing trial expiration notification", { userEmail });
 
-    // Get user profile and subscription data
+    // Get user profile data
     const { data: profile, error: profileError } = await supabaseClient
       .from('profiles')
       .select('first_name, email')
@@ -206,7 +194,10 @@ serve(async (req) => {
       throw profileError;
     }
 
-    logStep("Profile data fetched", { profile });
+    logStep("Profile data fetched", { 
+      first_name: profile?.first_name,
+      email: profile?.email
+    });
 
     // Get subscription data to find trial end date
     const { data: subscription, error: subscriptionError } = await supabaseClient
@@ -236,9 +227,44 @@ serve(async (req) => {
       trialEndDate = trialEnd.toISOString();
     }
 
-    // Get user language preference
-    const userLanguage = await getUserLanguage(userEmail, supabaseClient);
-    logStep("Using language for trial expiration email", { userEmail, language: userLanguage });
+    // Get user language preference from language_support table
+    let userLanguage: 'de' | 'en' = 'de'; // Default to German
+    
+    try {
+      const { data: langSupport, error: langError } = await supabaseClient
+        .from('language_support')
+        .select('language')
+        .eq('email', userEmail)
+        .maybeSingle();
+
+      if (langError) {
+        logStep("Error fetching language preference, defaulting to German", { 
+          error: langError.message,
+          code: langError.code
+        });
+      } else if (langSupport?.language) {
+        const normalizedLang = langSupport.language.toLowerCase().trim();
+        if (normalizedLang === 'en' || normalizedLang === 'english') {
+          userLanguage = 'en';
+        }
+        logStep("Language preference found in language_support table", { 
+          userEmail, 
+          savedLanguage: langSupport.language,
+          selectedLanguage: userLanguage 
+        });
+      } else {
+        logStep("No language preference found in language_support table, defaulting to German", { userEmail });
+      }
+    } catch (error) {
+      logStep("Exception fetching language preference, defaulting to German", { 
+        error: error.message 
+      });
+    }
+    
+    logStep("Final language selection for trial expiration email", { 
+      userEmail, 
+      language: userLanguage 
+    });
 
     const userName = profile?.first_name || (userLanguage === 'en' ? 'Valued Customer' : 'Geschätzter Kunde');
     const formattedTrialEndDate = formatDate(trialEndDate, userLanguage);
