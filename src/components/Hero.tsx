@@ -73,7 +73,7 @@ export const Hero = () => {
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         
-        <FloatingElements />
+        {/* <FloatingElements /> */}
 
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full md:mt-10">
           {/* Logo prominently placed at the top */}
