@@ -64,6 +64,7 @@ export const HeroCarousel = () => {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState<'prev' | 'next' | null>(null);
 
   // Auto-advance carousel with pause on hover
   useEffect(() => {
@@ -99,23 +100,31 @@ export const HeroCarousel = () => {
 
   const nextSlide = useCallback(() => {
     if (isTransitioning) return;
+    setButtonClicked('next');
     setIsTransitioning(true);
     setCurrentIndex((prev) => (prev + 1) % carouselImages.length);
-    setTimeout(() => setIsTransitioning(false), 700);
+    setTimeout(() => {
+      setIsTransitioning(false);
+      setButtonClicked(null);
+    }, 300);
   }, [carouselImages.length, isTransitioning]);
 
   const prevSlide = useCallback(() => {
     if (isTransitioning) return;
+    setButtonClicked('prev');
     setIsTransitioning(true);
     setCurrentIndex((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
-    setTimeout(() => setIsTransitioning(false), 700);
+    setTimeout(() => {
+      setIsTransitioning(false);
+      setButtonClicked(null);
+    }, 300);
   }, [carouselImages.length, isTransitioning]);
 
   const goToSlide = useCallback((index: number) => {
     if (isTransitioning || index === currentIndex) return;
     setIsTransitioning(true);
     setCurrentIndex(index);
-    setTimeout(() => setIsTransitioning(false), 700);
+    setTimeout(() => setIsTransitioning(false), 300);
   }, [currentIndex, isTransitioning]);
 
   const toggleAutoPlay = useCallback(() => {
@@ -200,22 +209,22 @@ export const HeroCarousel = () => {
           let scale = 0.8;
           
           if (isActive) {
-            transform = 'translateZ(0px) scale(1)';
+            transform = 'translateX(0) scale(1)';
             zIndex = 10;
             opacity = 1;
             scale = 1;
           } else if (isNext) {
-            transform = 'translateZ(-200px) translateX(60%) scale(0.85) rotateY(-15deg)';
+            transform = 'translateX(60%) scale(0.85)';
             zIndex = 5;
             opacity = 0.7;
             scale = 0.85;
           } else if (isPrev) {
-            transform = 'translateZ(-200px) translateX(-60%) scale(0.85) rotateY(15deg)';
+            transform = 'translateX(-60%) scale(0.85)';
             zIndex = 5;
             opacity = 0.7;
             scale = 0.85;
           } else {
-            transform = 'translateZ(-400px) scale(0.7)';
+            transform = 'translateX(0) scale(0.7)';
             zIndex = 1;
             opacity = 0.3;
             scale = 0.7;
@@ -224,12 +233,11 @@ export const HeroCarousel = () => {
           return (
             <div
               key={index}
-              className="absolute inset-0 transition-all duration-1000 ease-out"
+              className="absolute inset-0 transition-all duration-300 ease-out"
               style={{
                 transform,
                 zIndex,
-                opacity,
-                transformStyle: 'preserve-3d'
+                opacity
               }}
             >
               {/* 3D Image Container */}
@@ -237,7 +245,7 @@ export const HeroCarousel = () => {
                 className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl"
                 style={{
                   transform: `scale(${scale})`,
-                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
               >
                 {/* Background Image */}
@@ -283,10 +291,10 @@ export const HeroCarousel = () => {
                 <div className="absolute inset-0 hidden sm:flex items-end justify-center p-8 md:p-12 lg:p-16">
                   <div className="w-full max-w-4xl text-center text-white">
                     <div className={cn(
-                      "transform transition-all duration-1000 delay-300",
+                      "transform transition-all duration-300 delay-100",
                       isActive 
                         ? "opacity-100 translate-y-0 scale-100" 
-                        : "opacity-0 translate-y-8 scale-95"
+                        : "opacity-0 translate-y-4 scale-95"
                     )}>
                       <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold pb-4 leading-tight drop-shadow-2xl bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
                         {image.title}
@@ -309,13 +317,10 @@ export const HeroCarousel = () => {
           onClick={prevSlide}
           disabled={isTransitioning}
           className={cn(
-            "absolute left-6 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white backdrop-blur-xl border border-white/30 h-14 w-14 transition-all duration-500 shadow-2xl hover:shadow-3xl group z-20 hidden sm:flex",
-            isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-0 -translate-x-4 scale-90"
+            "absolute left-6 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm border border-white/30 h-14 w-14 transition-all duration-200 shadow-lg hover:shadow-xl group z-20 hidden sm:flex",
+            isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-0 -translate-x-2 scale-95",
+            buttonClicked === 'prev' && "scale-90 bg-primary/20"
           )}
-          style={{
-            transform: `translateZ(50px) ${isHovered ? 'translateX(0)' : 'translateX(-16px)'}`,
-            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}
           aria-label="Previous slide"
         >
           <ChevronLeft className="h-7 w-7 transition-transform group-hover:-translate-x-1" />
@@ -327,13 +332,10 @@ export const HeroCarousel = () => {
           onClick={nextSlide}
           disabled={isTransitioning}
           className={cn(
-            "absolute right-6 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white backdrop-blur-xl border border-white/30 h-14 w-14 transition-all duration-500 shadow-2xl hover:shadow-3xl group z-20 hidden sm:flex",
-            isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-0 translate-x-4 scale-90"
+            "absolute right-6 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm border border-white/30 h-14 w-14 transition-all duration-200 shadow-lg hover:shadow-xl group z-20 hidden sm:flex",
+            isHovered ? "opacity-100 translate-x-0 scale-100" : "opacity-0 translate-x-2 scale-95",
+            buttonClicked === 'next' && "scale-90 bg-primary/20"
           )}
-          style={{
-            transform: `translateZ(50px) ${isHovered ? 'translateX(0)' : 'translateX(16px)'}`,
-            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}
           aria-label="Next slide"
         >
           <ChevronRight className="h-7 w-7 transition-transform group-hover:translate-x-1" />
@@ -343,16 +345,13 @@ export const HeroCarousel = () => {
 
         {/* Enhanced 3D Progress Bar */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-2 bg-black/40 backdrop-blur-md z-20"
-          style={{
-            transform: 'translateZ(40px)'
-          }}
+          className="absolute bottom-0 left-0 right-0 h-2 bg-black/40 backdrop-blur-sm z-20"
         >
           <div
-            className="h-full bg-gradient-to-r from-primary via-primary/80 to-primary/60 transition-all duration-700 ease-out shadow-lg"
+            className="h-full bg-gradient-to-r from-primary via-primary/80 to-primary/60 transition-all duration-300 ease-out shadow-lg"
             style={{
               width: `${((currentIndex + 1) / carouselImages.length) * 100}%`,
-              transition: 'width 0.7s cubic-bezier(0.4, 0, 0.2, 1)'
+              transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           />
         </div>
@@ -360,10 +359,7 @@ export const HeroCarousel = () => {
         {/* Debug indicator for development - Hidden on Mobile */}
         {process.env.NODE_ENV === 'development' && (
           <div 
-            className="absolute top-6 left-6 bg-black/60 text-white text-xs px-4 py-2 rounded-xl backdrop-blur-xl border border-white/30 z-20 hidden sm:block"
-            style={{
-              transform: 'translateZ(30px)'
-            }}
+            className="absolute top-6 left-6 bg-black/60 text-white text-xs px-4 py-2 rounded-xl backdrop-blur-sm border border-white/30 z-20 hidden sm:block"
           >
             <div className="flex items-center gap-2">
               <span>{isMobile ? '📱' : '🖥️'}</span>
