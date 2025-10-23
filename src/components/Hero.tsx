@@ -67,7 +67,7 @@ export const Hero = () => {
 
   return (
     <>
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
+      <section className="relative min-h-screen flex pt-4 sm:pt-0 items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
         <DevelopmentBadge isDevelopment={isDevelopment} />
 
         {/* Background Pattern */}
@@ -76,14 +76,6 @@ export const Hero = () => {
         {/* <FloatingElements /> */}
 
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full md:mt-10">
-          {/* Logo prominently placed at the top */}
-          <div className="mb-8 flex justify-center">
-            <ThemeLogo 
-              className="hidden md:block md:h-16 w-auto"
-              onClick={() => navigate('/')}
-            />
-          </div>
-          
           <HeroContent isDevelopment={isDevelopment} />
           
           {/* Hero Carousel */}

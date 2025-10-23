@@ -2,6 +2,7 @@ import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Hero } from "@/components/Hero";
+import { HomepageHeader } from "@/components/HomepageHeader";
 import { StickyPremiumButton } from "@/components/StickyPremiumButton";
 import { SmartLoginModal } from "@/components/auth/SmartLoginModal";
 import { VerificationCodeModal } from "@/components/auth/VerificationCodeModal";
@@ -541,6 +542,7 @@ const Index = () => {
 
   return (
     <>
+      <HomepageHeader />
       <div id="hero">
         <Hero />
       </div>

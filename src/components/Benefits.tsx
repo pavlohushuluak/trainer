@@ -337,13 +337,15 @@ export const Benefits = () => {
   };
 
   return (
-    <section id="benefits" className="pt-6 md:pt-10 lg:pt-16 pb-4">
-      <div className="mx-auto px-0">
+    <section className="pt-20">
+      <div className="mx-auto px-0" id="benefits">
         <div className="text-center mb-6 sm:mb-8 md:mb-12">
-          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground pb-4 sm:pb-6 md:pb-8 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent px-2">
-            {t('benefits.title')}
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold pb-3 sm:pb-4 md:pb-6 px-2 animate-fade-in-up">
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent animate-gradient-x">
+              {t('benefits.title')}
+            </span>
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4 sm:px-6 leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-3xl mx-auto px-4 sm:px-6 leading-relaxed animate-fade-in-up delay-200">
             {t('benefits.subtitle')}
           </p>
         </div>
@@ -454,14 +456,14 @@ export const Benefits = () => {
 
                       <CardContent className="h-full flex flex-col justify-center p-4 md:p-6 lg:p-8 relative z-10">
                         <div className="flex flex-col items-center text-center gap-4 lg:gap-6">
-                          <div className="flex-shrink-0">
+                          {/* <div className="flex-shrink-0">
                             <div className={cn(
                               "w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center shadow-lg relative overflow-hidden",
                               `bg-gradient-to-br ${benefit.iconGradient}`
                             )}>
                               <IconComponent className="w-6 h-6 lg:w-7 lg:h-7 text-white relative z-10" />
                             </div>
-                          </div>
+                          </div> */}
                           <div className="flex-1 w-full">
                             <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-foreground mb-4 leading-tight">
                               {benefit.title}

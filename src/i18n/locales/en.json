@@ -510,8 +510,11 @@
   },
   "navigation": {
     "home": "Home",
-    "training": "Pet Training",
+    "benefits": "Benefits",
     "pricing": "Pricing",
+    "testimonials": "Testimonials",
+    "faq": "FAQ",
+    "training": "Pet Training",
     "about": "About",
     "contact": "Contact",
     "login": "Login",
@@ -588,7 +591,7 @@
     }
   },
   "faq": {
-    "title": "Frequently Asked Questions about TierTrainer24",
+    "title": "Frequently Asked Questions",
     "subtitle": "Everything about our intelligent pet training for dogs, cats, horses, small animals & birds with 14-day money-back guarantee",
     "questions": {
       "guarantee": {
@@ -752,35 +755,35 @@
     "title": "Why TierTrainer?",
     "subtitle": "Six decisive advantages that set us apart from conventional pet trainers",
     "benefit1": {
-      "title": "💬 1. Because you don't have to wait for the next appointment.",
+      "title": "1. Because you don't have to wait for the next appointment.",
       "description1": "With us, you get an assessment immediately.",
       "description2": "No \"We might have something available next Thursday at 2:00 PM\".",
       "description3": "Your pet needs help when the behavior happens – not two weeks later."
     },
     "benefit2": {
-      "title": "🏠 2. Because your pet learns best in its familiar environment.",
+      "title": "2. Because your pet learns best in its familiar environment.",
       "description1": "Many pets behave completely differently with trainers – quiet, intimidated, distracted.",
       "description2": "We analyze behavior where it really happens: at home, in everyday life, in your real life."
     },
     "benefit3": {
-      "title": "💸 3. Because the subscription costs less than a single training session.",
+      "title": "3. Because the subscription costs less than a single training session.",
       "subscriptionPrice": "TierTrainer subscription: from €9.90/month",
       "trainerPrice": "On-site pet trainer: €60–150/hour",
       "description1": "And that every time you need help?",
       "description2": "With us: Ask unlimited questions – one price."
     },
     "benefit4": {
-      "title": "⏱️ 4. Because you're continuously supported in the subscription – not just occasionally.",
+      "title": "4. Because you're continuously supported in the subscription – not just occasionally.",
       "description1": "Many trainers give you homework and then disappear.",
       "description2": "We stay by your side – with progress journal, updates, reminders, and real feedback over weeks."
     },
     "benefit5": {
-      "title": "🧠 5. Because you learn more than just \"sit\".",
+      "title": "5. Because you learn more than just \"sit\".",
       "description1": "We help you understand your pet – their motives, their fears, their body language.",
       "description2": "Changing behavior starts with empathy – not with drill."
     },
     "benefit6": {
-      "title": "🔒 6. Because you're supported safely, ad-free & stress-free.",
+      "title": "6. Because you're supported safely, ad-free & stress-free.",
       "point1": "No sales tactics.",
       "point2": "No pressure to book additional sessions.",
       "point3": "No hidden upsells like with many pet trainers or online courses"
@@ -809,7 +812,7 @@
       "prioritySupport": "Priority support"
     },
     "header": {
-      "title": "TierTrainer Premium – For Your Pet(s)",
+      "title": "TierTrainer Premium",
       "subtitle": "Everything you need for successful pet care"
     },
     "packageContent": {
@@ -818,31 +821,29 @@
         "allInclusive": "🎯 All features included • 🔄 Cancel anytime • 💰 14-day money-back guarantee"
       },
       "cards": {
-        "tierTrainer": {
-          "title": "🤖 TierTrainer",
-          "feature1": "Personal trainer for your pet",
-          "feature2": "For all pet types (dog, cat, bird, etc.)",
-          "feature3": "Based on latest technology"
-        },
-        "multimodal": {
-          "title": "💬 Multimodal Consultation",
-          "feature1": "Text chat for quick questions",
-          "feature2": "Voice input for natural conversations",
-          "feature3": "Image analysis for behavior & health"
+        "chatTrainer": {
+          "title": "Chat with Trainer",
+          "feature1": "Unlimited 24/7 access to trainer",
+          "feature2": "Instant answers to training questions",
+          "feature3": "Personalized advice for your pet"
         },
         "imageAnalysis": {
-          "title": "🖼️ Image Upload & Behavior Analysis",
-          "question": "What is your pet trying to tell you?",
-          "description": "Simply upload a photo of your pet – our technology analyzes gaze, posture, and facial expressions. You'll know in seconds what your pet is feeling or needs right now.",
-          "feature1": "Image-based behavior analysis",
-          "feature2": "Detection of stress, joy & curiosity",
-          "feature3": "Evaluate body language & emotions"
+          "title": "Image Analysis",
+          "feature1": "Upload photos for behavior analysis",
+          "feature2": "Professional emotion detection",
+          "feature3": "Instant insights about your pet's mood"
         },
-        "customized": {
-          "title": "🐾 Customized for Your Pet",
-          "feature1": "Personalized training plans",
+        "trainingPlans": {
+          "title": "Training Plans",
+          "feature1": "Custom training plans for your pet",
           "feature2": "Step-by-step instructions",
-          "feature3": "Adapted to your pet & your goals"
+          "feature3": "Adapted to your pet's specific needs"
+        },
+        "progressTracking": {
+          "title": "Progress Tracking",
+          "feature1": "Track daily training progress",
+          "feature2": "Visual progress indicators",
+          "feature3": "Celebrate milestones and achievements"
         }
       }
     },

@@ -55,7 +55,7 @@ export const FreeTierSection = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 mb-6 sm:mb-8 lg:mb-12">
+    <div className="w-full max-w-3xl mx-auto px-3 sm:px-4 mb-6 sm:mb-8 lg:mb-12">
       <Card className="border-0 shadow-xl hover:shadow-2xl bg-gradient-to-br from-white/95 via-blue-50/95 to-purple-50/95 dark:from-gray-900/95 dark:via-blue-900/20 dark:to-purple-900/20 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 overflow-hidden relative transition-shadow duration-300">
         {/* Background decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -63,7 +63,7 @@ export const FreeTierSection = () => {
           <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-tr from-indigo-400/10 to-pink-400/10 rounded-full blur-2xl"></div>
         </div>
 
-        <CardContent className="relative p-4 sm:p-6 lg:p-8 xl:p-10">
+        <CardContent className="relative p-2 sm:p-2 lg:p-4 xl:p-6">
           <div className="text-center space-y-4 sm:space-y-5 lg:space-y-6">
             {/* Header */}
             <div className="space-y-2 sm:space-y-2.5 lg:space-y-3">
@@ -77,9 +77,9 @@ export const FreeTierSection = () => {
               <p className="text-xs sm:text-sm lg:text-base text-muted-foreground font-medium px-2 sm:px-0">
                 {t('hero.freeTier.subtitle')}
               </p>
-              <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed px-2 sm:px-0">
+              {/* <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed px-2 sm:px-0">
                 {t('hero.freeTier.description')}
-              </p>
+              </p> */}
             </div>
 
             {/* CTA Button */}

@@ -16,11 +16,11 @@ export const Pricing = () => {
   const currentPlans = isYearly ? getSixMonthPlans(t) : getMonthlyPlans(t);
 
   return (
-    <section id="pricing" className="py-4 md:py-8 bg-secondary/30">
+    <section id="pricing" className="pt-20 pb-4 bg-secondary/30">
       <div className="container mx-auto px-4">
         <PricingHeader />
         <PackageContent />
-        <MoneyBackGuarantee currentPlans={currentPlans} />
+        {/* <MoneyBackGuarantee currentPlans={currentPlans} /> */}
         <PricingToggle isYearly={isYearly} onToggle={setIsYearly} />
         <PricingCardsOptimized isYearly={isYearly} />
         <PaymentMethods />

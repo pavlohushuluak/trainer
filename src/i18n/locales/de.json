@@ -511,8 +511,11 @@
   },
   "navigation": {
     "home": "Startseite",
-    "training": "Haustiererziehung",
+    "benefits": "Vorteile",
     "pricing": "Preise",
+    "testimonials": "Erfolgsgeschichten",
+    "faq": "FAQ",
+    "training": "Haustiererziehung",
     "about": "Über uns",
     "contact": "Kontakt",
     "login": "Anmelden",
@@ -589,7 +592,7 @@
     }
   },
   "faq": {
-    "title": "Häufig gestellte Fragen zu TierTrainer24",
+    "title": "Häufig gestellte Fragen",
     "subtitle": "Alles über unsere intelligente Haustiererziehung für Hunde, Katzen, Pferde, Kleintiere & Vögel mit 14-tägiger Geld-zurück-Garantie",
     "questions": {
       "guarantee": {
@@ -753,35 +756,35 @@
     "title": "Warum TierTrainer?",
     "subtitle": "Sechs entscheidende Vorteile, die uns von konventionellen Haustiertrainern unterscheiden",
     "benefit1": {
-      "title": "💬 1. Weil Sie nicht auf den nächsten Termin warten müssen.",
+      "title": "1. Weil Sie nicht auf den nächsten Termin warten müssen.",
       "description1": "Bei uns erhalten Sie sofort eine Einschätzung.",
       "description2": "Kein \"Wir haben vielleicht nächsten Donnerstag um 14:00 Uhr etwas frei\".",
       "description3": "Ihr Haustier braucht Hilfe, wenn das Verhalten auftritt – nicht zwei Wochen später."
     },
     "benefit2": {
-      "title": "🏠 2. Weil Ihr Haustier am besten in seiner gewohnten Umgebung lernt.",
+      "title": "2. Weil Ihr Haustier am besten in seiner gewohnten Umgebung lernt.",
       "description1": "Viele Haustiere verhalten sich mit Trainern völlig anders – ruhig, eingeschüchtert, abgelenkt.",
       "description2": "Wir analysieren Verhalten dort, wo es wirklich passiert: zu Hause, im Alltag, in Ihrem echten Leben."
     },
     "benefit3": {
-      "title": "💸 3. Weil das Abonnement weniger kostet als eine einzige Trainingsstunde.",
+      "title": "3. Weil das Abonnement weniger kostet als eine einzige Trainingsstunde.",
       "subscriptionPrice": "TierTrainer Abonnement: ab €9,90/Monat",
       "trainerPrice": "Vor-Ort Haustiertrainer: €60–150/Stunde",
       "description1": "Und das jedes Mal, wenn Sie Hilfe brauchen?",
       "description2": "Bei uns: Stellen Sie unbegrenzte Fragen – ein Preis."
     },
     "benefit4": {
-      "title": "⏱️ 4. Weil Sie im Abonnement kontinuierlich unterstützt werden – nicht nur gelegentlich.",
+      "title": "4. Weil Sie im Abonnement kontinuierlich unterstützt werden – nicht nur gelegentlich.",
       "description1": "Viele Trainer geben Ihnen Hausaufgaben und verschwinden dann.",
       "description2": "Wir bleiben an Ihrer Seite – mit Fortschrittsjournal, Updates, Erinnerungen und echtem Feedback über Wochen."
     },
     "benefit5": {
-      "title": "🧠 5. Weil Sie mehr lernen als nur \"Sitz\".",
+      "title": "5. Weil Sie mehr lernen als nur \"Sitz\".",
       "description1": "Wir helfen Ihnen, Ihr Haustier zu verstehen – seine Motive, seine Ängste, seine Körpersprache.",
       "description2": "Verhaltensänderung beginnt mit Empathie – nicht mit Drill."
     },
     "benefit6": {
-      "title": "🔒 6. Weil Sie sicher, werbefrei & stressfrei unterstützt werden.",
+      "title": "6. Weil Sie sicher, werbefrei & stressfrei unterstützt werden.",
       "point1": "Keine Verkaufstaktiken.",
       "point2": "Kein Druck, zusätzliche Stunden zu buchen.",
       "point3": "Keine versteckten Upsells wie bei vielen Haustiertrainern oder Online-Kursen"
@@ -810,7 +813,7 @@
       "prioritySupport": "Prioritäts-Support"
     },
     "header": {
-      "title": "TierTrainer Premium – Für Ihr(e) Haustier(e)",
+      "title": "TierTrainer Premium",
       "subtitle": "Alles, was Sie für erfolgreiche Haustierpflege brauchen"
     },
     "packageContent": {
@@ -819,31 +822,29 @@
         "allInclusive": "🎯 Alle Features inklusive • 🔄 Jederzeit kündbar • 💰 14-tägige Geld-zurück-Garantie"
       },
       "cards": {
-        "tierTrainer": {
-          "title": "🤖 TierTrainer",
-          "feature1": "Persönlicher Trainer für Ihr Haustier",
-          "feature2": "Für alle Haustierarten (Hund, Katze, Vogel, etc.)",
-          "feature3": "Basierend auf neuester Technologie"
-        },
-        "multimodal": {
-          "title": "💬 Multimodale Beratung",
-          "feature1": "Text-Chat für schnelle Fragen",
-          "feature2": "Spracheingabe für natürliche Gespräche",
-          "feature3": "Bildanalyse für Verhalten & Gesundheit"
+        "chatTrainer": {
+          "title": "Chat mit Trainer",
+          "feature1": "Unbegrenzter 24/7-Zugang zu Trainer",
+          "feature2": "Sofortige Antworten auf Trainingsfragen",
+          "feature3": "Personalisierte Beratung für Ihr Haustier"
         },
         "imageAnalysis": {
-          "title": "🖼️ Bild-Upload & Verhaltensanalyse",
-          "question": "Was versucht Ihr Haustier Ihnen zu sagen?",
-          "description": "Laden Sie einfach ein Foto Ihres Haustiers hoch – unsere Technologie analysiert Blick, Haltung und Gesichtsausdrücke. Sie wissen in Sekunden, was Ihr Haustier fühlt oder gerade braucht.",
-          "feature1": "Bildbasierte Verhaltensanalyse",
-          "feature2": "Erkennung von Stress, Freude & Neugier",
-          "feature3": "Bewertung von Körpersprache & Emotionen"
+          "title": "Bildanalyse",
+          "feature1": "Fotos für Verhaltensanalyse hochladen",
+          "feature2": "Professionelle Emotionserkennung",
+          "feature3": "Sofortige Einblicke in die Stimmung Ihres Haustiers"
         },
-        "customized": {
-          "title": "🐾 Angepasst für Ihr Haustier",
-          "feature1": "Personalisiert Trainingspläne",
+        "trainingPlans": {
+          "title": "Trainingspläne",
+          "feature1": "Maßgeschneiderte Trainingspläne für Ihr Haustier",
           "feature2": "Schritt-für-Schritt-Anweisungen",
-          "feature3": "Angepasst an Ihr Haustier & Ihre Ziele"
+          "feature3": "Angepasst an die spezifischen Bedürfnisse Ihres Haustiers"
+        },
+        "progressTracking": {
+          "title": "Fortschrittsverfolgung",
+          "feature1": "Täglichen Trainingsfortschritt verfolgen",
+          "feature2": "Visuelle Fortschrittsanzeigen",
+          "feature3": "Meilensteine und Erfolge feiern"
         }
       }
     },

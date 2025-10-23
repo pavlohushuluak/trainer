@@ -49,7 +49,7 @@ export const FAQ = () => {
   }
 ];
   return (
-    <section id="faq" className="py-6 sm:py-8 md:py-10 lg:py-12 bg-secondary/30">
+    <section id="faq" className="pt-20 pb-4 bg-secondary/30">
       {/* Schema.org FAQ structured data */}
       <script type="application/ld+json">
         {JSON.stringify({
@@ -68,10 +68,12 @@ export const FAQ = () => {
 
       <div className="container mx-auto px-3 sm:px-4 md:px-6">
         <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12">
-          <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-3 sm:mb-4 md:mb-6 px-2 sm:px-0 leading-tight">
-            {t('faq.title')}
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 px-2 sm:px-0 leading-tight animate-fade-in-up">
+            <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 bg-clip-text text-transparent animate-gradient-x">
+              {t('faq.title')}
+            </span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-2 sm:px-4 leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-3xl mx-auto px-2 sm:px-4 leading-relaxed animate-fade-in-up delay-200">
             {t('faq.subtitle')}
           </p>
         </div>

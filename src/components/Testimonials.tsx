@@ -261,13 +261,15 @@ export const Testimonials = () => {
   };
 
   return (
-    <section id="testimonials" className="pt-4 sm:pt-6 md:pt-10 lg:pt-16 pb-3 sm:pb-4">
+    <section id="testimonials" className="pt-20 pb-4">
       <div className="mx-auto px-0">
         <div className="text-center mb-4 sm:mb-6 md:mb-8 lg:mb-12">
-          <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground pb-3 sm:pb-4 md:pb-6 lg:pb-8 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80 bg-clip-text text-transparent px-3 sm:px-4 leading-tight">
-            {t('testimonials.title')}
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold pb-3 sm:pb-4 md:pb-6 px-3 sm:px-4 leading-tight animate-fade-in-up">
+            <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent animate-gradient-x">
+              {t('testimonials.title')}
+            </span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto px-3 sm:px-4 md:px-6 leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-3xl mx-auto px-3 sm:px-4 md:px-6 leading-relaxed animate-fade-in-up delay-200">
             {t('testimonials.subtitle')}
           </p>
         </div>
