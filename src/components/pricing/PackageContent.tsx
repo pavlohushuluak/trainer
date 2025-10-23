@@ -6,9 +6,9 @@ export const PackageContent = () => {
   const { t } = useTranslations();
   return (
     <div className="mb-6 sm:mb-8 md:mb-10 lg:mb-12 px-3 sm:px-4">
-      <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-3 sm:mb-4 md:mb-6 leading-tight">
+      {/* <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-3 sm:mb-4 md:mb-6 leading-tight">
         {t('pricing.packageContent.title')}
-      </h3>
+      </h3> */}
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 max-w-7xl mx-auto">
         {/* Chat with Professional Trainer */}
