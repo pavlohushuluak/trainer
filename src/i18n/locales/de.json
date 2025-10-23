@@ -532,7 +532,7 @@
     "myTraining": "Mein Tiertraining",
     "myTrainingShort": "Training",
     "community": "Community",
-    "startFree": "Kostenlos starten"
+    "startFree": "Jetzt starten"
   },
   "hero": {
     "title": "Professionelle Haustiererziehung mit Trainer-Support",
@@ -1002,7 +1002,7 @@
       "title": "Tipps für beste Ergebnisse",
       "description": "Wie Sie die besten Analyseergebnisse erhalten",
       "photoQuality": {
-        "title": "📸 Fotoqualität",
+        "title": "Fotoqualität",
         "description": "Verwenden Sie gutes Licht und stellen Sie sicher, dass Ihr Haustier deutlich sichtbar ist"
       },
       "focus": {
@@ -1030,7 +1030,7 @@
         "button": "Jetzt Premium werden"
       },
       "free": {
-        "title": "📸 Kostenlose Bildanalyse",
+        "title": "Kostenlose Bildanalyse",
         "description": "Analysen verbleibend",
         "badge": "Kostenlos"
       }
@@ -1043,7 +1043,7 @@
       "unavailable": {
         "description": "Bildanalyse vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut."
       },
-      "uploadTitle": "📸 Schritt 2: Haustierfoto hochladen",
+      "uploadTitle": "Schritt 2: Haustierfoto hochladen",
       "tips": {
         "title": "💡 Tipps für beste Ergebnisse:",
         "lighting": "• Verwenden Sie gutes Licht",
@@ -3831,7 +3831,7 @@
       }
     },
     "introductionCard": {
-      "title": "🔮 Bildanalyse - Verstehen Sie Ihr Haustier besser",
+      "title": "Bildanalyse - Verstehen Sie Ihr Haustier besser",
       "whatToDo": {
         "title": "Was Sie tun müssen:",
         "step1": "Haustierprofil erstellen (falls noch nicht vorhanden)",

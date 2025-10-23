@@ -531,7 +531,7 @@
     "myTraining": "My Pet Training",
     "myTrainingShort": "Training",
     "community": "Community",
-    "startFree": "Start Free"
+    "startFree": "Start Now"
   },
   "hero": {
     "title": "Professional Pet Training with AI",
@@ -1001,7 +1001,7 @@
       "title": "Tips for Best Results",
       "description": "How to get the best analysis results",
       "photoQuality": {
-        "title": "📸 Photo Quality",
+        "title": "Photo Quality",
         "description": "Use good lighting and ensure your pet is clearly visible"
       },
       "focus": {
@@ -1029,7 +1029,7 @@
         "button": "Become Premium Now"
       },
       "free": {
-        "title": "📸 Free Image Analysis",
+        "title": "Free Image Analysis",
         "description": "analyses remaining",
         "badge": "Free"
       }
@@ -1042,7 +1042,7 @@
       "unavailable": {
         "description": "Image analysis temporarily unavailable. Please try again later."
       },
-      "uploadTitle": "📸 Step 2: Upload pet photo",
+      "uploadTitle": "Step 2: Upload pet photo",
       "tips": {
         "title": "💡 Tips for best results:",
         "lighting": "• Use good lighting",
@@ -3816,7 +3816,7 @@
       }
     },
     "introductionCard": {
-      "title": "🔮 Image Analysis - Understand Your Pet Better",
+      "title": "Image Analysis - Understand Your Pet Better",
       "whatToDo": {
         "title": "What you need to do:",
         "step1": "Create a pet profile (if not already available)",
